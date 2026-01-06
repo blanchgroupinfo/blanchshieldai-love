@@ -7,6 +7,18 @@ export interface Agent {
   isCategory?: boolean;
 }
 
+// Generate H.I.I. AI Universal Unified AI Agent Number
+// Format: HII-AI-XXXX where XXXX is the sequential number
+export const generateHIIAgentNumber = (id: string): string => {
+  const num = id.replace("AI", "");
+  return `HII-AI-${num.padStart(4, "0")}`;
+};
+
+// Get the full agent display with H.I.I. AI number
+export const getAgentDisplayId = (agent: Agent): string => {
+  return generateHIIAgentNumber(agent.id);
+};
+
 export const agentCategories = [
   { number: 1, name: "Core AI & Architecture", icon: "cpu" },
   { number: 2, name: "Identity & Avatar", icon: "user" },

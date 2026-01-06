@@ -10,6 +10,7 @@ import Technology from "./pages/Technology";
 import Contact from "./pages/Contact";
 import API from "./pages/API";
 import Agents from "./pages/Agents";
+import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -29,6 +30,7 @@ const App = () => (
           <Route path="/api" element={<API />} />
           <Route path="/agents" element={<Agents />} />
           <Route path="/agents/:agentId" element={<Agents />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
