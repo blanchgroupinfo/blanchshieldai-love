@@ -3,7 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import NavigationHeader from "@/components/NavigationHeader";
 import Footer from "@/components/Footer";
 import ScrollAnimationWrapper from "@/components/ScrollAnimationWrapper";
-import { agents, agentCategories, Agent } from "@/data/agents";
+import { agents, agentCategories, Agent, generateHIIAgentNumber } from "@/data/agents";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -63,7 +63,7 @@ const AgentCard = ({ agent, showCategory = false }: { agent: Agent; showCategory
             <IconComponent className={`w-5 h-5 ${agent.isCategory ? 'text-primary' : 'text-primary/80'}`} />
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-xs text-primary/70 font-mono mb-1">{agent.id}</p>
+            <p className="text-xs text-primary/70 font-mono mb-1">{generateHIIAgentNumber(agent.id)}</p>
             <h3 className={`font-display text-sm text-foreground leading-tight ${agent.isCategory ? 'font-semibold' : 'font-medium'}`}>
               {agent.name}
             </h3>
@@ -115,7 +115,7 @@ const AgentDetail = ({ agentId }: { agentId: string }) => {
               <IconComponent className="w-12 h-12 text-primary" />
             </div>
             <div className="flex-1">
-              <Badge variant="outline" className="mb-2">{agent.id}</Badge>
+              <Badge variant="outline" className="mb-2">{generateHIIAgentNumber(agent.id)}</Badge>
               <h1 className="text-3xl md:text-4xl font-display font-bold gradient-text mb-2">
                 {agent.name}
               </h1>
