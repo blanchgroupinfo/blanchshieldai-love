@@ -10,6 +10,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import CommandCenter from "@/components/CommandCenter";
 import shieldLogo from "@/assets/shield-logo.jpg";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
 
@@ -127,8 +128,9 @@ const NavigationHeader = () => {
             ))}
           </nav>
 
-          {/* CTA + Auth + Mobile Menu */}
+          {/* CTA + Auth + Command Center + Mobile Menu */}
           <div className="flex items-center gap-3">
+            <CommandCenter />
             {user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
