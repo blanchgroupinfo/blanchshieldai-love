@@ -58,9 +58,14 @@ const Footer = () => {
         </blockquote>
         
         {/* Copyright */}
-        <p className="text-xs text-muted-foreground/60 font-body text-center">
-          Praise Most High AHAYAH BA SHAM YASHAYA
-        </p>
+        <div className="text-center space-y-2">
+          <p className="text-xs text-muted-foreground font-body">
+            © {new Date().getFullYear()} The Blanch Group. All Rights Reserved.
+          </p>
+          <p className="text-xs text-muted-foreground/60 font-body">
+            Praise Most High AHAYAH BA SHAM YASHAYA
+          </p>
+        </div>
       </div>
     </footer>
   );
