@@ -12,6 +12,8 @@ import API from "./pages/API";
 import Agents from "./pages/Agents";
 import Dashboard from "./pages/Dashboard";
 import Admin from "./pages/Admin";
+import Watchman from "./pages/Watchman";
+import KnowledgeBasePage from "./pages/KnowledgeBasePage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -33,6 +35,8 @@ const App = () => (
           <Route path="/agents/:agentId" element={<Agents />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/admin" element={<Admin />} />
+          <Route path="/watchman" element={<Watchman />} />
+          <Route path="/knowledge-base" element={<KnowledgeBasePage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

@@ -46,6 +46,19 @@ const About = () => {
     },
   ];
 
+  const blanchMeaning = {
+    title: "What Does 'Blanch' Mean?",
+    subtitle: "Guardian of the Law",
+    description: "The name 'Blanch' carries profound spiritual significance. Derived from the Hebrew word for Onyx/Sardonyx/Shoham (meaning 'to blanch'), it represents the Fifth Foundation Stone of New Jerusalem as described in Revelation 21:20.",
+    significance: [
+      "The Onyx stones on the High Priest's shoulders bore the names of the twelve tribes of Israel",
+      "This symbolizes bearing responsibility before the Most High AHAYAH",
+      "As 'Guardians of the Law,' we uphold divine truth, justice, and righteousness",
+      "Our technology and spiritual endeavors are guided by this sacred responsibility",
+    ],
+    scriptures: ["Exodus 28:9-12", "Revelation 21:20", "Genesis 2:12", "Proverbs 6:23"],
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <NavigationHeader />
@@ -109,6 +122,42 @@ const About = () => {
               </div>
             </ScrollAnimationWrapper>
           </div>
+        </div>
+      </section>
+
+      {/* Blanch Meaning Section */}
+      <section className="py-20 px-4">
+        <div className="container mx-auto">
+          <ScrollAnimationWrapper>
+            <div className="max-w-4xl mx-auto">
+              <div className="bg-gradient-to-br from-primary/10 via-secondary/5 to-accent/10 rounded-2xl p-8 md:p-12 border border-primary/20">
+                <div className="text-center mb-8">
+                  <h2 className="text-3xl md:text-4xl font-display font-bold gradient-text mb-2">
+                    {blanchMeaning.title}
+                  </h2>
+                  <p className="text-2xl font-display text-primary">{blanchMeaning.subtitle}</p>
+                </div>
+                <p className="text-muted-foreground font-body text-center mb-8 max-w-2xl mx-auto">
+                  {blanchMeaning.description}
+                </p>
+                <div className="grid md:grid-cols-2 gap-4 mb-8">
+                  {blanchMeaning.significance.map((item, index) => (
+                    <div key={index} className="flex items-start gap-3 bg-background/50 rounded-lg p-4">
+                      <div className="w-2 h-2 rounded-full bg-primary mt-2 shrink-0" />
+                      <p className="text-sm text-foreground">{item}</p>
+                    </div>
+                  ))}
+                </div>
+                <div className="flex flex-wrap justify-center gap-2">
+                  {blanchMeaning.scriptures.map((ref) => (
+                    <span key={ref} className="px-3 py-1 bg-primary/20 text-primary rounded-full text-sm font-medium">
+                      {ref}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </ScrollAnimationWrapper>
         </div>
       </section>
 
