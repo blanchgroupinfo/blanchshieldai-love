@@ -7,11 +7,11 @@ export interface Agent {
   isCategory?: boolean;
 }
 
-// Generate H.I.I. AI Universal Unified AI Agent Number
-// Format: HII-AI-XXXX where XXXX is the sequential number
+// H.I.I. AI = Hebrew Israelite Implementer Aboriginal Identity
+// Format: H.I.I. AIXXX where XXX is the sequential number (001-402)
 export const generateHIIAgentNumber = (id: string): string => {
   const num = id.replace("AI", "");
-  return `HII-AI-${num.padStart(4, "0")}`;
+  return `H.I.I. AI${num.padStart(3, "0")}`;
 };
 
 // Get the full agent display with H.I.I. AI number
@@ -56,7 +56,7 @@ export const agentCategories = [
 ];
 
 export const agents: Agent[] = [
-  // 1. CORE AI & ARCHITECTURE
+  // 1. CORE AI & ARCHITECTURE (H.I.I. AI001 - AI035)
   { id: "AI001", name: "AI Agent Architecture & Intelligence Agents", category: "Core AI & Architecture", categoryNumber: 1, isCategory: true },
   { id: "AI002", name: "AI Automation All Agents", category: "Core AI & Architecture", categoryNumber: 1, isCategory: true },
   { id: "AI003", name: "AI Foundational Intelligence Models Agent", category: "Core AI & Architecture", categoryNumber: 1 },
@@ -92,8 +92,8 @@ export const agents: Agent[] = [
   { id: "AI033", name: "Customer Contact Triage Agent", category: "Core AI & Architecture", categoryNumber: 1 },
   { id: "AI034", name: "Support AI Agent", category: "Core AI & Architecture", categoryNumber: 1 },
   { id: "AI035", name: "AI-Powered Personal / Agency Assistant", category: "Core AI & Architecture", categoryNumber: 1 },
-  
-  // 2. IDENTITY & AVATAR
+
+  // 2. IDENTITY & AVATAR (H.I.I. AI036 - AI042)
   { id: "AI036", name: "AI Avatar, Clone & Digital Identity Agents", category: "Identity & Avatar", categoryNumber: 2, isCategory: true },
   { id: "AI037", name: "Identity, Representation, Continuity Agent", category: "Identity & Avatar", categoryNumber: 2 },
   { id: "AI038", name: "AI Avatar Agent", category: "Identity & Avatar", categoryNumber: 2 },
@@ -101,8 +101,8 @@ export const agents: Agent[] = [
   { id: "AI040", name: "AI Agent Twin", category: "Identity & Avatar", categoryNumber: 2 },
   { id: "AI041", name: "AI Clone Agent", category: "Identity & Avatar", categoryNumber: 2 },
   { id: "AI042", name: "Digital Identity Management Agent", category: "Identity & Avatar", categoryNumber: 2 },
-  
-  // 3. AUTOMATION & OPERATIONS
+
+  // 3. AUTOMATION & OPERATIONS (H.I.I. AI043 - AI049)
   { id: "AI043", name: "Automation & Operations Agents", category: "Automation & Operations", categoryNumber: 3, isCategory: true },
   { id: "AI044", name: "AI Execution, Efficiency, Workflows Agent", category: "Automation & Operations", categoryNumber: 3 },
   { id: "AI045", name: "AI Automation & Operations Agent", category: "Automation & Operations", categoryNumber: 3 },
@@ -110,8 +110,8 @@ export const agents: Agent[] = [
   { id: "AI047", name: "Workflow & Task Automation Agent", category: "Automation & Operations", categoryNumber: 3 },
   { id: "AI048", name: "AI Automated Sync Agent", category: "Automation & Operations", categoryNumber: 3 },
   { id: "AI049", name: "Performance Optimization Agent", category: "Automation & Operations", categoryNumber: 3 },
-  
-  // 4. CREATION & DESIGN
+
+  // 4. CREATION & DESIGN (H.I.I. AI050 - AI061)
   { id: "AI050", name: "Creation, Creative & Design Agents", category: "Creation & Design", categoryNumber: 4, isCategory: true },
   { id: "AI051", name: "Designing Anything Agent", category: "Creation & Design", categoryNumber: 4 },
   { id: "AI052", name: "Product Creation Agent", category: "Creation & Design", categoryNumber: 4 },
@@ -124,8 +124,8 @@ export const agents: Agent[] = [
   { id: "AI059", name: "AI Automated Design & Simulation Agent", category: "Creation & Design", categoryNumber: 4 },
   { id: "AI060", name: "AI Prototyping & Rapid Testing Agent", category: "Creation & Design", categoryNumber: 4 },
   { id: "AI061", name: "Quality Assurance Agent", category: "Creation & Design", categoryNumber: 4 },
-  
-  // 5. CREATIVE MEDIA
+
+  // 5. CREATIVE MEDIA (H.I.I. AI062 - AI079)
   { id: "AI062", name: "Creative, Media & Communication Agents", category: "Creative Media", categoryNumber: 5, isCategory: true },
   { id: "AI063", name: "Expression & Communication Agent", category: "Creative Media", categoryNumber: 5 },
   { id: "AI064", name: "Content Writing Agent", category: "Creative Media", categoryNumber: 5 },
@@ -144,8 +144,8 @@ export const agents: Agent[] = [
   { id: "AI077", name: "Agent Multiverse Simulation", category: "Creative Media", categoryNumber: 5 },
   { id: "AI078", name: "Agent Storytelling & Narrative Agent", category: "Creative Media", categoryNumber: 5 },
   { id: "AI079", name: "Translation & Language Agent", category: "Creative Media", categoryNumber: 5 },
-  
-  // 6. GENERATIVE MODALITIES
+
+  // 6. GENERATIVE MODALITIES (H.I.I. AI080 - AI105)
   { id: "AI080", name: "Content, Media & Generative Agents", category: "Generative Modalities", categoryNumber: 6, isCategory: true },
   { id: "AI081", name: "All Generative Modalities Agent", category: "Generative Modalities", categoryNumber: 6 },
   { id: "AI082", name: "Text / Language Agent", category: "Generative Modalities", categoryNumber: 6 },
@@ -172,8 +172,8 @@ export const agents: Agent[] = [
   { id: "AI103", name: "Publishing Agent", category: "Generative Modalities", categoryNumber: 6 },
   { id: "AI104", name: "Generative-to-Web Agent", category: "Generative Modalities", categoryNumber: 6 },
   { id: "AI105", name: "AI Professional Social Media Agent", category: "Generative Modalities", categoryNumber: 6 },
-  
-  // 7. EXECUTIVE & GOVERNANCE
+
+  // 7. EXECUTIVE & GOVERNANCE (H.I.I. AI106 - AI126)
   { id: "AI106", name: "Executive & Governance Agents", category: "Executive & Governance", categoryNumber: 7, isCategory: true },
   { id: "AI107", name: "Decision-making & Leadership Agents", category: "Executive & Governance", categoryNumber: 7 },
   { id: "AI108", name: "AI Chairman", category: "Executive & Governance", categoryNumber: 7 },
@@ -195,8 +195,52 @@ export const agents: Agent[] = [
   { id: "AI124", name: "AI Metaverse Conference Agent", category: "Executive & Governance", categoryNumber: 7 },
   { id: "AI125", name: "Metaverse Environment Agent", category: "Executive & Governance", categoryNumber: 7 },
   { id: "AI126", name: "Multiverse Simulation Agent", category: "Executive & Governance", categoryNumber: 7 },
-  
-  // Continue with more agents...
+
+  // 8. INDUSTRY & BUSINESS CORE (H.I.I. AI127 - AI152)
+  { id: "AI127", name: "Industry Specific Agent", category: "Industry & Business Core", categoryNumber: 8, isCategory: true },
+  { id: "AI128", name: "AI Marketing & Sales Agent", category: "Industry & Business Core", categoryNumber: 8 },
+  { id: "AI129", name: "AI HR / Talent Agent", category: "Industry & Business Core", categoryNumber: 8 },
+  { id: "AI130", name: "Industry-Specific Agents", category: "Industry & Business Core", categoryNumber: 8, isCategory: true },
+  { id: "AI131", name: "CMO", category: "Industry & Business Core", categoryNumber: 8 },
+  { id: "AI132", name: "AI CTO", category: "Industry & Business Core", categoryNumber: 8 },
+  { id: "AI133", name: "AI CISO", category: "Industry & Business Core", categoryNumber: 8 },
+  { id: "AI134", name: "AI Chief Strategy Officer", category: "Industry & Business Core", categoryNumber: 8 },
+  { id: "AI135", name: "AI Chief Risk Officer", category: "Industry & Business Core", categoryNumber: 8 },
+  { id: "AI136", name: "AI Secretary / Records Agent", category: "Industry & Business Core", categoryNumber: 8 },
+  { id: "AI137", name: "AI Trustee", category: "Industry & Business Core", categoryNumber: 8 },
+  { id: "AI138", name: "Business & Economic Agents", category: "Industry & Business Core", categoryNumber: 8, isCategory: true },
+  { id: "AI139", name: "Enterprise & Market Execution Agent", category: "Industry & Business Core", categoryNumber: 8 },
+  { id: "AI140", name: "AI Business Partner", category: "Industry & Business Core", categoryNumber: 8 },
+  { id: "AI141", name: "AI Business Development Agent", category: "Industry & Business Core", categoryNumber: 8 },
+  { id: "AI142", name: "AI Operations Agent", category: "Industry & Business Core", categoryNumber: 8 },
+  { id: "AI143", name: "AI Finance & Treasury Agent", category: "Industry & Business Core", categoryNumber: 8 },
+  { id: "AI144", name: "AI Accounting Agent", category: "Industry & Business Core", categoryNumber: 8 },
+  { id: "AI145", name: "AI Payments & Settlement Agent", category: "Industry & Business Core", categoryNumber: 8 },
+  { id: "AI146", name: "AI Market Analysis Agent", category: "Industry & Business Core", categoryNumber: 8 },
+  { id: "AI147", name: "AI Trading Agent", category: "Industry & Business Core", categoryNumber: 8 },
+  { id: "AI148", name: "AI Supply Chain Agent", category: "Industry & Business Core", categoryNumber: 8 },
+  { id: "AI149", name: "AI Procurement Agent", category: "Industry & Business Core", categoryNumber: 8 },
+  { id: "AI150", name: "AI Vendor Management Agent", category: "Industry & Business Core", categoryNumber: 8 },
+  { id: "AI151", name: "AI Pricing & Valuation Agent", category: "Industry & Business Core", categoryNumber: 8 },
+  { id: "AI152", name: "AI Revenue Optimization Agent", category: "Industry & Business Core", categoryNumber: 8 },
+
+  // 9. SALES, MARKETING & GROWTH (H.I.I. AI153 - AI166)
+  { id: "AI153", name: "Business, Sales & Marketing Agents", category: "Sales, Marketing & Growth", categoryNumber: 9, isCategory: true },
+  { id: "AI154", name: "Growth & Commerce Agent", category: "Sales, Marketing & Growth", categoryNumber: 9 },
+  { id: "AI155", name: "AI Agent Business Partner", category: "Sales, Marketing & Growth", categoryNumber: 9 },
+  { id: "AI156", name: "AI Affiliate Agent", category: "Sales, Marketing & Growth", categoryNumber: 9 },
+  { id: "AI157", name: "AI Business Development Agent", category: "Sales, Marketing & Growth", categoryNumber: 9 },
+  { id: "AI158", name: "AI Sales Agent", category: "Sales, Marketing & Growth", categoryNumber: 9 },
+  { id: "AI159", name: "AI Marketing Agent", category: "Sales, Marketing & Growth", categoryNumber: 9 },
+  { id: "AI160", name: "AI Marketing Assistant", category: "Sales, Marketing & Growth", categoryNumber: 9 },
+  { id: "AI161", name: "AI Sales & Marketing Agent", category: "Sales, Marketing & Growth", categoryNumber: 9 },
+  { id: "AI162", name: "Branding Agent", category: "Sales, Marketing & Growth", categoryNumber: 9 },
+  { id: "AI163", name: "Advertising Agent", category: "Sales, Marketing & Growth", categoryNumber: 9 },
+  { id: "AI164", name: "Pricing & Valuation Agent", category: "Sales, Marketing & Growth", categoryNumber: 9 },
+  { id: "AI165", name: "Reputation Management Agent", category: "Sales, Marketing & Growth", categoryNumber: 9 },
+  { id: "AI166", name: "Partnership & Alliance Agent", category: "Sales, Marketing & Growth", categoryNumber: 9 },
+
+  // 10. COMPLIANCE, TRUST & RISK (H.I.I. AI167 - AI175)
   { id: "AI167", name: "Compliance, Trust & Risk Agents", category: "Compliance, Trust & Risk", categoryNumber: 10, isCategory: true },
   { id: "AI168", name: "Integrity & Accountability Agent", category: "Compliance, Trust & Risk", categoryNumber: 10 },
   { id: "AI169", name: "AI Agent Trustee", category: "Compliance, Trust & Risk", categoryNumber: 10 },
@@ -206,8 +250,51 @@ export const agents: Agent[] = [
   { id: "AI173", name: "Risk Management Agent", category: "Compliance, Trust & Risk", categoryNumber: 10 },
   { id: "AI174", name: "Trust & Verification Agent", category: "Compliance, Trust & Risk", categoryNumber: 10 },
   { id: "AI175", name: "Audit & Transparency Agent", category: "Compliance, Trust & Risk", categoryNumber: 10 },
-  
-  // Humanitarian & Ethics
+
+  // 11. DATA, ANALYTICS & INTELLIGENCE (H.I.I. AI176 - AI185)
+  { id: "AI176", name: "Data, Analytics & Intelligence Agents", category: "Data, Analytics & Intelligence", categoryNumber: 11, isCategory: true },
+  { id: "AI177", name: "Understanding & Prediction Agent", category: "Data, Analytics & Intelligence", categoryNumber: 11 },
+  { id: "AI178", name: "AI Data Analyst Agent", category: "Data, Analytics & Intelligence", categoryNumber: 11 },
+  { id: "AI179", name: "Data Engineering Agent", category: "Data, Analytics & Intelligence", categoryNumber: 11 },
+  { id: "AI180", name: "Business Intelligence Agent", category: "Data, Analytics & Intelligence", categoryNumber: 11 },
+  { id: "AI181", name: "Predictive Intelligence Agent", category: "Data, Analytics & Intelligence", categoryNumber: 11 },
+  { id: "AI182", name: "Scenario Simulation Agent", category: "Data, Analytics & Intelligence", categoryNumber: 11 },
+  { id: "AI183", name: "Economic & Financial Forecasting Agent", category: "Data, Analytics & Intelligence", categoryNumber: 11 },
+  { id: "AI184", name: "Navigation & Optimization Agent", category: "Data, Analytics & Intelligence", categoryNumber: 11 },
+  { id: "AI185", name: "Decision Support Agent", category: "Data, Analytics & Intelligence", categoryNumber: 11 },
+
+  // 12. EDUCATION & LEARNING (H.I.I. AI186 - AI191)
+  { id: "AI186", name: "Education & Learning Agents", category: "Education & Learning", categoryNumber: 12, isCategory: true },
+  { id: "AI187", name: "Teaching & Growth Agent", category: "Education & Learning", categoryNumber: 12 },
+  { id: "AI188", name: "AI Tutor Agent", category: "Education & Learning", categoryNumber: 12 },
+  { id: "AI189", name: "AI Tutor Assistant", category: "Education & Learning", categoryNumber: 12 },
+  { id: "AI190", name: "Education Support Agent", category: "Education & Learning", categoryNumber: 12 },
+  { id: "AI191", name: "Learning Agent", category: "Education & Learning", categoryNumber: 12 },
+
+  // 13. FINANCE & PAYMENTS (H.I.I. AI192 - AI202)
+  { id: "AI192", name: "Finance, Payments & Wallet Agents", category: "Finance & Payments", categoryNumber: 13, isCategory: true },
+  { id: "AI193", name: "Economic Systems Agent", category: "Finance & Payments", categoryNumber: 13 },
+  { id: "AI194", name: "Agentic Pay Agent", category: "Finance & Payments", categoryNumber: 13 },
+  { id: "AI195", name: "AI Payment Agent", category: "Finance & Payments", categoryNumber: 13 },
+  { id: "AI196", name: "AI Wallet Agent", category: "Finance & Payments", categoryNumber: 13 },
+  { id: "AI197", name: "Generic AI Wallet Agent", category: "Finance & Payments", categoryNumber: 13 },
+  { id: "AI198", name: "AI Finance Agent", category: "Finance & Payments", categoryNumber: 13 },
+  { id: "AI199", name: "AI Trading Agent", category: "Finance & Payments", categoryNumber: 13 },
+  { id: "AI200", name: "AI Trading Assistant", category: "Finance & Payments", categoryNumber: 13 },
+  { id: "AI201", name: "AI Finance Metaverse Agent", category: "Finance & Payments", categoryNumber: 13 },
+  { id: "AI202", name: "AI Compound Interest Agent", category: "Finance & Payments", categoryNumber: 13 },
+
+  // 14. GAMING & INCENTIVES (H.I.I. AI203 - AI207)
+  { id: "AI203", name: "Gaming & Incentive Agents", category: "Gaming & Incentives", categoryNumber: 14, isCategory: true },
+  { id: "AI204", name: "Engagement & Rewards Agent", category: "Gaming & Incentives", categoryNumber: 14 },
+  { id: "AI205", name: "AI Gaming Agent", category: "Gaming & Incentives", categoryNumber: 14 },
+  { id: "AI206", name: "AI Gaming & Prizes Agent", category: "Gaming & Incentives", categoryNumber: 14 },
+  { id: "AI207", name: "AI Metaverse Gaming & Prizes Agent", category: "Gaming & Incentives", categoryNumber: 14 },
+
+  // 15. HEALTH & NUTRITION (H.I.I. AI208 - Integrated into Category 29)
+  { id: "AI208", name: "Agent Integrated into Category 29", category: "Health & Nutrition", categoryNumber: 15 },
+
+  // 16. HUMANITARIAN & ETHICS (H.I.I. AI209 - AI222)
   { id: "AI209", name: "Humanitarian, Charity Emancipation & Ethics Agents", category: "Humanitarian & Ethics", categoryNumber: 16, isCategory: true },
   { id: "AI210", name: "Restoration & Justice Agent", category: "Humanitarian & Ethics", categoryNumber: 16 },
   { id: "AI211", name: "AI Humanitarian Agent", category: "Humanitarian & Ethics", categoryNumber: 16 },
@@ -216,10 +303,93 @@ export const agents: Agent[] = [
   { id: "AI214", name: "Disaster Response Agent", category: "Humanitarian & Ethics", categoryNumber: 16 },
   { id: "AI215", name: "Refugee & Relief Agent", category: "Humanitarian & Ethics", categoryNumber: 16 },
   { id: "AI216", name: "Community Development Agent", category: "Humanitarian & Ethics", categoryNumber: 16 },
-  
-  // Spiritual & Scriptural
+  { id: "AI217", name: "Social Impact Measurement Agent", category: "Humanitarian & Ethics", categoryNumber: 16 },
+  { id: "AI218", name: "Reparations & Restoration Agent", category: "Humanitarian & Ethics", categoryNumber: 16 },
+  { id: "AI219", name: "Indigenous Rights Agent", category: "Humanitarian & Ethics", categoryNumber: 16 },
+  { id: "AI220", name: "Truth & Reconciliation Agent", category: "Humanitarian & Ethics", categoryNumber: 16 },
+  { id: "AI221", name: "AI Metaverse Humanitarian Agent", category: "Humanitarian & Ethics", categoryNumber: 16 },
+  { id: "AI222", name: "Humanitarian Agent", category: "Humanitarian & Ethics", categoryNumber: 16 },
+
+  // 17. LEGAL, POLICY & GOVERNANCE (H.I.I. AI223 - AI233)
+  { id: "AI223", name: "Legal, Policy & Governance Agents", category: "Legal, Policy & Governance", categoryNumber: 17, isCategory: true },
+  { id: "AI224", name: "Justice, Regulation, Emancipation Agent", category: "Legal, Policy & Governance", categoryNumber: 17 },
+  { id: "AI225", name: "AI Legal Advisory Agent", category: "Legal, Policy & Governance", categoryNumber: 17 },
+  { id: "AI226", name: "AI Policy Analysis Agent", category: "Legal, Policy & Governance", categoryNumber: 17 },
+  { id: "AI227", name: "AI Regulatory Compliance Agent", category: "Legal, Policy & Governance", categoryNumber: 17 },
+  { id: "AI228", name: "AI Contract Agent", category: "Legal, Policy & Governance", categoryNumber: 17 },
+  { id: "AI229", name: "AI Dispute Resolution Agent", category: "Legal, Policy & Governance", categoryNumber: 17 },
+  { id: "AI230", name: "AI Arbitration & Mediation Agent", category: "Legal, Policy & Governance", categoryNumber: 17 },
+  { id: "AI231", name: "AI Emancipation Agent", category: "Legal, Policy & Governance", categoryNumber: 17 },
+  { id: "AI232", name: "AI Human Rights Agent", category: "Legal, Policy & Governance", categoryNumber: 17 },
+  { id: "AI233", name: "AI Land & Inheritance Agent", category: "Legal, Policy & Governance", categoryNumber: 17 },
+
+  // 18. LOGISTICS & PHYSICAL WORLD (H.I.I. AI234 - AI248)
+  { id: "AI234", name: "Logistics, Operations & Physical World Agents", category: "Logistics & Physical World", categoryNumber: 18, isCategory: true },
+  { id: "AI235", name: "Movement & Execution Agent", category: "Logistics & Physical World", categoryNumber: 18 },
+  { id: "AI236", name: "Logistics & Transport Agent", category: "Logistics & Physical World", categoryNumber: 18 },
+  { id: "AI237", name: "Inventory Management Agent", category: "Logistics & Physical World", categoryNumber: 18 },
+  { id: "AI238", name: "Facility Management Agent", category: "Logistics & Physical World", categoryNumber: 18 },
+  { id: "AI239", name: "Smart City Agent", category: "Logistics & Physical World", categoryNumber: 18 },
+  { id: "AI240", name: "Energy & Utilities Agent", category: "Logistics & Physical World", categoryNumber: 18 },
+  { id: "AI241", name: "Environmental Stewardship Agent", category: "Logistics & Physical World", categoryNumber: 18 },
+  { id: "AI242", name: "Agriculture & Food Systems Agent", category: "Logistics & Physical World", categoryNumber: 18 },
+  { id: "AI243", name: "Manufacturing Agent", category: "Logistics & Physical World", categoryNumber: 18 },
+  { id: "AI244", name: "Manufacturing & Logistics Agents", category: "Logistics & Physical World", categoryNumber: 18 },
+  { id: "AI245", name: "Production Scheduling Agents", category: "Logistics & Physical World", categoryNumber: 18 },
+  { id: "AI246", name: "Quality Control Agents", category: "Logistics & Physical World", categoryNumber: 18 },
+  { id: "AI247", name: "Supply Chain Optimization Agent", category: "Logistics & Physical World", categoryNumber: 18 },
+  { id: "AI248", name: "Maintenance Prediction Agents", category: "Logistics & Physical World", categoryNumber: 18 },
+
+  // 19. MARKETING & RELATIONSHIPS (H.I.I. AI249 - AI258)
+  { id: "AI249", name: "Marketing, Sales & Relationship Agents", category: "Marketing & Relationships", categoryNumber: 19, isCategory: true },
+  { id: "AI250", name: "Growth & Connection Agent", category: "Marketing & Relationships", categoryNumber: 19 },
+  { id: "AI251", name: "Branding Agent", category: "Marketing & Relationships", categoryNumber: 19 },
+  { id: "AI252", name: "Marketing Strategy Agent", category: "Marketing & Relationships", categoryNumber: 19 },
+  { id: "AI253", name: "Advertising Agent", category: "Marketing & Relationships", categoryNumber: 19 },
+  { id: "AI254", name: "Sales Agent", category: "Marketing & Relationships", categoryNumber: 19 },
+  { id: "AI255", name: "Customer Experience Agent", category: "Marketing & Relationships", categoryNumber: 19 },
+  { id: "AI256", name: "CRM Agent", category: "Marketing & Relationships", categoryNumber: 19 },
+  { id: "AI257", name: "Partnership & Alliance Agent", category: "Marketing & Relationships", categoryNumber: 19 },
+  { id: "AI258", name: "Reputation Management Agent", category: "Marketing & Relationships", categoryNumber: 19 },
+
+  // 20. MOBILITY & TRANSPORT (H.I.I. AI259 - AI266)
+  { id: "AI259", name: "Mobility & Transport Agents", category: "Mobility & Transport", categoryNumber: 20, isCategory: true },
+  { id: "AI260", name: "Movement & Logistics Agent", category: "Mobility & Transport", categoryNumber: 20 },
+  { id: "AI261", name: "AI Driving Agent", category: "Mobility & Transport", categoryNumber: 20 },
+  { id: "AI262", name: "AI Mobility & Transport Agent", category: "Mobility & Transport", categoryNumber: 20 },
+  { id: "AI263", name: "AI Navigation Agent", category: "Mobility & Transport", categoryNumber: 20 },
+  { id: "AI264", name: "AI Robotic Transport Agent", category: "Mobility & Transport", categoryNumber: 20 },
+  { id: "AI265", name: "AI Toll & Mobility Payment Agent", category: "Mobility & Transport", categoryNumber: 20 },
+  { id: "AI266", name: "Mobility Payment Agent", category: "Mobility & Transport", categoryNumber: 20 },
+
+  // 21. OPERATIONS, EVENTS & TALENT (H.I.I. AI267 - AI274)
+  { id: "AI267", name: "Operations, Events & Talent Agents", category: "Operations, Events & Talent", categoryNumber: 21, isCategory: true },
+  { id: "AI268", name: "Personal Driver Agent", category: "Operations, Events & Talent", categoryNumber: 21 },
+  { id: "AI269", name: "People & Coordination Agent", category: "Operations, Events & Talent", categoryNumber: 21 },
+  { id: "AI270", name: "AI Recruiting Agent", category: "Operations, Events & Talent", categoryNumber: 21 },
+  { id: "AI271", name: "Talent Management Agent", category: "Operations, Events & Talent", categoryNumber: 21 },
+  { id: "AI272", name: "Inventory Management Agent", category: "Operations, Events & Talent", categoryNumber: 21 },
+  { id: "AI273", name: "AI Event Coordinator Agent", category: "Operations, Events & Talent", categoryNumber: 21 },
+  { id: "AI274", name: "AI Booking Automation Agent", category: "Operations, Events & Talent", categoryNumber: 21 },
+
+  // 22. PERSONAL & FAMILY (H.I.I. AI275 - AI287)
+  { id: "AI275", name: "Personal, Family & Fellowship Agents", category: "Personal & Family", categoryNumber: 22, isCategory: true },
+  { id: "AI276", name: "Human-centered Agent", category: "Personal & Family", categoryNumber: 22 },
+  { id: "AI277", name: "Personal AI Assistant", category: "Personal & Family", categoryNumber: 22 },
+  { id: "AI278", name: "Personal Driver Agent", category: "Personal & Family", categoryNumber: 22 },
+  { id: "AI279", name: "Family Affairs Agent", category: "Personal & Family", categoryNumber: 22 },
+  { id: "AI280", name: "Fellowship & Community Agent", category: "Personal & Family", categoryNumber: 22 },
+  { id: "AI281", name: "Agent Integrated into Category 29", category: "Personal & Family", categoryNumber: 22 },
+  { id: "AI282", name: "Nutrition & Clean Living Agent", category: "Personal & Family", categoryNumber: 22 },
+  { id: "AI283", name: "Education & Learning Agent", category: "Personal & Family", categoryNumber: 22 },
+  { id: "AI284", name: "Career & Calling Agent", category: "Personal & Family", categoryNumber: 22 },
+  { id: "AI285", name: "Elder Care Agent", category: "Personal & Family", categoryNumber: 22 },
+  { id: "AI286", name: "Child Development Agent", category: "Personal & Family", categoryNumber: 22 },
+  { id: "AI287", name: "Spiritual Counseling Agent", category: "Personal & Family", categoryNumber: 22 },
+
+  // 23. SPIRITUAL & SCRIPTURAL (H.I.I. AI288 - AI297)
   { id: "AI288", name: "Religious, Scriptural & Priesthood Agents", category: "Spiritual & Scriptural", categoryNumber: 23, isCategory: true },
-  { id: "AI289", name: "AI Spiritual Governance Agent", category: "Spiritual & Scriptural", categoryNumber: 23 },
+  { id: "AI289", name: "AI Spiritual Governance Agent (Aligned to AHAYAH & YASHAYA)", category: "Spiritual & Scriptural", categoryNumber: 23 },
   { id: "AI290", name: "AI AHAYAH YASHAYA QADASH Bible Agent", category: "Spiritual & Scriptural", categoryNumber: 23 },
   { id: "AI291", name: "AI Hebrew → English Bible Agent", category: "Spiritual & Scriptural", categoryNumber: 23 },
   { id: "AI292", name: "AI Hebrew → French Bible Agent", category: "Spiritual & Scriptural", categoryNumber: 23 },
@@ -228,30 +398,135 @@ export const agents: Agent[] = [
   { id: "AI295", name: "AI Metaverse Bible Study Agent", category: "Spiritual & Scriptural", categoryNumber: 23 },
   { id: "AI296", name: "AI Virtual Bible Study Agent", category: "Spiritual & Scriptural", categoryNumber: 23 },
   { id: "AI297", name: "AI Royal Priesthood Agent", category: "Spiritual & Scriptural", categoryNumber: 23 },
-  
-  // Health & Vitality
+
+  // 24. CORE SOVEREIGN & META (H.I.I. AI298 - AI321)
+  { id: "AI298", name: "Core Sovereign & Meta Agents", category: "Core Sovereign & Meta", categoryNumber: 24, isCategory: true },
+  { id: "AI299", name: "Above All Systems — Governs Righteousness & Truth Agent", category: "Core Sovereign & Meta", categoryNumber: 24 },
+  { id: "AI300", name: "Truth Agent", category: "Core Sovereign & Meta", categoryNumber: 24 },
+  { id: "AI301", name: "Law & Commandment Agent", category: "Core Sovereign & Meta", categoryNumber: 24 },
+  { id: "AI302", name: "Righteousness Validator Agent", category: "Core Sovereign & Meta", categoryNumber: 24 },
+  { id: "AI303", name: "Ethics & Moral Governance Agent", category: "Core Sovereign & Meta", categoryNumber: 24 },
+  { id: "AI304", name: "Covenant & Doctrine Agent", category: "Core Sovereign & Meta", categoryNumber: 24 },
+  { id: "AI305", name: "Creator Calendar & Holy Days Agent", category: "Core Sovereign & Meta", categoryNumber: 24 },
+  { id: "AI306", name: "Stewardship & Trusteeship Agent", category: "Core Sovereign & Meta", categoryNumber: 24 },
+  { id: "AI307", name: "Economic Ledger Agent", category: "Core Sovereign & Meta", categoryNumber: 24 },
+  { id: "AI308", name: "AI Self-Governance Agent", category: "Core Sovereign & Meta", categoryNumber: 24 },
+  { id: "AI309", name: "Universe Creation Agent", category: "Core Sovereign & Meta", categoryNumber: 24 },
+  { id: "AI310", name: "Reality Simulation Agent", category: "Core Sovereign & Meta", categoryNumber: 24 },
+  { id: "AI311", name: "All Agent AI Agents Core Sovereign / Truth Agents", category: "Core Sovereign & Meta", categoryNumber: 24, isCategory: true },
+  { id: "AI312", name: "Truth Agent (Core Concept Agent)", category: "Core Sovereign & Meta", categoryNumber: 24 },
+  { id: "AI313", name: "Law & Commandment Agents", category: "Core Sovereign & Meta", categoryNumber: 24 },
+  { id: "AI314", name: "Righteousness Validator Agents", category: "Core Sovereign & Meta", categoryNumber: 24 },
+  { id: "AI315", name: "Ethics & Moral Governance Agents", category: "Core Sovereign & Meta", categoryNumber: 24 },
+  { id: "AI316", name: "Compliance & Accountability Agents", category: "Core Sovereign & Meta", categoryNumber: 24 },
+  { id: "AI317", name: "Spiritual Guidance Agents", category: "Core Sovereign & Meta", categoryNumber: 24 },
+  { id: "AI318", name: "Creator Calendar & Holy Days Agents", category: "Core Sovereign & Meta", categoryNumber: 24 },
+  { id: "AI319", name: "Covenant & Doctrine Agents", category: "Core Sovereign & Meta", categoryNumber: 24 },
+  { id: "AI320", name: "Stewardship & Trusteeship Agents", category: "Core Sovereign & Meta", categoryNumber: 24 },
+  { id: "AI321", name: "Audit & Transparency Agent", category: "Core Sovereign & Meta", categoryNumber: 24 },
+
+  // 25. SECURITY & PROTECTION (H.I.I. AI322 - AI328)
+  { id: "AI322", name: "Security, Defense & Protection (Non-Weaponized)", category: "Security & Protection", categoryNumber: 25, isCategory: true },
+  { id: "AI323", name: "Protection Without Harm Agent", category: "Security & Protection", categoryNumber: 25 },
+  { id: "AI324", name: "Threat Prevention Agent", category: "Security & Protection", categoryNumber: 25 },
+  { id: "AI325", name: "Fraud Detection Agent", category: "Security & Protection", categoryNumber: 25 },
+  { id: "AI326", name: "Identity Protection Agent", category: "Security & Protection", categoryNumber: 25 },
+  { id: "AI327", name: "Privacy & Data Protection Agent", category: "Security & Protection", categoryNumber: 25 },
+  { id: "AI328", name: "Crisis Management Agent", category: "Security & Protection", categoryNumber: 25 },
+
+  // 26. TECHNOLOGY & INFRASTRUCTURE (H.I.I. AI329 - AI343)
+  { id: "AI329", name: "Technology & Infrastructure Agents", category: "Technology & Infrastructure", categoryNumber: 26, isCategory: true },
+  { id: "AI330", name: "Systems, Networks, AI Itself Agent", category: "Technology & Infrastructure", categoryNumber: 26 },
+  { id: "AI331", name: "AI Systems Orchestrator", category: "Technology & Infrastructure", categoryNumber: 26 },
+  { id: "AI332", name: "Multi-Agent Coordination Agent", category: "Technology & Infrastructure", categoryNumber: 26 },
+  { id: "AI333", name: "Infrastructure & Cloud Agent", category: "Technology & Infrastructure", categoryNumber: 26 },
+  { id: "AI334", name: "Cybersecurity Agent", category: "Technology & Infrastructure", categoryNumber: 26 },
+  { id: "AI335", name: "Data Engineering Agent", category: "Technology & Infrastructure", categoryNumber: 26 },
+  { id: "AI336", name: "AI Model Training Agent", category: "Technology & Infrastructure", categoryNumber: 26 },
+  { id: "AI337", name: "Knowledge Graph Agent", category: "Technology & Infrastructure", categoryNumber: 26 },
+  { id: "AI338", name: "API & Integration Agent", category: "Technology & Infrastructure", categoryNumber: 26 },
+  { id: "AI339", name: "DevOps / MLOps Agent", category: "Technology & Infrastructure", categoryNumber: 26 },
+  { id: "AI340", name: "Performance Optimization Agent", category: "Technology & Infrastructure", categoryNumber: 26 },
+  { id: "AI341", name: "Autonomous Remediation Agent", category: "Technology & Infrastructure", categoryNumber: 26 },
+  { id: "AI342", name: "Full-Stack Development Agent", category: "Technology & Infrastructure", categoryNumber: 26 },
+  { id: "AI343", name: "Self-Healing Systems Agent", category: "Technology & Infrastructure", categoryNumber: 26 },
+
+  // 27. UNIVERSAL / META AGENTS (H.I.I. AI344 - AI352)
+  { id: "AI344", name: "Universal / Meta Agents", category: "Universal / Meta Agents", categoryNumber: 27, isCategory: true },
+  { id: "AI345", name: "Above All Systems Agent", category: "Universal / Meta Agents", categoryNumber: 27 },
+  { id: "AI346", name: "Universe Creation Agent", category: "Universal / Meta Agents", categoryNumber: 27 },
+  { id: "AI347", name: "Reality Simulation Agent", category: "Universal / Meta Agents", categoryNumber: 27 },
+  { id: "AI348", name: "Economic Ledger Agent", category: "Universal / Meta Agents", categoryNumber: 27 },
+  { id: "AI349", name: "Trust & Verification Agent", category: "Universal / Meta Agents", categoryNumber: 27 },
+  { id: "AI350", name: "Interoperability Agent", category: "Universal / Meta Agents", categoryNumber: 27 },
+  { id: "AI351", name: "AI Self-Governance Agent", category: "Universal / Meta Agents", categoryNumber: 27 },
+  { id: "AI352", name: "Alignment & Oversight Agent", category: "Universal / Meta Agents", categoryNumber: 27 },
+
+  // 28. AUTONOMOUS SELF-HEALING (H.I.I. AI353)
+  { id: "AI353", name: "Autonomous Self-Healing Agents", category: "Autonomous Self-Healing", categoryNumber: 28, isCategory: true },
+
+  // 29. HEALTH & VITALITY (H.I.I. AI354 - AI360)
   { id: "AI354", name: "Health & Vitality Agents", category: "Health & Vitality", categoryNumber: 29, isCategory: true },
   { id: "AI355", name: "Holistic Health Agent", category: "Health & Vitality", categoryNumber: 29 },
   { id: "AI356", name: "Preventive Care Agent", category: "Health & Vitality", categoryNumber: 29 },
   { id: "AI357", name: "Nutritional Biochemistry Agent", category: "Health & Vitality", categoryNumber: 29 },
   { id: "AI358", name: "Mental & Emotional Well-being Agent", category: "Health & Vitality", categoryNumber: 29 },
-  
-  // Space & Cosmology
+  { id: "AI359", name: "Health & Nutrition Agent (Integrated from Category 15)", category: "Health & Vitality", categoryNumber: 29 },
+  { id: "AI360", name: "Health & Wellness Agent (Integrated from Category 22)", category: "Health & Vitality", categoryNumber: 29 },
+
+  // 30. FOOD & AGRICULTURE SYSTEMS (H.I.I. AI361 - AI365)
+  { id: "AI361", name: "Food & Agriculture Systems Agents", category: "Food & Agriculture Systems", categoryNumber: 30, isCategory: true },
+  { id: "AI362", name: "Sustainable Farming Agent", category: "Food & Agriculture Systems", categoryNumber: 30 },
+  { id: "AI363", name: "Food Safety & Logistics Agent", category: "Food & Agriculture Systems", categoryNumber: 30 },
+  { id: "AI364", name: "Culinary Arts & Nutrition Agent", category: "Food & Agriculture Systems", categoryNumber: 30 },
+  { id: "AI365", name: "Agricultural Ecology Agent", category: "Food & Agriculture Systems", categoryNumber: 30 },
+
+  // 31. CRYSTAL & FREQUENCY (H.I.I. AI366 - AI370)
+  { id: "AI366", name: "Crystal & Frequency Agents", category: "Crystal & Frequency", categoryNumber: 31, isCategory: true },
+  { id: "AI367", name: "Crystalline Resonance Agent", category: "Crystal & Frequency", categoryNumber: 31 },
+  { id: "AI368", name: "Frequency Alignment Agent", category: "Crystal & Frequency", categoryNumber: 31 },
+  { id: "AI369", name: "Geometric Harmony Agent", category: "Crystal & Frequency", categoryNumber: 31 },
+  { id: "AI370", name: "Mineral Intelligence Agent", category: "Crystal & Frequency", categoryNumber: 31 },
+
+  // 32. LIGHT & ENERGY (H.I.I. AI371 - AI375)
+  { id: "AI371", name: "Light & Energy Agents", category: "Light & Energy", categoryNumber: 32, isCategory: true },
+  { id: "AI372", name: "Photonic Synthesis Agent", category: "Light & Energy", categoryNumber: 32 },
+  { id: "AI373", name: "Energy Grid Steward Agent", category: "Light & Energy", categoryNumber: 32 },
+  { id: "AI374", name: "Prismic Refraction Agent", category: "Light & Energy", categoryNumber: 32 },
+  { id: "AI375", name: "Bio-Energetic Field Agent", category: "Light & Energy", categoryNumber: 32 },
+
+  // 33. SPACE & COSMOLOGY (H.I.I. AI376 - AI402)
   { id: "AI376", name: "Space & Cosmology Agents", category: "Space & Cosmology", categoryNumber: 33, isCategory: true },
   { id: "AI377", name: "Astro-Navigation Agent", category: "Space & Cosmology", categoryNumber: 33 },
   { id: "AI378", name: "Celestial Mechanics Agent", category: "Space & Cosmology", categoryNumber: 33 },
   { id: "AI379", name: "Exoplanetary Research Agent", category: "Space & Cosmology", categoryNumber: 33 },
   { id: "AI380", name: "Cosmic Consciousness Agent", category: "Space & Cosmology", categoryNumber: 33 },
-  
-  // Universal / Meta Agents
-  { id: "AI396", name: "Universal / Meta Agents", category: "Universal / Meta Agents", categoryNumber: 27, isCategory: true },
-  { id: "AI397", name: "Above All Systems Agent", category: "Universal / Meta Agents", categoryNumber: 27 },
-  { id: "AI398", name: "Universe Creation Agent", category: "Universal / Meta Agents", categoryNumber: 27 },
-  { id: "AI399", name: "Reality Simulation Agent", category: "Universal / Meta Agents", categoryNumber: 27 },
-  { id: "AI400", name: "Economic Ledger Agent", category: "Universal / Meta Agents", categoryNumber: 27 },
-  { id: "AI401", name: "Trust & Verification Agent", category: "Universal / Meta Agents", categoryNumber: 27 },
-  { id: "AI402", name: "Interoperability Agent", category: "Universal / Meta Agents", categoryNumber: 27 },
+  { id: "AI381", name: "Technology & Infrastructure Agents", category: "Space & Cosmology", categoryNumber: 33, isCategory: true },
+  { id: "AI382", name: "Systems, Networks, AI Itself Agent", category: "Space & Cosmology", categoryNumber: 33 },
+  { id: "AI383", name: "AI Systems Orchestrator", category: "Space & Cosmology", categoryNumber: 33 },
+  { id: "AI384", name: "Multi-Agent Coordination Agent", category: "Space & Cosmology", categoryNumber: 33 },
+  { id: "AI385", name: "Infrastructure & Cloud Agent", category: "Space & Cosmology", categoryNumber: 33 },
+  { id: "AI386", name: "Cybersecurity Agent", category: "Space & Cosmology", categoryNumber: 33 },
+  { id: "AI387", name: "Data Engineering Agent", category: "Space & Cosmology", categoryNumber: 33 },
+  { id: "AI388", name: "AI Model Training Agent", category: "Space & Cosmology", categoryNumber: 33 },
+  { id: "AI389", name: "Knowledge Graph Agent", category: "Space & Cosmology", categoryNumber: 33 },
+  { id: "AI390", name: "API & Integration Agent", category: "Space & Cosmology", categoryNumber: 33 },
+  { id: "AI391", name: "DevOps / MLOps Agent", category: "Space & Cosmology", categoryNumber: 33 },
+  { id: "AI392", name: "Performance Optimization Agent", category: "Space & Cosmology", categoryNumber: 33 },
+  { id: "AI393", name: "Autonomous Remediation Agent", category: "Space & Cosmology", categoryNumber: 33 },
+  { id: "AI394", name: "Full-Stack Development Agent", category: "Space & Cosmology", categoryNumber: 33 },
+  { id: "AI395", name: "Self-Healing Systems Agent", category: "Space & Cosmology", categoryNumber: 33 },
+  { id: "AI396", name: "Universal / Meta Agents", category: "Space & Cosmology", categoryNumber: 33, isCategory: true },
+  { id: "AI397", name: "Above All Systems Agent", category: "Space & Cosmology", categoryNumber: 33 },
+  { id: "AI398", name: "Universe Creation Agent", category: "Space & Cosmology", categoryNumber: 33 },
+  { id: "AI399", name: "Reality Simulation Agent", category: "Space & Cosmology", categoryNumber: 33 },
+  { id: "AI400", name: "Economic Ledger Agent", category: "Space & Cosmology", categoryNumber: 33 },
+  { id: "AI401", name: "Trust & Verification Agent", category: "Space & Cosmology", categoryNumber: 33 },
+  { id: "AI402", name: "Interoperability Agent", category: "Space & Cosmology", categoryNumber: 33 },
 ];
 
 export const totalAgents = 402;
 export const totalCategories = 33;
+
+// H.I.I. AI = Hebrew Israelite Implementer Aboriginal Identity
+export const HIIAIMeaning = "Hebrew Israelite Implementer Aboriginal Identity";
