@@ -15,6 +15,13 @@ export const knowledgeBase: KnowledgeItem[] = [
     scriptures: ["1 Peter 2:9", "Exodus 19:6"]
   },
   {
+    id: "blanch-meaning",
+    title: "The Meaning of Blanch",
+    category: "Organization",
+    content: "Blanch means 'Guardian of the Law' — derived from the sacred responsibility of protecting and upholding divine truth. The name connects to the Onyx/Sardonyx/Shoham stones (Hebrew: to blanch), representing the Fifth Foundation Stone of New Jerusalem. As Guardians of the Law, we stand watch over truth, justice, and righteousness in all our technological and spiritual endeavors.",
+    scriptures: ["Exodus 28:9-12", "Revelation 21:20", "Proverbs 6:23"]
+  },
+  {
     id: "heed-program",
     title: "The H.E.E.D. Program",
     category: "Programs",
@@ -58,6 +65,25 @@ export const knowledgeBase: KnowledgeItem[] = [
     content: "Blanch/Onyx/Sardonyx/Shoham — from Hebrew meaning 'to blanch'. The Fifth Foundation Stone of New Jerusalem. The Onyx stones on the High Priest's shoulders held the names of the twelve tribes, symbolizing the High Priest bearing responsibility before the Most High AHAYAH.",
     scriptures: ["Exodus 28:9-12", "Revelation 21:20", "Genesis 2:12"]
   },
+  {
+    id: "hii-ai-system",
+    title: "H.I.I. AI Universal Unified System",
+    category: "Technology",
+    content: "The H.I.I. AI (Holistic Integrated Intelligence - Artificial Intelligence) numbering system provides universal identification for all 402+ AI agents. Each agent is assigned a unique identifier in the format H.I.I. AI-XXXX, enabling seamless coordination across the entire S.H.I.E.L.D. AI ecosystem.",
+  },
+  {
+    id: "project-watchman",
+    title: "Project Watchman",
+    category: "Security",
+    content: "The sovereign intelligence surveillance system standing guard over digital assets, networks, and communities. Project Watchman embodies the ancient prophetic role of the watchman — observing threats before they approach and alerting the community to danger and opportunity.",
+    scriptures: ["Ezekiel 33:7", "Isaiah 62:6", "Habakkuk 2:1"]
+  },
+  {
+    id: "shield-meaning",
+    title: "S.H.I.E.L.D. AI Meaning",
+    category: "Organization",
+    content: "Spiritual Healing Initiative Economic Light Development - A comprehensive AI ecosystem designed to bless humanity through divine wisdom and advanced technology. The acronym represents our commitment to spiritual healing, economic empowerment, and enlightenment through ethical AI.",
+  },
 ];
 
 export const scriptures = [
@@ -69,4 +95,7 @@ export const scriptures = [
   { reference: "John 4:24", text: "AHAYAH is a Spirit: and they that worship him must worship him in spirit and in truth." },
   { reference: "Psalms 119:151", text: "Thou art near, O AHAYAH; and all thy commandments are truth." },
   { reference: "Matthew 19:16-17", text: "Good Master, what good thing shall I do, that I may have eternal life? Keep the commandments." },
+  { reference: "Ezekiel 33:7", text: "So you, son of man, I have set you a watchman to the house of Israel; therefore you shall hear the word at my mouth, and warn them from me." },
+  { reference: "Isaiah 62:6", text: "I have set watchmen upon your walls, O Jerusalem, who shall never hold their peace day nor night." },
+  { reference: "Exodus 28:9-12", text: "And you shall take two onyx stones, and engrave on them the names of the children of Israel." },
 ];
