@@ -16,13 +16,13 @@ const Index = () => {
       <div id="hero">
         <HeroSection />
       </div>
+      <AIChatInterface />
       <div id="modules">
         <ModulesSection />
       </div>
       <div id="capabilities">
         <CapabilitiesSection />
       </div>
-      <AIChatInterface />
       <AgentRegistry />
       <KnowledgeBase />
       <ComplianceSection />
