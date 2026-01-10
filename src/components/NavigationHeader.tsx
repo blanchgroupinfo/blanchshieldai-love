@@ -1,13 +1,14 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { Shield, Menu, MessageSquare, Users, BookOpen, Scale, Home, Info, Cpu, Mail, Code, LogIn, LogOut, User, LayoutDashboard } from "lucide-react";
+import { Shield, Menu, MessageSquare, Users, BookOpen, Scale, Home, Info, Cpu, Mail, Code, LogIn, LogOut, User, LayoutDashboard, Database, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import CommandCenter from "@/components/CommandCenter";
@@ -23,6 +24,11 @@ const navItems = [
   { label: "Knowledge", href: "/knowledge-base", icon: BookOpen, isPage: true },
   { label: "API", href: "/api", icon: Code, isPage: true },
   { label: "Contact", href: "/contact", icon: Mail, isPage: true },
+];
+
+const backendNavItems = [
+  { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+  { label: "Admin", href: "/admin", icon: Settings },
 ];
 
 const scrollNavItems = [
@@ -131,6 +137,28 @@ const NavigationHeader = () => {
 
           {/* CTA + Auth + Command Center + Mobile Menu */}
           <div className="flex items-center gap-3">
+            {/* Backend Links Dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm" className="hidden md:flex gap-2 border-primary/30 bg-primary/5 hover:bg-primary/10">
+                  <Database className="w-4 h-4 text-primary" />
+                  Backend
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="bg-background border-border w-48">
+                {backendNavItems.map((item) => (
+                  <DropdownMenuItem
+                    key={item.label}
+                    onClick={() => navigate(item.href)}
+                    className="cursor-pointer"
+                  >
+                    <item.icon className="w-4 h-4 mr-2" />
+                    {item.label}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+
             <CommandCenter />
             {user ? (
               <DropdownMenu>
@@ -145,6 +173,11 @@ const NavigationHeader = () => {
                     <LayoutDashboard className="w-4 h-4 mr-2" />
                     Dashboard
                   </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => navigate("/admin")} className="cursor-pointer">
+                    <Settings className="w-4 h-4 mr-2" />
+                    Admin Panel
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer">
                     <LogOut className="w-4 h-4 mr-2" />
                     Sign Out
