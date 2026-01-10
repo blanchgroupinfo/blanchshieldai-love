@@ -22,8 +22,8 @@ const Index = () => {
       <div id="capabilities">
         <CapabilitiesSection />
       </div>
-      <AgentRegistry />
       <AIChatInterface />
+      <AgentRegistry />
       <KnowledgeBase />
       <ComplianceSection />
       <MissionSection />
