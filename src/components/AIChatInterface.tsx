@@ -1,12 +1,21 @@
 import { useState, useRef, useEffect } from "react";
-import { Send, Sparkles, User, Bot, Loader2, X, Minimize2, Maximize2 } from "lucide-react";
+import { Send, Sparkles, User, Bot, Loader2, Minimize2, Maximize2, Mic, MicOff, Paperclip, History, X, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 import shieldLogo from "@/assets/shield-logo.jpg";
 
 type Message = {
   role: "user" | "assistant";
   content: string;
+};
+
+type Conversation = {
+  id: string;
+  title: string | null;
+  created_at: string;
+  updated_at: string;
 };
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/shield-chat`;
@@ -16,8 +25,15 @@ const AIChatInterface = () => {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
+  const [showHistory, setShowHistory] = useState(false);
+  const [conversations, setConversations] = useState<Conversation[]>([]);
+  const [currentConversationId, setCurrentConversationId] = useState<string | null>(null);
+  const [userId, setUserId] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -27,6 +43,109 @@ const AIChatInterface = () => {
     scrollToBottom();
   }, [messages]);
 
+  useEffect(() => {
+    const checkAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user) {
+        setUserId(session.user.id);
+        fetchConversations(session.user.id);
+      }
+    };
+    checkAuth();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (session?.user) {
+        setUserId(session.user.id);
+        fetchConversations(session.user.id);
+      } else {
+        setUserId(null);
+        setConversations([]);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const fetchConversations = async (uid: string) => {
+    const { data, error } = await supabase
+      .from("chat_conversations")
+      .select("*")
+      .eq("user_id", uid)
+      .order("updated_at", { ascending: false });
+
+    if (!error && data) {
+      setConversations(data);
+    }
+  };
+
+  const loadConversation = async (conversationId: string) => {
+    const { data, error } = await supabase
+      .from("chat_messages")
+      .select("*")
+      .eq("conversation_id", conversationId)
+      .order("created_at", { ascending: true });
+
+    if (!error && data) {
+      setMessages(data.map(m => ({ role: m.role as "user" | "assistant", content: m.content })));
+      setCurrentConversationId(conversationId);
+      setShowHistory(false);
+    }
+  };
+
+  const createConversation = async (firstMessage: string) => {
+    if (!userId) return null;
+
+    const title = firstMessage.slice(0, 50) + (firstMessage.length > 50 ? "..." : "");
+    const { data, error } = await supabase
+      .from("chat_conversations")
+      .insert({ user_id: userId, title })
+      .select()
+      .single();
+
+    if (!error && data) {
+      setCurrentConversationId(data.id);
+      setConversations(prev => [data, ...prev]);
+      return data.id;
+    }
+    return null;
+  };
+
+  const saveMessage = async (conversationId: string, role: string, content: string) => {
+    await supabase.from("chat_messages").insert({
+      conversation_id: conversationId,
+      role,
+      content,
+    });
+
+    // Update conversation timestamp
+    await supabase
+      .from("chat_conversations")
+      .update({ updated_at: new Date().toISOString() })
+      .eq("id", conversationId);
+  };
+
+  const deleteConversation = async (conversationId: string) => {
+    const { error } = await supabase
+      .from("chat_conversations")
+      .delete()
+      .eq("id", conversationId);
+
+    if (!error) {
+      setConversations(prev => prev.filter(c => c.id !== conversationId));
+      if (currentConversationId === conversationId) {
+        setCurrentConversationId(null);
+        setMessages([]);
+      }
+      toast.success("Conversation deleted");
+    }
+  };
+
+  const startNewChat = () => {
+    setMessages([]);
+    setCurrentConversationId(null);
+    setShowHistory(false);
+  };
+
   const sendMessage = async () => {
     if (!input.trim() || isLoading) return;
 
@@ -34,6 +153,15 @@ const AIChatInterface = () => {
     setMessages((prev) => [...prev, userMessage]);
     setInput("");
     setIsLoading(true);
+
+    let conversationId = currentConversationId;
+    if (!conversationId && userId) {
+      conversationId = await createConversation(userMessage.content);
+    }
+
+    if (conversationId) {
+      await saveMessage(conversationId, "user", userMessage.content);
+    }
 
     let assistantContent = "";
 
@@ -58,7 +186,6 @@ const AIChatInterface = () => {
       const decoder = new TextDecoder();
       let buffer = "";
 
-      // Add empty assistant message
       setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
 
       while (true) {
@@ -99,6 +226,10 @@ const AIChatInterface = () => {
           }
         }
       }
+
+      if (conversationId && assistantContent) {
+        await saveMessage(conversationId, "assistant", assistantContent);
+      }
     } catch (error) {
       console.error("Chat error:", error);
       setMessages((prev) => [
@@ -120,11 +251,47 @@ const AIChatInterface = () => {
     }
   };
 
+  const handleFileUpload = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      toast.success(`File "${file.name}" attached. File upload processing coming soon.`);
+    }
+  };
+
+  const toggleRecording = async () => {
+    if (isRecording) {
+      mediaRecorderRef.current?.stop();
+      setIsRecording(false);
+    } else {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        const mediaRecorder = new MediaRecorder(stream);
+        mediaRecorderRef.current = mediaRecorder;
+
+        const chunks: BlobPart[] = [];
+        mediaRecorder.ondataavailable = (e) => chunks.push(e.data);
+        mediaRecorder.onstop = () => {
+          stream.getTracks().forEach(track => track.stop());
+          toast.success("Voice recording captured. Speech-to-text processing coming soon.");
+        };
+
+        mediaRecorder.start();
+        setIsRecording(true);
+        toast.info("Recording... Click again to stop.");
+      } catch (error) {
+        toast.error("Microphone access denied.");
+      }
+    }
+  };
+
   return (
     <section id="chat" className="relative py-24 overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-b from-card via-background to-card" />
       
-      {/* Background glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[120px]" />
 
       <div className="container relative z-10 px-4">
@@ -161,6 +328,27 @@ const AIChatInterface = () => {
                 </div>
               </div>
               <div className="flex items-center gap-2">
+                {userId && (
+                  <>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => setShowHistory(!showHistory)}
+                      className="text-muted-foreground"
+                      title="Chat History"
+                    >
+                      <History className="w-4 h-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={startNewChat}
+                      className="text-muted-foreground text-xs"
+                    >
+                      New Chat
+                    </Button>
+                  </>
+                )}
                 <Button
                   variant="ghost"
                   size="icon"
@@ -180,6 +368,62 @@ const AIChatInterface = () => {
                   exit={{ height: 0 }}
                   className="overflow-hidden"
                 >
+                  {/* Chat History Panel */}
+                  <AnimatePresence>
+                    {showHistory && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0 }}
+                        className="border-b border-border/50 bg-card/30"
+                      >
+                        <div className="p-4 max-h-48 overflow-y-auto">
+                          <div className="flex items-center justify-between mb-3">
+                            <h4 className="text-sm font-semibold text-foreground">Chat History</h4>
+                            <Button variant="ghost" size="icon" onClick={() => setShowHistory(false)}>
+                              <X className="w-4 h-4" />
+                            </Button>
+                          </div>
+                          {conversations.length === 0 ? (
+                            <p className="text-xs text-muted-foreground text-center py-4">No previous conversations</p>
+                          ) : (
+                            <div className="space-y-2">
+                              {conversations.map((conv) => (
+                                <div
+                                  key={conv.id}
+                                  className={`flex items-center justify-between p-2 rounded-lg cursor-pointer transition-colors ${
+                                    currentConversationId === conv.id
+                                      ? "bg-primary/20 border border-primary/30"
+                                      : "bg-card/50 hover:bg-card/80"
+                                  }`}
+                                  onClick={() => loadConversation(conv.id)}
+                                >
+                                  <div className="flex-1 min-w-0">
+                                    <p className="text-sm font-medium truncate">{conv.title || "Untitled"}</p>
+                                    <p className="text-xs text-muted-foreground">
+                                      {new Date(conv.updated_at).toLocaleDateString()}
+                                    </p>
+                                  </div>
+                                  <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className="shrink-0 text-destructive/70 hover:text-destructive"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      deleteConversation(conv.id);
+                                    }}
+                                  >
+                                    <Trash2 className="w-3 h-3" />
+                                  </Button>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
                   {/* Messages Area */}
                   <div className="h-96 overflow-y-auto p-4 space-y-4">
                     {messages.length === 0 && (
@@ -244,7 +488,36 @@ const AIChatInterface = () => {
 
                   {/* Input Area */}
                   <div className="p-4 border-t border-border/50 bg-card/30">
-                    <div className="flex gap-3">
+                    <div className="flex gap-2 items-end">
+                      {/* File Upload */}
+                      <input
+                        type="file"
+                        ref={fileInputRef}
+                        onChange={handleFileChange}
+                        className="hidden"
+                        accept="image/*,.pdf,.doc,.docx,.txt"
+                      />
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={handleFileUpload}
+                        className="shrink-0 text-muted-foreground hover:text-primary"
+                        title="Upload File"
+                      >
+                        <Paperclip className="w-4 h-4" />
+                      </Button>
+
+                      {/* Microphone */}
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={toggleRecording}
+                        className={`shrink-0 ${isRecording ? "text-red-500 animate-pulse" : "text-muted-foreground hover:text-primary"}`}
+                        title={isRecording ? "Stop Recording" : "Voice Input"}
+                      >
+                        {isRecording ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+                      </Button>
+
                       <textarea
                         ref={inputRef}
                         value={input}
@@ -268,6 +541,11 @@ const AIChatInterface = () => {
                         )}
                       </Button>
                     </div>
+                    {!userId && (
+                      <p className="text-xs text-muted-foreground mt-2 text-center">
+                        <a href="/auth" className="text-primary hover:underline">Sign in</a> to save chat history
+                      </p>
+                    )}
                   </div>
                 </motion.div>
               )}
