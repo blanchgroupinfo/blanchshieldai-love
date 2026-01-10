@@ -60,6 +60,24 @@ const CommandCenter = () => {
 
   const quickActions: QuickAction[] = [
     {
+      id: "dashboard",
+      name: "Dashboard",
+      description: "User Control Panel",
+      icon: BarChart3,
+      color: "text-emerald-400",
+      gradient: "from-emerald-500/20 to-green-500/20",
+      link: "/dashboard",
+    },
+    {
+      id: "admin",
+      name: "Admin Panel",
+      description: "System Administration",
+      icon: Shield,
+      color: "text-red-400",
+      gradient: "from-red-500/20 to-orange-500/20",
+      link: "/admin",
+    },
+    {
       id: "agents",
       name: "AI Agents",
       description: "500+ H.I.I. AI Unified Agents",
@@ -84,7 +102,7 @@ const CommandCenter = () => {
       icon: BookOpen,
       color: "text-amber-400",
       gradient: "from-amber-500/20 to-orange-500/20",
-      link: "/#knowledge",
+      link: "/knowledge-base",
     },
     {
       id: "database",
@@ -96,21 +114,12 @@ const CommandCenter = () => {
       link: "/technology",
     },
     {
-      id: "analytics",
-      name: "Analytics",
-      description: "Real-time Insights",
-      icon: BarChart3,
-      color: "text-cyan-400",
-      gradient: "from-cyan-500/20 to-teal-500/20",
-      link: "/dashboard",
-    },
-    {
       id: "security",
       name: "Security",
       description: "Protection Systems",
       icon: Lock,
-      color: "text-red-400",
-      gradient: "from-red-500/20 to-rose-500/20",
+      color: "text-rose-400",
+      gradient: "from-rose-500/20 to-red-500/20",
       link: "/technology",
     },
     {
@@ -127,8 +136,8 @@ const CommandCenter = () => {
       name: "Finance",
       description: "Digital Banking",
       icon: Wallet,
-      color: "text-emerald-400",
-      gradient: "from-emerald-500/20 to-green-500/20",
+      color: "text-cyan-400",
+      gradient: "from-cyan-500/20 to-teal-500/20",
       link: "/technology",
     },
     {
@@ -148,15 +157,6 @@ const CommandCenter = () => {
       color: "text-orange-400",
       gradient: "from-orange-500/20 to-yellow-500/20",
       link: "/admin",
-    },
-    {
-      id: "compliance",
-      name: "Compliance",
-      description: "Regulatory Framework",
-      icon: Shield,
-      color: "text-teal-400",
-      gradient: "from-teal-500/20 to-cyan-500/20",
-      link: "/#compliance",
     },
     {
       id: "settings",
