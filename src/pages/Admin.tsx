@@ -29,6 +29,8 @@ import {
   Eye,
   RefreshCw,
   History,
+  UserCog,
+  Crown,
 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -86,9 +88,25 @@ interface ChatConversation {
   updated_at: string;
 }
 
+interface UserProfile {
+  id: string;
+  user_id: string;
+  email: string | null;
+  full_name: string | null;
+  created_at: string;
+}
+
+interface UserRole {
+  id: string;
+  user_id: string;
+  role: 'admin' | 'moderator' | 'user';
+  created_at: string;
+}
+
 const Admin = () => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [stats, setStats] = useState({
     totalAgents: 402,
     activeUsers: 0,
@@ -99,6 +117,8 @@ const Admin = () => {
   const [newsletterList, setNewsletterList] = useState<NewsletterSub[]>([]);
   const [contactList, setContactList] = useState<ContactMessage[]>([]);
   const [chatHistory, setChatHistory] = useState<ChatConversation[]>([]);
+  const [userProfiles, setUserProfiles] = useState<UserProfile[]>([]);
+  const [userRoles, setUserRoles] = useState<UserRole[]>([]);
   const [selectedMessage, setSelectedMessage] = useState<ContactMessage | null>(null);
   const navigate = useNavigate();
 
@@ -110,6 +130,17 @@ const Admin = () => {
         return;
       }
       setUser(session.user);
+      
+      // Check if user is admin
+      const { data: roleData } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", session.user.id)
+        .eq("role", "admin")
+        .single();
+      
+      setIsAdmin(!!roleData);
+      
       await fetchAllData();
       setLoading(false);
     };
@@ -123,6 +154,8 @@ const Admin = () => {
       fetchNewsletterSubs(),
       fetchContactMessages(),
       fetchChatHistory(),
+      fetchUserProfiles(),
+      fetchUserRoles(),
     ]);
   };
 
@@ -186,6 +219,84 @@ const Admin = () => {
 
     if (!error && data) {
       setChatHistory(data);
+    }
+  };
+
+  const fetchUserProfiles = async () => {
+    const { data, error } = await supabase
+      .from("profiles")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (!error && data) {
+      setUserProfiles(data);
+    }
+  };
+
+  const fetchUserRoles = async () => {
+    const { data, error } = await supabase
+      .from("user_roles")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (!error && data) {
+      setUserRoles(data as UserRole[]);
+    }
+  };
+
+  const getUserRole = (userId: string): string => {
+    const role = userRoles.find(r => r.user_id === userId);
+    return role?.role || 'user';
+  };
+
+  const assignRole = async (userId: string, role: 'admin' | 'moderator' | 'user') => {
+    // First check if user already has a role
+    const existingRole = userRoles.find(r => r.user_id === userId);
+    
+    if (existingRole) {
+      if (role === 'user') {
+        // Remove role entry for regular users
+        const { error } = await supabase
+          .from("user_roles")
+          .delete()
+          .eq("user_id", userId);
+        
+        if (!error) {
+          setUserRoles(prev => prev.filter(r => r.user_id !== userId));
+          toast.success("Role removed");
+        } else {
+          toast.error("Failed to update role");
+        }
+      } else {
+        // Update existing role
+        const { error } = await supabase
+          .from("user_roles")
+          .update({ role })
+          .eq("user_id", userId);
+        
+        if (!error) {
+          setUserRoles(prev => prev.map(r => 
+            r.user_id === userId ? { ...r, role } : r
+          ));
+          toast.success(`Role updated to ${role}`);
+        } else {
+          toast.error("Failed to update role");
+        }
+      }
+    } else if (role !== 'user') {
+      // Insert new role
+      const { data, error } = await supabase
+        .from("user_roles")
+        .insert({ user_id: userId, role })
+        .select()
+        .single();
+      
+      if (!error && data) {
+        setUserRoles(prev => [...prev, data as UserRole]);
+        toast.success(`Role assigned: ${role}`);
+      } else {
+        toast.error("Failed to assign role");
+      }
     }
   };
 
@@ -445,6 +556,7 @@ const Admin = () => {
               <TabsTrigger value="subscribers">Subscribers</TabsTrigger>
               <TabsTrigger value="messages">Messages</TabsTrigger>
               <TabsTrigger value="chats">Chat History</TabsTrigger>
+              <TabsTrigger value="users">User Roles</TabsTrigger>
               <TabsTrigger value="modules">Modules</TabsTrigger>
               <TabsTrigger value="sync">Sync Status</TabsTrigger>
             </TabsList>
@@ -663,6 +775,107 @@ const Admin = () => {
                       )}
                     </TableBody>
                   </Table>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="users">
+              <Card className="bg-card/50 border-border/30">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <UserCog className="w-5 h-5 text-purple-400" />
+                    User Role Management
+                  </CardTitle>
+                  <CardDescription>
+                    Manage user permissions and assign roles
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {!isAdmin ? (
+                    <div className="text-center py-8">
+                      <Lock className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+                      <p className="text-muted-foreground">Admin access required to manage user roles</p>
+                    </div>
+                  ) : (
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>User</TableHead>
+                          <TableHead>Email</TableHead>
+                          <TableHead>Current Role</TableHead>
+                          <TableHead>Joined</TableHead>
+                          <TableHead className="text-right">Actions</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {userProfiles.length === 0 ? (
+                          <TableRow>
+                            <TableCell colSpan={5} className="text-center text-muted-foreground py-8">
+                              No users yet
+                            </TableCell>
+                          </TableRow>
+                        ) : (
+                          userProfiles.map((profile) => {
+                            const currentRole = getUserRole(profile.user_id);
+                            return (
+                              <TableRow key={profile.id}>
+                                <TableCell className="font-medium">
+                                  <div className="flex items-center gap-2">
+                                    {currentRole === 'admin' && <Crown className="w-4 h-4 text-amber-400" />}
+                                    {profile.full_name || "Anonymous"}
+                                  </div>
+                                </TableCell>
+                                <TableCell>{profile.email || "N/A"}</TableCell>
+                                <TableCell>
+                                  <Badge className={
+                                    currentRole === 'admin' 
+                                      ? "bg-amber-500/20 text-amber-400 border-amber-500/30"
+                                      : currentRole === 'moderator'
+                                        ? "bg-blue-500/20 text-blue-400 border-blue-500/30"
+                                        : "bg-gray-500/20 text-gray-400 border-gray-500/30"
+                                  }>
+                                    {currentRole.charAt(0).toUpperCase() + currentRole.slice(1)}
+                                  </Badge>
+                                </TableCell>
+                                <TableCell>{new Date(profile.created_at).toLocaleDateString()}</TableCell>
+                                <TableCell className="text-right">
+                                  <div className="flex justify-end gap-1">
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      onClick={() => assignRole(profile.user_id, 'admin')}
+                                      disabled={currentRole === 'admin'}
+                                      className="text-xs"
+                                    >
+                                      Admin
+                                    </Button>
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      onClick={() => assignRole(profile.user_id, 'moderator')}
+                                      disabled={currentRole === 'moderator'}
+                                      className="text-xs"
+                                    >
+                                      Mod
+                                    </Button>
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      onClick={() => assignRole(profile.user_id, 'user')}
+                                      disabled={currentRole === 'user'}
+                                      className="text-xs text-muted-foreground"
+                                    >
+                                      User
+                                    </Button>
+                                  </div>
+                                </TableCell>
+                              </TableRow>
+                            );
+                          })
+                        )}
+                      </TableBody>
+                    </Table>
+                  )}
                 </CardContent>
               </Card>
             </TabsContent>

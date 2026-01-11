@@ -159,12 +159,40 @@ const FloatingChat = () => {
     } else {
       try {
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        const mediaRecorder = new MediaRecorder(stream);
+        const mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm' });
         mediaRecorderRef.current = mediaRecorder;
 
-        mediaRecorder.onstop = () => {
+        const chunks: BlobPart[] = [];
+        mediaRecorder.ondataavailable = (e) => chunks.push(e.data);
+        mediaRecorder.onstop = async () => {
           stream.getTracks().forEach(track => track.stop());
-          toast.success("Voice recording captured.");
+          const audioBlob = new Blob(chunks, { type: 'audio/webm' });
+          
+          toast.info("Processing speech...");
+          
+          try {
+            const formData = new FormData();
+            formData.append('audio', audioBlob, 'recording.webm');
+            
+            const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/speech-to-text`, {
+              method: 'POST',
+              headers: {
+                Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+              },
+              body: formData,
+            });
+            
+            if (!response.ok) throw new Error('Transcription failed');
+            
+            const result = await response.json();
+            if (result.text) {
+              setInput(prev => prev + (prev ? ' ' : '') + result.text);
+              toast.success("Voice transcribed!");
+            }
+          } catch (error) {
+            console.error('STT error:', error);
+            toast.error("Could not transcribe audio.");
+          }
         };
 
         mediaRecorder.start();

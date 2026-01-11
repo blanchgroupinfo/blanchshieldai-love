@@ -147,9 +147,18 @@ const AIChatInterface = () => {
   };
 
   const sendMessage = async () => {
-    if (!input.trim() || isLoading) return;
+    if ((!input.trim() && !attachedFile) || isLoading) return;
 
-    const userMessage: Message = { role: "user", content: input.trim() };
+    let messageContent = input.trim();
+    
+    // Process attached file
+    if (attachedFile) {
+      const fileContent = await processFileForChat(attachedFile);
+      messageContent = messageContent ? `${messageContent}\n\n${fileContent}` : fileContent;
+      setAttachedFile(null);
+    }
+
+    const userMessage: Message = { role: "user", content: messageContent };
     setMessages((prev) => [...prev, userMessage]);
     setInput("");
     setIsLoading(true);
@@ -255,11 +264,38 @@ const AIChatInterface = () => {
     fileInputRef.current?.click();
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const [attachedFile, setAttachedFile] = useState<File | null>(null);
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      toast.success(`File "${file.name}" attached. File upload processing coming soon.`);
+      if (file.size > 10 * 1024 * 1024) {
+        toast.error("File size must be under 10MB");
+        return;
+      }
+      setAttachedFile(file);
+      toast.success(`File "${file.name}" attached. It will be sent with your next message.`);
     }
+  };
+
+  const processFileForChat = async (file: File): Promise<string> => {
+    const reader = new FileReader();
+    return new Promise((resolve) => {
+      reader.onload = async () => {
+        const base64 = (reader.result as string).split(',')[1];
+        const fileInfo = `[Attached file: ${file.name} (${file.type}, ${(file.size / 1024).toFixed(1)}KB)]`;
+        
+        if (file.type.startsWith('image/')) {
+          resolve(`${fileInfo}\n[Image content will be analyzed by the AI]`);
+        } else if (file.type === 'text/plain' || file.name.endsWith('.txt')) {
+          const text = atob(base64);
+          resolve(`${fileInfo}\nFile contents:\n${text.slice(0, 2000)}${text.length > 2000 ? '...' : ''}`);
+        } else {
+          resolve(fileInfo);
+        }
+      };
+      reader.readAsDataURL(file);
+    });
   };
 
   const toggleRecording = async () => {
@@ -269,14 +305,40 @@ const AIChatInterface = () => {
     } else {
       try {
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        const mediaRecorder = new MediaRecorder(stream);
+        const mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm' });
         mediaRecorderRef.current = mediaRecorder;
 
         const chunks: BlobPart[] = [];
         mediaRecorder.ondataavailable = (e) => chunks.push(e.data);
-        mediaRecorder.onstop = () => {
+        mediaRecorder.onstop = async () => {
           stream.getTracks().forEach(track => track.stop());
-          toast.success("Voice recording captured. Speech-to-text processing coming soon.");
+          const audioBlob = new Blob(chunks, { type: 'audio/webm' });
+          
+          toast.info("Processing speech...");
+          
+          try {
+            const formData = new FormData();
+            formData.append('audio', audioBlob, 'recording.webm');
+            
+            const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/speech-to-text`, {
+              method: 'POST',
+              headers: {
+                Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+              },
+              body: formData,
+            });
+            
+            if (!response.ok) throw new Error('Transcription failed');
+            
+            const result = await response.json();
+            if (result.text) {
+              setInput(prev => prev + (prev ? ' ' : '') + result.text);
+              toast.success("Voice transcribed successfully!");
+            }
+          } catch (error) {
+            console.error('STT error:', error);
+            toast.error("Could not transcribe audio. Please try again.");
+          }
         };
 
         mediaRecorder.start();
