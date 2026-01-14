@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { Shield, Menu, MessageSquare, Users, BookOpen, Scale, Home, Info, Cpu, Mail, Code, LogIn, LogOut, User, LayoutDashboard, Settings } from "lucide-react";
+import { Shield, Menu, MessageSquare, Users, BookOpen, Scale, Home, Info, Cpu, Mail, Code, LogIn, LogOut, User, LayoutDashboard, Settings, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import {
@@ -19,6 +19,7 @@ const navItems = [
   { label: "Home", href: "/", icon: Home, isPage: true },
   { label: "About", href: "/about", icon: Info, isPage: true },
   { label: "Technology", href: "/technology", icon: Cpu, isPage: true },
+  { label: "Trading", href: "/trading", icon: TrendingUp, isPage: true },
   { label: "Agents", href: "/agents", icon: Users, isPage: true },
   { label: "Watchman", href: "/watchman", icon: Shield, isPage: true },
   { label: "Knowledge", href: "/knowledge-base", icon: BookOpen, isPage: true },
