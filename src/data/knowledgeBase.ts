@@ -69,7 +69,7 @@ export const knowledgeBase: KnowledgeItem[] = [
     id: "hii-ai-system",
     title: "H.I.I. AI Universal Unified System",
     category: "Technology",
-    content: "The H.I.I. AI (Holistic Integrated Intelligence - Artificial Intelligence) numbering system provides universal identification for all 402+ AI agents. Each agent is assigned a unique identifier in the format H.I.I. AI-XXXX, enabling seamless coordination across the entire S.H.I.E.L.D. AI ecosystem.",
+    content: "The H.I.I. AI (Hebrew Israelite Implementer - Aboriginal Identity) numbering system provides universal identification for all 402+ AI agents. Each agent is assigned a unique identifier in the format H.I.I. AI-XXXX, enabling seamless coordination across the entire S.H.I.E.L.D. AI ecosystem.",
   },
   {
     id: "project-watchman",
