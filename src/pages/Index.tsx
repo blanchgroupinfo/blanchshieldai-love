@@ -13,7 +13,7 @@ import FloatingChat from "@/components/FloatingChat";
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background pt-8">
       <NavigationHeader />
       <SectionNavigation />
       <FloatingChat />

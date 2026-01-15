@@ -1,6 +1,5 @@
 import { useState } from "react";
 import NavigationHeader from "@/components/NavigationHeader";
-import LiveMarketTicker from "@/components/LiveMarketTicker";
 import Footer from "@/components/Footer";
 import TradingHero from "@/components/trading/TradingHero";
 import TradingMarkets from "@/components/trading/TradingMarkets";
@@ -18,7 +17,6 @@ const Trading = () => {
 
   const handleSectionChange = (sectionId: string) => {
     setActiveSection(sectionId);
-    // Scroll to section
     const element = document.getElementById(sectionId);
     if (element) {
       element.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -26,11 +24,8 @@ const Trading = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <LiveMarketTicker />
-      <div className="pt-8">
-        <NavigationHeader />
-      </div>
+    <div className="min-h-screen bg-background pt-8">
+      <NavigationHeader />
       <TradingSidebar 
         activeSection={activeSection} 
         onSectionChange={handleSectionChange} 
