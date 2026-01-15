@@ -16,6 +16,8 @@ import Admin from "./pages/Admin";
 import Watchman from "./pages/Watchman";
 import KnowledgeBasePage from "./pages/KnowledgeBasePage";
 import Trading from "./pages/Trading";
+import UniversalBusinessNetwork from "./pages/UniversalBusinessNetwork";
+import VirtualMarketplace from "./pages/VirtualMarketplace";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -42,6 +44,8 @@ const App = () => (
           <Route path="/watchman" element={<Watchman />} />
           <Route path="/knowledge-base" element={<KnowledgeBasePage />} />
           <Route path="/trading" element={<Trading />} />
+          <Route path="/business-network" element={<UniversalBusinessNetwork />} />
+          <Route path="/marketplace" element={<VirtualMarketplace />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
