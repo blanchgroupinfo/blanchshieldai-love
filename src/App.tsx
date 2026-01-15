@@ -3,6 +3,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import LiveMarketTicker from "@/components/LiveMarketTicker";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import About from "./pages/About";
@@ -25,6 +26,8 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        {/* Global Live Market Ticker */}
+        <LiveMarketTicker />
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/auth" element={<Auth />} />
