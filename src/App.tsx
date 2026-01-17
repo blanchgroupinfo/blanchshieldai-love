@@ -18,6 +18,12 @@ import KnowledgeBasePage from "./pages/KnowledgeBasePage";
 import Trading from "./pages/Trading";
 import UniversalBusinessNetwork from "./pages/UniversalBusinessNetwork";
 import VirtualMarketplace from "./pages/VirtualMarketplace";
+import ShieldLLM from "./pages/ShieldLLM";
+import HeedVentures from "./pages/HeedVentures";
+import FoodReplicator from "./pages/FoodReplicator";
+import ComplianceKYC from "./pages/ComplianceKYC";
+import InternationalLaw from "./pages/InternationalLaw";
+import SovereignCourt from "./pages/SovereignCourt";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -46,6 +52,12 @@ const App = () => (
           <Route path="/trading" element={<Trading />} />
           <Route path="/business-network" element={<UniversalBusinessNetwork />} />
           <Route path="/marketplace" element={<VirtualMarketplace />} />
+          <Route path="/shield-llm" element={<ShieldLLM />} />
+          <Route path="/heed-ventures" element={<HeedVentures />} />
+          <Route path="/food-replicator" element={<FoodReplicator />} />
+          <Route path="/compliance-kyc" element={<ComplianceKYC />} />
+          <Route path="/international-law" element={<InternationalLaw />} />
+          <Route path="/sovereign-court" element={<SovereignCourt />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
