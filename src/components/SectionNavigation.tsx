@@ -63,10 +63,10 @@ const SectionNavigation = () => {
     <AnimatePresence>
       {isVisible && (
         <motion.div
-          initial={{ opacity: 0, x: 20 }}
+          initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: 20 }}
-          className="fixed right-4 top-1/2 -translate-y-1/2 z-40 hidden lg:flex flex-col gap-2"
+          exit={{ opacity: 0, x: -20 }}
+          className="fixed left-4 top-1/2 -translate-y-1/2 z-40 hidden lg:flex flex-col gap-2"
         >
           {/* Back to top button */}
           <motion.button
@@ -101,7 +101,7 @@ const SectionNavigation = () => {
                   <Icon className="w-4 h-4" />
                   
                   {/* Tooltip */}
-                  <span className="absolute right-full mr-3 px-2 py-1 rounded-lg bg-card border border-border text-xs font-medium text-foreground whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
+                  <span className="absolute left-full ml-3 px-2 py-1 rounded-lg bg-card border border-border text-xs font-medium text-foreground whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
                     {section.label}
                   </span>
                 </motion.button>

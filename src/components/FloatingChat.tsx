@@ -246,7 +246,7 @@ const FloatingChat = () => {
                 </div>
                 <div>
                   <h3 className="font-display font-semibold text-foreground text-sm">S.H.I.E.L.D. AI</h3>
-                  <p className="text-xs text-muted-foreground">H.I.I. AI Assistant</p>
+                  <p className="text-xs text-muted-foreground">H.I.I. Watchman</p>
                 </div>
               </div>
               <Button

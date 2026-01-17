@@ -21,8 +21,8 @@ const navItems = [
   { label: "Technology", href: "/technology", icon: Cpu, isPage: true },
   { label: "Trading", href: "/trading", icon: TrendingUp, isPage: true },
   { label: "Agents", href: "/agents", icon: Users, isPage: true },
-  { label: "Watchman", href: "/watchman", icon: Shield, isPage: true },
-  { label: "Knowledge", href: "/knowledge-base", icon: BookOpen, isPage: true },
+  { label: "Project Watchman", href: "/watchman", icon: Shield, isPage: true },
+  { label: "Knowledge Base", href: "/knowledge-base", icon: BookOpen, isPage: true },
   { label: "API", href: "/api", icon: Code, isPage: true },
   { label: "Contact", href: "/contact", icon: Mail, isPage: true },
 ];
