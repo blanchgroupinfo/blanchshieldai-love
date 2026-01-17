@@ -18,6 +18,8 @@ import {
   ChevronRight,
   X,
   Sparkles,
+  Code2,
+  PenTool,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -166,6 +168,24 @@ const CommandCenter = () => {
       color: "text-slate-400",
       gradient: "from-slate-500/20 to-gray-500/20",
       link: "/dashboard",
+    },
+    {
+      id: "web-app-build",
+      name: "Web/App Build",
+      description: "S.H.I.E.L.D. AI Development",
+      icon: Code2,
+      color: "text-violet-400",
+      gradient: "from-violet-500/20 to-purple-500/20",
+      link: "/technology",
+    },
+    {
+      id: "autocad",
+      name: "AutoCAD",
+      description: "S.H.I.E.L.D. AI Design",
+      icon: PenTool,
+      color: "text-teal-400",
+      gradient: "from-teal-500/20 to-cyan-500/20",
+      link: "/technology",
     },
   ];
 
