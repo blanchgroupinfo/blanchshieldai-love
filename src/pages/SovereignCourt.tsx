@@ -171,7 +171,7 @@ const SovereignCourt = () => {
               "Judges and officers shalt thou make thee in all thy gates... 
               and they shall judge the people with just judgment."
             </blockquote>
-            <cite className="text-muted-foreground">— Deuteronomy 16:18</cite>
+            <cite className="text-primary">— Deuteronomy 16:18</cite>
           </motion.div>
         </div>
       </section>
