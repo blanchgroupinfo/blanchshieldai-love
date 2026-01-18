@@ -44,7 +44,7 @@ const Footer = () => {
         </div>
         
         {/* Scripture */}
-        <blockquote className="text-sm italic text-muted-foreground font-body mb-6 text-center">
+        <blockquote className="text-sm italic font-body mb-6 text-center text-primary">
           "For the commandment is a lamp; and the law is light; and reproofs of instruction are the way of life."
           <cite className="block mt-2 not-italic text-shield-accent">— Proverbs 6:23</cite>
         </blockquote>
@@ -54,7 +54,7 @@ const Footer = () => {
           <p className="text-xs text-muted-foreground font-body">
             © {new Date().getFullYear()} The Blanch Group. All Rights Reserved.
           </p>
-          <p className="text-xs text-muted-foreground/60 font-body">
+          <p className="text-xs font-body text-primary">
             Praise Most High AHAYAH BA SHAM YASHAYA
           </p>
         </div>
