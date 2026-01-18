@@ -5,130 +5,127 @@ import { Eye, Shield, Bell, Radio, Globe, Lock, AlertTriangle, CheckCircle, Zap,
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Link } from "react-router-dom";
-
 const Watchman = () => {
-  const watchmanFeatures = [
-    {
-      icon: Eye,
-      title: "24/7 Global Surveillance",
-      description: "Continuous monitoring of systems, networks, and digital assets across all connected platforms.",
-      status: "Active",
-    },
-    {
-      icon: Shield,
-      title: "Threat Detection & Prevention",
-      description: "AI-powered threat analysis identifying potential security breaches before they occur.",
-      status: "Active",
-    },
-    {
-      icon: Bell,
-      title: "Real-Time Alerts",
-      description: "Instant notifications for anomalies, breaches, and compliance violations.",
-      status: "Active",
-    },
-    {
-      icon: Radio,
-      title: "Multi-Channel Monitoring",
-      description: "Surveillance across blockchain networks, APIs, databases, and communication channels.",
-      status: "Active",
-    },
-    {
-      icon: Globe,
-      title: "Global Compliance Watch",
-      description: "Monitoring adherence to international regulations and divine law standards.",
-      status: "Active",
-    },
-    {
-      icon: Lock,
-      title: "Access Control Monitoring",
-      description: "Tracking and validating all authentication attempts and access patterns.",
-      status: "Active",
-    },
-  ];
-
-  const alertLevels = [
-    { level: "Normal", color: "bg-green-500", description: "All systems operating within normal parameters" },
-    { level: "Advisory", color: "bg-blue-500", description: "Minor anomalies detected, under observation" },
-    { level: "Elevated", color: "bg-yellow-500", description: "Potential threats identified, enhanced monitoring" },
-    { level: "Critical", color: "bg-red-500", description: "Immediate action required, containment protocols" },
-  ];
-
-  const coreMandates = [
-    {
-      icon: Globe,
-      title: "Global Warning & Encouragement",
-      description: "All nations are urged to use their specific talents to assist the Aboriginal Black Hebrew Israelites/Yasharahala. This service is a requirement of the daily routine to ensure the Royal Priesthood has the necessary provisions to uphold and spread the Laws & Commandments for the Kingdom of AHAYAH.",
-      scripture: "Exodus 19:5, Deuteronomy 7:6"
-    },
-    {
-      icon: Heart,
-      title: "The Greatest Commandment in Action",
-      description: "To truly love AHAYAH and YASHAYA is to love and serve His Chosen People the Aboriginal Black Hebrew Israelite/Yasharahala. True worship is expressed through the tangible support of the Royal Priesthood.",
-      scripture: "Matthew 22:36-38, 1 Peter 2:9"
-    },
-    {
-      icon: Users,
-      title: "Unified AI Integration",
-      description: "Every User and Admin is required to select a primary Lead Watchman Universal Unified Agent from the H.I.I. AI list to assist their endeavor of expertise and mission to Pay it Forward in assisting the Most High AHAYAH's Chosen People.",
-      scripture: "1 Corinthians 1:10, 1 Corinthians 11:17"
-    },
-    {
-      icon: Star,
-      title: "The Goal of Righteousness",
-      description: "By dedicating your life's work to the Most High AHAYAH and His Son YASHAYA, and showing compassion to the Aboriginal Black Hebrew Israelite/Yasharahala community, you participate in the fulfillment of prophecy.",
-      scripture: "Psalms 119:105, Proverbs 6:23, Deuteronomy 15:4"
-    },
-  ];
-
-  const scripturalFoundation = [
-    {
-      category: "Identity",
-      scriptures: [
-        { reference: "Job 30:30", text: "My skin is black upon me, and my bones are burned with heat." },
-        { reference: "Jeremiah 14:2", text: "Judah mourneth, and the gates thereof languish; they are black unto the ground." },
-        { reference: "Song of Solomon 1:5", text: "I am black, but comely, O ye daughters of Jerusalem." },
-      ]
-    },
-    {
-      category: "The Promise",
-      scriptures: [
-        { reference: "Isaiah 14:2", text: "Nations serving the House of Israel/Yasharahala." },
-        { reference: "Isaiah 49:6", text: "A light to the Gentiles, salvation unto the end of the earth." },
-      ]
-    },
-    {
-      category: "The Command",
-      scriptures: [
-        { reference: "1 John 5:3", text: "For this is the love of God, that we keep his commandments." },
-        { reference: "2 John 1:6", text: "This is love, that we walk after his commandments." },
-      ]
-    },
-    {
-      category: "The Diligence",
-      scriptures: [
-        { reference: "Romans 12:11", text: "Not slothful in business; fervent in spirit; serving the Lord." },
-        { reference: "Luke 2:49", text: "I must be about my Father's business." },
-      ]
-    },
-  ];
-
-  const watchmanScriptures = [
-    {
-      reference: "Ezekiel 33:7",
-      text: "So you, son of man, I have set you a watchman to the house of Israel; therefore you shall hear the word at my mouth, and warn them from me.",
-    },
-    {
-      reference: "Isaiah 62:6",
-      text: "I have set watchmen upon your walls, O Jerusalem, who shall never hold their peace day nor night.",
-    },
-    {
-      reference: "Habakkuk 2:1",
-      text: "I will stand upon my watch, and set me upon the tower, and will watch to see what He will say unto me.",
-    },
-  ];
-
-  return (
-    <div className="min-h-screen bg-background">
+  const watchmanFeatures = [{
+    icon: Eye,
+    title: "24/7 Global Surveillance",
+    description: "Continuous monitoring of systems, networks, and digital assets across all connected platforms.",
+    status: "Active"
+  }, {
+    icon: Shield,
+    title: "Threat Detection & Prevention",
+    description: "AI-powered threat analysis identifying potential security breaches before they occur.",
+    status: "Active"
+  }, {
+    icon: Bell,
+    title: "Real-Time Alerts",
+    description: "Instant notifications for anomalies, breaches, and compliance violations.",
+    status: "Active"
+  }, {
+    icon: Radio,
+    title: "Multi-Channel Monitoring",
+    description: "Surveillance across blockchain networks, APIs, databases, and communication channels.",
+    status: "Active"
+  }, {
+    icon: Globe,
+    title: "Global Compliance Watch",
+    description: "Monitoring adherence to international regulations and divine law standards.",
+    status: "Active"
+  }, {
+    icon: Lock,
+    title: "Access Control Monitoring",
+    description: "Tracking and validating all authentication attempts and access patterns.",
+    status: "Active"
+  }];
+  const alertLevels = [{
+    level: "Normal",
+    color: "bg-green-500",
+    description: "All systems operating within normal parameters"
+  }, {
+    level: "Advisory",
+    color: "bg-blue-500",
+    description: "Minor anomalies detected, under observation"
+  }, {
+    level: "Elevated",
+    color: "bg-yellow-500",
+    description: "Potential threats identified, enhanced monitoring"
+  }, {
+    level: "Critical",
+    color: "bg-red-500",
+    description: "Immediate action required, containment protocols"
+  }];
+  const coreMandates = [{
+    icon: Globe,
+    title: "Global Warning & Encouragement",
+    description: "All nations are urged to use their specific talents to assist the Aboriginal Black Hebrew Israelites/Yasharahala. This service is a requirement of the daily routine to ensure the Royal Priesthood has the necessary provisions to uphold and spread the Laws & Commandments for the Kingdom of AHAYAH.",
+    scripture: "Exodus 19:5, Deuteronomy 7:6"
+  }, {
+    icon: Heart,
+    title: "The Greatest Commandment in Action",
+    description: "To truly love AHAYAH and YASHAYA is to love and serve His Chosen People the Aboriginal Black Hebrew Israelite/Yasharahala. True worship is expressed through the tangible support of the Royal Priesthood.",
+    scripture: "Matthew 22:36-38, 1 Peter 2:9"
+  }, {
+    icon: Users,
+    title: "Unified AI Integration",
+    description: "Every User and Admin is required to select a primary Lead Watchman Universal Unified Agent from the H.I.I. AI list to assist their endeavor of expertise and mission to Pay it Forward in assisting the Most High AHAYAH's Chosen People.",
+    scripture: "1 Corinthians 1:10, 1 Corinthians 11:17"
+  }, {
+    icon: Star,
+    title: "The Goal of Righteousness",
+    description: "By dedicating your life's work to the Most High AHAYAH and His Son YASHAYA, and showing compassion to the Aboriginal Black Hebrew Israelite/Yasharahala community, you participate in the fulfillment of prophecy.",
+    scripture: "Psalms 119:105, Proverbs 6:23, Deuteronomy 15:4"
+  }];
+  const scripturalFoundation = [{
+    category: "Identity",
+    scriptures: [{
+      reference: "Job 30:30",
+      text: "My skin is black upon me, and my bones are burned with heat."
+    }, {
+      reference: "Jeremiah 14:2",
+      text: "Judah mourneth, and the gates thereof languish; they are black unto the ground."
+    }, {
+      reference: "Song of Solomon 1:5",
+      text: "I am black, but comely, O ye daughters of Jerusalem."
+    }]
+  }, {
+    category: "The Promise",
+    scriptures: [{
+      reference: "Isaiah 14:2",
+      text: "Nations serving the House of Israel/Yasharahala."
+    }, {
+      reference: "Isaiah 49:6",
+      text: "A light to the Gentiles, salvation unto the end of the earth."
+    }]
+  }, {
+    category: "The Command",
+    scriptures: [{
+      reference: "1 John 5:3",
+      text: "For this is the love of God, that we keep his commandments."
+    }, {
+      reference: "2 John 1:6",
+      text: "This is love, that we walk after his commandments."
+    }]
+  }, {
+    category: "The Diligence",
+    scriptures: [{
+      reference: "Romans 12:11",
+      text: "Not slothful in business; fervent in spirit; serving the Lord."
+    }, {
+      reference: "Luke 2:49",
+      text: "I must be about my Father's business."
+    }]
+  }];
+  const watchmanScriptures = [{
+    reference: "Ezekiel 33:7",
+    text: "So you, son of man, I have set you a watchman to the house of Israel; therefore you shall hear the word at my mouth, and warn them from me."
+  }, {
+    reference: "Isaiah 62:6",
+    text: "I have set watchmen upon your walls, O Jerusalem, who shall never hold their peace day nor night."
+  }, {
+    reference: "Habakkuk 2:1",
+    text: "I will stand upon my watch, and set me upon the tower, and will watch to see what He will say unto me."
+  }];
+  return <div className="min-h-screen bg-background">
       <NavigationHeader />
       
       {/* Hero Section */}
@@ -180,11 +177,11 @@ const Watchman = () => {
                 Mission Statement
               </h2>
               <div className="bg-card/50 rounded-2xl p-8 border border-border/50">
-                <p className="text-lg text-muted-foreground font-body leading-relaxed mb-6">
-                  The Blanch Watchman Project → has a Universal Unified AI Agent Number <span className="text-primary font-semibold">H.I.I. AIxxx</span> (Hebrew Israelite Implementer Aboriginal Identity): 
+                <p className="text-lg text-muted-foreground font-body leading-relaxed mb-6 text-justify">
+                  The Blanch Watchman Project → has a Universal Unified AI Agent Number  <span className="text-primary font-semibold">H.I.I. AIxxx</span> (Hebrew Israelite Implementer Aboriginal Identity): 
                   serves as a divine call to all nations to recognize and assist the Aboriginal Black Hebrew Israelites (Yasharahala) in fulfilling biblical prophecy.
                 </p>
-                <p className="text-lg text-muted-foreground font-body leading-relaxed mb-6">
+                <p className="text-lg text-muted-foreground font-body leading-relaxed mb-6 text-justify">
                   As the "Most High" AHAYAH and the Messiah YASHAYA have promised, the nations will eventually seek the righteous Law through the Royal Priesthood. 
                   This project facilitates that transition by aligning daily routines, talents, and resources toward the support and restoration of the Chosen People 
                   the Royal House of Israel/Yasharahala. Aboriginal Black Hebrew Watchman.
@@ -192,7 +189,7 @@ const Watchman = () => {
                 <p className="text-primary font-display text-center italic">
                   "Our ancestors names are written in heavens gates."
                 </p>
-                <p className="text-sm text-muted-foreground text-center mt-4">
+                <p className="text-sm text-muted-foreground text-center mt-4 italic">
                   (Jeremiah 14:2, Job 30:30, Song of Solomon 1:5, Isaiah 29:22, Matthew 10:26, 1 Peter 2:9, Revelation 15:4, Exodus 19:6, 
                   Exodus 34:24, Isaiah 11:11-12, Exodus 19:5, Deuteronomy 14:2, Psalms 135:4)
                 </p>
@@ -212,8 +209,7 @@ const Watchman = () => {
           </ScrollAnimationWrapper>
 
           <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
-            {coreMandates.map((mandate, index) => (
-              <ScrollAnimationWrapper key={mandate.title} delay={index * 0.1}>
+            {coreMandates.map((mandate, index) => <ScrollAnimationWrapper key={mandate.title} delay={index * 0.1}>
                 <Card className="bg-card/30 border-border/50 h-full hover:border-primary/50 transition-all duration-300">
                   <CardHeader>
                     <div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
@@ -230,8 +226,7 @@ const Watchman = () => {
                     </p>
                   </CardContent>
                 </Card>
-              </ScrollAnimationWrapper>
-            ))}
+              </ScrollAnimationWrapper>)}
           </div>
         </div>
       </section>
@@ -353,8 +348,7 @@ const Watchman = () => {
           </ScrollAnimationWrapper>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {watchmanFeatures.map((feature, index) => (
-              <ScrollAnimationWrapper key={feature.title} delay={index * 0.1}>
+            {watchmanFeatures.map((feature, index) => <ScrollAnimationWrapper key={feature.title} delay={index * 0.1}>
                 <Card className="bg-card/30 border-border/50 h-full hover:border-primary/50 transition-all duration-300">
                   <CardHeader>
                     <div className="flex items-start justify-between">
@@ -373,8 +367,7 @@ const Watchman = () => {
                     </CardDescription>
                   </CardContent>
                 </Card>
-              </ScrollAnimationWrapper>
-            ))}
+              </ScrollAnimationWrapper>)}
           </div>
         </div>
       </section>
@@ -389,8 +382,7 @@ const Watchman = () => {
           </ScrollAnimationWrapper>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
-            {alertLevels.map((alert, index) => (
-              <ScrollAnimationWrapper key={alert.level} delay={index * 0.1}>
+            {alertLevels.map((alert, index) => <ScrollAnimationWrapper key={alert.level} delay={index * 0.1}>
                 <Card className="bg-card/30 border-border/50">
                   <CardContent className="pt-6">
                     <div className="flex items-center gap-3 mb-4">
@@ -400,8 +392,7 @@ const Watchman = () => {
                     <p className="text-sm text-muted-foreground">{alert.description}</p>
                   </CardContent>
                 </Card>
-              </ScrollAnimationWrapper>
-            ))}
+              </ScrollAnimationWrapper>)}
           </div>
         </div>
       </section>
@@ -471,8 +462,7 @@ const Watchman = () => {
           </ScrollAnimationWrapper>
 
           <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            {watchmanScriptures.map((scripture, index) => (
-              <ScrollAnimationWrapper key={scripture.reference} delay={index * 0.1}>
+            {watchmanScriptures.map((scripture, index) => <ScrollAnimationWrapper key={scripture.reference} delay={index * 0.1}>
                 <Card className="bg-card/30 border-border/50 backdrop-blur-sm">
                   <CardContent className="pt-6">
                     <blockquote className="text-muted-foreground italic font-body mb-4">
@@ -483,8 +473,7 @@ const Watchman = () => {
                     </cite>
                   </CardContent>
                 </Card>
-              </ScrollAnimationWrapper>
-            ))}
+              </ScrollAnimationWrapper>)}
           </div>
         </div>
       </section>
@@ -502,25 +491,21 @@ const Watchman = () => {
           </ScrollAnimationWrapper>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
-            {scripturalFoundation.map((category, index) => (
-              <ScrollAnimationWrapper key={category.category} delay={index * 0.1}>
+            {scripturalFoundation.map((category, index) => <ScrollAnimationWrapper key={category.category} delay={index * 0.1}>
                 <Card className="bg-background/50 border-border/50 backdrop-blur-sm h-full">
                   <CardHeader>
                     <CardTitle className="text-lg text-primary">{category.category}</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    {category.scriptures.map((scripture) => (
-                      <div key={scripture.reference} className="mb-4 last:mb-0">
+                    {category.scriptures.map(scripture => <div key={scripture.reference} className="mb-4 last:mb-0">
                         <p className="text-sm text-muted-foreground italic mb-1">
                           "{scripture.text}"
                         </p>
                         <cite className="text-xs text-primary/70">— {scripture.reference}</cite>
-                      </div>
-                    ))}
+                      </div>)}
                   </CardContent>
                 </Card>
-              </ScrollAnimationWrapper>
-            ))}
+              </ScrollAnimationWrapper>)}
           </div>
         </div>
       </section>
@@ -542,16 +527,10 @@ const Watchman = () => {
                 "YASHAYA IS THE WORD IS A LAMP UNTO MY FEET AND LIGHT TO MY PATH" — Psalms 119:105
               </p>
               <div className="flex flex-wrap justify-center gap-4">
-                <Link 
-                  to="/agents" 
-                  className="px-8 py-4 bg-primary text-primary-foreground rounded-lg font-display font-semibold hover:bg-primary/90 transition-colors"
-                >
+                <Link to="/agents" className="px-8 py-4 bg-primary text-primary-foreground rounded-lg font-display font-semibold hover:bg-primary/90 transition-colors">
                   Explore H.I.I. AI Agents
                 </Link>
-                <Link 
-                  to="/knowledge-base" 
-                  className="px-8 py-4 bg-secondary/20 text-secondary border border-secondary/30 rounded-lg font-display font-semibold hover:bg-secondary/30 transition-colors"
-                >
+                <Link to="/knowledge-base" className="px-8 py-4 bg-secondary/20 text-secondary border border-secondary/30 rounded-lg font-display font-semibold hover:bg-secondary/30 transition-colors">
                   Learn More
                 </Link>
               </div>
@@ -583,8 +562,6 @@ const Watchman = () => {
       </section>
 
       <Footer />
-    </div>
-  );
+    </div>;
 };
-
 export default Watchman;
