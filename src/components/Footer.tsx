@@ -46,7 +46,7 @@ const Footer = () => {
         {/* Scripture */}
         <blockquote className="text-sm italic font-body mb-6 text-center text-primary">
           "For the commandment is a lamp; and the law is light; and reproofs of instruction are the way of life."
-          <cite className="block mt-2 not-italic text-shield-accent">— Proverbs 6:23</cite>
+          <cite className="block mt-2 not-italic text-primary">— Proverbs 6:23</cite>
         </blockquote>
         
         {/* Copyright */}
