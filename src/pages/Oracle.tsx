@@ -76,7 +76,7 @@ const Oracle = () => {
             </h1>
             
             <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-              Lunar Command Center processing global resource allocation and AI sync. Secure, reliable, and decentralized oracle infrastructure connecting smart contracts with real-world data. Powered by S.H.I.E.L.D. AI verification systems.
+              Lunar City. Mothership, Space Station and Command Center processing global resource allocation and AI sync. Secure, reliable, and decentralized oracle infrastructure connecting smart contracts with real-world data. Powered by S.H.I.E.L.D. AI verification systems.
             </p>
             
             <div className="flex flex-wrap gap-4 justify-center">
