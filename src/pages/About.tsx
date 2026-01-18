@@ -90,7 +90,7 @@ const About = () => {
                   </div>
                   <h2 className="text-2xl font-display font-bold text-foreground">Our Vision</h2>
                 </div>
-                <p className="text-muted-foreground font-body leading-relaxed">
+                <p className="text-muted-foreground font-body leading-relaxed text-justify">
                   A world where artificial intelligence serves as a bridge between divine wisdom and 
                   human capability. We envision communities thriving through ethical technology, 
                   nations prospering through fair governance, and individuals empowered to fulfill 
