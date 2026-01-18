@@ -1,10 +1,8 @@
 import shieldLogo from "@/assets/shield-logo.jpg";
 import { Shield } from "lucide-react";
 import NewsletterSubscription from "./NewsletterSubscription";
-
 const Footer = () => {
-  return (
-    <footer className="relative py-16 overflow-hidden">
+  return <footer className="relative py-16 overflow-hidden">
       <div className="absolute inset-0 bg-card border-t border-border/50" />
       
       <div className="container relative z-10 px-4">
@@ -14,11 +12,7 @@ const Footer = () => {
             {/* Logo */}
             <div className="relative mb-6">
               <div className="absolute inset-0 bg-primary/20 rounded-full blur-2xl" />
-              <img 
-                src={shieldLogo} 
-                alt="Blanch S.H.I.E.L.D. AI" 
-                className="relative w-20 h-20 object-contain rounded-xl"
-              />
+              <img src={shieldLogo} alt="Blanch S.H.I.E.L.D. AI" className="relative w-20 h-20 object-contain rounded-xl" />
             </div>
             
             {/* Brand */}
@@ -34,9 +28,7 @@ const Footer = () => {
 
           {/* Right: Newsletter */}
           <div className="flex flex-col justify-center">
-            <h4 className="text-lg font-display font-semibold text-foreground mb-2">
-              Subscribe to H.I.I. AI Newsletter
-            </h4>
+            <h4 className="text-lg font-display font-semibold text-foreground mb-2">Subscribe to S.H.I.E.L.D. AI Newsletter</h4>
             <p className="text-sm text-muted-foreground mb-4">
               Stay updated with the latest AI agent developments and technology news.
             </p>
@@ -67,8 +59,6 @@ const Footer = () => {
           </p>
         </div>
       </div>
-    </footer>
-  );
+    </footer>;
 };
-
 export default Footer;
