@@ -136,7 +136,7 @@ const VirtualMarketplace = () => {
             <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-foreground via-primary to-foreground bg-clip-text text-transparent">
               Virtual Marketplace
             </h1>
-            <p className="text-xl text-muted-foreground mb-8">The premier B2B, B2C, C2C, marketplace for enterprise assets, commodities, real estate, and professional services.</p>
+            <p className="text-xl text-muted-foreground mb-8">The premier All Universal Commerce Models marketplace for enterprise assets, commodities, real estate, and professional services.</p>
             
             {/* Search Bar */}
             <div className="flex gap-2 max-w-2xl mx-auto">
