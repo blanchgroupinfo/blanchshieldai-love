@@ -197,7 +197,7 @@ const ComplianceKYC = () => {
         }} viewport={{
           once: true
         }} className="max-w-3xl mx-auto text-center text-primary">
-            <blockquote className="text-xl md:text-2xl font-display italic text-foreground mb-4">"A false balance is abomination to the Most High AHAYAH: but a just weight is his delight."</blockquote>
+            <blockquote className="text-xl md:text-2xl font-display italic mb-4 text-primary">"A false balance is abomination to the Most High AHAYAH: but a just weight is his delight."</blockquote>
             <cite className="text-muted-foreground">— Proverbs 11:1</cite>
           </motion.div>
         </div>
