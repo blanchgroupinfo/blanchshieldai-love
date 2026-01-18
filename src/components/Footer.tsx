@@ -17,7 +17,7 @@ const Footer = () => {
             
             {/* Brand */}
             <h3 className="text-xl font-display font-bold mb-2">
-              <span className="gradient-text">BLANCH S.H.I.E.L.D.</span>
+              <span className="gradient-text">Blanch S.H.I.E.L.D.</span>
               <span className="text-primary ml-2">AI</span>
             </h3>
             
