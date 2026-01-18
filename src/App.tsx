@@ -24,6 +24,15 @@ import FoodReplicator from "./pages/FoodReplicator";
 import ComplianceKYC from "./pages/ComplianceKYC";
 import InternationalLaw from "./pages/InternationalLaw";
 import SovereignCourt from "./pages/SovereignCourt";
+import Metaverse from "./pages/Metaverse";
+import Explorer from "./pages/Explorer";
+import Oracle from "./pages/Oracle";
+import CreatorsCalendar from "./pages/CreatorsCalendar";
+import LawsCommandments from "./pages/LawsCommandments";
+import PhilanthropyHub from "./pages/PhilanthropyHub";
+import DistributedLedger from "./pages/DistributedLedger";
+import CrossBorderSettlements from "./pages/CrossBorderSettlements";
+import BlanchCorridor from "./pages/BlanchCorridor";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -58,6 +67,15 @@ const App = () => (
           <Route path="/compliance-kyc" element={<ComplianceKYC />} />
           <Route path="/international-law" element={<InternationalLaw />} />
           <Route path="/sovereign-court" element={<SovereignCourt />} />
+          <Route path="/metaverse" element={<Metaverse />} />
+          <Route path="/explorer" element={<Explorer />} />
+          <Route path="/oracle" element={<Oracle />} />
+          <Route path="/creators-calendar" element={<CreatorsCalendar />} />
+          <Route path="/laws-commandments" element={<LawsCommandments />} />
+          <Route path="/philanthropy" element={<PhilanthropyHub />} />
+          <Route path="/distributed-ledger" element={<DistributedLedger />} />
+          <Route path="/cross-border" element={<CrossBorderSettlements />} />
+          <Route path="/blanch-corridor" element={<BlanchCorridor />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
