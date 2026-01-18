@@ -189,7 +189,7 @@ const Watchman = () => {
                 <p className="text-primary font-display text-center italic">
                   "Our ancestors names are written in heavens gates."
                 </p>
-                <p className="text-sm text-muted-foreground text-center mt-4 italic">
+                <p className="text-sm text-center mt-4 italic text-primary">
                   (Jeremiah 14:2, Job 30:30, Song of Solomon 1:5, Isaiah 29:22, Matthew 10:26, 1 Peter 2:9, Revelation 15:4, Exodus 19:6, 
                   Exodus 34:24, Isaiah 11:11-12, Exodus 19:5, Deuteronomy 14:2, Psalms 135:4)
                 </p>
