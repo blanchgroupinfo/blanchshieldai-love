@@ -12,7 +12,7 @@ const Footer = () => {
             {/* Logo */}
             <div className="relative mb-6">
               <div className="absolute inset-0 bg-primary/20 rounded-full blur-2xl" />
-              <img src={shieldLogo} alt="Blanch S.H.I.E.L.D. AI" className="relative w-20 h-20 object-contain rounded-xl" />
+              <img alt="Blanch S.H.I.E.L.D. AI" className="relative w-20 h-20 object-contain rounded-xl" src="/lovable-uploads/82b19b1c-cb42-480d-a5a8-da899a505baa.jpg" />
             </div>
             
             {/* Brand */}
