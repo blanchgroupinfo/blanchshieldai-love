@@ -439,7 +439,7 @@ const AIChatInterface = () => {
                         <p className="text-muted-foreground font-body">
                           Ask me anything about governance, technology, spiritual guidance, or our universal capabilities.
                         </p>
-                        <p className="text-xs text-muted-foreground/60 mt-2 italic">
+                        <p className="text-xs mt-2 italic text-primary">
                           "Thy righteousness is an everlasting righteousness, and thy law is the truth." — Psalms 119:142
                         </p>
                       </div>}
