@@ -1,6 +1,8 @@
 import { ScrollText, Crown, Heart, Star } from "lucide-react";
+
 const MissionSection = () => {
-  return <section className="relative py-24 overflow-hidden">
+  return (
+    <section className="relative py-24 overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-b from-card via-background to-card" />
       
       <div className="container relative z-10 px-4">
@@ -49,9 +51,11 @@ const MissionSection = () => {
                     Grounded in the wisdom of sacred scriptures, our system operates for the benefit of all people, languages, and nations.
                   </p>
                   <div className="flex flex-wrap gap-2">
-                    {["2 Timothy 3:16-17", "Psalms 119:142", "Proverbs 6:23", "John 8:32"].map(verse => <span key={verse} className="px-3 py-1 rounded-full bg-primary/10 text-sm text-primary font-body">
+                    {["2 Timothy 3:16-17", "Psalms 119:142", "Proverbs 6:23", "John 8:32"].map((verse) => (
+                      <span key={verse} className="px-3 py-1 rounded-full bg-primary/10 text-sm text-primary font-body">
                         {verse}
-                      </span>)}
+                      </span>
+                    ))}
                   </div>
                 </div>
               </div>
@@ -66,10 +70,8 @@ const MissionSection = () => {
                   <h3 className="text-xl font-display font-semibold mb-3 text-foreground">
                     Purpose
                   </h3>
-                  <p className="text-muted-foreground font-body leading-relaxed text-justify">
-                    To demonstrate that the Most High AHAYAH has kept His promises by integrating His foundations into every facet of human and universal life — protecting, empowering, and scaling sovereign communities, smart cities, trade, and faith-aligned innovation. 
-
-2 Peter 1:4  
+                  <p className="text-muted-foreground font-body leading-relaxed">
+                    To demonstrate that the Most High AHAYAH has kept His promises by integrating His foundations into every facet of human and universal life — protecting, empowering, and scaling sovereign communities, smart cities, trade, and faith-aligned innovation.
                   </p>
                 </div>
               </div>
@@ -85,6 +87,8 @@ const MissionSection = () => {
           </div>
         </div>
       </div>
-    </section>;
+    </section>
+  );
 };
+
 export default MissionSection;
