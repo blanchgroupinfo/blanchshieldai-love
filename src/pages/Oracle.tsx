@@ -120,7 +120,7 @@ const Oracle = () => {
           once: true
         }} className="text-center mb-16">
             <h2 className="text-4xl font-display font-bold mb-4">Blanch Oracle and Blanch Network Capabilities</h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">Blanch Network Enterprise-grade Monitering the Blanch Oracle infrastructure for mission-critical applications</p>
+            <p className="text-muted-foreground max-w-2xl mx-auto">Blanch Oracle and Blanch Network Enterprise-grade Monitering the Blanch Oracle infrastructure for mission-critical applications</p>
           </motion.div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
