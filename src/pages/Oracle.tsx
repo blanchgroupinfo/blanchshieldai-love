@@ -75,7 +75,7 @@ const Oracle = () => {
               <span className="gradient-text">Oracle Project</span>
             </h1>
             
-            <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">Lunar City, Motherships, Space Station, and Command Center processing global resource allocation and AI sync. Secure, reliable, and decentralized oracle infrastructure connecting smart contracts with real-world data. Powered by Blanch S.H.I.E.L.D. AI verification systems.</p>
+            <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">Lunar City, Motherships, Space Station, and on Earth the Blanch Corridor and Lunar Command Centers in the Blanch Corridor processing global resource allocation and AI sync. Secure, reliable, and decentralized Blanch Oracle infrastructure connecting smart contracts with real-world data. Powered by Blanch S.H.I.E.L.D. AI verification systems and Interconnecting with the Blanch Network.</p>
             
             <div className="flex flex-wrap gap-4 justify-center">
               <Button size="lg" className="gap-2">
