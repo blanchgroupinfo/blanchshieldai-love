@@ -131,16 +131,14 @@ const NavigationHeader = () => {
           <Link to="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
             <img src={shieldLogo} alt="S.H.I.E.L.D. AI" className="w-10 h-10 md:w-12 md:h-12 rounded-lg object-contain" />
             <div className="hidden sm:block">
-              <span className="font-display font-bold text-lg gradient-text">S.H.I.E.L.D.</span>
+              <span className="font-display font-bold text-lg gradient-text">Blanch S.H.I.E.L.D.</span>
               <span className="font-display font-bold text-lg text-primary ml-1">AI</span>
             </div>
           </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center gap-1">
-            {navItems.map(item => <Link key={item.label} to={item.href} className={`px-3 py-2 rounded-lg font-body text-sm transition-all duration-200 ${location.pathname === item.href ? "bg-primary/10 text-primary" : "text-muted-foreground hover:text-foreground hover:bg-card/50"}`}>
-                {item.label}
-              </Link>)}
+            {navItems.map(item => {})}
             {isHomePage && scrollNavItems.slice(0, 2).map(item => <button key={item.label} onClick={() => scrollToSection(item.href)} className="px-3 py-2 rounded-lg font-body text-sm text-muted-foreground hover:text-foreground hover:bg-card/50 transition-all duration-200">
                 {item.label}
               </button>)}
@@ -149,7 +147,7 @@ const NavigationHeader = () => {
           {/* CTA + Auth + Command Center + Mobile Menu */}
           <div className="flex items-center gap-3">
 
-            
+            <CommandCenter />
             {user ? <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="outline" size="sm" className="hidden sm:flex">
