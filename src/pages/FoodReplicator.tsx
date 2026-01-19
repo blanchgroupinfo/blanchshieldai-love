@@ -167,9 +167,9 @@ const FoodReplicator = () => {
                 <Droplets className="w-8 h-8 text-green-500" />
                 <h3 className="text-xl font-display font-bold">Clean Water Initiative</h3>
               </div>
-              <p className="text-muted-foreground mb-6 text-justify">Beyond food, non GMO, and no Unclean Meats, the Blanch Food Replicator technology can synthesize pure, clean foods, and clean drinking water from atmospheric humidity and basic elements.</p>
-              <blockquote className="text-sm italic text-muted-foreground border-l-2 border-green-500 pl-4">"And he shewed me a pure river of water of life, clear as crystal, proceeding out of the throne of AHAYAH and of the Lamb."</blockquote>
-              <cite className="text-xs text-muted-foreground mt-2 block">— Revelation 22:1</cite>
+              <p className="text-muted-foreground mb-6 text-justify">Beyond food, non-GMO, and no unclean meats, the Blanch Food Replicator technology can synthesize pure, clean foods, and clean drinking water from atmospheric humidity and basic elements.</p>
+              <blockquote className="text-sm italic border-l-2 border-green-500 pl-4 text-primary">"And he shewed me a pure river of water of life, clear as crystal, proceeding out of the throne of AHAYAH and of the Lamb."</blockquote>
+              <cite className="text-xs mt-2 block text-primary">— Revelation 22:1</cite>
             </motion.div>
           </div>
         </div>
