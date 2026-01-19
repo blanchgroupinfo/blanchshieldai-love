@@ -129,7 +129,7 @@ const NavigationHeader = () => {
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
-            <img src={shieldLogo} alt="S.H.I.E.L.D. AI" className="w-10 h-10 md:w-12 md:h-12 rounded-lg object-contain" />
+            <img alt="S.H.I.E.L.D. AI" className="w-10 h-10 md:w-12 md:h-12 rounded-lg object-contain" src="/lovable-uploads/07dc7f9b-5404-4ddb-8c5c-d24b1b61d6dd.png" />
             <div className="hidden sm:block">
               <span className="font-display font-bold text-lg gradient-text">Blanch S.H.I.E.L.D.</span>
               <span className="font-display font-bold text-lg text-primary ml-1">AI</span>
