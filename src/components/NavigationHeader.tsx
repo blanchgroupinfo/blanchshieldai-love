@@ -139,9 +139,7 @@ const NavigationHeader = () => {
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center gap-1">
             {navItems.map(item => {})}
-            {isHomePage && scrollNavItems.slice(0, 2).map(item => <button key={item.label} onClick={() => scrollToSection(item.href)} className="px-3 py-2 rounded-lg font-body text-sm text-muted-foreground hover:text-foreground hover:bg-card/50 transition-all duration-200">
-                {item.label}
-              </button>)}
+            {isHomePage && scrollNavItems.slice(0, 2).map(item => {})}
           </nav>
 
           {/* CTA + Auth + Command Center + Mobile Menu */}
