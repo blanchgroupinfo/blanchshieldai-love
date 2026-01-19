@@ -338,9 +338,7 @@ const AIChatInterface = () => {
           <h2 className="text-3xl md:text-5xl font-display font-bold mb-4">
             Ask <span className="gradient-text">S.H.I.E.L.D. AI</span>
           </h2>
-          <p className="text-sm text-primary/80 font-display tracking-wider mb-2">
-            H.I.I. AI — Hebrew Israelite Implementer Aboriginal Identity
-          </p>
+          <p className="text-sm text-primary/80 font-display tracking-wider mb-2">H.I.I. AI Watchman — Hebrew Israelite Implementer Aboriginal Identity Watc</p>
           <p className="text-muted-foreground max-w-2xl mx-auto font-body">
             Consult with our Sovereign Universal Ethical Intelligence System for guidance aligned with divine truth
           </p>
