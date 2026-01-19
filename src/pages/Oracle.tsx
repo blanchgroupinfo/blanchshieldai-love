@@ -75,7 +75,7 @@ const Oracle = () => {
               <span className="gradient-text">Oracle Project</span>
             </h1>
             
-            <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">Lunar City, Motherships, Space Station and Command Center processing global resource allocation and AI sync. Secure, reliable, and decentralized oracle infrastructure connecting smart contracts with real-world data. Powered by S.H.I.E.L.D. AI verification systems.</p>
+            <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">Lunar City, Motherships, Space Station, and Command Center processing global resource allocation and AI sync. Secure, reliable, and decentralized oracle infrastructure connecting smart contracts with real-world data. Powered by Blanch S.H.I.E.L.D. AI verification systems.</p>
             
             <div className="flex flex-wrap gap-4 justify-center">
               <Button size="lg" className="gap-2">
@@ -119,10 +119,8 @@ const Oracle = () => {
         }} viewport={{
           once: true
         }} className="text-center mb-16">
-            <h2 className="text-4xl font-display font-bold mb-4">Oracle Capabilities</h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              Enterprise-grade oracle infrastructure for mission-critical applications
-            </p>
+            <h2 className="text-4xl font-display font-bold mb-4">Blanch Oracle and Blanch Network Capabilities</h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">Blanch Network Enterprise-grade Monitering the Blanch Oracle infrastructure for mission-critical applications</p>
           </motion.div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -169,10 +167,7 @@ const Oracle = () => {
               <h2 className="text-4xl font-display font-bold mb-6">
                 Diverse <span className="gradient-text">Data Sources</span>
               </h2>
-              <p className="text-muted-foreground mb-8">
-                Access a wide range of verified data feeds for your decentralized applications. 
-                Our oracle network aggregates data from multiple trusted sources to ensure accuracy.
-              </p>
+              <p className="text-muted-foreground mb-8">Access a wide range of verified data feeds for your decentralized applications. The Blanch Oracle and Blanch Network aggregates data from multiple trusted sources to ensure accuracy.</p>
               
               <div className="grid grid-cols-2 gap-4">
                 {dataTypes.map((type, index) => <motion.div key={type} initial={{
