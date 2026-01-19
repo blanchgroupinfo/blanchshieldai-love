@@ -358,7 +358,7 @@ const AIChatInterface = () => {
             <div className="flex items-center justify-between p-4 border-b border-border/50 bg-card/50">
               <div className="flex items-center gap-3">
                 <div className="relative">
-                  <img src={shieldLogo} alt="S.H.I.E.L.D. AI" className="w-10 h-10 rounded-lg" />
+                  <img alt="S.H.I.E.L.D. AI" className="w-10 h-10 rounded-lg" src="/lovable-uploads/e2b94e92-43fe-4096-bf98-5faac8405bf3.png" />
                   <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-background" />
                 </div>
                 <div>
