@@ -112,7 +112,7 @@ const CommandCenter = () => {
           Command Center
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-5xl bg-background/95 backdrop-blur-xl border-border/50">
+      <DialogContent className="max-w-4xl bg-background/95 backdrop-blur-xl border-border/50">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-3 text-2xl">
             <div className="p-2 rounded-xl bg-gradient-to-br from-primary/20 to-accent/20">
@@ -122,81 +122,82 @@ const CommandCenter = () => {
           </DialogTitle>
         </DialogHeader>
 
-        <div className="mt-4">
-          {/* Horizontal Scrollable Quick Actions */}
-          <ScrollArea className="w-full">
-            <div className="flex gap-4 p-4 min-w-max">
-              <AnimatePresence>
-                {quickActions.map((action, index) => (
-                  <motion.button
-                    key={action.id}
-                    initial={{ opacity: 0, x: 20, scale: 0.9 }}
-                    animate={{ opacity: 1, x: 0, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.9 }}
-                    transition={{ delay: index * 0.02, type: "spring", stiffness: 300 }}
-                    whileHover={{ 
-                      scale: 1.08, 
-                      y: -5,
-                      transition: { type: "spring", stiffness: 400 }
+        <div className="mt-6">
+          {/* Quick Action Grid - macOS Style */}
+          <div className="grid grid-cols-3 md:grid-cols-4 gap-4 p-4">
+            <AnimatePresence>
+              {quickActions.map((action, index) => (
+                <motion.button
+                  key={action.id}
+                  initial={{ opacity: 0, y: 20, scale: 0.9 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  transition={{ delay: index * 0.05, type: "spring", stiffness: 300 }}
+                  whileHover={{ 
+                    scale: 1.05, 
+                    y: -5,
+                    transition: { type: "spring", stiffness: 400 }
+                  }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => handleActionClick(action)}
+                  onMouseEnter={() => setHoveredAction(action.id)}
+                  onMouseLeave={() => setHoveredAction(null)}
+                  className="relative flex flex-col items-center p-4 rounded-2xl bg-card/50 border border-border/30 hover:border-primary/30 transition-all duration-300 group cursor-pointer"
+                >
+                  {/* 3D Icon Container */}
+                  <motion.div
+                    className={`relative p-4 rounded-2xl bg-gradient-to-br ${action.gradient} mb-3`}
+                    animate={{
+                      rotateY: hoveredAction === action.id ? 10 : 0,
+                      rotateX: hoveredAction === action.id ? -10 : 0,
                     }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => handleActionClick(action)}
-                    onMouseEnter={() => setHoveredAction(action.id)}
-                    onMouseLeave={() => setHoveredAction(null)}
-                    className="relative flex flex-col items-center p-4 rounded-2xl bg-card/50 border border-border/30 hover:border-primary/30 transition-all duration-300 group cursor-pointer min-w-[100px]"
+                    style={{ transformStyle: "preserve-3d", perspective: 1000 }}
                   >
-                    {/* 3D Icon Container */}
-                    <motion.div
-                      className={`relative p-3 rounded-2xl bg-gradient-to-br ${action.gradient} mb-2`}
-                      animate={{
-                        rotateY: hoveredAction === action.id ? 12 : 0,
-                        rotateX: hoveredAction === action.id ? -12 : 0,
-                      }}
-                      style={{ transformStyle: "preserve-3d", perspective: 1000 }}
-                    >
-                      {/* Glow effect */}
-                      <div className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${action.gradient} blur-xl opacity-0 group-hover:opacity-50 transition-opacity duration-300`} />
-                      
-                      {/* Icon with 3D shadow */}
-                      <div className="relative">
-                        <action.icon className={`w-7 h-7 ${action.color} relative z-10`} />
-                        <div className={`absolute inset-0 ${action.color} blur-md opacity-30`} />
-                      </div>
-                    </motion.div>
+                    {/* Glow effect */}
+                    <div className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${action.gradient} blur-xl opacity-0 group-hover:opacity-50 transition-opacity duration-300`} />
+                    
+                    {/* Icon with 3D shadow */}
+                    <div className="relative">
+                      <action.icon className={`w-8 h-8 ${action.color} relative z-10`} />
+                      <div className={`absolute inset-0 ${action.color} blur-md opacity-30`} />
+                    </div>
+                  </motion.div>
 
-                    {/* Label */}
-                    <span className="text-xs font-medium text-foreground text-center leading-tight whitespace-nowrap">
-                      {action.name}
-                    </span>
-                  </motion.button>
-                ))}
-              </AnimatePresence>
-            </div>
-          </ScrollArea>
+                  {/* Label */}
+                  <span className="text-sm font-medium text-foreground text-center leading-tight">
+                    {action.name}
+                  </span>
+                  <span className="text-xs text-muted-foreground text-center mt-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                    {action.description}
+                  </span>
+                </motion.button>
+              ))}
+            </AnimatePresence>
+          </div>
 
           {/* Full Command Center Button */}
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="mt-4 px-4"
+            transition={{ delay: 0.5 }}
+            className="mt-6 px-4"
           >
             <Button
               variant="shield"
-              className="w-full py-5 text-lg gap-3"
+              className="w-full py-6 text-lg gap-3"
               onClick={() => {
                 setIsOpen(false);
-                navigate("/command-center");
+                navigate("/admin");
               }}
             >
               <Shield className="w-5 h-5" />
-              Full Command Center
+              Full Command Center Overview
               <ChevronRight className="w-5 h-5" />
             </Button>
           </motion.div>
 
           {/* System Status */}
-          <div className="mt-4 px-4 pb-2">
+          <div className="mt-6 px-4 pb-2">
             <div className="flex items-center justify-between p-3 rounded-xl bg-card/30 border border-border/20">
               <div className="flex items-center gap-3">
                 <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
