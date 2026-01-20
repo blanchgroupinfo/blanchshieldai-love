@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { Shield, Menu, MessageSquare, Users, BookOpen, Scale, Home, Info, Cpu, Mail, Code, LogIn, LogOut, User, LayoutDashboard, Settings, TrendingUp } from "lucide-react";
+import { Shield, Menu, MessageSquare, Users, BookOpen, Scale, Home, Info, Cpu, Mail, Code, LogIn, LogOut, User, LayoutDashboard, Settings, TrendingUp, ChevronDown, Globe, Briefcase, Building, Gavel, Wallet, Database, Sparkles, Calendar, ScrollText, Heart, Network, ArrowRightLeft, Store, Boxes, Search, Landmark, FileCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -76,9 +76,31 @@ const scrollNavItems = [{
   href: "#compliance",
   icon: Scale
 }];
+
+const verticalMenuItems = [
+  { label: "S.H.I.E.L.D. AI LLM", href: "/shield-llm", icon: Sparkles },
+  { label: "H.E.E.D. Ventures", href: "/heed-ventures", icon: Briefcase },
+  { label: "Trading Finance Hub", href: "/trading", icon: TrendingUp },
+  { label: "Compliance & KYC", href: "/compliance-kyc", icon: FileCheck },
+  { label: "International Law", href: "/international-law", icon: Gavel },
+  { label: "Sovereign Court", href: "/sovereign-court", icon: Landmark },
+  { label: "Metaverse", href: "/metaverse", icon: Globe },
+  { label: "Explorer", href: "/explorer", icon: Search },
+  { label: "Oracle", href: "/oracle", icon: Database },
+  { label: "Creators Calendar", href: "/creators-calendar", icon: Calendar },
+  { label: "Laws & Commandments", href: "/laws-commandments", icon: ScrollText },
+  { label: "Philanthropy Hub", href: "/philanthropy", icon: Heart },
+  { label: "Distributed Ledger", href: "/distributed-ledger", icon: Boxes },
+  { label: "Cross Border Settlements", href: "/cross-border-settlements", icon: ArrowRightLeft },
+  { label: "Virtual Marketplace", href: "/virtual-marketplace", icon: Store },
+  { label: "Universal Business Network", href: "/universal-business-network", icon: Network },
+  { label: "Blanch Corridor", href: "/blanch-corridor", icon: Building },
+  { label: "Food Replicator", href: "/food-replicator", icon: Wallet },
+];
 const NavigationHeader = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [isVerticalMenuOpen, setIsVerticalMenuOpen] = useState(false);
   const [user, setUser] = useState<SupabaseUser | null>(null);
   const location = useLocation();
   const navigate = useNavigate();
@@ -127,19 +149,85 @@ const NavigationHeader = () => {
   return <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? "bg-background/80 backdrop-blur-xl border-b border-border/50 shadow-lg" : "bg-transparent"}`}>
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16 md:h-20">
-          {/* Logo */}
-          <Link to="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
-            <img alt="S.H.I.E.L.D. AI" className="w-10 h-10 md:w-12 md:h-12 rounded-lg object-contain" src="/lovable-uploads/07dc7f9b-5404-4ddb-8c5c-d24b1b61d6dd.png" />
-            <div className="hidden sm:block">
-              <span className="font-display font-bold text-lg gradient-text">Blanch S.H.I.E.L.D.</span>
-              <span className="font-display font-bold text-lg text-primary ml-1">AI</span>
-            </div>
-          </Link>
+          <div className="flex items-center gap-3">
+            {/* Vertical Navigation Menu */}
+            <DropdownMenu open={isVerticalMenuOpen} onOpenChange={setIsVerticalMenuOpen}>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" className="h-10 w-10">
+                  <Menu className="w-5 h-5" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent 
+                align="start" 
+                className="w-64 max-h-[80vh] overflow-y-auto bg-background/95 backdrop-blur-xl border-border"
+              >
+                <div className="px-3 py-2 border-b border-border/50">
+                  <span className="text-sm font-semibold text-primary">S.H.I.E.L.D. AI Navigation</span>
+                </div>
+                {verticalMenuItems.map((item) => (
+                  <DropdownMenuItem 
+                    key={item.label} 
+                    onClick={() => {
+                      navigate(item.href);
+                      setIsVerticalMenuOpen(false);
+                    }}
+                    className="cursor-pointer flex items-center gap-3 py-2"
+                  >
+                    <item.icon className="w-4 h-4 text-primary" />
+                    <span>{item.label}</span>
+                  </DropdownMenuItem>
+                ))}
+                <DropdownMenuSeparator />
+                {backendNavItems.map((item) => (
+                  <DropdownMenuItem 
+                    key={item.label} 
+                    onClick={() => {
+                      navigate(item.href);
+                      setIsVerticalMenuOpen(false);
+                    }}
+                    className="cursor-pointer flex items-center gap-3 py-2"
+                  >
+                    <item.icon className="w-4 h-4 text-muted-foreground" />
+                    <span>{item.label}</span>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            {/* Logo */}
+            <Link to="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+              <img alt="S.H.I.E.L.D. AI" className="w-10 h-10 md:w-12 md:h-12 rounded-lg object-contain" src="/lovable-uploads/07dc7f9b-5404-4ddb-8c5c-d24b1b61d6dd.png" />
+              <div className="hidden sm:block">
+                <span className="font-display font-bold text-lg gradient-text">Blanch S.H.I.E.L.D.</span>
+                <span className="font-display font-bold text-lg text-primary ml-1">AI</span>
+              </div>
+            </Link>
+          </div>
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center gap-1">
-            {navItems.map(item => {})}
-            {isHomePage && scrollNavItems.slice(0, 2).map(item => {})}
+            {navItems.map(item => (
+              <Link 
+                key={item.label} 
+                to={item.href}
+                className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  location.pathname === item.href 
+                    ? 'text-primary bg-primary/10' 
+                    : 'text-muted-foreground hover:text-foreground hover:bg-card/50'
+                }`}
+              >
+                {item.label}
+              </Link>
+            ))}
+            {isHomePage && scrollNavItems.slice(0, 2).map(item => (
+              <button
+                key={item.label}
+                onClick={() => scrollToSection(item.href)}
+                className="px-3 py-2 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-card/50 transition-colors"
+              >
+                {item.label}
+              </button>
+            ))}
           </nav>
 
           {/* CTA + Auth + Command Center + Mobile Menu */}
