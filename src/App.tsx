@@ -33,6 +33,8 @@ import PhilanthropyHub from "./pages/PhilanthropyHub";
 import DistributedLedger from "./pages/DistributedLedger";
 import CrossBorderSettlements from "./pages/CrossBorderSettlements";
 import BlanchCorridor from "./pages/BlanchCorridor";
+import CommandCenterPage from "./pages/CommandCenterPage";
+import CoreModules from "./pages/CoreModules";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -59,8 +61,8 @@ const App = () => (
           <Route path="/watchman" element={<Watchman />} />
           <Route path="/knowledge-base" element={<KnowledgeBasePage />} />
           <Route path="/trading" element={<Trading />} />
-          <Route path="/business-network" element={<UniversalBusinessNetwork />} />
-          <Route path="/marketplace" element={<VirtualMarketplace />} />
+          <Route path="/universal-business-network" element={<UniversalBusinessNetwork />} />
+          <Route path="/virtual-marketplace" element={<VirtualMarketplace />} />
           <Route path="/shield-llm" element={<ShieldLLM />} />
           <Route path="/heed-ventures" element={<HeedVentures />} />
           <Route path="/food-replicator" element={<FoodReplicator />} />
@@ -74,8 +76,10 @@ const App = () => (
           <Route path="/laws-commandments" element={<LawsCommandments />} />
           <Route path="/philanthropy" element={<PhilanthropyHub />} />
           <Route path="/distributed-ledger" element={<DistributedLedger />} />
-          <Route path="/cross-border" element={<CrossBorderSettlements />} />
+          <Route path="/cross-border-settlements" element={<CrossBorderSettlements />} />
           <Route path="/blanch-corridor" element={<BlanchCorridor />} />
+          <Route path="/command-center" element={<CommandCenterPage />} />
+          <Route path="/core-modules" element={<CoreModules />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
