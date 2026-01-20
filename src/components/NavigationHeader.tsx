@@ -78,24 +78,43 @@ const scrollNavItems = [{
 }];
 
 const verticalMenuItems = [
+  // AI & Technology
   { label: "S.H.I.E.L.D. AI LLM", href: "/shield-llm", icon: Sparkles },
   { label: "H.E.E.D. Ventures", href: "/heed-ventures", icon: Briefcase },
+  { label: "Project Watchman", href: "/watchman", icon: Shield },
+  
+  // Trading & Finance
   { label: "Trading Finance Hub", href: "/trading", icon: TrendingUp },
   { label: "Compliance & KYC", href: "/compliance-kyc", icon: FileCheck },
+  { label: "Cross Border Settlements", href: "/cross-border-settlements", icon: ArrowRightLeft },
+  
+  // Virtual Marketplace
+  { label: "Virtual Marketplace", href: "/virtual-marketplace", icon: Store },
+  { label: "Marketplace Auth", href: "/auth?redirect=/virtual-marketplace", icon: LogIn },
+  
+  // Legal & Governance
   { label: "International Law", href: "/international-law", icon: Gavel },
   { label: "Sovereign Court", href: "/sovereign-court", icon: Landmark },
+  { label: "Laws & Commandments", href: "/laws-commandments", icon: ScrollText },
+  
+  // Metaverse & Digital
   { label: "Metaverse", href: "/metaverse", icon: Globe },
   { label: "Explorer", href: "/explorer", icon: Search },
   { label: "Oracle", href: "/oracle", icon: Database },
-  { label: "Creators Calendar", href: "/creators-calendar", icon: Calendar },
-  { label: "Laws & Commandments", href: "/laws-commandments", icon: ScrollText },
-  { label: "Philanthropy Hub", href: "/philanthropy", icon: Heart },
   { label: "Distributed Ledger", href: "/distributed-ledger", icon: Boxes },
-  { label: "Cross Border Settlements", href: "/cross-border-settlements", icon: ArrowRightLeft },
-  { label: "Virtual Marketplace", href: "/virtual-marketplace", icon: Store },
+  
+  // Calendar & Faith
+  { label: "Creators Calendar", href: "/creators-calendar", icon: Calendar },
+  { label: "Philanthropy Hub", href: "/philanthropy", icon: Heart },
+  
+  // Networks & Infrastructure
   { label: "Universal Business Network", href: "/universal-business-network", icon: Network },
   { label: "Blanch Corridor", href: "/blanch-corridor", icon: Building },
   { label: "Food Replicator", href: "/food-replicator", icon: Wallet },
+  
+  // Knowledge & Resources
+  { label: "Knowledge Base", href: "/knowledge-base", icon: BookOpen },
+  { label: "API Documentation", href: "/api", icon: Code },
 ];
 const NavigationHeader = () => {
   const [isScrolled, setIsScrolled] = useState(false);
