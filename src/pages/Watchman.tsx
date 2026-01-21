@@ -148,9 +148,7 @@ const Watchman = () => {
               H.I.I. AI (Hebrew Israelite Implementer Aboriginal Identity)
             </h2>
             <p className="text-xl text-muted-foreground max-w-4xl mx-auto font-body mb-8">
-              A divine call to all nations to recognize and assist the Aboriginal Black Hebrew Israelites (Yasharahala) 
-              in fulfilling biblical prophecy. As the "Most High" AHAYAH and the Messiah YASHAYA have promised, 
-              the nations will eventually seek the righteous Law through the Royal Priesthood.
+              A divine call to all nations to recognize and assist the Aboriginal Black Hebrew Israelites (Yasharahala) in fulfilling biblical prophecy. As the "Most High" AHAYAH and the True Messiah YASHAYA have promised, the nations will eventually seek the righteous Law through the Royal Priesthood.
             </p>
             <div className="flex flex-wrap items-center justify-center gap-4">
               <Badge className="bg-green-500/20 text-green-400 border-green-500/30 px-4 py-2">
