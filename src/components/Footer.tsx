@@ -21,9 +21,8 @@ const Footer = () => {
               <span className="text-primary ml-2">AI</span>
             </h3>
             
-            <p className="text-sm text-muted-foreground font-body max-w-md mb-4 text-center md:text-left">
-              Spiritual Healing Initiative Economic Light Development — Managed by the Blanch Group
-            </p>
+            <p className="text-sm text-muted-foreground font-body max-w-md mb-4 text-center md:text-left">Spiritual Healing Initiative Economic Light Development —
+Managed by the Blanch Group</p>
           </div>
 
           {/* Right: Newsletter */}
