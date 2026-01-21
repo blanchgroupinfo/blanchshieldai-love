@@ -138,8 +138,26 @@ const NavigationHeader = () => {
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center gap-1">
-            {navItems.map(item => {})}
-            {isHomePage && scrollNavItems.slice(0, 2).map(item => {})}
+            {navItems.map(item => (
+              <Link 
+                key={item.href} 
+                to={item.href} 
+                className="flex items-center gap-2 px-3 py-2 text-sm text-muted-foreground hover:text-primary transition-colors"
+              >
+                <item.icon className="w-4 h-4" />
+                {item.label}
+              </Link>
+            ))}
+            {isHomePage && scrollNavItems.slice(0, 2).map(item => (
+              <a 
+                key={item.href} 
+                href={item.href} 
+                className="flex items-center gap-2 px-3 py-2 text-sm text-muted-foreground hover:text-primary transition-colors"
+              >
+                <item.icon className="w-4 h-4" />
+                {item.label}
+              </a>
+            ))}
           </nav>
 
           {/* CTA + Auth + Command Center + Mobile Menu */}
