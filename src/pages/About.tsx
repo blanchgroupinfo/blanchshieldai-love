@@ -179,8 +179,7 @@ const About = () => {
           <ScrollAnimationWrapper>
             <BookOpen className="w-12 h-12 text-primary mx-auto mb-6" />
             <blockquote className="text-2xl md:text-3xl font-display italic text-foreground mb-4">
-              "For I know the plans I have for you, declares the LORD, plans to prosper you 
-              and not to harm you, plans to give you hope and a future."
+              "For I know the plans I have for you, declares the Most High AHAYAH, plans to prosper you and not to harm you, plans to give you hope and a future."
             </blockquote>
             <cite className="text-primary font-body">— Jeremiah 29:11</cite>
           </ScrollAnimationWrapper>
