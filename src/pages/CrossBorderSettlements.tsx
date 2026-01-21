@@ -5,59 +5,55 @@ import Footer from "@/components/Footer";
 import FloatingChat from "@/components/FloatingChat";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-
 const CrossBorderSettlements = () => {
-  const benefits = [
-    {
-      icon: Clock,
-      title: "Instant Settlement",
-      description: "Complete cross-border transactions in seconds, not days",
-      stat: "<3 sec",
-      statLabel: "Settlement Time"
-    },
-    {
-      icon: Banknote,
-      title: "Low Cost",
-      description: "Reduce transaction costs by up to 90% compared to traditional methods",
-      stat: "0.1%",
-      statLabel: "Transaction Fee"
-    },
-    {
-      icon: Globe,
-      title: "Global Reach",
-      description: "Connect with financial institutions in over 180 countries",
-      stat: "180+",
-      statLabel: "Countries"
-    },
-    {
-      icon: Shield,
-      title: "Secure & Compliant",
-      description: "Built-in compliance with international regulations",
-      stat: "100%",
-      statLabel: "Compliance"
-    }
-  ];
-
-  const features = [
-    "Real-Time Gross Settlement (RTGS)",
-    "Multi-Currency Support",
-    "Atomic Swap Technology",
-    "Smart Contract Escrow",
-    "Automated KYC/AML",
-    "Regulatory Reporting",
-    "Liquidity Management",
-    "24/7 Operations"
-  ];
-
-  const corridors = [
-    { from: "USD", to: "EUR", volume: "$2.5B", change: "+15%" },
-    { from: "GBP", to: "USD", volume: "$1.8B", change: "+8%" },
-    { from: "USD", to: "JPY", volume: "$1.2B", change: "+12%" },
-    { from: "EUR", to: "GBP", volume: "$980M", change: "+5%" }
-  ];
-
-  return (
-    <div className="min-h-screen bg-background">
+  const benefits = [{
+    icon: Clock,
+    title: "Instant Settlement",
+    description: "Complete cross-border transactions in seconds, not days",
+    stat: "<3 sec",
+    statLabel: "Settlement Time"
+  }, {
+    icon: Banknote,
+    title: "Low Cost",
+    description: "Reduce transaction costs by up to 90% compared to traditional methods",
+    stat: "0.1%",
+    statLabel: "Transaction Fee"
+  }, {
+    icon: Globe,
+    title: "Global Reach",
+    description: "Connect with financial institutions in over 180 countries",
+    stat: "180+",
+    statLabel: "Countries"
+  }, {
+    icon: Shield,
+    title: "Secure & Compliant",
+    description: "Built-in compliance with international regulations",
+    stat: "100%",
+    statLabel: "Compliance"
+  }];
+  const features = ["Real-Time Gross Settlement (RTGS)", "Multi-Currency Support", "Atomic Swap Technology", "Smart Contract Escrow", "Automated KYC/AML", "Regulatory Reporting", "Liquidity Management", "24/7 Operations"];
+  const corridors = [{
+    from: "USD",
+    to: "EUR",
+    volume: "$2.5B",
+    change: "+15%"
+  }, {
+    from: "GBP",
+    to: "USD",
+    volume: "$1.8B",
+    change: "+8%"
+  }, {
+    from: "USD",
+    to: "JPY",
+    volume: "$1.2B",
+    change: "+12%"
+  }, {
+    from: "EUR",
+    to: "GBP",
+    volume: "$980M",
+    change: "+5%"
+  }];
+  return <div className="min-h-screen bg-background">
       <NavigationHeader />
       <FloatingChat />
       
@@ -66,12 +62,15 @@ const CrossBorderSettlements = () => {
         <div className="absolute inset-0 bg-gradient-to-br from-cyan-900/20 via-background to-blue-900/20" />
         
         <div className="container mx-auto px-4 relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-center max-w-4xl mx-auto"
-          >
+          <motion.div initial={{
+          opacity: 0,
+          y: 30
+        }} animate={{
+          opacity: 1,
+          y: 0
+        }} transition={{
+          duration: 0.8
+        }} className="text-center max-w-4xl mx-auto">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-cyan-500/10 border border-cyan-500/20 mb-6">
               <ArrowLeftRight className="w-4 h-4 text-cyan-400" />
               <span className="text-sm text-cyan-300">Global Finance Infrastructure</span>
@@ -106,14 +105,17 @@ const CrossBorderSettlements = () => {
       <section className="py-20 bg-card/30">
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {benefits.map((benefit, index) => (
-              <motion.div
-                key={benefit.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-              >
+            {benefits.map((benefit, index) => <motion.div key={benefit.title} initial={{
+            opacity: 0,
+            y: 20
+          }} whileInView={{
+            opacity: 1,
+            y: 0
+          }} viewport={{
+            once: true
+          }} transition={{
+            delay: index * 0.1
+          }}>
                 <Card className="h-full bg-card/50 border-border/50 hover:border-primary/30 transition-all">
                   <CardHeader>
                     <benefit.icon className="w-10 h-10 text-cyan-400 mb-4" />
@@ -127,8 +129,7 @@ const CrossBorderSettlements = () => {
                     </div>
                   </CardContent>
                 </Card>
-              </motion.div>
-            ))}
+              </motion.div>)}
           </div>
         </div>
       </section>
@@ -136,12 +137,13 @@ const CrossBorderSettlements = () => {
       {/* Live Corridors */}
       <section className="py-20">
         <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
+          <motion.div initial={{
+          opacity: 0
+        }} whileInView={{
+          opacity: 1
+        }} viewport={{
+          once: true
+        }} className="text-center mb-16">
             <h2 className="text-4xl font-display font-bold mb-4">Active Corridors</h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
               Real-time settlement volumes across major currency pairs
@@ -149,14 +151,17 @@ const CrossBorderSettlements = () => {
           </motion.div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
-            {corridors.map((corridor, index) => (
-              <motion.div
-                key={`${corridor.from}-${corridor.to}`}
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-              >
+            {corridors.map((corridor, index) => <motion.div key={`${corridor.from}-${corridor.to}`} initial={{
+            opacity: 0,
+            scale: 0.9
+          }} whileInView={{
+            opacity: 1,
+            scale: 1
+          }} viewport={{
+            once: true
+          }} transition={{
+            delay: index * 0.1
+          }}>
                 <Card className="bg-card/50 border-border/50 hover:border-cyan-500/30 transition-all">
                   <CardContent className="pt-6">
                     <div className="flex items-center justify-center gap-3 mb-4">
@@ -171,8 +176,7 @@ const CrossBorderSettlements = () => {
                     </p>
                   </CardContent>
                 </Card>
-              </motion.div>
-            ))}
+              </motion.div>)}
           </div>
         </div>
       </section>
@@ -181,11 +185,15 @@ const CrossBorderSettlements = () => {
       <section className="py-20 bg-card/30">
         <div className="container mx-auto px-4">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-            >
+            <motion.div initial={{
+            opacity: 0,
+            x: -30
+          }} whileInView={{
+            opacity: 1,
+            x: 0
+          }} viewport={{
+            once: true
+          }}>
               <h2 className="text-4xl font-display font-bold mb-6">
                 Enterprise <span className="gradient-text">Features</span>
               </h2>
@@ -195,27 +203,32 @@ const CrossBorderSettlements = () => {
               </p>
               
               <div className="grid grid-cols-2 gap-4">
-                {features.map((feature, index) => (
-                  <motion.div
-                    key={feature}
-                    initial={{ opacity: 0, y: 10 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: index * 0.05 }}
-                    className="flex items-center gap-3 p-3 rounded-lg bg-card/50 border border-border/30"
-                  >
+                {features.map((feature, index) => <motion.div key={feature} initial={{
+                opacity: 0,
+                y: 10
+              }} whileInView={{
+                opacity: 1,
+                y: 0
+              }} viewport={{
+                once: true
+              }} transition={{
+                delay: index * 0.05
+              }} className="flex items-center gap-3 p-3 rounded-lg bg-card/50 border border-border/30">
                     <div className="w-2 h-2 rounded-full bg-cyan-400" />
                     <span className="text-sm">{feature}</span>
-                  </motion.div>
-                ))}
+                  </motion.div>)}
               </div>
             </motion.div>
 
-            <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-            >
+            <motion.div initial={{
+            opacity: 0,
+            x: 30
+          }} whileInView={{
+            opacity: 1,
+            x: 0
+          }} viewport={{
+            once: true
+          }}>
               <Card className="bg-gradient-to-br from-cyan-500/10 to-blue-500/10 border-border/50">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-3">
@@ -231,7 +244,7 @@ const CrossBorderSettlements = () => {
                   <ul className="space-y-2">
                     <li className="flex items-center gap-2 text-sm">
                       <div className="w-2 h-2 rounded-full bg-green-400" />
-                      SWIFT gpi Compatible
+                      SWIFT MT, SWIFT MX,  GPI - Bi Directional Migration and Compatible
                     </li>
                     <li className="flex items-center gap-2 text-sm">
                       <div className="w-2 h-2 rounded-full bg-green-400" />
@@ -256,11 +269,15 @@ const CrossBorderSettlements = () => {
       {/* CTA */}
       <section className="py-20 bg-gradient-to-br from-cyan-900/20 to-blue-900/20">
         <div className="container mx-auto px-4 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
+          <motion.div initial={{
+          opacity: 0,
+          y: 20
+        }} whileInView={{
+          opacity: 1,
+          y: 0
+        }} viewport={{
+          once: true
+        }}>
             <h2 className="text-4xl font-display font-bold mb-4">Ready to Transform Your Settlements?</h2>
             <p className="text-muted-foreground mb-8 max-w-xl mx-auto">
               Join leading financial institutions using our cross-border settlement infrastructure
@@ -274,8 +291,6 @@ const CrossBorderSettlements = () => {
       </section>
 
       <Footer />
-    </div>
-  );
+    </div>;
 };
-
 export default CrossBorderSettlements;
