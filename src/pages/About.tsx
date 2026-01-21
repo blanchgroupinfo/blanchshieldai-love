@@ -53,10 +53,7 @@ const About = () => {
             <h1 className="text-4xl md:text-6xl font-display font-bold gradient-text mb-6">
               About S.H.I.E.L.D. AI
             </h1>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto font-body">
-              Spiritual Healing Initiative Economic Light Development - A comprehensive AI ecosystem 
-              designed to bless humanity through divine wisdom and advanced technology.
-            </p>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto font-body">Spiritual Healing Initiative Economic Light Development - Artificial Intelligence comprehensive AI ecosystem designed to bless humanity through divine wisdom and advanced technology.</p>
           </ScrollAnimationWrapper>
         </div>
       </section>
