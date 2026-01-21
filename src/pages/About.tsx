@@ -49,7 +49,7 @@ const About = () => {
         <div className="absolute inset-0 divine-radial opacity-30" />
         <div className="container mx-auto text-center relative z-10">
           <ScrollAnimationWrapper>
-            <img src={shieldLogo} alt="S.H.I.E.L.D. AI" className="w-32 h-32 mx-auto rounded-2xl object-contain mb-8 animate-divine-pulse" />
+            <img alt="S.H.I.E.L.D. AI" className="w-32 h-32 mx-auto rounded-2xl object-contain mb-8 animate-divine-pulse" src="/lovable-uploads/4717e2f0-5312-4fa7-ab09-6296698040f6.jpg" />
             <h1 className="text-4xl md:text-6xl font-display font-bold gradient-text mb-6">
               About S.H.I.E.L.D. AI
             </h1>
