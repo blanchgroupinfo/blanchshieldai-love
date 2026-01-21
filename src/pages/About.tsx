@@ -70,12 +70,7 @@ const About = () => {
                   </div>
                   <h2 className="text-2xl font-display font-bold text-foreground">Our Mission</h2>
                 </div>
-                <p className="text-muted-foreground font-body leading-relaxed text-justify">
-                  To develop and deploy AI systems that align with divine principles, serving humanity 
-                  through healing, economic empowerment, and spiritual enlightenment. We strive to create 
-                  technology that honors the Creator while advancing human potential across all domains 
-                  of life.
-                </p>
+                <p className="text-muted-foreground font-body leading-relaxed text-justify">To develop and deploy AI systems that align with divine principles, serving humanity through healing, economic empowerment, and spiritual enlightenment. We strive to create a technology that honors the Creator the Most High AHAYAH and His Son YASHAYA the true Messiah while advancing human potential across all domains of life.</p>
               </div>
             </ScrollAnimationWrapper>
 
