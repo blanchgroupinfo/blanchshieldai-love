@@ -22,7 +22,7 @@ const About = () => {
     description: "Making advanced AI technology accessible to all people across the globe."
   }];
   const leadership = [{
-    name: "Dr. I. E. Blanch",
+    name: "HRH King Will Blanch Asa Yasharahala",
     role: "Founder & Chief Visionary Officer",
     description: "Visionary leader guiding S.H.I.E.L.D. AI with spiritual wisdom and technological innovation."
   }, {
