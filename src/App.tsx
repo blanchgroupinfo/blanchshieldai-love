@@ -33,6 +33,9 @@ import PhilanthropyHub from "./pages/PhilanthropyHub";
 import DistributedLedger from "./pages/DistributedLedger";
 import CrossBorderSettlements from "./pages/CrossBorderSettlements";
 import BlanchCorridor from "./pages/BlanchCorridor";
+import CommandCenterPage from "./pages/CommandCenter";
+import WebAppBuilding from "./pages/WebAppBuilding";
+import AutoCAD from "./pages/AutoCAD";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -76,6 +79,9 @@ const App = () => (
           <Route path="/distributed-ledger" element={<DistributedLedger />} />
           <Route path="/cross-border" element={<CrossBorderSettlements />} />
           <Route path="/blanch-corridor" element={<BlanchCorridor />} />
+          <Route path="/command-center" element={<CommandCenterPage />} />
+          <Route path="/web-app-building" element={<WebAppBuilding />} />
+          <Route path="/autocad" element={<AutoCAD />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

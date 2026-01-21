@@ -5,7 +5,7 @@ import { Shield, Menu, MessageSquare, Users, BookOpen, Scale, Home, Info, Cpu, M
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import CommandCenter from "@/components/CommandCenter";
+import { Link as RouterLink } from "react-router-dom";
 import shieldLogo from "@/assets/shield-logo.jpg";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
 const navItems = [{
@@ -163,7 +163,16 @@ const NavigationHeader = () => {
           {/* CTA + Auth + Command Center + Mobile Menu */}
           <div className="flex items-center gap-3">
 
-            <CommandCenter />
+            <RouterLink to="/command-center">
+              <Button
+                variant="outline"
+                size="sm"
+                className="hidden sm:flex gap-2 border-primary/30 bg-primary/5 hover:bg-primary/10 text-primary"
+              >
+                <Cpu className="w-4 h-4" />
+                Command Center
+              </Button>
+            </RouterLink>
             {user ? <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="outline" size="sm" className="hidden sm:flex">
