@@ -86,8 +86,9 @@ const CommandCenterPage = () => {
     { id: "llm", name: "S.H.I.E.L.D. AI LLM", description: "Large Language Model", icon: Brain, color: "text-purple-400", gradient: "from-purple-500/20 to-pink-500/20", link: "/shield-llm", category: "ai" },
     { id: "dlt", name: "DLT Technologies", description: "No Fees, No Mining", icon: Blocks, color: "text-blue-400", gradient: "from-blue-500/20 to-indigo-500/20", link: "/distributed-ledger", category: "technology" },
     { id: "api", name: "API & Integrations", description: "Developer Tools", icon: Link2, color: "text-green-400", gradient: "from-green-500/20 to-teal-500/20", link: "/api", category: "technology" },
-    { id: "interfaces", name: "Build Interfaces", description: "Hologram & OS Systems", icon: Monitor, color: "text-cyan-400", gradient: "from-cyan-500/20 to-blue-500/20", link: "/technology", category: "technology" },
-    
+       { id: "interfaces", name: "Build Interfaces", description: "S.H.I.E.L.D. AI Hologram & OS Systems", icon: Monitor, color: "text-cyan-400", gradient: "from-cyan-500/20 to-blue-500/20", link: "/technology", category: "technology" },
+    { id: "interfaces", name: "S.H.I.E.L.D. AI Interfaces", description: "S.H.I.E.L.D. AI Hologram & OS Systems", icon: Monitor, color: "text-cyan-400", gradient: "from-cyan-500/20 to-blue-500/20", link: "/technology", category: "technology" },
+
     // Cloud & Infrastructure
     { id: "drive", name: "S.H.I.E.L.D. Drive", description: "Cloud Storage", icon: HardDrive, color: "text-blue-400", gradient: "from-blue-500/20 to-cyan-500/20", link: "/dashboard", category: "cloud" },
     { id: "blanch-drive", name: "Blanch Drive", description: "Enterprise Storage", icon: HardDrive, color: "text-indigo-400", gradient: "from-indigo-500/20 to-purple-500/20", link: "/dashboard", category: "cloud" },
@@ -212,7 +213,7 @@ const CommandCenterPage = () => {
               </div>
             </div>
             <h1 className="text-4xl md:text-5xl font-display font-bold gradient-text mb-4">
-              S.H.I.E.L.D. Command Center
+              S.H.I.E.L.D. AI Command Center
             </h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
               Access all platform features, tools, and services from one unified command center
