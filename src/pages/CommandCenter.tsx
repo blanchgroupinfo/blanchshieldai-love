@@ -60,7 +60,7 @@ const CommandCenterPage = () => {
     
     // Trading & Finance
     { id: "trading", name: "Trading Finance Hub", description: "S.H.I.E.L.D. AI Trading", icon: TrendingUp, color: "text-green-400", gradient: "from-green-500/20 to-emerald-500/20", link: "/trading", category: "finance" },
-    { id: "banking", name: "S.H.I.E.L.D. Banking", description: "Digital Banking", icon: Landmark, color: "text-emerald-400", gradient: "from-emerald-500/20 to-green-500/20", link: "/trading", category: "finance" },
+    { id: "banking", name: "S.H.I.E.L.D. AI Banking", description: "Digital Banking", icon: Landmark, color: "text-emerald-400", gradient: "from-emerald-500/20 to-green-500/20", link: "/trading", category: "finance" },
     { id: "deposit", name: "Deposit", description: "Fund Your Account", icon: CreditCard, color: "text-green-400", gradient: "from-green-500/20 to-emerald-500/20", link: "/dashboard", category: "finance" },
     { id: "withdraw", name: "Withdraw", description: "Withdraw Funds", icon: Wallet, color: "text-blue-400", gradient: "from-blue-500/20 to-cyan-500/20", link: "/dashboard", category: "finance" },
     { id: "order-history", name: "Order History", description: "Transaction Records", icon: History, color: "text-purple-400", gradient: "from-purple-500/20 to-pink-500/20", link: "/dashboard", category: "finance" },
@@ -113,8 +113,8 @@ const CommandCenterPage = () => {
     { id: "marketing", name: "Marketing", description: "Campaign Management", icon: Target, color: "text-pink-400", gradient: "from-pink-500/20 to-rose-500/20", link: "/admin", category: "marketing" },
     
     // Media & Creative
-    { id: "studios", name: "S.H.I.E.L.D. Studios", description: "Media Production", icon: Film, color: "text-red-400", gradient: "from-red-500/20 to-pink-500/20", link: "/technology", category: "media" },
-    { id: "creative-media", name: "Creative Media", description: "Content Creation", icon: Palette, color: "text-pink-400", gradient: "from-pink-500/20 to-purple-500/20", link: "/technology", category: "media" },
+    { id: "studios", name: "S.H.I.E.L.D. AI Studios", description: "Media Production", icon: Film, color: "text-red-400", gradient: "from-red-500/20 to-pink-500/20", link: "/technology", category: "media" },
+    { id: "creative-media", name: "S.H.I.E.L.D. AI Creative Media", description: "Content Creation", icon: Palette, color: "text-pink-400", gradient: "from-pink-500/20 to-purple-500/20", link: "/technology", category: "media" },
     
     // Compliance & Legal
     { id: "compliance", name: "Compliance & KYC", description: "Regulatory Compliance", icon: FileCheck, color: "text-green-400", gradient: "from-green-500/20 to-emerald-500/20", link: "/compliance-kyc", category: "compliance" },
@@ -122,10 +122,10 @@ const CommandCenterPage = () => {
     { id: "international-law", name: "International Law", description: "Legal Framework", icon: Scale, color: "text-blue-400", gradient: "from-blue-500/20 to-indigo-500/20", link: "/international-law", category: "compliance" },
     
     // Blanch Network
-    { id: "corridor", name: "Blanch Corridor", description: "Global Network", icon: Network, color: "text-indigo-400", gradient: "from-indigo-500/20 to-purple-500/20", link: "/blanch-corridor", category: "network" },
+    { id: "blanch-network", name: "Blanch Network", description: "Global Network", icon: Globe, color: "text-indigo-400", gradient: "from-indigo-500/20 to-purple-500/20", link: "/blanch-network", category: "network" },
     { id: "oracle", name: "Blanch Oracle", description: "Decentralized Oracle", icon: Eye, color: "text-amber-400", gradient: "from-amber-500/20 to-yellow-500/20", link: "/oracle", category: "network" },
     { id: "blanch-group", name: "Blanch Group", description: "Enterprise Group", icon: Building2, color: "text-blue-400", gradient: "from-blue-500/20 to-indigo-500/20", link: "/about", category: "network" },
-    { id: "blanch-network", name: "Blanch Network", description: "Global Infrastructure", icon: Globe, color: "text-purple-400", gradient: "from-purple-500/20 to-pink-500/20", link: "/blanch-corridor", category: "network" },
+    { id: "corridor", name: "Blanch Corridor", description: "Global Infrastructure", icon: Globe, color: "text-purple-400", gradient: "from-purple-500/20 to-pink-500/20", link: "/blanch-corridor", category: "network" },
     
     // Programs & Ventures
     { id: "ventures", name: "H.E.E.D. Ventures", description: "Submit Your Ventures", icon: Rocket, color: "text-orange-400", gradient: "from-orange-500/20 to-red-500/20", link: "/heed-ventures", category: "programs" },
