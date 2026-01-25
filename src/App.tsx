@@ -36,6 +36,7 @@ import BlanchCorridor from "./pages/BlanchCorridor";
 import CommandCenterPage from "./pages/CommandCenter";
 import WebAppBuilding from "./pages/WebAppBuilding";
 import AutoCAD from "./pages/AutoCAD";
+import USCPB from "./pages/USCPB";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -82,6 +83,7 @@ const App = () => (
           <Route path="/command-center" element={<CommandCenterPage />} />
           <Route path="/web-app-building" element={<WebAppBuilding />} />
           <Route path="/autocad" element={<AutoCAD />} />
+          <Route path="/uscpb" element={<USCPB />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
