@@ -101,7 +101,7 @@ const CommandCenterPage = () => {
     // Virtual & Metaverse
     { id: "metaverse", name: "S.H.I.E.L.D. AI Metaverse", description: "Virtual Reality Worlds", icon: Boxes, color: "text-purple-400", gradient: "from-purple-500/20 to-pink-500/20", link: "/metaverse", category: "virtual" },
     { id: "hologram", name: " S.H.I.E.L.D. AI Hologram", description: "3D Holographic & OS Systems", icon: Box, color: "text-cyan-400", gradient: "from-cyan-500/20 to-teal-500/20", link: "/technology", category: "virtual" },
-    { id: "conference", name: " S.H.I.E.L.D. AI Virtual Conference", description: "Video Meetings & Conference Calls", icon: Video, color: "text-blue-400", gradient: "from-blue-500/20 to-indigo-500/20", link: "/technology", category: "virtual" },
+    { id: "conference", name: "S.H.I.E.L.D. AI Virtual Conference", description: "Video Meetings & Conference Calls", icon: Video, color: "text-blue-400", gradient: "from-blue-500/20 to-indigo-500/20", link: "/technology", category: "virtual" },
 
     // Explorer & Analytics
     { id: "explorer", name: "S.H.I.E.L.D. AI Explorer", description: "Blockchain Explorer", icon: Search, color: "text-blue-400", gradient: "from-blue-500/20 to-cyan-500/20", link: "/explorer", category: "analytics" },
@@ -361,3 +361,4 @@ const CommandCenterPage = () => {
 };
 
 export default CommandCenterPage;
+
