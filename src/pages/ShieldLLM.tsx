@@ -144,10 +144,7 @@ const ShieldLLM = () => {
                   <span className="gradient-text">Comprehensive</span>
                   <br />AI Capabilities
                 </h2>
-                <p className="text-muted-foreground mb-8">
-                  S.H.I.E.L.D. AI LLM powers the entire H.I.I. AI ecosystem, providing 
-                  intelligent responses across all 402 sovereign agents and modules.
-                </p>
+                <p className="text-muted-foreground mb-8">S.H.I.E.L.D. AI LLM powers the entire H.I.I. AI, Blanch Group ecosystem, providing intelligent responses across all 402 sovereign agents and modules.</p>
                 
                 <div className="grid grid-cols-2 gap-3">
                   {capabilities.map((cap, index) => <motion.div key={cap} initial={{
