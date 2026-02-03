@@ -37,6 +37,7 @@ import CommandCenterPage from "./pages/CommandCenter";
 import WebAppBuilding from "./pages/WebAppBuilding";
 import AutoCAD from "./pages/AutoCAD";
 import USCPB from "./pages/USCPB";
+import AIGateway from "./pages/AIGateway";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -84,6 +85,7 @@ const App = () => (
           <Route path="/web-app-building" element={<WebAppBuilding />} />
           <Route path="/autocad" element={<AutoCAD />} />
           <Route path="/uscpb" element={<USCPB />} />
+          <Route path="/ai-gateway" element={<AIGateway />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
