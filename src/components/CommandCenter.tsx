@@ -46,6 +46,7 @@ const CommandCenter = () => {
   }, []);
 
   const quickActions: QuickAction[] = [
+    { id: "ai-gateway", name: "S.H.I.E.L.D. AI Gateway", description: "Unified AI API Gateway", icon: Zap, color: "text-yellow-400", gradient: "from-yellow-500/20 to-amber-500/20", link: "/ai-gateway" },
     { id: "dashboard", name: "Dashboard", description: "User Control Panel", icon: BarChart3, color: "text-emerald-400", gradient: "from-emerald-500/20 to-green-500/20", link: "/dashboard" },
     { id: "admin", name: "Admin Panel", description: "System Administration", icon: Shield, color: "text-red-400", gradient: "from-red-500/20 to-orange-500/20", link: "/admin" },
     { id: "agents", name: "AI Agents", description: "500+ H.I.I. AI Unified Agents", icon: Cpu, color: "text-blue-400", gradient: "from-blue-500/20 to-cyan-500/20", link: "/agents" },
