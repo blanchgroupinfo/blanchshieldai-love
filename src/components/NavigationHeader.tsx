@@ -207,10 +207,10 @@ const NavigationHeader = () => {
               Ask AI
             </Button>
 
-            {/* Mobile Menu */}
+            {/* Menu */}
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
-              <SheetTrigger asChild className="lg:hidden">
-                <Button variant="ghost" size="icon">
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="icon" className="hidden sm:flex">
                   <Menu className="w-5 h-5" />
                 </Button>
               </SheetTrigger>
