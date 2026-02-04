@@ -185,10 +185,10 @@ const NavigationHeader = () => {
               Ask AI
             </Button>
 
-            {/* Menu */}
+            {/* Menu - Always visible */}
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="hidden sm:flex">
+                <Button variant="ghost" size="icon" className="flex">
                   <Menu className="w-5 h-5" />
                 </Button>
               </SheetTrigger>
@@ -202,7 +202,30 @@ const NavigationHeader = () => {
                     </div>
                   </div>
 
-                  {/* Navigation links removed per user request */}
+                  {/* Navigation Links */}
+                  <nav className="flex flex-col gap-2">
+                    {navItems.map(item => (
+                      <Link 
+                        key={item.label} 
+                        to={item.href} 
+                        onClick={() => setIsOpen(false)} 
+                        className={`flex items-center gap-3 px-4 py-3 rounded-lg font-body text-left transition-all duration-200 ${location.pathname === item.href ? "bg-primary/10 text-primary" : "text-muted-foreground hover:text-foreground hover:bg-card/50"}`}
+                      >
+                        <item.icon className="w-5 h-5" />
+                        {item.label}
+                      </Link>
+                    ))}
+                    {isHomePage && scrollNavItems.map(item => (
+                      <button 
+                        key={item.label} 
+                        onClick={() => scrollToSection(item.href)} 
+                        className="flex items-center gap-3 px-4 py-3 rounded-lg font-body text-left text-muted-foreground hover:text-foreground hover:bg-card/50 transition-all duration-200"
+                      >
+                        <item.icon className="w-5 h-5" />
+                        {item.label}
+                      </button>
+                    ))}
+                  </nav>
 
                   <div className="space-y-3 mt-4">
                     {user ? <>
