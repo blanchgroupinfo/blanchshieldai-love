@@ -14,6 +14,48 @@ export type Database = {
   }
   public: {
     Tables: {
+      calendar_events: {
+        Row: {
+          calendar_day: number
+          calendar_month: number
+          calendar_year: number
+          created_at: string
+          description: string | null
+          event_type: string | null
+          id: string
+          is_recurring: boolean | null
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          calendar_day: number
+          calendar_month: number
+          calendar_year: number
+          created_at?: string
+          description?: string | null
+          event_type?: string | null
+          id?: string
+          is_recurring?: boolean | null
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          calendar_day?: number
+          calendar_month?: number
+          calendar_year?: number
+          created_at?: string
+          description?: string | null
+          event_type?: string | null
+          id?: string
+          is_recurring?: boolean | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       chat_conversations: {
         Row: {
           created_at: string
@@ -97,6 +139,33 @@ export type Database = {
         }
         Relationships: []
       }
+      holy_day_reminders: {
+        Row: {
+          created_at: string
+          holy_day_name: string
+          id: string
+          remind_days_before: number | null
+          reminder_enabled: boolean | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          holy_day_name: string
+          id?: string
+          remind_days_before?: number | null
+          reminder_enabled?: boolean | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          holy_day_name?: string
+          id?: string
+          remind_days_before?: number | null
+          reminder_enabled?: boolean | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       newsletter_subscriptions: {
         Row: {
           created_at: string
@@ -149,6 +218,39 @@ export type Database = {
           email?: string | null
           full_name?: string | null
           id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_locations: {
+        Row: {
+          created_at: string
+          id: string
+          latitude: number
+          location_name: string | null
+          longitude: number
+          timezone: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          latitude: number
+          location_name?: string | null
+          longitude: number
+          timezone?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          latitude?: number
+          location_name?: string | null
+          longitude?: number
+          timezone?: string | null
           updated_at?: string
           user_id?: string
         }
