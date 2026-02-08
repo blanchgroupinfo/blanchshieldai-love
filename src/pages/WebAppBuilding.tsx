@@ -55,7 +55,7 @@ const WebAppBuilding = () => {
     },
     {
       icon: Terminal,
-      title: "CLI Tools",
+      title: "AI-powered IDE and CLI Tools",
       description: "Powerful command-line development tools"
     },
     {
