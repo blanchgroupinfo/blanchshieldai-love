@@ -454,7 +454,6 @@ const CreatorsCalendar = () => {
                     <CardTitle className="flex items-center gap-3 text-center">
                       <Calendar className="w-6 h-6 text-amber-400" />
                       <span className="text-amber-400 text-2xl">Month {monthData.monthNumber}</span>
-                      <span className="font-display text-lg">({monthData.hebrewName})</span>
                       <span className="text-muted-foreground text-sm">({monthData.gregorianMonths})</span>
                     </CardTitle>
                     
