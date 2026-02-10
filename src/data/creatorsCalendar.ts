@@ -65,32 +65,42 @@ export const hebrewDayNames = [
 
 // 12 Months - Named by number as commanded by the Most High AHAYAH
 // The Most High did not name months - simply Month 1 through Month 12
+// Pattern: 30, 30, 31 per season (4 seasons = 364 days)
 export const calendarMonths: CalendarMonth[] = [
   { monthNumber: 1, hebrewName: "Month 1", gregorianMonths: "March/April", days: 30 },
   { monthNumber: 2, hebrewName: "Month 2", gregorianMonths: "April/May", days: 30 },
-  { monthNumber: 3, hebrewName: "Month 3", gregorianMonths: "May/June", days: 30 },
+  { monthNumber: 3, hebrewName: "Month 3", gregorianMonths: "May/June", days: 31 },
   { monthNumber: 4, hebrewName: "Month 4", gregorianMonths: "June/July", days: 30 },
   { monthNumber: 5, hebrewName: "Month 5", gregorianMonths: "July/August", days: 30 },
-  { monthNumber: 6, hebrewName: "Month 6", gregorianMonths: "August/September", days: 30 },
+  { monthNumber: 6, hebrewName: "Month 6", gregorianMonths: "August/September", days: 31 },
   { monthNumber: 7, hebrewName: "Month 7", gregorianMonths: "September/October", days: 30 },
   { monthNumber: 8, hebrewName: "Month 8", gregorianMonths: "October/November", days: 30 },
-  { monthNumber: 9, hebrewName: "Month 9", gregorianMonths: "November/December", days: 30 },
+  { monthNumber: 9, hebrewName: "Month 9", gregorianMonths: "November/December", days: 31 },
   { monthNumber: 10, hebrewName: "Month 10", gregorianMonths: "December/January", days: 30 },
   { monthNumber: 11, hebrewName: "Month 11", gregorianMonths: "January/February", days: 30 },
-  { monthNumber: 12, hebrewName: "Month 12", gregorianMonths: "February/March", days: 30 },
+  { monthNumber: 12, hebrewName: "Month 12", gregorianMonths: "February/March", days: 31 },
 ];
 
-// Holy Days, Feasts, and Fasts
+// Calculate absolute day number (1-364) from month and day
+export const getAbsoluteDay = (month: number, day: number): number => {
+  let total = 0;
+  for (let m = 1; m < month; m++) {
+    total += calendarMonths[m - 1].days;
+  }
+  return total + day;
+};
+
+// Holy Days, Feasts, and Fasts - per PDF template
 export const feasts: Feast[] = [
-  // 1st Month - Abib/Nisan
+  // 1st Month
   { 
     id: "new-year",
-    name: "New Year / New Month", 
+    name: "New Year - First Day of Creation", 
     hebrewName: "Rosh Hashanah / Hadash", 
     month: 1, 
     day: 1, 
     endDay: 1,
-    description: "Beginning of months, beginning of the year", 
+    description: "The beginning of the Creator's year, marking the first day of creation and the start of the agricultural year in spring.", 
     type: "new-month",
     noWork: false,
     scriptures: ["Exodus 12:2", "Numbers 10:10", "Exodus 40"]
@@ -102,37 +112,37 @@ export const feasts: Feast[] = [
     month: 1, 
     day: 14, 
     endDay: 14,
-    description: "Memorial of deliverance from Egypt - at even", 
+    description: "Passover commemorates the deliverance from Egypt", 
     type: "holy-day",
     noWork: true,
     scriptures: ["Exodus 12:6", "Leviticus 23:5", "Numbers 9:2-3"]
   },
   { 
     id: "unleavened-bread",
-    name: "Feast of Unleavened Bread", 
-    hebrewName: "Hag Matzah", 
+    name: "Unleavened Bread / Wave Sheaf", 
+    hebrewName: "Hag Matzah / Nawap Amar", 
     month: 1, 
     day: 15, 
+    endDay: 15,
+    description: "Feast of Unleavened Bread begins and Wave Sheaf Offering", 
+    type: "feast",
+    noWork: true,
+    scriptures: ["Exodus 12:15-20", "Leviticus 23:6-8", "Leviticus 23:10-14"]
+  },
+  { 
+    id: "unleavened-bread-ends",
+    name: "Unleavened Bread Ends", 
+    hebrewName: "Hag Matzah", 
+    month: 1, 
+    day: 21, 
     endDay: 21,
-    description: "Seven days of unleavened bread - No leaven in homes", 
+    description: "The seventh and final day of Unleavened Bread, a sacred assembly.", 
     type: "feast",
     noWork: true,
     scriptures: ["Exodus 12:15-20", "Leviticus 23:6-8", "Numbers 28:17-25"]
   },
-  { 
-    id: "wave-sheaf",
-    name: "Wave Sheaf / First Fruits", 
-    hebrewName: "Nawap Amar / Bakawar", 
-    month: 1, 
-    day: 16, 
-    endDay: 16,
-    description: "Wave offering of first fruits", 
-    type: "holy-day",
-    noWork: false,
-    scriptures: ["Leviticus 23:10-14"]
-  },
   
-  // 2nd Month - Zif/Iyyar
+  // 2nd Month
   { 
     id: "month-2",
     name: "New Month", 
@@ -145,20 +155,8 @@ export const feasts: Feast[] = [
     noWork: false,
     scriptures: ["Numbers 10:10"]
   },
-  { 
-    id: "second-passover",
-    name: "Second Passover", 
-    hebrewName: "Pesach Sheni", 
-    month: 2, 
-    day: 14, 
-    endDay: 14,
-    description: "For those who could not keep first Passover", 
-    type: "holy-day",
-    noWork: false,
-    scriptures: ["Numbers 9:10-11"]
-  },
   
-  // 3rd Month - Sivan
+  // 3rd Month
   { 
     id: "month-3",
     name: "New Month", 
@@ -173,18 +171,18 @@ export const feasts: Feast[] = [
   },
   { 
     id: "pentecost",
-    name: "Feast of Pentecost / Weeks", 
+    name: "Feast of Pentecost", 
     hebrewName: "Hag Shavuot", 
     month: 3, 
     day: 3, 
     endDay: 4,
-    description: "Feast of First Fruits, Feast of Harvest - 50 days after Wave Sheaf", 
+    description: "Festival of First Fruits and Harvest, celebrating the giving of the Torah/Tarah", 
     type: "feast",
     noWork: true,
     scriptures: ["Leviticus 23:15-21", "Exodus 34:22", "Deuteronomy 16:10"]
   },
   
-  // 4th Month - Tammuz
+  // 4th Month
   { 
     id: "month-4",
     name: "New Month", 
@@ -200,17 +198,17 @@ export const feasts: Feast[] = [
   { 
     id: "fast-4",
     name: "Fourth Month Fast", 
-    hebrewName: "Tzom Tammuz", 
+    hebrewName: "Fast", 
     month: 4, 
-    day: 10, 
-    endDay: 10,
-    description: "Fast day - at even to even, no work", 
+    day: 9, 
+    endDay: 9,
+    description: "A three-day fast of mourning and repentance", 
     type: "fast",
     noWork: true,
     scriptures: ["Zechariah 8:19"]
   },
   
-  // 5th Month - Ab
+  // 5th Month
   { 
     id: "month-5",
     name: "New Month", 
@@ -226,17 +224,17 @@ export const feasts: Feast[] = [
   { 
     id: "fast-5",
     name: "Fifth Month Fast", 
-    hebrewName: "Tzom Ab", 
+    hebrewName: "Fast", 
     month: 5, 
-    day: 10, 
-    endDay: 10,
-    description: "Fast day - at even to even, no work", 
+    day: 9, 
+    endDay: 9,
+    description: "A three-day fast commemorating the destruction of the Temple", 
     type: "fast",
     noWork: true,
     scriptures: ["Zechariah 8:19"]
   },
   
-  // 6th Month - Elul
+  // 6th Month
   { 
     id: "month-6",
     name: "New Month", 
@@ -250,7 +248,7 @@ export const feasts: Feast[] = [
     scriptures: ["Numbers 10:10"]
   },
   
-  // 7th Month - Ethanim/Tishri
+  // 7th Month
   { 
     id: "trumpets",
     name: "Feast of Trumpets", 
@@ -258,7 +256,7 @@ export const feasts: Feast[] = [
     month: 7, 
     day: 1, 
     endDay: 1,
-    description: "Day of blowing trumpets - Holy convocation", 
+    description: "The Day of Trumpets, a memorial of blowing trumpets signaling repentance and preparation.", 
     type: "holy-day",
     noWork: true,
     scriptures: ["Leviticus 23:24-25", "Numbers 29:1"]
@@ -270,7 +268,7 @@ export const feasts: Feast[] = [
     month: 7, 
     day: 10, 
     endDay: 10,
-    description: "Most holy day of fasting and repentance - afflict your souls", 
+    description: "The most solemn day of the year, a day of fasting, repentance, and atonement for sins.", 
     type: "holy-day",
     noWork: true,
     scriptures: ["Leviticus 23:27-32", "Leviticus 16", "Numbers 29:7"]
@@ -281,26 +279,14 @@ export const feasts: Feast[] = [
     hebrewName: "Hag Sukkot", 
     month: 7, 
     day: 15, 
-    endDay: 21,
-    description: "Seven days dwelling in booths - rejoicing before AHAYAH", 
+    endDay: 15,
+    description: "The Feast of Tabernacles, an eight-day celebration of dwelling in temporary shelters.", 
     type: "feast",
     noWork: true,
     scriptures: ["Leviticus 23:34-36", "Numbers 29:12", "Deuteronomy 16:13-15"]
   },
-  { 
-    id: "last-great-day",
-    name: "Last Great Day", 
-    hebrewName: "Shemini Atzeret", 
-    month: 7, 
-    day: 22, 
-    endDay: 22,
-    description: "Eighth day holy assembly", 
-    type: "holy-day",
-    noWork: true,
-    scriptures: ["Leviticus 23:36", "Numbers 29:35", "John 7:37"]
-  },
   
-  // 8th Month - Bul/Cheshvan
+  // 8th Month
   { 
     id: "month-8",
     name: "New Month", 
@@ -314,7 +300,7 @@ export const feasts: Feast[] = [
     scriptures: ["Numbers 10:10"]
   },
   
-  // 9th Month - Kislev
+  // 9th Month
   { 
     id: "month-9",
     name: "New Month", 
@@ -328,19 +314,31 @@ export const feasts: Feast[] = [
     scriptures: ["Numbers 10:10"]
   },
   { 
+    id: "fast-9",
+    name: "Ninth Month Fast", 
+    hebrewName: "Fast", 
+    month: 9, 
+    day: 20, 
+    endDay: 20,
+    description: "A three-day fast in the ninth month", 
+    type: "fast",
+    noWork: true,
+    scriptures: ["Zechariah 8:19"]
+  },
+  { 
     id: "dedication",
     name: "Feast of Dedication", 
     hebrewName: "Hanukkah", 
     month: 9, 
     day: 25, 
     endDay: 25,
-    description: "Dedication of the Temple", 
+    description: "The Feast of Lights, celebrating the rededication of the Temple", 
     type: "feast",
     noWork: false,
     scriptures: ["John 10:22"]
   },
   
-  // 10th Month - Tebeth
+  // 10th Month
   { 
     id: "month-10",
     name: "New Month", 
@@ -356,17 +354,17 @@ export const feasts: Feast[] = [
   { 
     id: "fast-10",
     name: "Tenth Month Fast", 
-    hebrewName: "Tzom Tebeth", 
+    hebrewName: "Fast", 
     month: 10, 
-    day: 10, 
-    endDay: 10,
-    description: "Fast day", 
+    day: 9, 
+    endDay: 9,
+    description: "A three-day fast in the tenth month", 
     type: "fast",
     noWork: true,
     scriptures: ["Zechariah 8:19"]
   },
   
-  // 11th Month - Shebat
+  // 11th Month
   { 
     id: "month-11",
     name: "New Month", 
@@ -380,7 +378,7 @@ export const feasts: Feast[] = [
     scriptures: ["Numbers 10:10"]
   },
   
-  // 12th Month - Adar
+  // 12th Month
   { 
     id: "month-12",
     name: "New Month", 
@@ -394,13 +392,25 @@ export const feasts: Feast[] = [
     scriptures: ["Numbers 10:10"]
   },
   { 
+    id: "nicanor",
+    name: "Day of Nicanor", 
+    hebrewName: "Nicanor", 
+    month: 12, 
+    day: 13, 
+    endDay: 13,
+    description: "Day of celebration commemorating victory", 
+    type: "holy-day",
+    noWork: false,
+    scriptures: ["1 Maccabees 7:49"]
+  },
+  { 
     id: "purim",
     name: "Feast of Purim", 
     hebrewName: "Purim", 
     month: 12, 
     day: 14, 
     endDay: 15,
-    description: "Remembrance of deliverance in Persia", 
+    description: "Celebrating deliverance from destruction through Queen Esther", 
     type: "feast",
     noWork: false,
     scriptures: ["Esther 9:21-22"]
@@ -501,32 +511,60 @@ export const getFeastsForDay = (month: number, day: number): Feast[] => {
 };
 
 // Helper function to get the Gregorian date for a Creator's Calendar date
+// Accounts for variable month lengths: 30, 30, 31 pattern
 export const getGregorianDate = (year: number, month: number, day: number): Date => {
   const yearStart = getYearStartDate(year);
   const startDate = new Date(year, yearStart.month - 1, yearStart.day);
   
-  // Calculate days from year start (month-1)*30 + (day-1)
-  const daysFromStart = (month - 1) * 30 + (day - 1);
-  startDate.setDate(startDate.getDate() + daysFromStart);
+  // Calculate total days from year start using actual month lengths
+  let daysFromStart = 0;
+  for (let m = 1; m < month; m++) {
+    daysFromStart += calendarMonths[m - 1].days;
+  }
+  daysFromStart += (day - 1);
   
-  return startDate;
+  const result = new Date(startDate);
+  result.setDate(result.getDate() + daysFromStart);
+  
+  return result;
 };
 
-// Helper to format Gregorian date
+// Helper to format Gregorian date as MM/DD/YEAR
 export const formatGregorianDate = (date: Date): string => {
-  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  return `${months[date.getMonth()]} ${date.getDate()}`;
+  const mm = String(date.getMonth() + 1).padStart(2, '0');
+  const dd = String(date.getDate()).padStart(2, '0');
+  const yyyy = date.getFullYear();
+  return `${mm}/${dd}/${yyyy}`;
 };
 
-// Get Hebrew day name for a calendar day
-export const getHebrewDayName = (day: number): typeof hebrewDayNames[0] => {
-  const dayOfWeek = ((day - 1) % 7);
+// Get Hebrew day name for a calendar day within a specific month
+export const getHebrewDayName = (month: number, day: number): typeof hebrewDayNames[0] => {
+  const absDay = getAbsoluteDay(month, day);
+  const dayOfWeek = ((absDay - 1) % 7);
   return hebrewDayNames[dayOfWeek];
 };
 
-// Check if a day is a Sabbath (7th day of each week)
-export const isSabbath = (day: number): boolean => {
-  return ((day - 1) % 7) === 6;
+// Check if a day is a Sabbath (7th day of each week, based on absolute position in year)
+// Sabbath pattern per PDF:
+// Month 1: 7, 14, 21, 28
+// Month 2: 5, 12, 19, 26
+// Month 3: 3, 10, 17, 24, 31
+// Repeats each quarter
+export const isSabbath = (month: number, day: number): boolean => {
+  const absDay = getAbsoluteDay(month, day);
+  return absDay % 7 === 0;
+};
+
+// Get all sabbath days for a given month
+export const getSabbathDays = (monthNumber: number): number[] => {
+  const month = calendarMonths[monthNumber - 1];
+  const sabbaths: number[] = [];
+  for (let d = 1; d <= month.days; d++) {
+    if (isSabbath(monthNumber, d)) {
+      sabbaths.push(d);
+    }
+  }
+  return sabbaths;
 };
 
 // Sun time calculation (simplified - for more accuracy use astronomy library)
@@ -571,7 +609,6 @@ export const calculateSunTimes = (date: Date, latitude: number, longitude: numbe
   // Calculate different sun positions
   const sunriseAngle = -0.833; // Standard sunrise/sunset
   const civilTwilightAngle = -6;
-  const nauticalTwilightAngle = -12;
   
   const calculateHourAngle = (angle: number) => {
     const cosH = (Math.sin(angle * Math.PI / 180) - Math.sin(latRad) * Math.sin(decl)) /
