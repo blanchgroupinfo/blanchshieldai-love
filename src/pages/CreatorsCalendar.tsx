@@ -467,7 +467,7 @@ const CreatorsCalendar = () => {
                           }
                           const dayFeasts = getFeastsForDay(monthData.monthNumber, day);
                           const gregorianDate = getGregorianDate(currentYear, monthData.monthNumber, day);
-                          const dayIsSabbath = isSabbath(day);
+                          const dayIsSabbath = isSabbath(monthData.monthNumber, day);
                           const isSelected = selectedDay === day;
                           const dayEvents = getEventsForDay(monthData.monthNumber, day);
                           return <TableCell key={dayIndex} className={`border border-border/30 p-1.5 align-top cursor-pointer transition-colors min-h-[90px]
