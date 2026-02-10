@@ -612,7 +612,7 @@ const CreatorsCalendar = () => {
                   <div className="flex items-center justify-between">
                     <CardTitle className="flex items-center gap-3">
                       <Calendar className="w-6 h-6 text-amber-400" />
-                      Year {currentYear} Overview
+                      Creator Year {currentYear - 2012} - Complete Overview
                     </CardTitle>
                     <div className="flex items-center gap-2 no-print">
                       <Button variant="outline" size="sm" onClick={() => setCurrentYear(prev => prev - 1)}>
@@ -625,86 +625,156 @@ const CreatorsCalendar = () => {
                     </div>
                   </div>
                   <CardDescription>
-                    All 12 months • Year begins March {yearStartInfo.day}, {currentYear} • 364 Days
+                    All Holy Days and Weekly Sabbaths • Year begins March {yearStartInfo.day}, {currentYear} • 364 Days
                   </CardDescription>
                 </CardHeader>
-                <CardContent>
-                  <div className="grid md:grid-cols-3 lg:grid-cols-4 gap-6">
-                    {calendarMonths.map((month, index) => {
-                    const monthHolyDays = feasts.filter(f => f.month === month.monthNumber);
-                    // Build mini weeks for this month
-                    const miniWeeks: number[][] = [];
-                    let miniWeek: number[] = [];
-                    for (let d = 1; d <= 30; d++) {
-                      miniWeek.push(d);
-                      if (miniWeek.length === 7) {
-                        miniWeeks.push(miniWeek);
-                        miniWeek = [];
+                <CardContent className="space-y-8">
+                  {/* Mini Calendar Grids */}
+                  <div>
+                    <h3 className="text-lg font-bold text-amber-400 mb-4">All 12 Months</h3>
+                    <div className="grid md:grid-cols-3 lg:grid-cols-4 gap-6">
+                      {calendarMonths.map((month, index) => {
+                      const monthHolyDays = feasts.filter(f => f.month === month.monthNumber);
+                      const miniWeeks: number[][] = [];
+                      let miniWeek: number[] = [];
+                      for (let d = 1; d <= month.days; d++) {
+                        const absDay = (() => {
+                          let total = 0;
+                          for (let m = 1; m < month.monthNumber; m++) {
+                            total += calendarMonths[m - 1].days;
+                          }
+                          return total + d;
+                        })();
+                        const dayOfWeek = ((absDay - 1) % 7);
+                        if (d === 1 && dayOfWeek > 0) {
+                          // Pad start of month
+                          for (let p = 0; p < dayOfWeek; p++) {
+                            miniWeek.push(0);
+                          }
+                        }
+                        miniWeek.push(d);
+                        if (miniWeek.length === 7) {
+                          miniWeeks.push(miniWeek);
+                          miniWeek = [];
+                        }
                       }
-                    }
-                    if (miniWeek.length > 0) {
-                      while (miniWeek.length < 7) miniWeek.push(0);
-                      miniWeeks.push(miniWeek);
-                    }
-                    return <motion.div key={month.monthNumber} initial={{
-                      opacity: 0,
-                      scale: 0.9
-                    }} animate={{
-                      opacity: 1,
-                      scale: 1
-                    }} transition={{
-                      delay: index * 0.05
-                    }} className={`p-3 rounded-lg border cursor-pointer transition-all hover:scale-[1.02]
-                            ${currentMonth === index ? 'bg-primary/10 border-primary/50' : 'bg-card/50 border-border/30 hover:border-primary/30'}`} onClick={() => {
-                      setCurrentMonth(index);
-                      const tabList = document.querySelector('[role="tablist"]');
-                      const monthlyTab = tabList?.querySelector('[value="monthly"]');
-                      if (monthlyTab) (monthlyTab as HTMLElement).click();
-                    }}>
-                          {/* Month Header */}
-                          <div className="text-center mb-2">
-                            <h4 className="font-bold text-amber-400">Month {month.monthNumber}</h4>
-                            <p className="text-[10px] text-muted-foreground">{month.gregorianMonths}</p>
-                          </div>
+                      if (miniWeek.length > 0) {
+                        while (miniWeek.length < 7) miniWeek.push(0);
+                        miniWeeks.push(miniWeek);
+                      }
+                      return <motion.div key={month.monthNumber} initial={{
+                        opacity: 0,
+                        scale: 0.9
+                      }} animate={{
+                        opacity: 1,
+                        scale: 1
+                      }} transition={{
+                        delay: index * 0.05
+                      }} className={`p-3 rounded-lg border cursor-pointer transition-all hover:scale-[1.02]
+                              ${currentMonth === index ? 'bg-primary/10 border-primary/50' : 'bg-card/50 border-border/30 hover:border-primary/30'}`} onClick={() => {
+                        setCurrentMonth(index);
+                        const tabList = document.querySelector('[role="tablist"]');
+                        const monthlyTab = tabList?.querySelector('[value="monthly"]');
+                        if (monthlyTab) (monthlyTab as HTMLElement).click();
+                      }}>
+                            <div className="text-center mb-2">
+                              <h4 className="font-bold text-amber-400">Month {month.monthNumber}</h4>
+                              <p className="text-[10px] text-muted-foreground">{month.days} days • {month.gregorianMonths}</p>
+                            </div>
 
-                          {/* Mini Calendar Grid */}
-                          <table className="w-full text-[9px]">
-                            <thead>
-                              <tr>
-                                {['1', '2', '3', '4', '5', '6', 'S'].map((d, i) => <th key={i} className={`text-center py-0.5 ${i === 6 ? 'text-amber-400' : 'text-muted-foreground'}`}>
-                                    {d}
-                                  </th>)}
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {miniWeeks.map((week, wi) => <tr key={wi}>
-                                  {week.map((day, di) => {
-                              if (day === 0) return <td key={di} />;
-                              const hasFeast = monthHolyDays.some(f => day >= f.day && day <= f.endDay && f.type !== 'new-month');
-                              const daySabbath = isSabbath(month.monthNumber, day);
-                              const gregDate = getGregorianDate(currentYear, month.monthNumber, day);
-                              return <td key={di} className={`text-center py-0.5 rounded-sm
-                                          ${daySabbath ? 'bg-amber-500/20 text-amber-400 font-bold' : ''}
-                                          ${hasFeast ? 'bg-primary/20 text-primary font-bold' : ''}
-                                        `} title={`Day ${day} = ${formatGregorianDate(gregDate)}`}>
-                                        {day}
-                                      </td>;
-                            })}
-                                </tr>)}
-                            </tbody>
-                          </table>
+                            <table className="w-full text-[9px]">
+                              <thead>
+                                <tr>
+                                  {['1', '2', '3', '4', '5', '6', 'S'].map((d, i) => <th key={i} className={`text-center py-0.5 ${i === 6 ? 'text-amber-400' : 'text-muted-foreground'}`}>
+                                      {d}
+                                    </th>)}
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {miniWeeks.map((week, wi) => <tr key={wi}>
+                                    {week.map((day, di) => {
+                                if (day === 0) return <td key={di} />;
+                                const hasFeast = monthHolyDays.some(f => day >= f.day && day <= f.endDay && f.type !== 'new-month');
+                                const daySabbath = isSabbath(month.monthNumber, day);
+                                return <td key={di} className={`text-center py-0.5 rounded-sm
+                                            ${daySabbath ? 'bg-amber-500/20 text-amber-400 font-bold' : ''}
+                                            ${hasFeast ? 'bg-primary/20 text-primary font-bold' : ''}
+                                          `}>
+                                          {day}
+                                        </td>;
+                              })}
+                                  </tr>)}
+                              </tbody>
+                            </table>
 
-                          {/* Holy Days List */}
-                          <div className="mt-2 space-y-0.5">
-                            {monthHolyDays.filter(f => f.type !== 'new-month').slice(0, 3).map((feast, i) => <Badge key={i} variant="outline" className={`text-[8px] block truncate ${getFeastBadgeColor(feast.type)}`}>
-                                Day {feast.day}: {feast.name}
-                              </Badge>)}
-                            {monthHolyDays.filter(f => f.type !== 'new-month').length > 3 && <span className="text-[8px] text-muted-foreground">
-                                +{monthHolyDays.filter(f => f.type !== 'new-month').length - 3} more
-                              </span>}
+                            <div className="mt-2 space-y-0.5">
+                              {monthHolyDays.filter(f => f.type !== 'new-month').slice(0, 3).map((feast, i) => <Badge key={i} variant="outline" className={`text-[8px] block truncate ${getFeastBadgeColor(feast.type)}`}>
+                                  Day {feast.day}: {feast.name}
+                                </Badge>)}
+                              {monthHolyDays.filter(f => f.type !== 'new-month').length > 3 && <span className="text-[8px] text-muted-foreground">
+                                  +{monthHolyDays.filter(f => f.type !== 'new-month').length - 3} more
+                                </span>}
+                            </div>
+                          </motion.div>;
+                    })}
+                    </div>
+                  </div>
+
+                  {/* Annual Holy Days List */}
+                  <div>
+                    <h3 className="text-lg font-bold text-amber-400 mb-4">Annual Holy Days</h3>
+                    <div className="grid md:grid-cols-2 gap-3">
+                      {feasts.filter(f => f.type !== 'new-month' || f.id === 'new-year').map((feast) => {
+                        const gregDate = getGregorianDate(currentYear, feast.month, feast.day);
+                        return <div key={feast.id} className="p-3 rounded-lg bg-card/50 border border-border/30">
+                          <div className="flex items-center justify-between mb-1">
+                            <Badge variant="outline" className={`text-[10px] ${getFeastBadgeColor(feast.type)}`}>
+                              {feast.month}{feast.month === 1 ? 'st' : feast.month === 2 ? 'nd' : feast.month === 3 ? 'rd' : 'th'} Month, Day {feast.day}
+                            </Badge>
+                            <span className="text-[10px] text-muted-foreground">{formatGregorianDate(gregDate)}</span>
                           </div>
-                        </motion.div>;
-                  })}
+                          <h4 className="font-medium">{feast.name}</h4>
+                          <p className="text-xs text-muted-foreground mt-1">{feast.description}</p>
+                        </div>;
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Weekly Sabbaths by Month */}
+                  <div>
+                    <h3 className="text-lg font-bold text-amber-400 mb-4">Weekly Sabbaths by Month</h3>
+                    <p className="text-sm text-muted-foreground mb-4">52 Sabbaths Total</p>
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                      {calendarMonths.map((month) => {
+                        const sabbaths = getSabbathDays(month.monthNumber);
+                        return <div key={month.monthNumber} className="p-3 rounded-lg bg-amber-500/5 border border-amber-500/20">
+                          <h4 className="font-medium text-amber-400 mb-2">
+                            {month.monthNumber}{month.monthNumber === 1 ? 'st' : month.monthNumber === 2 ? 'nd' : month.monthNumber === 3 ? 'rd' : 'th'} Month
+                          </h4>
+                          <div className="flex flex-wrap gap-1">
+                            {sabbaths.map(d => <Badge key={d} variant="outline" className="bg-amber-500/20 text-amber-300 border-amber-500/30 text-xs">
+                              Day {d}
+                            </Badge>)}
+                          </div>
+                        </div>;
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Summary Stats */}
+                  <div className="grid grid-cols-3 gap-4 text-center">
+                    <div className="p-4 rounded-lg bg-primary/5 border border-primary/20">
+                      <span className="text-2xl font-bold text-primary">{feasts.filter(f => f.type !== 'new-month').length}</span>
+                      <p className="text-xs text-muted-foreground mt-1">Annual Holy Days</p>
+                    </div>
+                    <div className="p-4 rounded-lg bg-amber-500/5 border border-amber-500/20">
+                      <span className="text-2xl font-bold text-amber-400">52</span>
+                      <p className="text-xs text-muted-foreground mt-1">Weekly Sabbaths</p>
+                    </div>
+                    <div className="p-4 rounded-lg bg-card/50 border border-border/30">
+                      <span className="text-2xl font-bold">364</span>
+                      <p className="text-xs text-muted-foreground mt-1">Days in Year</p>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
