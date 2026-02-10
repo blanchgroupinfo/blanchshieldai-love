@@ -64,19 +64,20 @@ export const hebrewDayNames = [
 ];
 
 // 12 Months - Named by number as commanded by the Most High AHAYAH
+// The Most High did not name months - simply Month 1 through Month 12
 export const calendarMonths: CalendarMonth[] = [
-  { monthNumber: 1, hebrewName: "Abib/Nisan", gregorianMonths: "March/April", days: 30 },
-  { monthNumber: 2, hebrewName: "Zif/Iyyar", gregorianMonths: "April/May", days: 30 },
-  { monthNumber: 3, hebrewName: "Sivan", gregorianMonths: "May/June", days: 30 },
-  { monthNumber: 4, hebrewName: "Tammuz", gregorianMonths: "June/July", days: 30 },
-  { monthNumber: 5, hebrewName: "Ab", gregorianMonths: "July/August", days: 30 },
-  { monthNumber: 6, hebrewName: "Elul", gregorianMonths: "August/September", days: 30 },
-  { monthNumber: 7, hebrewName: "Ethanim/Tishri", gregorianMonths: "September/October", days: 30 },
-  { monthNumber: 8, hebrewName: "Bul/Cheshvan", gregorianMonths: "October/November", days: 30 },
-  { monthNumber: 9, hebrewName: "Kislev", gregorianMonths: "November/December", days: 30 },
-  { monthNumber: 10, hebrewName: "Tebeth", gregorianMonths: "December/January", days: 30 },
-  { monthNumber: 11, hebrewName: "Shebat", gregorianMonths: "January/February", days: 30 },
-  { monthNumber: 12, hebrewName: "Adar", gregorianMonths: "February/March", days: 30 },
+  { monthNumber: 1, hebrewName: "Month 1", gregorianMonths: "March/April", days: 30 },
+  { monthNumber: 2, hebrewName: "Month 2", gregorianMonths: "April/May", days: 30 },
+  { monthNumber: 3, hebrewName: "Month 3", gregorianMonths: "May/June", days: 30 },
+  { monthNumber: 4, hebrewName: "Month 4", gregorianMonths: "June/July", days: 30 },
+  { monthNumber: 5, hebrewName: "Month 5", gregorianMonths: "July/August", days: 30 },
+  { monthNumber: 6, hebrewName: "Month 6", gregorianMonths: "August/September", days: 30 },
+  { monthNumber: 7, hebrewName: "Month 7", gregorianMonths: "September/October", days: 30 },
+  { monthNumber: 8, hebrewName: "Month 8", gregorianMonths: "October/November", days: 30 },
+  { monthNumber: 9, hebrewName: "Month 9", gregorianMonths: "November/December", days: 30 },
+  { monthNumber: 10, hebrewName: "Month 10", gregorianMonths: "December/January", days: 30 },
+  { monthNumber: 11, hebrewName: "Month 11", gregorianMonths: "January/February", days: 30 },
+  { monthNumber: 12, hebrewName: "Month 12", gregorianMonths: "February/March", days: 30 },
 ];
 
 // Holy Days, Feasts, and Fasts
