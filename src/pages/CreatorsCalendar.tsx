@@ -681,7 +681,7 @@ const CreatorsCalendar = () => {
                                   {week.map((day, di) => {
                               if (day === 0) return <td key={di} />;
                               const hasFeast = monthHolyDays.some(f => day >= f.day && day <= f.endDay && f.type !== 'new-month');
-                              const daySabbath = isSabbath(day);
+                              const daySabbath = isSabbath(month.monthNumber, day);
                               const gregDate = getGregorianDate(currentYear, month.monthNumber, day);
                               return <td key={di} className={`text-center py-0.5 rounded-sm
                                           ${daySabbath ? 'bg-amber-500/20 text-amber-400 font-bold' : ''}
