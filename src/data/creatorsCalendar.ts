@@ -59,7 +59,7 @@ export const hebrewDayNames = [
   { day: 3, hebrew: "YAWAM SHALAYASHAYA", meaning: "Third Day" },
   { day: 4, hebrew: "YAWAM RABAYAIY", meaning: "Fourth Day" },
   { day: 5, hebrew: "YAWAM HAMAYASHAYA", meaning: "Fifth Day" },
-  { day: 6, hebrew: "YAWAM SHASHAY", meaning: "Sixth Day" },
+  { day: 6, hebrew: "YAWAM SHASHAYA", meaning: "Sixth Day" },
   { day: 7, hebrew: "SHABBAT", meaning: "Sabbath Day" },
 ];
 
