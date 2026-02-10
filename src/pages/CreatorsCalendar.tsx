@@ -542,8 +542,8 @@ const CreatorsCalendar = () => {
                       <p className="text-sm text-muted-foreground mb-2">
                         <strong>Gregorian:</strong> {formatGregorianDate(getGregorianDate(currentYear, monthData.monthNumber, selectedDay))}, {currentYear}
                         <span className="mx-2">•</span>
-                        <strong>Hebrew Day:</strong> {getHebrewDayName(selectedDay).hebrew} ({getHebrewDayName(selectedDay).meaning})
-                        {isSabbath(selectedDay) && <Badge className="ml-2 bg-amber-500/20 text-amber-300">SHABBAT</Badge>}
+                        <strong>Hebrew Day:</strong> {getHebrewDayName(monthData.monthNumber, selectedDay).hebrew} ({getHebrewDayName(monthData.monthNumber, selectedDay).meaning})
+                        {isSabbath(monthData.monthNumber, selectedDay) && <Badge className="ml-2 bg-amber-500/20 text-amber-300">SHABBAT</Badge>}
                       </p>
 
                       {/* Holy Days on this date */}
