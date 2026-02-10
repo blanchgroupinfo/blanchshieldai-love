@@ -67,10 +67,26 @@ const CreatorsCalendar = () => {
   } = useCalendarEvents(currentYear);
   const monthData = calendarMonths[currentMonth];
 
-  // Generate weeks for the current month (30 days, 7-day weeks)
+  // Generate weeks for the current month with proper day-of-week alignment
   const weeks = useMemo(() => {
     const result: number[][] = [];
     let week: number[] = [];
+    
+    // Find what day-of-week the 1st of this month falls on
+    const firstDayAbsolute = (() => {
+      let total = 0;
+      for (let m = 1; m < monthData.monthNumber; m++) {
+        total += calendarMonths[m - 1].days;
+      }
+      return total + 1;
+    })();
+    const startDayOfWeek = (firstDayAbsolute - 1) % 7; // 0-6
+    
+    // Pad the beginning
+    for (let p = 0; p < startDayOfWeek; p++) {
+      week.push(0);
+    }
+    
     for (let day = 1; day <= monthData.days; day++) {
       week.push(day);
       if (week.length === 7) {
