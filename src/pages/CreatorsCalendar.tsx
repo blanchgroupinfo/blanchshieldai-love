@@ -1,6 +1,6 @@
 import { useState, useMemo, useRef } from "react";
 import { motion } from "framer-motion";
-import { Calendar, Sun, Moon, Star, Book, Clock, ChevronLeft, ChevronRight, Sparkles, Sunrise, AlertCircle, Printer, MapPin, Plus, Bell, Search, Navigation, X, Sunset, Edit, Trash2 } from "lucide-react";
+import { Calendar, Sun, Moon, Star, Book, Clock, ChevronLeft, ChevronRight, Sparkles, Sunrise, AlertCircle, Printer, MapPin, Plus, Bell, Search, Navigation, X, Sunset, Edit, Trash2, Download } from "lucide-react";
 import NavigationHeader from "@/components/NavigationHeader";
 import Footer from "@/components/Footer";
 import FloatingChat from "@/components/FloatingChat";
@@ -16,7 +16,8 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { calendarMonths, hebrewDayNames, feasts, calendarScriptures, getFeastsForDay, getGregorianDate, formatGregorianDate, getHebrewDayName, isSabbath, getYearStartDate, getSabbathDays, type Feast } from "@/data/creatorsCalendar";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { calendarMonths, hebrewDayNames, feasts, calendarScriptures, getFeastsForDay, getGregorianDate, formatGregorianDate, getHebrewDayName, isSabbath, getYearStartDate, getSabbathDays, getCreatorDateForGregorian, type Feast } from "@/data/creatorsCalendar";
 import { useSunTimes } from "@/hooks/useSunTimes";
 import { useCalendarEvents } from "@/hooks/useCalendarEvents";
 import { useToast } from "@/hooks/use-toast";
@@ -136,6 +137,56 @@ const CreatorsCalendar = () => {
   // Handle print
   const handlePrint = () => {
     window.print();
+  };
+
+  // Export to PDF
+  const handleExportPDF = () => {
+    window.print();
+  };
+
+  // ICS Calendar Export
+  const handleExportICS = () => {
+    let ics = 'BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Creator Calendar//EN\r\nCALSCALE:GREGORIAN\r\nX-WR-CALNAME:Creator Calendar ' + currentYear + '\r\n';
+    
+    const formatICSDate = (d: Date) => {
+      return `${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}`;
+    };
+    
+    // Add holy days and feasts
+    feasts.filter(f => f.type !== 'new-month').forEach(feast => {
+      const startDate = getGregorianDate(currentYear, feast.month, feast.day);
+      const endDate = getGregorianDate(currentYear, feast.month, feast.endDay);
+      endDate.setDate(endDate.getDate() + 1);
+      const desc = feast.description.replace(/,/g, '\\,').replace(/\n/g, '\\n');
+      ics += `BEGIN:VEVENT\r\nDTSTART;VALUE=DATE:${formatICSDate(startDate)}\r\nDTEND;VALUE=DATE:${formatICSDate(endDate)}\r\nSUMMARY:${feast.name}\r\nDESCRIPTION:${desc} - Month ${feast.month}\\, Day ${feast.day}${feast.endDay !== feast.day ? '-' + feast.endDay : ''}\r\nEND:VEVENT\r\n`;
+    });
+    
+    // Add sabbaths
+    calendarMonths.forEach(month => {
+      getSabbathDays(month.monthNumber).forEach(day => {
+        const sabbathDate = getGregorianDate(currentYear, month.monthNumber, day);
+        const endDate = new Date(sabbathDate);
+        endDate.setDate(endDate.getDate() + 1);
+        ics += `BEGIN:VEVENT\r\nDTSTART;VALUE=DATE:${formatICSDate(sabbathDate)}\r\nDTEND;VALUE=DATE:${formatICSDate(endDate)}\r\nSUMMARY:SHABBAT - Month ${month.monthNumber}\\, Day ${day}\r\nDESCRIPTION:Weekly Sabbath\r\nEND:VEVENT\r\n`;
+      });
+    });
+    
+    ics += 'END:VCALENDAR';
+    
+    const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `creator-calendar-${currentYear}.ics`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    toast({
+      title: "Calendar Exported",
+      description: `Creator Calendar ${currentYear} downloaded as ICS file. Import into any calendar app.`
+    });
   };
 
   // Handle location search
@@ -261,6 +312,31 @@ const CreatorsCalendar = () => {
               </div>
             </div>
 
+            {/* Creator Date Today */}
+            {todayCreatorDate && (
+              <div className="max-w-3xl mx-auto mb-4">
+                <h3 className="text-center text-sm font-bold text-green-400 mb-2">Creator Date Today</h3>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                  <div className="p-3 rounded-lg bg-green-500/10 border border-green-500/20 text-center">
+                    <p className="text-[10px] text-green-300 mb-1">Year & Day</p>
+                    <p className="font-bold text-sm">Year {todayCreatorDate.creatorYearNum}, Day {todayCreatorDate.absoluteDay}</p>
+                  </div>
+                  <div className="p-3 rounded-lg bg-green-500/10 border border-green-500/20 text-center">
+                    <p className="text-[10px] text-green-300 mb-1">Month & Day</p>
+                    <p className="font-bold text-sm">{getOrdinal(todayCreatorDate.month)} Month, Day {todayCreatorDate.day}</p>
+                  </div>
+                  <div className="p-3 rounded-lg bg-green-500/10 border border-green-500/20 text-center">
+                    <p className="text-[10px] text-green-300 mb-1">Weekday</p>
+                    <p className="font-bold text-xs">Day {getHebrewDayName(todayCreatorDate.month, todayCreatorDate.day).day} - {getHebrewDayName(todayCreatorDate.month, todayCreatorDate.day).hebrew}</p>
+                  </div>
+                  <div className="p-3 rounded-lg bg-green-500/10 border border-green-500/20 text-center">
+                    <p className="text-[10px] text-green-300 mb-1">Gregorian Date</p>
+                    <p className="font-bold text-sm">{formatGregorianDate(new Date())}</p>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Sun Times Display */}
             {sunTimes && <motion.div initial={{
             opacity: 0,
@@ -370,6 +446,38 @@ const CreatorsCalendar = () => {
               </DialogContent>
             </Dialog>
 
+            {/* Export Calendar */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm">
+                  <Download className="w-4 h-4 mr-2" />
+                  Export Calendar
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="center">
+                <DropdownMenuItem onClick={handleExportPDF}>
+                  Export to PDF
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleExportICS}>
+                  Add to Google Calendar
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleExportICS}>
+                  Add to Microsoft Outlook
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleExportICS}>
+                  Add to Apple Calendar
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleExportICS}>
+                  Add to Linux Calendar
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleExportICS}>
+                  Download ICS File
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
             {/* Print Button */}
             <Button variant="outline" size="sm" onClick={handlePrint}>
               <Printer className="w-4 h-4 mr-2" />
@@ -419,11 +527,11 @@ const CreatorsCalendar = () => {
                   {/* Year Start Info */}
                   <div className="text-center mb-4 p-3 rounded-lg bg-amber-500/5 border border-amber-500/20">
                     <p className="text-sm text-muted-foreground">
-                      <strong className="text-amber-400">Year {currentYear}</strong> begins on{' '}
-                      <strong>March {yearStartInfo.day}, {currentYear}</strong> (Gregorian) at Dawn
+                      <strong className="text-amber-400">Creator Year {currentYear - 2012}</strong> begins on{' '}
+                      <strong>{gregorianMonthNames[yearStartInfo.month - 1]} {yearStartInfo.day}, {yearStartInfo.gregorianYear}</strong> (Gregorian) at Dawn
                     </p>
                     <p className="text-xs text-muted-foreground mt-1">
-                      Anchor: March 17, 2013 = Day 1, Month 1 • After the Equilux
+                      Anchor: March 17, 2013 = Day 1, Month 1 • 364-Day Year Cycle • After the Equilux
                     </p>
                   </div>
 
@@ -486,17 +594,22 @@ const CreatorsCalendar = () => {
                           const dayIsSabbath = isSabbath(monthData.monthNumber, day);
                           const isSelected = selectedDay === day;
                           const dayEvents = getEventsForDay(monthData.monthNumber, day);
+                          const isToday = todayCreatorDate && todayCreatorDate.creatorYear === currentYear && todayCreatorDate.month === monthData.monthNumber && todayCreatorDate.day === day;
                           return <TableCell key={dayIndex} className={`border border-border/30 p-1.5 align-top cursor-pointer transition-colors min-h-[90px]
                                     ${dayIsSabbath ? 'bg-amber-500/10' : 'hover:bg-card/80'}
                                     ${isSelected ? 'ring-2 ring-primary' : ''}
                                     ${dayFeasts.length > 0 ? 'bg-primary/5' : ''}
+                                    ${isToday ? 'ring-2 ring-green-500 bg-green-500/10' : ''}
                                   `} onClick={() => setSelectedDay(day)}>
                                   <div className="flex flex-col gap-0.5">
                                     <div className="flex items-center justify-between">
-                                      <span className={`font-bold text-base ${dayIsSabbath ? 'text-amber-400' : ''}`}>
+                                      <span className={`font-bold text-base ${dayIsSabbath ? 'text-amber-400' : ''} ${isToday ? 'text-green-400' : ''}`}>
                                         {day}
                                       </span>
-                                      {day === 1 && <Badge variant="outline" className="text-[8px] px-1 py-0 bg-blue-500/20 text-blue-300 border-blue-500/30">
+                                      {isToday && <Badge variant="outline" className="text-[8px] px-1 py-0 bg-green-500/20 text-green-300 border-green-500/30">
+                                          Today
+                                        </Badge>}
+                                      {day === 1 && !isToday && <Badge variant="outline" className="text-[8px] px-1 py-0 bg-blue-500/20 text-blue-300 border-blue-500/30">
                                           New
                                         </Badge>}
                                     </div>
@@ -524,6 +637,10 @@ const CreatorsCalendar = () => {
 
                   {/* Legend */}
                   <div className="mt-4 flex flex-wrap items-center gap-3 text-xs no-print">
+                    <div className="flex items-center gap-1">
+                      <div className="w-3 h-3 rounded bg-green-500/30 ring-2 ring-green-500" />
+                      <span>Today</span>
+                    </div>
                     <div className="flex items-center gap-1">
                       <div className="w-3 h-3 rounded bg-amber-500/30" />
                       <span>Sabbath</span>
@@ -641,7 +758,7 @@ const CreatorsCalendar = () => {
                     </div>
                   </div>
                   <CardDescription>
-                    All Holy Days and Weekly Sabbaths • Year begins March {yearStartInfo.day}, {currentYear} • 364 Days
+                    All Holy Days and Weekly Sabbaths • Year begins {gregorianMonthNames[yearStartInfo.month - 1]} {yearStartInfo.day}, {yearStartInfo.gregorianYear} • 364 Days
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-8">
@@ -712,9 +829,11 @@ const CreatorsCalendar = () => {
                                 if (day === 0) return <td key={di} />;
                                 const hasFeast = monthHolyDays.some(f => day >= f.day && day <= f.endDay && f.type !== 'new-month');
                                 const daySabbath = isSabbath(month.monthNumber, day);
+                                const isTodayMini = todayCreatorDate && todayCreatorDate.creatorYear === currentYear && todayCreatorDate.month === month.monthNumber && todayCreatorDate.day === day;
                                 return <td key={di} className={`text-center py-0.5 rounded-sm
                                             ${daySabbath ? 'bg-amber-500/20 text-amber-400 font-bold' : ''}
                                             ${hasFeast ? 'bg-primary/20 text-primary font-bold' : ''}
+                                            ${isTodayMini ? 'ring-1 ring-green-500 bg-green-500/20 text-green-400 font-bold' : ''}
                                           `}>
                                           {day}
                                         </td>;
