@@ -22,8 +22,14 @@ import { useSunTimes } from "@/hooks/useSunTimes";
 import { useCalendarEvents } from "@/hooks/useCalendarEvents";
 import { useToast } from "@/hooks/use-toast";
 const CreatorsCalendar = () => {
-  const [currentMonth, setCurrentMonth] = useState(0);
-  const [currentYear, setCurrentYear] = useState(2026);
+  // Initialize to today's date in the creator calendar
+  const today = new Date();
+  const todayInCreator = getCreatorDateForGregorian(today);
+  const initialMonth = todayInCreator ? (todayInCreator.month - 1) : 0;
+  const initialYear = todayInCreator ? todayInCreator.creatorYear : 2026;
+
+  const [currentMonth, setCurrentMonth] = useState(initialMonth);
+  const [currentYear, setCurrentYear] = useState(initialYear);
   const [selectedDay, setSelectedDay] = useState<number | null>(null);
   const [showEventDialog, setShowEventDialog] = useState(false);
   const [showReminderDialog, setShowReminderDialog] = useState(false);
@@ -67,6 +73,28 @@ const CreatorsCalendar = () => {
     getReminderForHolyDay
   } = useCalendarEvents(currentYear);
   const monthData = calendarMonths[currentMonth];
+
+  // Helper constants
+  const gregorianMonthNames = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
+
+  // Helper function to convert month number to ordinal
+  const getOrdinal = (num: number): string => {
+    const j = num % 10;
+    const k = num % 100;
+    if (j === 1 && k !== 11) return num + 'st';
+    if (j === 2 && k !== 12) return num + 'nd';
+    if (j === 3 && k !== 13) return num + 'rd';
+    return num + 'th';
+  };
+
+  // Calculate today's creator date
+  const todayCreatorDate = useMemo(() => {
+    const today = new Date();
+    return getCreatorDateForGregorian(today);
+  }, []);
 
   // Generate weeks for the current month with proper day-of-week alignment
   const weeks = useMemo(() => {
@@ -762,97 +790,114 @@ const CreatorsCalendar = () => {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-8">
-                  {/* Mini Calendar Grids */}
+                  {/* Four Seasons Grid */}
                   <div>
-                    <h3 className="text-lg font-bold text-amber-400 mb-4">All 12 Months</h3>
-                    <div className="grid md:grid-cols-3 lg:grid-cols-4 gap-6">
-                      {calendarMonths.map((month, index) => {
-                      const monthHolyDays = feasts.filter(f => f.month === month.monthNumber);
-                      const miniWeeks: number[][] = [];
-                      let miniWeek: number[] = [];
-                      for (let d = 1; d <= month.days; d++) {
-                        const absDay = (() => {
-                          let total = 0;
-                          for (let m = 1; m < month.monthNumber; m++) {
-                            total += calendarMonths[m - 1].days;
-                          }
-                          return total + d;
-                        })();
-                        const dayOfWeek = ((absDay - 1) % 7);
-                        if (d === 1 && dayOfWeek > 0) {
-                          // Pad start of month
-                          for (let p = 0; p < dayOfWeek; p++) {
-                            miniWeek.push(0);
-                          }
-                        }
-                        miniWeek.push(d);
-                        if (miniWeek.length === 7) {
-                          miniWeeks.push(miniWeek);
-                          miniWeek = [];
-                        }
-                      }
-                      if (miniWeek.length > 0) {
-                        while (miniWeek.length < 7) miniWeek.push(0);
-                        miniWeeks.push(miniWeek);
-                      }
-                      return <motion.div key={month.monthNumber} initial={{
-                        opacity: 0,
-                        scale: 0.9
-                      }} animate={{
-                        opacity: 1,
-                        scale: 1
-                      }} transition={{
-                        delay: index * 0.05
-                      }} className={`p-3 rounded-lg border cursor-pointer transition-all hover:scale-[1.02]
-                              ${currentMonth === index ? 'bg-primary/10 border-primary/50' : 'bg-card/50 border-border/30 hover:border-primary/30'}`} onClick={() => {
-                        setCurrentMonth(index);
-                        const tabList = document.querySelector('[role="tablist"]');
-                        const monthlyTab = tabList?.querySelector('[value="monthly"]');
-                        if (monthlyTab) (monthlyTab as HTMLElement).click();
-                      }}>
-                            <div className="text-center mb-2">
-                              <h4 className="font-bold text-amber-400">Month {month.monthNumber}</h4>
-                              <p className="text-[10px] text-muted-foreground">{month.days} days • {month.gregorianMonths}</p>
-                            </div>
+                    <h3 className="text-lg font-bold text-amber-400 mb-6">All 12 Months - Four Seasons</h3>
+                    
+                    {/* Season data */}
+                    {[
+                      { name: 'FIRST SEASON (SPRING)', color: 'blue', monthRange: [0, 1, 2], days: 91 },
+                      { name: 'SECOND SEASON (SUMMER)', color: 'yellow', monthRange: [3, 4, 5], days: 91 },
+                      { name: 'THIRD SEASON (FALL)', color: 'orange', monthRange: [6, 7, 8], days: 91 },
+                      { name: 'FOURTH SEASON (WINTER)', color: 'cyan', monthRange: [9, 10, 11], days: 91 }
+                    ].map((season, seasonIndex) => (
+                      <div key={seasonIndex} className="mb-8">
+                        <div className="flex items-center gap-2 mb-4 p-3 rounded-lg bg-card/50 border border-border/30">
+                          <div className={`w-4 h-4 rounded-full bg-${season.color}-500/30`} />
+                          <h4 className={`font-bold text-lg text-${season.color}-400`}>{season.name} ({season.days} Days)</h4>
+                        </div>
+                        <div className="grid md:grid-cols-3 gap-6">
+                          {season.monthRange.map((monthIndex) => {
+                            const month = calendarMonths[monthIndex];
+                            const monthHolyDays = feasts.filter(f => f.month === month.monthNumber);
+                            const miniWeeks: number[][] = [];
+                            let miniWeek: number[] = [];
+                            
+                            for (let d = 1; d <= month.days; d++) {
+                              const absDay = (() => {
+                                let total = 0;
+                                for (let m = 1; m < month.monthNumber; m++) {
+                                  total += calendarMonths[m - 1].days;
+                                }
+                                return total + d;
+                              })();
+                              const dayOfWeek = ((absDay - 1) % 7);
+                              if (d === 1 && dayOfWeek > 0) {
+                                for (let p = 0; p < dayOfWeek; p++) {
+                                  miniWeek.push(0);
+                                }
+                              }
+                              miniWeek.push(d);
+                              if (miniWeek.length === 7) {
+                                miniWeeks.push(miniWeek);
+                                miniWeek = [];
+                              }
+                            }
+                            if (miniWeek.length > 0) {
+                              while (miniWeek.length < 7) miniWeek.push(0);
+                              miniWeeks.push(miniWeek);
+                            }
+                            
+                            return <motion.div key={month.monthNumber} initial={{
+                              opacity: 0,
+                              scale: 0.9
+                            }} animate={{
+                              opacity: 1,
+                              scale: 1
+                            }} transition={{
+                              delay: monthIndex * 0.05
+                            }} className={`p-3 rounded-lg border cursor-pointer transition-all hover:scale-[1.02]
+                                  ${currentMonth === monthIndex ? 'bg-primary/10 border-primary/50' : 'bg-card/50 border-border/30 hover:border-primary/30'}`} onClick={() => {
+                              setCurrentMonth(monthIndex);
+                              const tabList = document.querySelector('[role="tablist"]');
+                              const monthlyTab = tabList?.querySelector('[value="monthly"]');
+                              if (monthlyTab) (monthlyTab as HTMLElement).click();
+                            }}>
+                              <div className="text-center mb-2">
+                                <h4 className="font-bold text-amber-400">Month {month.monthNumber}</h4>
+                                <p className="text-[10px] text-muted-foreground">{month.days} days • {month.gregorianMonths}</p>
+                              </div>
 
-                            <table className="w-full text-[9px]">
-                              <thead>
-                                <tr>
-                                  {['1', '2', '3', '4', '5', '6', 'S'].map((d, i) => <th key={i} className={`text-center py-0.5 ${i === 6 ? 'text-amber-400' : 'text-muted-foreground'}`}>
+                              <table className="w-full text-[9px]">
+                                <thead>
+                                  <tr>
+                                    {['1', '2', '3', '4', '5', '6', 'S'].map((d, i) => <th key={i} className={`text-center py-0.5 ${i === 6 ? 'text-amber-400' : 'text-muted-foreground'}`}>
                                       {d}
                                     </th>)}
-                                </tr>
-                              </thead>
-                              <tbody>
-                                {miniWeeks.map((week, wi) => <tr key={wi}>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {miniWeeks.map((week, wi) => <tr key={wi}>
                                     {week.map((day, di) => {
-                                if (day === 0) return <td key={di} />;
-                                const hasFeast = monthHolyDays.some(f => day >= f.day && day <= f.endDay && f.type !== 'new-month');
-                                const daySabbath = isSabbath(month.monthNumber, day);
-                                const isTodayMini = todayCreatorDate && todayCreatorDate.creatorYear === currentYear && todayCreatorDate.month === month.monthNumber && todayCreatorDate.day === day;
-                                return <td key={di} className={`text-center py-0.5 rounded-sm
-                                            ${daySabbath ? 'bg-amber-500/20 text-amber-400 font-bold' : ''}
-                                            ${hasFeast ? 'bg-primary/20 text-primary font-bold' : ''}
-                                            ${isTodayMini ? 'ring-1 ring-green-500 bg-green-500/20 text-green-400 font-bold' : ''}
-                                          `}>
-                                          {day}
-                                        </td>;
-                              })}
+                                      if (day === 0) return <td key={di} />;
+                                      const hasFeast = monthHolyDays.some(f => day >= f.day && day <= f.endDay && f.type !== 'new-month');
+                                      const daySabbath = isSabbath(month.monthNumber, day);
+                                      const isTodayMini = todayCreatorDate && todayCreatorDate.creatorYear === currentYear && todayCreatorDate.month === month.monthNumber && todayCreatorDate.day === day;
+                                      return <td key={di} className={`text-center py-0.5 rounded-sm
+                                        ${daySabbath ? 'bg-amber-500/20 text-amber-400 font-bold' : ''}
+                                        ${hasFeast ? 'bg-primary/20 text-primary font-bold' : ''}
+                                        ${isTodayMini ? 'ring-1 ring-green-500 bg-green-500/20 text-green-400 font-bold' : ''}
+                                      `}>
+                                        {day}
+                                      </td>;
+                                    })}
                                   </tr>)}
-                              </tbody>
-                            </table>
+                                </tbody>
+                              </table>
 
-                            <div className="mt-2 space-y-0.5">
-                              {monthHolyDays.filter(f => f.type !== 'new-month').slice(0, 3).map((feast, i) => <Badge key={i} variant="outline" className={`text-[8px] block truncate ${getFeastBadgeColor(feast.type)}`}>
+                              <div className="mt-2 space-y-0.5">
+                                {monthHolyDays.filter(f => f.type !== 'new-month').slice(0, 3).map((feast, i) => <Badge key={i} variant="outline" className={`text-[8px] block truncate ${getFeastBadgeColor(feast.type)}`}>
                                   Day {feast.day}: {feast.name}
                                 </Badge>)}
-                              {monthHolyDays.filter(f => f.type !== 'new-month').length > 3 && <span className="text-[8px] text-muted-foreground">
+                                {monthHolyDays.filter(f => f.type !== 'new-month').length > 3 && <span className="text-[8px] text-muted-foreground">
                                   +{monthHolyDays.filter(f => f.type !== 'new-month').length - 3} more
                                 </span>}
-                            </div>
-                          </motion.div>;
-                    })}
-                    </div>
+                              </div>
+                            </motion.div>;
+                          })}
+                        </div>
+                      </div>
+                    ))}
                   </div>
 
                   {/* Annual Holy Days List */}
