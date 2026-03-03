@@ -49,6 +49,8 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        {/* Global Spiritual Ticker */}
+        <SpiritualTicker />
         {/* Global Live Market Ticker */}
         <LiveMarketTicker />
         <Routes>
