@@ -54,7 +54,7 @@ const LiveMarketTicker = () => {
   const tickerItems = [...markets, ...markets];
 
   return (
-    <div className="fixed top-0 left-0 right-0 z-[60] bg-card/95 backdrop-blur-xl border-b border-border/50 overflow-hidden">
+    <div className="fixed top-[28px] left-0 right-0 z-[60] bg-card/95 backdrop-blur-xl border-b border-border/50 overflow-hidden">
       <div className="flex animate-ticker">
         {tickerItems.map((market, index) => (
           <div
