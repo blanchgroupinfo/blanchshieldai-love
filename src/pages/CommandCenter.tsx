@@ -8,15 +8,16 @@ import {
   Search, Eye, Calendar, ScrollText, Heart, Blocks, ArrowLeftRight, Network,
   TrendingUp, Building2, ShoppingBag, Scale, Utensils, FileCheck, Brain,
   Rocket, Home, CreditCard, History, Megaphone, LineChart, Users2, Landmark,
-  Cloud, HardDrive, Mail as MailIcon, Zap, Server, Box, Video, Headphones,
-  UserCheck, ClipboardCheck, Layers, Link2, Briefcase, MapPin, Compass,
-  Package, Factory, Film, Lightbulb, Mic, Radio, Tv, Camera, Printer,
-  Smartphone, Tablet, Monitor, Laptop, Watch, Gamepad2, Music, Palette,
-  Brush, Scissors, Hammer, Wrench, Cog, Star, Crown, Gift, Trophy, Medal,
-  Target, Flag, Bookmark, Tag, Filter, Grid, List, Layout, Sidebar, PanelLeft,
-  ArrowUpRight, Store, Bell, RefreshCw, Key, FileText, HelpCircle, Car,
-  Banknote, CircleDollarSign, Newspaper, GraduationCap, Bot, Wand2,
-  MonitorSmartphone, FolderOpen, Workflow, BadgeCheck, BookMarked
+  Cloud, HardDrive, Zap, Server, Box, Video, Headphones,
+  UserCheck, Layers, Link2, Briefcase,
+  Package, Factory, Film,
+  Smartphone, Monitor, Laptop, Gamepad2, Music, Palette,
+  Wrench, Star, Crown, Gift, Trophy, Medal,
+  Target, Grid,
+  ArrowUpRight, Store, Bell, RefreshCw, FileText, HelpCircle, Car,
+  Banknote, Newspaper, GraduationCap, Bot,
+  MonitorSmartphone, FolderOpen, Workflow, BadgeCheck, BookMarked,
+  User as UserIcon
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
