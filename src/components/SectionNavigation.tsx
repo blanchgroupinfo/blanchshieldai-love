@@ -9,18 +9,33 @@ import {
   BookOpen, 
   Shield, 
   Target,
-  ChevronUp
+  ChevronUp,
+  Layers,
+  Sun,
+  ShoppingBag,
+  TrendingUp,
+  Network,
+  Gem,
+  Eye
 } from "lucide-react";
 
 const sections = [
   { id: "hero", label: "Home", icon: Home },
+  { id: "framework", label: "Framework", icon: Shield },
+  { id: "guidance", label: "Guidance", icon: Sun },
   { id: "chat", label: "Ask AI", icon: MessageSquare },
   { id: "modules", label: "Modules", icon: Box },
   { id: "capabilities", label: "Capabilities", icon: Zap },
   { id: "agents", label: "Agents", icon: Users },
+  { id: "pillars", label: "Pillars", icon: Layers },
+  { id: "commerce", label: "Commerce", icon: ShoppingBag },
+  { id: "trading", label: "Trading", icon: TrendingUp },
+  { id: "ecosystem", label: "Ecosystem", icon: Network },
+  { id: "onyx", label: "Onyx", icon: Gem },
   { id: "knowledge", label: "Knowledge", icon: BookOpen },
   { id: "compliance", label: "Compliance", icon: Shield },
   { id: "mission", label: "Mission", icon: Target },
+  { id: "watchman", label: "Watchman", icon: Eye },
 ];
 
 const SectionNavigation = () => {
@@ -29,10 +44,8 @@ const SectionNavigation = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      // Show navigation after scrolling down a bit
       setIsVisible(window.scrollY > 200);
 
-      // Determine active section
       const scrollPosition = window.scrollY + 200;
       
       for (let i = sections.length - 1; i >= 0; i--) {
@@ -66,9 +79,8 @@ const SectionNavigation = () => {
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: -20 }}
-          className="fixed left-4 top-1/2 -translate-y-1/2 z-40 hidden lg:flex flex-col gap-2"
+          className="fixed left-4 top-1/2 -translate-y-1/2 z-40 hidden lg:flex flex-col gap-1"
         >
-          {/* Back to top button */}
           <motion.button
             onClick={scrollToTop}
             className="p-2 rounded-full bg-card/80 backdrop-blur-sm border border-border/50 text-muted-foreground hover:text-primary hover:border-primary/50 transition-all duration-200 mb-2"
@@ -79,8 +91,7 @@ const SectionNavigation = () => {
             <ChevronUp className="w-4 h-4" />
           </motion.button>
 
-          {/* Section dots */}
-          <div className="flex flex-col gap-2 p-2 rounded-full bg-card/80 backdrop-blur-sm border border-border/50">
+          <div className="flex flex-col gap-1 p-1.5 rounded-full bg-card/80 backdrop-blur-sm border border-border/50">
             {sections.map((section) => {
               const Icon = section.icon;
               const isActive = activeSection === section.id;
@@ -89,7 +100,7 @@ const SectionNavigation = () => {
                 <motion.button
                   key={section.id}
                   onClick={() => scrollToSection(section.id)}
-                  className={`group relative p-2 rounded-full transition-all duration-200 ${
+                  className={`group relative p-1.5 rounded-full transition-all duration-200 ${
                     isActive
                       ? "bg-primary text-primary-foreground"
                       : "text-muted-foreground hover:text-primary hover:bg-primary/10"
@@ -98,9 +109,8 @@ const SectionNavigation = () => {
                   whileTap={{ scale: 0.95 }}
                   title={section.label}
                 >
-                  <Icon className="w-4 h-4" />
+                  <Icon className="w-3.5 h-3.5" />
                   
-                  {/* Tooltip */}
                   <span className="absolute left-full ml-3 px-2 py-1 rounded-lg bg-card border border-border text-xs font-medium text-foreground whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
                     {section.label}
                   </span>

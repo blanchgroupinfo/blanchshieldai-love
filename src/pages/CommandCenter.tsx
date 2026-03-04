@@ -8,17 +8,19 @@ import {
   Search, Eye, Calendar, ScrollText, Heart, Blocks, ArrowLeftRight, Network,
   TrendingUp, Building2, ShoppingBag, Scale, Utensils, FileCheck, Brain,
   Rocket, Home, CreditCard, History, Megaphone, LineChart, Users2, Landmark,
-  Cloud, HardDrive, Mail as MailIcon, Zap, Server, Box, Video, Headphones,
-  UserCheck, ClipboardCheck, Layers, Link2, Briefcase, MapPin, Compass,
-  Package, Factory, Film, Lightbulb, Mic, Radio, Tv, Camera, Printer,
-  Smartphone, Tablet, Monitor, Laptop, Watch, Gamepad2, Music, Palette,
-  Brush, Scissors, Hammer, Wrench, Cog, Star, Crown, Gift, Trophy, Medal,
-  Target, Flag, Bookmark, Tag, Filter, Grid, List, Layout, Sidebar, PanelLeft,
-  ArrowUpRight
+  Cloud, HardDrive, Zap, Server, Box, Video, Headphones,
+  UserCheck, Layers, Link2, Briefcase,
+  Package, Factory, Film,
+  Smartphone, Monitor, Laptop, Gamepad2, Music, Palette,
+  Wrench, Star, Crown, Gift, Trophy, Medal,
+  Target, Grid,
+  ArrowUpRight, Store, Bell, RefreshCw, FileText, HelpCircle, Car,
+  Banknote, Newspaper, GraduationCap, Bot,
+  MonitorSmartphone, FolderOpen, Workflow, BadgeCheck, BookMarked,
+  User as UserIcon
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import NavigationHeader from "@/components/NavigationHeader";
 import Footer from "@/components/Footer";
 import FloatingChat from "@/components/FloatingChat";
@@ -53,137 +55,211 @@ const CommandCenterPage = () => {
   }, []);
 
   const quickActions: QuickAction[] = [
-    // Core Platform
-    { id: "ai-gateway", name: "S.H.I.E.L.D. AI Gateway", description: "Unified AI API Gateway", icon: Zap, color: "text-yellow-400", gradient: "from-yellow-500/20 to-amber-500/20", link: "/ai-gateway", category: "core" },
-    { id: "dashboard", name: "Dashboard", description: "User Control Panel", icon: BarChart3, color: "text-emerald-400", gradient: "from-emerald-500/20 to-green-500/20", link: "/dashboard", category: "core" },
-    { id: "admin", name: "Admin Panel", description: "System Administration", icon: Shield, color: "text-red-400", gradient: "from-red-500/20 to-orange-500/20", link: "/admin", category: "core" },
-    { id: "agents", name: "AI Agents", description: "500+ H.I.I. AI Unified Agents", icon: Cpu, color: "text-blue-400", gradient: "from-blue-500/20 to-cyan-500/20", link: "/agents", category: "ai" },
+    // ==================== BLANCH BRAND ====================
+    { id: "blanch-advertising", name: "Blanch Advertising Pool", description: "Advertising & Marketing Pool", icon: Megaphone, color: "text-orange-400", gradient: "from-orange-500/20 to-yellow-500/20", link: "/command-center", category: "blanch" },
+    { id: "blanch-trust-bank", name: "Blanch & Co Trust – Sovereign Digital Private Bank", description: "Sovereign Digital Private Banking", icon: Landmark, color: "text-emerald-400", gradient: "from-emerald-500/20 to-green-500/20", link: "/command-center", category: "blanch" },
+    { id: "blanch-arena", name: "Blanch Arena", description: "Events & Entertainment Arena", icon: Trophy, color: "text-purple-400", gradient: "from-purple-500/20 to-pink-500/20", link: "/command-center", category: "blanch" },
+    { id: "blanch-autocad", name: "Blanch AutoCAD", description: "S.H.I.E.L.D. AI Design", icon: PenTool, color: "text-teal-400", gradient: "from-teal-500/20 to-cyan-500/20", link: "/autocad", category: "blanch" },
+    { id: "blanch-automotive", name: "Blanch Automotive", description: "Automotive Solutions", icon: Car, color: "text-blue-400", gradient: "from-blue-500/20 to-cyan-500/20", link: "/command-center", category: "blanch" },
+    { id: "blanch-blessings", name: "Blanch Blessing & Rewards", description: "Rewards Program", icon: Gift, color: "text-amber-400", gradient: "from-amber-500/20 to-yellow-500/20", link: "/command-center", category: "blanch" },
+    { id: "blanch-brand", name: "Blanch Brand", description: "Brand Management", icon: Crown, color: "text-amber-400", gradient: "from-amber-500/20 to-yellow-500/20", link: "/command-center", category: "blanch" },
+    { id: "blanch-business-card", name: "Blanch Business Card & Wallets", description: "Business Cards & Electronic Wallets", icon: CreditCard, color: "text-slate-400", gradient: "from-slate-500/20 to-gray-500/20", link: "/command-center", category: "blanch" },
+    { id: "blanch-cloud", name: "Blanch Cloud", description: "Enterprise Cloud", icon: Cloud, color: "text-violet-400", gradient: "from-violet-500/20 to-purple-500/20", link: "/command-center", category: "blanch" },
+    { id: "blanch-cloud-services", name: "Blanch Cloud Services", description: "Cloud Infrastructure Services", icon: Server, color: "text-sky-400", gradient: "from-sky-500/20 to-blue-500/20", link: "/command-center", category: "blanch" },
+    { id: "blanch-colonnade", name: "Blanch Colonnade", description: "Architectural Framework", icon: Building2, color: "text-stone-400", gradient: "from-stone-500/20 to-gray-500/20", link: "/command-center", category: "blanch" },
+    { id: "blanch-content-mgr", name: "Blanch Content Manager", description: "Content Management System", icon: FileText, color: "text-blue-400", gradient: "from-blue-500/20 to-indigo-500/20", link: "/command-center", category: "blanch" },
+    { id: "blanch-core", name: "Blanch Core", description: "Core Platform", icon: Cpu, color: "text-primary", gradient: "from-primary/20 to-accent/20", link: "/command-center", category: "blanch" },
+    { id: "blanch-corridor", name: "Blanch Corridor Project", description: "Global Infrastructure", icon: Globe, color: "text-purple-400", gradient: "from-purple-500/20 to-pink-500/20", link: "/blanch-corridor", category: "blanch" },
+    { id: "blanch-council", name: "Blanch Council", description: "Governance Council", icon: Users, color: "text-indigo-400", gradient: "from-indigo-500/20 to-violet-500/20", link: "/command-center", category: "blanch" },
+    { id: "blanch-dashboard", name: "Blanch Dashboard", description: "Enterprise Dashboard", icon: BarChart3, color: "text-emerald-400", gradient: "from-emerald-500/20 to-green-500/20", link: "/dashboard", category: "blanch" },
+    { id: "blanch-deposit", name: "Blanch Deposit", description: "Fund Your Account", icon: CreditCard, color: "text-green-400", gradient: "from-green-500/20 to-emerald-500/20", link: "/command-center", category: "blanch" },
+    { id: "blanch-domains", name: "Blanch Domains, Emails & Hosting", description: "Domain & Email Management", icon: Globe, color: "text-purple-400", gradient: "from-purple-500/20 to-pink-500/20", link: "/command-center", category: "blanch" },
+    { id: "blanch-drive", name: "Blanch Drive", description: "Enterprise Storage", icon: HardDrive, color: "text-indigo-400", gradient: "from-indigo-500/20 to-purple-500/20", link: "/command-center", category: "blanch" },
+    { id: "blanch-energy", name: "Blanch Energy", description: "Energy Solutions", icon: Zap, color: "text-yellow-400", gradient: "from-yellow-500/20 to-amber-500/20", link: "/command-center", category: "blanch" },
+    { id: "blanch-food-replicator", name: "Blanch Food Replicator", description: "Non-GMO Food Tech", icon: Utensils, color: "text-green-400", gradient: "from-green-500/20 to-lime-500/20", link: "/food-replicator", category: "blanch" },
+    { id: "blanch-foundation", name: "Blanch Foundation", description: "Charity, Humanitarian Fund, Emancipation", icon: Heart, color: "text-pink-400", gradient: "from-pink-500/20 to-rose-500/20", link: "/philanthropy", category: "blanch" },
+    { id: "blanch-gaming", name: "Blanch Gaming & Prizes", description: "Gaming & Rewards", icon: Gamepad2, color: "text-purple-400", gradient: "from-purple-500/20 to-pink-500/20", link: "/command-center", category: "blanch" },
+    { id: "blanch-gaming-dev", name: "Blanch Gaming Development", description: "Game Development Studio", icon: Gamepad2, color: "text-indigo-400", gradient: "from-indigo-500/20 to-violet-500/20", link: "/command-center", category: "blanch" },
+    { id: "blanch-group", name: "Blanch Group", description: "Enterprise Group", icon: Building2, color: "text-blue-400", gradient: "from-blue-500/20 to-indigo-500/20", link: "/command-center", category: "blanch" },
+    { id: "blanch-affiliates", name: "Blanch Group Affiliate Programs", description: "Circle Agent ID, LEI, Referrals, Commissions", icon: Users2, color: "text-pink-400", gradient: "from-pink-500/20 to-rose-500/20", link: "/command-center", category: "blanch" },
+    { id: "blanch-heed", name: "Blanch H.E.E.D Program", description: "Health, Education, Enterprising, Development", icon: GraduationCap, color: "text-emerald-400", gradient: "from-emerald-500/20 to-green-500/20", link: "/heed-ventures", category: "blanch" },
+    { id: "blanch-hr", name: "Blanch HR", description: "Human Resources", icon: Users, color: "text-blue-400", gradient: "from-blue-500/20 to-cyan-500/20", link: "/command-center", category: "blanch" },
+    { id: "blanch-industries", name: "Blanch Industries", description: "Industrial Solutions", icon: Factory, color: "text-slate-400", gradient: "from-slate-500/20 to-gray-500/20", link: "/command-center", category: "blanch" },
+    { id: "blanch-infrastructure", name: "Blanch Infrastructure", description: "Infrastructure Systems", icon: Building2, color: "text-stone-400", gradient: "from-stone-500/20 to-gray-500/20", link: "/command-center", category: "blanch" },
+    { id: "blanch-infinity-card", name: "Blanch Infinity Business Card & Wallets", description: "Premium Cards & E-Wallets", icon: CreditCard, color: "text-amber-400", gradient: "from-amber-500/20 to-yellow-500/20", link: "/command-center", category: "blanch" },
+    { id: "blanch-infinity-dlt", name: "Blanch Infinity DLT", description: "Distributed Ledger Tech", icon: Blocks, color: "text-blue-400", gradient: "from-blue-500/20 to-indigo-500/20", link: "/command-center", category: "blanch" },
+    { id: "blanch-bitro", name: "Blanch B.I.T.R.O Project", description: "Institute Technology Research Organization", icon: Brain, color: "text-purple-400", gradient: "from-purple-500/20 to-pink-500/20", link: "/command-center", category: "blanch" },
+    { id: "blanch-intl-law", name: "Blanch International Law", description: "Legal Framework", icon: Scale, color: "text-blue-400", gradient: "from-blue-500/20 to-indigo-500/20", link: "/international-law", category: "blanch" },
+    { id: "blanch-knowledge", name: "Blanch Knowledge Base", description: "Knowledge Repository", icon: BookOpen, color: "text-amber-400", gradient: "from-amber-500/20 to-orange-500/20", link: "/knowledge-base", category: "blanch" },
+    { id: "blanch-live-activity", name: "Blanch Live Activity", description: "Real-time Activity Feed", icon: RefreshCw, color: "text-green-400", gradient: "from-green-500/20 to-emerald-500/20", link: "/command-center", category: "blanch" },
+    { id: "blanch-marketing", name: "Blanch Marketing & Advertising", description: "Marketing Platform", icon: Megaphone, color: "text-orange-400", gradient: "from-orange-500/20 to-yellow-500/20", link: "/command-center", category: "blanch" },
+    { id: "blanch-media", name: "Blanch Media & Entertainment", description: "Media Production", icon: Film, color: "text-red-400", gradient: "from-red-500/20 to-pink-500/20", link: "/command-center", category: "blanch" },
+    { id: "blanch-metaverse", name: "Blanch Metaverse", description: "Virtual Reality", icon: Boxes, color: "text-purple-400", gradient: "from-purple-500/20 to-pink-500/20", link: "/metaverse", category: "blanch" },
+    { id: "blanch-network", name: "Blanch Network", description: "Global Network", icon: Network, color: "text-indigo-400", gradient: "from-indigo-500/20 to-purple-500/20", link: "/command-center", category: "blanch" },
+    { id: "blanch-notifications", name: "Blanch Notifications", description: "Notification Center", icon: Bell, color: "text-yellow-400", gradient: "from-yellow-500/20 to-amber-500/20", link: "/command-center", category: "blanch" },
+    { id: "blanch-oracle", name: "Blanch Oracle Project", description: "Decentralized Oracle", icon: Eye, color: "text-amber-400", gradient: "from-amber-500/20 to-yellow-500/20", link: "/oracle", category: "blanch" },
+    { id: "blanch-order-history", name: "Blanch Order History", description: "Transaction Records", icon: History, color: "text-purple-400", gradient: "from-purple-500/20 to-pink-500/20", link: "/command-center", category: "blanch" },
+    { id: "blanch-os", name: "Blanch OS", description: "Sovereign Operating System", icon: Monitor, color: "text-cyan-400", gradient: "from-cyan-500/20 to-blue-500/20", link: "/command-center", category: "blanch" },
+    { id: "blanch-pay", name: "Blanch Pay", description: "Payments, Clearing, Settlement, Finality", icon: Banknote, color: "text-green-400", gradient: "from-green-500/20 to-emerald-500/20", link: "/command-center", category: "blanch" },
+    { id: "blanch-philanthropy", name: "Blanch Philanthropy Hub", description: "Foundation, Charity, Humanitarian", icon: Heart, color: "text-pink-400", gradient: "from-pink-500/20 to-rose-500/20", link: "/philanthropy", category: "blanch" },
+    { id: "blanch-properties", name: "Blanch Properties", description: "Real Estate & Properties", icon: Building2, color: "text-stone-400", gradient: "from-stone-500/20 to-gray-500/20", link: "/command-center", category: "blanch" },
+    { id: "blanch-rtgs", name: "Blanch RTGS", description: "Real-Time Gross Settlement", icon: ArrowLeftRight, color: "text-cyan-400", gradient: "from-cyan-500/20 to-teal-500/20", link: "/command-center", category: "blanch" },
+    { id: "blanch-security", name: "Blanch Security", description: "Security Systems", icon: Shield, color: "text-red-400", gradient: "from-red-500/20 to-orange-500/20", link: "/command-center", category: "blanch" },
+    { id: "blanch-services", name: "Blanch Services", description: "All Services", icon: Briefcase, color: "text-blue-400", gradient: "from-blue-500/20 to-indigo-500/20", link: "/command-center", category: "blanch" },
+    { id: "blanch-settings", name: "Blanch Settings", description: "System Configuration", icon: Settings, color: "text-slate-400", gradient: "from-slate-500/20 to-gray-500/20", link: "/command-center", category: "blanch" },
+    { id: "blanch-store", name: "Blanch Store", description: "Official Store", icon: Store, color: "text-emerald-400", gradient: "from-emerald-500/20 to-green-500/20", link: "/command-center", category: "blanch" },
+    { id: "blanch-submit-venture", name: "Blanch Submit Venture", description: "Submit Your Ventures", icon: Rocket, color: "text-orange-400", gradient: "from-orange-500/20 to-red-500/20", link: "/heed-ventures", category: "blanch" },
+    { id: "blanch-super-admin", name: "Blanch Super Admin", description: "Super Administration", icon: Shield, color: "text-red-400", gradient: "from-red-500/20 to-orange-500/20", link: "/admin", category: "blanch" },
+    { id: "blanch-support", name: "Blanch Support", description: "Help Center", icon: HelpCircle, color: "text-green-400", gradient: "from-green-500/20 to-emerald-500/20", link: "/contact", category: "blanch" },
+    { id: "blanch-sync", name: "Blanch Sync Center", description: "Data Synchronization", icon: RefreshCw, color: "text-blue-400", gradient: "from-blue-500/20 to-cyan-500/20", link: "/command-center", category: "blanch" },
+    { id: "blanch-technology", name: "Blanch Technology", description: "Tech Solutions", icon: Cpu, color: "text-violet-400", gradient: "from-violet-500/20 to-purple-500/20", link: "/technology", category: "blanch" },
+    { id: "blanch-tps", name: "Blanch TPS", description: "Transactions Per Second", icon: Zap, color: "text-yellow-400", gradient: "from-yellow-500/20 to-amber-500/20", link: "/command-center", category: "blanch" },
+    { id: "blanch-trading", name: "Blanch Trading", description: "Trading Platform", icon: TrendingUp, color: "text-green-400", gradient: "from-green-500/20 to-emerald-500/20", link: "/trading", category: "blanch" },
+    { id: "blanch-union-pay", name: "Blanch Union Pay", description: "Payment Network", icon: CreditCard, color: "text-red-400", gradient: "from-red-500/20 to-orange-500/20", link: "/command-center", category: "blanch" },
+    { id: "blanch-ubn", name: "Blanch Universal Business Networks", description: "Global B2B Network", icon: Globe, color: "text-indigo-400", gradient: "from-indigo-500/20 to-violet-500/20", link: "/business-network", category: "blanch" },
+    { id: "blanch-user-mgr", name: "Blanch User Manager", description: "User Administration", icon: Users, color: "text-blue-400", gradient: "from-blue-500/20 to-cyan-500/20", link: "/admin", category: "blanch" },
+    { id: "blanch-user-settings", name: "Blanch User Settings", description: "User Preferences", icon: Settings, color: "text-slate-400", gradient: "from-slate-500/20 to-gray-500/20", link: "/command-center", category: "blanch" },
+    { id: "blanch-marketplace", name: "Blanch Virtual Marketplace", description: "Enterprise Commerce", icon: ShoppingBag, color: "text-pink-400", gradient: "from-pink-500/20 to-rose-500/20", link: "/marketplace", category: "blanch" },
+    { id: "blanch-wallets", name: "Blanch Wallets & E-Wallets", description: "Digital Wallet System", icon: Wallet, color: "text-blue-400", gradient: "from-blue-500/20 to-cyan-500/20", link: "/command-center", category: "blanch" },
+    { id: "blanch-watchman", name: "Blanch Watchman Project", description: "H.I.I. AI Watchman", icon: Eye, color: "text-red-400", gradient: "from-red-500/20 to-orange-500/20", link: "/watchman", category: "blanch" },
+    { id: "blanch-web-app", name: "Blanch Web/App Development", description: "AI Powered Cross Platform", icon: Code2, color: "text-violet-400", gradient: "from-violet-500/20 to-purple-500/20", link: "/web-app-building", category: "blanch" },
+    { id: "blanch-withdraw", name: "Blanch Withdraw", description: "Withdraw Funds", icon: Wallet, color: "text-blue-400", gradient: "from-blue-500/20 to-cyan-500/20", link: "/command-center", category: "blanch" },
 
-    // Trading & Finance
-    { id: "trading", name: "Trading Finance Hub", description: "S.H.I.E.L.D. AI Trading", icon: TrendingUp, color: "text-green-400", gradient: "from-green-500/20 to-emerald-500/20", link: "/trading", category: "finance" },
-    { id: "banking", name: "S.H.I.E.L.D. AI Banking", description: "Digital Banking", icon: Landmark, color: "text-emerald-400", gradient: "from-emerald-500/20 to-green-500/20", link: "/trading", category: "finance" },
-    { id: "deposit", name: "Deposit", description: "Fund Your Account", icon: CreditCard, color: "text-green-400", gradient: "from-green-500/20 to-emerald-500/20", link: "/dashboard", category: "finance" },
-    { id: "withdraw", name: "Withdraw", description: "Withdraw Funds", icon: Wallet, color: "text-blue-400", gradient: "from-blue-500/20 to-cyan-500/20", link: "/dashboard", category: "finance" },
-    { id: "order-history", name: "Order History", description: "Transaction Records", icon: History, color: "text-purple-400", gradient: "from-purple-500/20 to-pink-500/20", link: "/dashboard", category: "finance" },
-    { id: "cross-border", name: "Cross Border Settlements", description: "Global Payments", icon: ArrowLeftRight, color: "text-cyan-400", gradient: "from-cyan-500/20 to-teal-500/20", link: "/cross-border", category: "finance" },
+    // ==================== IDENTITY SECTION ====================
+    { id: "identity-b2b", name: "Identity B2B", description: "Payments, Clearing, Settlement", icon: Banknote, color: "text-emerald-400", gradient: "from-emerald-500/20 to-green-500/20", link: "/command-center", category: "identity" },
+    { id: "identity-b2b-network", name: "Identity B2B Network", description: "Professional Social Business Network", icon: Network, color: "text-indigo-400", gradient: "from-indigo-500/20 to-violet-500/20", link: "/command-center", category: "identity" },
+    { id: "identity-black-card", name: "Identity Black Card & Wallets", description: "Premium Card & E-Wallets", icon: CreditCard, color: "text-slate-400", gradient: "from-slate-500/20 to-gray-500/20", link: "/command-center", category: "identity" },
+    { id: "identity-film", name: "Identity Film Group", description: "Film & Media Production", icon: Film, color: "text-red-400", gradient: "from-red-500/20 to-pink-500/20", link: "/command-center", category: "identity" },
+    { id: "identity-music", name: "Identity Music Group", description: "Music Production & Label", icon: Music, color: "text-purple-400", gradient: "from-purple-500/20 to-pink-500/20", link: "/command-center", category: "identity" },
+    { id: "identity-unlimited", name: "Identity Unlimited", description: "Full Identity Suite", icon: Crown, color: "text-amber-400", gradient: "from-amber-500/20 to-yellow-500/20", link: "/command-center", category: "identity" },
 
-    // Knowledge & Spiritual
-    { id: "knowledge", name: "Knowledge Base", description: "Scriptural & Tech Wisdom", icon: BookOpen, color: "text-amber-400", gradient: "from-amber-500/20 to-orange-500/20", link: "/knowledge-base", category: "knowledge" },
+    // ==================== S.H.I.E.L.D. AI SECTION ====================
+    { id: "shield-dashboard", name: "S.H.I.E.L.D. AI Dashboard", description: "User Control Panel", icon: BarChart3, color: "text-emerald-400", gradient: "from-emerald-500/20 to-green-500/20", link: "/dashboard", category: "shield" },
+    { id: "shield-admin", name: "S.H.I.E.L.D. AI Admin", description: "System Administration", icon: Shield, color: "text-red-400", gradient: "from-red-500/20 to-orange-500/20", link: "/admin", category: "shield" },
+    { id: "shield-user-settings", name: "S.H.I.E.L.D. AI User Settings", description: "User Preferences", icon: Settings, color: "text-slate-400", gradient: "from-slate-500/20 to-gray-500/20", link: "/command-center", category: "shield" },
+    { id: "shield-user-profile", name: "S.H.I.E.L.D. AI User Profile", description: "Profile Management", icon: UserIcon, color: "text-blue-400", gradient: "from-blue-500/20 to-cyan-500/20", link: "/command-center", category: "shield" },
+    { id: "shield-deposit", name: "S.H.I.E.L.D. AI Deposit", description: "Fund Your Account", icon: CreditCard, color: "text-green-400", gradient: "from-green-500/20 to-emerald-500/20", link: "/command-center", category: "shield" },
+    { id: "shield-withdraw", name: "S.H.I.E.L.D. AI Withdraw", description: "Withdraw Funds", icon: Wallet, color: "text-blue-400", gradient: "from-blue-500/20 to-cyan-500/20", link: "/command-center", category: "shield" },
+    { id: "shield-about", name: "S.H.I.E.L.D. AI About", description: "About the Platform", icon: BookOpen, color: "text-amber-400", gradient: "from-amber-500/20 to-orange-500/20", link: "/about", category: "shield" },
+    { id: "shield-home", name: "S.H.I.E.L.D. AI Home", description: "Home Page", icon: Home, color: "text-primary", gradient: "from-primary/20 to-accent/20", link: "/", category: "shield" },
+    { id: "shield-agents", name: "S.H.I.E.L.D. AI Agents", description: "888 H.I.I. AI Agents", icon: Bot, color: "text-blue-400", gradient: "from-blue-500/20 to-cyan-500/20", link: "/agents", category: "shield" },
+    { id: "shield-agent-marketplace", name: "S.H.I.E.L.D. AI Agent Marketplace", description: "Agent Services Marketplace", icon: Store, color: "text-emerald-400", gradient: "from-emerald-500/20 to-green-500/20", link: "/command-center", category: "shield" },
+    { id: "shield-affiliates", name: "S.H.I.E.L.D. AI Affiliate Programs", description: "Circle Agent ID, LEI, Referrals", icon: Users2, color: "text-pink-400", gradient: "from-pink-500/20 to-rose-500/20", link: "/command-center", category: "shield" },
+    { id: "shield-advertising", name: "S.H.I.E.L.D. AI Advertising Pool", description: "Advertising Platform", icon: Megaphone, color: "text-orange-400", gradient: "from-orange-500/20 to-yellow-500/20", link: "/command-center", category: "shield" },
+    { id: "shield-analytics", name: "S.H.I.E.L.D. AI Analytics", description: "Data Insights", icon: LineChart, color: "text-cyan-400", gradient: "from-cyan-500/20 to-blue-500/20", link: "/command-center", category: "shield" },
+    { id: "shield-analysis", name: "S.H.I.E.L.D. AI Analysis", description: "Data Analysis", icon: BarChart3, color: "text-green-400", gradient: "from-green-500/20 to-emerald-500/20", link: "/command-center", category: "shield" },
+    { id: "shield-api", name: "S.H.I.E.L.D. AI API", description: "API & Developer Portal", icon: Code2, color: "text-green-400", gradient: "from-green-500/20 to-teal-500/20", link: "/api", category: "shield" },
+    { id: "shield-asset-mgmt", name: "S.H.I.E.L.D. AI Asset Management", description: "Digital Asset Management", icon: Briefcase, color: "text-blue-400", gradient: "from-blue-500/20 to-indigo-500/20", link: "/command-center", category: "shield" },
+    { id: "shield-automation", name: "S.H.I.E.L.D. AI Automation", description: "AI Automation Platform", icon: Workflow, color: "text-violet-400", gradient: "from-violet-500/20 to-purple-500/20", link: "/command-center", category: "shield" },
+    { id: "shield-automotive", name: "S.H.I.E.L.D. AI Automotive", description: "Automotive AI Solutions", icon: Car, color: "text-blue-400", gradient: "from-blue-500/20 to-cyan-500/20", link: "/command-center", category: "shield" },
+    { id: "shield-avatar", name: "S.H.I.E.L.D. AI Avatar", description: "Digital Avatar System", icon: UserIcon, color: "text-purple-400", gradient: "from-purple-500/20 to-pink-500/20", link: "/command-center", category: "shield" },
+    { id: "shield-banking", name: "S.H.I.E.L.D. AI Banking", description: "Digital Banking", icon: Landmark, color: "text-emerald-400", gradient: "from-emerald-500/20 to-green-500/20", link: "/command-center", category: "shield" },
+    { id: "shield-blessings", name: "S.H.I.E.L.D. AI Blessing & Rewards", description: "Rewards Program", icon: Gift, color: "text-amber-400", gradient: "from-amber-500/20 to-yellow-500/20", link: "/command-center", category: "shield" },
+    { id: "shield-blessing-tiers", name: "S.H.I.E.L.D. AI Blessing Tiers", description: "Tier Management", icon: Medal, color: "text-yellow-400", gradient: "from-yellow-500/20 to-amber-500/20", link: "/command-center", category: "shield" },
+    { id: "shield-build", name: "S.H.I.E.L.D. AI Build Interfaces", description: "Hologram, OS, Software & Cloud", icon: MonitorSmartphone, color: "text-cyan-400", gradient: "from-cyan-500/20 to-blue-500/20", link: "/command-center", category: "shield" },
+    { id: "shield-chat", name: "S.H.I.E.L.D. AI Chat", description: "Ask S.H.I.E.L.D. AI Anything", icon: MessageSquare, color: "text-primary", gradient: "from-primary/20 to-accent/20", link: "/command-center", category: "shield" },
+    { id: "shield-cloud", name: "S.H.I.E.L.D. AI Cloud", description: "AI Cloud Infrastructure", icon: Cloud, color: "text-sky-400", gradient: "from-sky-500/20 to-blue-500/20", link: "/command-center", category: "shield" },
+    { id: "shield-cluster", name: "S.H.I.E.L.D. AI Cluster", description: "Computing Cluster", icon: Server, color: "text-blue-400", gradient: "from-blue-500/20 to-indigo-500/20", link: "/command-center", category: "shield" },
+    { id: "shield-code-gen", name: "S.H.I.E.L.D. AI Code Generator", description: "AI Code Generation", icon: Code2, color: "text-violet-400", gradient: "from-violet-500/20 to-purple-500/20", link: "/command-center", category: "shield" },
+    { id: "shield-community", name: "S.H.I.E.L.D. AI Community", description: "Community Hub", icon: Users, color: "text-blue-400", gradient: "from-blue-500/20 to-cyan-500/20", link: "/command-center", category: "shield" },
+    { id: "shield-community-portal", name: "S.H.I.E.L.D. AI Community Portal", description: "Community Portal", icon: Globe, color: "text-indigo-400", gradient: "from-indigo-500/20 to-violet-500/20", link: "/command-center", category: "shield" },
+    { id: "shield-compliance", name: "S.H.I.E.L.D. AI Compliance & KYC", description: "Automated Compliance Engine", icon: FileCheck, color: "text-green-400", gradient: "from-green-500/20 to-emerald-500/20", link: "/compliance-kyc", category: "shield" },
+    { id: "shield-concierge", name: "S.H.I.E.L.D. AI Concierge", description: "AI Concierge Service", icon: UserCheck, color: "text-amber-400", gradient: "from-amber-500/20 to-yellow-500/20", link: "/command-center", category: "shield" },
+    { id: "shield-contact", name: "S.H.I.E.L.D. AI Contact Us", description: "Get in Touch", icon: Mail, color: "text-blue-400", gradient: "from-blue-500/20 to-cyan-500/20", link: "/contact", category: "shield" },
+    { id: "shield-core", name: "S.H.I.E.L.D. AI Core", description: "Core Intelligence Engine", icon: Cpu, color: "text-primary", gradient: "from-primary/20 to-accent/20", link: "/command-center", category: "shield" },
+    { id: "shield-capabilities", name: "S.H.I.E.L.D. AI Core Capabilities", description: "Platform Capabilities", icon: Zap, color: "text-yellow-400", gradient: "from-yellow-500/20 to-amber-500/20", link: "/command-center", category: "shield" },
+    { id: "shield-creative-media", name: "S.H.I.E.L.D. AI Creative Media", description: "AI Powered Content Creation", icon: Palette, color: "text-pink-400", gradient: "from-pink-500/20 to-purple-500/20", link: "/command-center", category: "shield" },
+    { id: "shield-crm-erp", name: "S.H.I.E.L.D. AI CRM & ERP", description: "Business Management", icon: Building2, color: "text-blue-400", gradient: "from-blue-500/20 to-indigo-500/20", link: "/command-center", category: "shield" },
+    { id: "shield-cross-border", name: "S.H.I.E.L.D. AI Cross Border", description: "Global Settlements", icon: ArrowLeftRight, color: "text-cyan-400", gradient: "from-cyan-500/20 to-teal-500/20", link: "/cross-border", category: "shield" },
+    { id: "shield-data-mgmt", name: "S.H.I.E.L.D. AI Data Management", description: "Data Systems", icon: Database, color: "text-blue-400", gradient: "from-blue-500/20 to-cyan-500/20", link: "/command-center", category: "shield" },
+    { id: "shield-db-mgr", name: "S.H.I.E.L.D. AI Database Manager", description: "Database Administration", icon: Database, color: "text-indigo-400", gradient: "from-indigo-500/20 to-violet-500/20", link: "/command-center", category: "shield" },
+    { id: "shield-deep-search", name: "S.H.I.E.L.D. AI Deep Search", description: "Advanced Search", icon: Search, color: "text-indigo-400", gradient: "from-indigo-500/20 to-violet-500/20", link: "/command-center", category: "shield" },
+    { id: "shield-docs", name: "S.H.I.E.L.D. AI Documentation", description: "Platform Documentation", icon: BookOpen, color: "text-amber-400", gradient: "from-amber-500/20 to-orange-500/20", link: "/command-center", category: "shield" },
+    { id: "shield-dlt", name: "S.H.I.E.L.D. AI DLT", description: "No Mining, No Fees", icon: Blocks, color: "text-blue-400", gradient: "from-blue-500/20 to-indigo-500/20", link: "/distributed-ledger", category: "shield" },
+    { id: "shield-domains", name: "S.H.I.E.L.D. AI Domains", description: "Domain Management", icon: Globe, color: "text-purple-400", gradient: "from-purple-500/20 to-pink-500/20", link: "/command-center", category: "shield" },
+    { id: "shield-drive", name: "S.H.I.E.L.D. AI Drive", description: "Cloud Storage", icon: HardDrive, color: "text-blue-400", gradient: "from-blue-500/20 to-cyan-500/20", link: "/command-center", category: "shield" },
+    { id: "shield-education", name: "S.H.I.E.L.D. AI Educational Resources", description: "Learn & Study", icon: GraduationCap, color: "text-emerald-400", gradient: "from-emerald-500/20 to-green-500/20", link: "/command-center", category: "shield" },
+    { id: "shield-email", name: "S.H.I.E.L.D. AI Email", description: "Secure Email", icon: Mail, color: "text-red-400", gradient: "from-red-500/20 to-orange-500/20", link: "/command-center", category: "shield" },
+    { id: "shield-energy", name: "S.H.I.E.L.D. AI Energy", description: "Energy Solutions", icon: Zap, color: "text-yellow-400", gradient: "from-yellow-500/20 to-amber-500/20", link: "/command-center", category: "shield" },
+    { id: "shield-explorer", name: "S.H.I.E.L.D. AI Explorer", description: "Blockchain Explorer", icon: Search, color: "text-blue-400", gradient: "from-blue-500/20 to-cyan-500/20", link: "/explorer", category: "shield" },
+    { id: "shield-gateway", name: "S.H.I.E.L.D. AI Gateway", description: "API Gateway & Middleware", icon: Zap, color: "text-yellow-400", gradient: "from-yellow-500/20 to-amber-500/20", link: "/ai-gateway", category: "shield" },
+    { id: "shield-gaming", name: "S.H.I.E.L.D. AI Gaming & Prizes", description: "Gaming Platform", icon: Gamepad2, color: "text-purple-400", gradient: "from-purple-500/20 to-pink-500/20", link: "/command-center", category: "shield" },
+    { id: "shield-gaming-dev", name: "S.H.I.E.L.D. AI Gaming Development", description: "Game Development", icon: Gamepad2, color: "text-indigo-400", gradient: "from-indigo-500/20 to-violet-500/20", link: "/command-center", category: "shield" },
+    { id: "shield-heed", name: "S.H.I.E.L.D. AI H.E.E.D. Program", description: "Helping Entrepreneurs Execute Dreams", icon: Rocket, color: "text-orange-400", gradient: "from-orange-500/20 to-red-500/20", link: "/heed-ventures", category: "shield" },
+    { id: "shield-watchman", name: "S.H.I.E.L.D. AI H.I.I. AI Project Watchman", description: "Covenant-Based Action & Mechanical Humanoid", icon: Eye, color: "text-red-400", gradient: "from-red-500/20 to-orange-500/20", link: "/watchman", category: "shield" },
+    { id: "shield-hologram-os", name: "S.H.I.E.L.D. AI Hologram & OS", description: "Cross Platform Systems", icon: Box, color: "text-cyan-400", gradient: "from-cyan-500/20 to-teal-500/20", link: "/command-center", category: "shield" },
+    { id: "shield-hospitality", name: "S.H.I.E.L.D. AI Hospitality", description: "Hospitality Solutions", icon: Building2, color: "text-blue-400", gradient: "from-blue-500/20 to-cyan-500/20", link: "/command-center", category: "shield" },
+    { id: "shield-hosting", name: "S.H.I.E.L.D. AI Hosting", description: "Web Hosting", icon: Server, color: "text-green-400", gradient: "from-green-500/20 to-emerald-500/20", link: "/command-center", category: "shield" },
+    { id: "shield-hr", name: "S.H.I.E.L.D. AI HR", description: "Human Resources", icon: Users, color: "text-blue-400", gradient: "from-blue-500/20 to-cyan-500/20", link: "/command-center", category: "shield" },
+    { id: "shield-industries", name: "S.H.I.E.L.D. AI Industries", description: "Industry Solutions", icon: Factory, color: "text-slate-400", gradient: "from-slate-500/20 to-gray-500/20", link: "/command-center", category: "shield" },
+    { id: "shield-integrations", name: "S.H.I.E.L.D. AI Integrations", description: "Platform Integrations", icon: Link2, color: "text-green-400", gradient: "from-green-500/20 to-teal-500/20", link: "/admin", category: "shield" },
+    { id: "shield-intl-law", name: "S.H.I.E.L.D. AI International Law", description: "Legal Framework", icon: Scale, color: "text-blue-400", gradient: "from-blue-500/20 to-indigo-500/20", link: "/international-law", category: "shield" },
+    { id: "shield-influencer", name: "S.H.I.E.L.D. AI Influencer", description: "Influencer Platform", icon: Star, color: "text-amber-400", gradient: "from-amber-500/20 to-yellow-500/20", link: "/command-center", category: "shield" },
+    { id: "shield-inventory", name: "S.H.I.E.L.D. AI Inventory", description: "Inventory Management", icon: Package, color: "text-orange-400", gradient: "from-orange-500/20 to-yellow-500/20", link: "/command-center", category: "shield" },
+    { id: "shield-knowledge", name: "S.H.I.E.L.D. AI Knowledge Base", description: "Scriptural & Tech Wisdom", icon: BookOpen, color: "text-amber-400", gradient: "from-amber-500/20 to-orange-500/20", link: "/knowledge-base", category: "shield" },
+    { id: "shield-law-enforcement", name: "S.H.I.E.L.D. AI Law Enforcement", description: "Justice & Safety", icon: Shield, color: "text-blue-400", gradient: "from-blue-500/20 to-indigo-500/20", link: "/command-center", category: "shield" },
+    { id: "shield-llm", name: "S.H.I.E.L.D. AI LLM", description: "Large Language Model", icon: Brain, color: "text-purple-400", gradient: "from-purple-500/20 to-pink-500/20", link: "/shield-llm", category: "shield" },
+    { id: "shield-magazine", name: "S.H.I.E.L.D. AI Magazine", description: "Digital Magazine", icon: Newspaper, color: "text-red-400", gradient: "from-red-500/20 to-pink-500/20", link: "/command-center", category: "shield" },
+    { id: "shield-manufacturing", name: "S.H.I.E.L.D. AI Manufacturing", description: "Manufacturing Solutions", icon: Factory, color: "text-slate-400", gradient: "from-slate-500/20 to-gray-500/20", link: "/command-center", category: "shield" },
+    { id: "shield-marketing", name: "S.H.I.E.L.D. AI Marketing", description: "Marketing Platform", icon: Target, color: "text-pink-400", gradient: "from-pink-500/20 to-rose-500/20", link: "/command-center", category: "shield" },
+    { id: "shield-metaverse", name: "S.H.I.E.L.D. AI Metaverse", description: "Virtual Reality", icon: Boxes, color: "text-purple-400", gradient: "from-purple-500/20 to-pink-500/20", link: "/metaverse", category: "shield" },
+    { id: "shield-os", name: "S.H.I.E.L.D. AI OS", description: "Sovereign Operating System", icon: Monitor, color: "text-cyan-400", gradient: "from-cyan-500/20 to-blue-500/20", link: "/command-center", category: "shield" },
+    { id: "shield-pay", name: "S.H.I.E.L.D. AI Pay", description: "Payments, Clearing, Settlement", icon: Banknote, color: "text-green-400", gradient: "from-green-500/20 to-emerald-500/20", link: "/command-center", category: "shield" },
+    { id: "shield-personal-assistant", name: "S.H.I.E.L.D. AI Personal Assistant", description: "AI Assistant", icon: Headphones, color: "text-blue-400", gradient: "from-blue-500/20 to-indigo-500/20", link: "/command-center", category: "shield" },
+    { id: "shield-platform-features", name: "S.H.I.E.L.D. AI Platform Features", description: "All Features", icon: Layers, color: "text-violet-400", gradient: "from-violet-500/20 to-purple-500/20", link: "/command-center", category: "shield" },
+    { id: "shield-plugin-hub", name: "S.H.I.E.L.D. AI Plugin Hub", description: "Plugin Marketplace", icon: Blocks, color: "text-emerald-400", gradient: "from-emerald-500/20 to-green-500/20", link: "/command-center", category: "shield" },
+    { id: "shield-privacy", name: "S.H.I.E.L.D. AI Privacy", description: "Privacy Settings", icon: Lock, color: "text-red-400", gradient: "from-red-500/20 to-orange-500/20", link: "/command-center", category: "shield" },
+    { id: "shield-projects", name: "S.H.I.E.L.D. AI Projects", description: "Create, Build & Manage", icon: Layers, color: "text-violet-400", gradient: "from-violet-500/20 to-purple-500/20", link: "/command-center", category: "shield" },
+    { id: "shield-quantum", name: "S.H.I.E.L.D. AI Quantum Research Lab", description: "Quantum Computing", icon: Sparkles, color: "text-purple-400", gradient: "from-purple-500/20 to-pink-500/20", link: "/command-center", category: "shield" },
+    { id: "shield-rtgs", name: "S.H.I.E.L.D. AI RTGS", description: "Real-Time Gross Settlement", icon: ArrowLeftRight, color: "text-cyan-400", gradient: "from-cyan-500/20 to-teal-500/20", link: "/command-center", category: "shield" },
+    { id: "shield-scheduling", name: "S.H.I.E.L.D. AI Scheduling System", description: "Calendar & Scheduling", icon: Calendar, color: "text-blue-400", gradient: "from-blue-500/20 to-cyan-500/20", link: "/command-center", category: "shield" },
+    { id: "shield-scripture-search", name: "S.H.I.E.L.D. AI Scripture Search", description: "Scripture Search Engine", icon: BookMarked, color: "text-amber-400", gradient: "from-amber-500/20 to-yellow-500/20", link: "/command-center", category: "shield" },
+    { id: "shield-security", name: "S.H.I.E.L.D. AI Security", description: "Security Systems", icon: Shield, color: "text-red-400", gradient: "from-red-500/20 to-orange-500/20", link: "/command-center", category: "shield" },
+    { id: "shield-services", name: "S.H.I.E.L.D. AI Services", description: "All Services", icon: Briefcase, color: "text-blue-400", gradient: "from-blue-500/20 to-indigo-500/20", link: "/command-center", category: "shield" },
+    { id: "shield-settings", name: "S.H.I.E.L.D. AI Settings", description: "System Settings", icon: Settings, color: "text-slate-400", gradient: "from-slate-500/20 to-gray-500/20", link: "/command-center", category: "shield" },
+    { id: "shield-sovereign-court", name: "S.H.I.E.L.D. AI Sovereign Court", description: "Validation System", icon: Scale, color: "text-amber-400", gradient: "from-amber-500/20 to-yellow-500/20", link: "/sovereign-court", category: "shield" },
+    { id: "shield-store", name: "S.H.I.E.L.D. AI Store", description: "Official Store", icon: Store, color: "text-emerald-400", gradient: "from-emerald-500/20 to-green-500/20", link: "/command-center", category: "shield" },
+    { id: "shield-studios", name: "S.H.I.E.L.D. AI Studios", description: "Media, DAW, Video & Publishing", icon: Film, color: "text-red-400", gradient: "from-red-500/20 to-pink-500/20", link: "/command-center", category: "shield" },
+    { id: "shield-support", name: "S.H.I.E.L.D. AI Support", description: "Help Center", icon: HelpCircle, color: "text-green-400", gradient: "from-green-500/20 to-emerald-500/20", link: "/contact", category: "shield" },
+    { id: "shield-technology", name: "S.H.I.E.L.D. AI Technology", description: "Tech Solutions", icon: Cpu, color: "text-violet-400", gradient: "from-violet-500/20 to-purple-500/20", link: "/technology", category: "shield" },
+    { id: "shield-tools", name: "S.H.I.E.L.D. AI Tools & Modules", description: "All Tools", icon: Wrench, color: "text-slate-400", gradient: "from-slate-500/20 to-gray-500/20", link: "/command-center", category: "shield" },
+    { id: "shield-tps", name: "S.H.I.E.L.D. AI TPS", description: "Transactions Per Second", icon: Zap, color: "text-yellow-400", gradient: "from-yellow-500/20 to-amber-500/20", link: "/command-center", category: "shield" },
+    { id: "shield-trading", name: "S.H.I.E.L.D. AI Trading Finance Hub", description: "Trading Platform", icon: TrendingUp, color: "text-green-400", gradient: "from-green-500/20 to-emerald-500/20", link: "/trading", category: "shield" },
+    { id: "shield-trading-portal", name: "S.H.I.E.L.D. AI Trading Portal", description: "Trading Finance Hub Portal", icon: TrendingUp, color: "text-emerald-400", gradient: "from-emerald-500/20 to-green-500/20", link: "/command-center", category: "shield" },
+    { id: "shield-true-structure", name: "S.H.I.E.L.D. AI True Structure", description: "Architecture Framework", icon: Layers, color: "text-indigo-400", gradient: "from-indigo-500/20 to-violet-500/20", link: "/command-center", category: "shield" },
+    { id: "shield-universal-commerce", name: "S.H.I.E.L.D. AI Universal Commerce", description: "380+ Commerce Models", icon: ShoppingBag, color: "text-pink-400", gradient: "from-pink-500/20 to-rose-500/20", link: "/command-center", category: "shield" },
+    { id: "shield-ubn", name: "S.H.I.E.L.D. AI Universal Business Networks", description: "Global B2B Network", icon: Globe, color: "text-indigo-400", gradient: "from-indigo-500/20 to-violet-500/20", link: "/business-network", category: "shield" },
+    { id: "shield-conference", name: "S.H.I.E.L.D. AI Virtual Conference", description: "Voice, Video & Hologram", icon: Video, color: "text-blue-400", gradient: "from-blue-500/20 to-indigo-500/20", link: "/command-center", category: "shield" },
+    { id: "shield-marketplace", name: "S.H.I.E.L.D. AI Virtual Marketplace", description: "Enterprise Commerce", icon: ShoppingBag, color: "text-pink-400", gradient: "from-pink-500/20 to-rose-500/20", link: "/marketplace", category: "shield" },
+    { id: "shield-wallets", name: "S.H.I.E.L.D. AI Wallet & E-Wallets", description: "Digital Wallet System", icon: Wallet, color: "text-blue-400", gradient: "from-blue-500/20 to-cyan-500/20", link: "/command-center", category: "shield" },
+    { id: "shield-web-app", name: "S.H.I.E.L.D. AI Web/App Development", description: "AI Powered Cross Platform", icon: Code2, color: "text-violet-400", gradient: "from-violet-500/20 to-purple-500/20", link: "/web-app-building", category: "shield" },
+    { id: "shield-zero-knowledge", name: "S.H.I.E.L.D. AI Zero Knowledge Protocol", description: "Privacy Protocol", icon: Lock, color: "text-red-400", gradient: "from-red-500/20 to-orange-500/20", link: "/command-center", category: "shield" },
+
+    // ==================== INTEGRATIONS ====================
+    { id: "google-sync", name: "Google Sync", description: "Google Integration", icon: Globe, color: "text-red-400", gradient: "from-red-500/20 to-orange-500/20", link: "/command-center", category: "integrations" },
+    { id: "apple-sync", name: "Apple Sync", description: "Apple Integration", icon: Smartphone, color: "text-slate-400", gradient: "from-slate-500/20 to-gray-500/20", link: "/command-center", category: "integrations" },
+    { id: "microsoft-sync", name: "Microsoft Sync", description: "Microsoft Integration", icon: Monitor, color: "text-blue-400", gradient: "from-blue-500/20 to-cyan-500/20", link: "/command-center", category: "integrations" },
+    { id: "linux-sync", name: "Linux Sync", description: "Linux Integration", icon: Laptop, color: "text-orange-400", gradient: "from-orange-500/20 to-yellow-500/20", link: "/command-center", category: "integrations" },
+    { id: "uscpb", name: "USCPB Integration", description: "USCPB Banking", icon: Landmark, color: "text-emerald-400", gradient: "from-emerald-500/20 to-green-500/20", link: "/uscpb", category: "integrations" },
+
+    // ==================== FILE SYSTEM ====================
+    { id: "file-system", name: "Universal File System Manager", description: "Cross Platform File Management", icon: FolderOpen, color: "text-blue-400", gradient: "from-blue-500/20 to-cyan-500/20", link: "/command-center", category: "tools" },
+
+    // ==================== KNOWLEDGE ====================
     { id: "calendar", name: "Creators Calendar", description: "Holy Days & Sabbath", icon: Calendar, color: "text-amber-400", gradient: "from-amber-500/20 to-orange-500/20", link: "/creators-calendar", category: "knowledge" },
     { id: "laws", name: "Laws & Commandments", description: "Divine Instructions", icon: ScrollText, color: "text-amber-400", gradient: "from-amber-500/20 to-yellow-500/20", link: "/laws-commandments", category: "knowledge" },
     { id: "kingdom", name: "Kingdom of Jerusalem", description: "Sacred Governance", icon: Crown, color: "text-amber-400", gradient: "from-amber-500/20 to-yellow-500/20", link: "/laws-commandments", category: "knowledge" },
     { id: "prayer", name: "House of Prayer", description: "For All People", icon: Heart, color: "text-pink-400", gradient: "from-pink-500/20 to-rose-500/20", link: "/philanthropy", category: "knowledge" },
-
-    // Business & Commerce
-    { id: "universal-network", name: "Universal Business Networks", description: "Global B2B Network", icon: Globe, color: "text-indigo-400", gradient: "from-indigo-500/20 to-violet-500/20", link: "/business-network", category: "business" },
-    { id: "marketplace", name: "Virtual Marketplace", description: "Enterprise Commerce", icon: ShoppingBag, color: "text-pink-400", gradient: "from-pink-500/20 to-rose-500/20", link: "/marketplace", category: "business" },
-    { id: "crm-erp", name: "CRM & ERP", description: "Business Management", icon: Building2, color: "text-blue-400", gradient: "from-blue-500/20 to-indigo-500/20", link: "/admin", category: "business" },
-    { id: "inventory", name: "Inventory", description: "Stock Management", icon: Package, color: "text-orange-400", gradient: "from-orange-500/20 to-yellow-500/20", link: "/admin", category: "business" },
-    { id: "manufacturing", name: "Manufacturing", description: "Production Systems", icon: Factory, color: "text-slate-400", gradient: "from-slate-500/20 to-gray-500/20", link: "/admin", category: "business" },
-
-    // Technology & Development
-    { id: "web-app-build", name: "Web/App Building", description: "S.H.I.E.L.D. AI Development", icon: Code2, color: "text-violet-400", gradient: "from-violet-500/20 to-purple-500/20", link: "/web-app-building", category: "technology" },
-    { id: "autocad", name: "AutoCAD", description: "S.H.I.E.L.D. AI Design", icon: PenTool, color: "text-teal-400", gradient: "from-teal-500/20 to-cyan-500/20", link: "/autocad", category: "technology" },
-    { id: "llm", name: "S.H.I.E.L.D. AI LLM", description: "Large Language Model", icon: Brain, color: "text-purple-400", gradient: "from-purple-500/20 to-pink-500/20", link: "/shield-llm", category: "ai" },
-    { id: "dlt", name: "DLT Technologies", description: "No Fees, No Mining", icon: Blocks, color: "text-blue-400", gradient: "from-blue-500/20 to-indigo-500/20", link: "/distributed-ledger", category: "technology" },
-    { id: "api", name: "API & Integrations", description: "Developer Tools", icon: Link2, color: "text-green-400", gradient: "from-green-500/20 to-teal-500/20", link: "/api", category: "technology" },
-    { id: "interfaces", name: "Build Interfaces", description: "S.H.I.E.L.D. AI Hologram & OS Systems", icon: Monitor, color: "text-cyan-400", gradient: "from-cyan-500/20 to-blue-500/20", link: "/technology", category: "technology" },
-    { id: "interfaces", name: "S.H.I.E.L.D. AI Interfaces", description: "S.H.I.E.L.D. AI Hologram & OS Systems", icon: Monitor, color: "text-cyan-400", gradient: "from-cyan-500/20 to-blue-500/20", link: "/technology", category: "technology" },
-
-    // Cloud & Infrastructure
-    { id: "drive", name: "S.H.I.E.L.D. Drive", description: "Cloud Storage", icon: HardDrive, color: "text-blue-400", gradient: "from-blue-500/20 to-cyan-500/20", link: "/dashboard", category: "cloud" },
-    { id: "blanch-drive", name: "Blanch Drive", description: "Enterprise Storage", icon: HardDrive, color: "text-indigo-400", gradient: "from-indigo-500/20 to-purple-500/20", link: "/dashboard", category: "cloud" },
-    { id: "cloud", name: "S.H.I.E.L.D. Cloud", description: "Cloud Infrastructure", icon: Cloud, color: "text-sky-400", gradient: "from-sky-500/20 to-blue-500/20", link: "/technology", category: "cloud" },
-    { id: "blanch-cloud", name: "Blanch Cloud", description: "Enterprise Cloud", icon: Cloud, color: "text-violet-400", gradient: "from-violet-500/20 to-purple-500/20", link: "/technology", category: "cloud" },
-    { id: "email", name: "S.H.I.E.L.D. AI Email", description: "Secure Email", icon: MailIcon, color: "text-red-400", gradient: "from-red-500/20 to-orange-500/20", link: "/dashboard", category: "cloud" },
-    { id: "hosting", name: "Hosting", description: "Web Hosting", icon: Server, color: "text-green-400", gradient: "from-green-500/20 to-emerald-500/20", link: "/technology", category: "cloud" },
-    { id: "domains", name: "Domains", description: "Domain Management", icon: Globe, color: "text-purple-400", gradient: "from-purple-500/20 to-pink-500/20", link: "/technology", category: "cloud" },
-
-    // Virtual & Metaverse
-    { id: "metaverse", name: "S.H.I.E.L.D. AI Metaverse", description: "Virtual Reality Worlds", icon: Boxes, color: "text-purple-400", gradient: "from-purple-500/20 to-pink-500/20", link: "/metaverse", category: "virtual" },
-    { id: "hologram", name: " S.H.I.E.L.D. AI Hologram", description: "3D Holographic & OS Systems", icon: Box, color: "text-cyan-400", gradient: "from-cyan-500/20 to-teal-500/20", link: "/technology", category: "virtual" },
-    { id: "conference", name: "S.H.I.E.L.D. AI Virtual Conference", description: "Video Meetings & Conference Calls", icon: Video, color: "text-blue-400", gradient: "from-blue-500/20 to-indigo-500/20", link: "/technology", category: "virtual" },
-
-    // Explorer & Analytics
-    { id: "explorer", name: "S.H.I.E.L.D. AI Explorer", description: "Blockchain Explorer", icon: Search, color: "text-blue-400", gradient: "from-blue-500/20 to-cyan-500/20", link: "/explorer", category: "analytics" },
-    { id: "deep-search", name: "S.H.I.E.L.D. AI Deep Search", description: "Advanced Search", icon: Search, color: "text-indigo-400", gradient: "from-indigo-500/20 to-violet-500/20", link: "/explorer", category: "analytics" },
-    { id: "analytics", name: "S.H.I.E.L.D. AI Analytics", description: "Data Insights", icon: LineChart, color: "text-cyan-400", gradient: "from-cyan-500/20 to-blue-500/20", link: "/admin", category: "analytics" },
-    { id: "analysis", name: "S.H.I.E.L.D. AI Analysis", description: "Data Analysis", icon: BarChart3, color: "text-green-400", gradient: "from-green-500/20 to-emerald-500/20", link: "/admin", category: "analytics" },
-
-    // Marketing & Advertising
-    { id: "advertising", name: "S.H.I.E.L.D. AI Advertising Hub", description: "Marketing Platform", icon: Megaphone, color: "text-orange-400", gradient: "from-orange-500/20 to-yellow-500/20", link: "/admin", category: "marketing" },
-    { id: "marketing", name: "S.H.I.E.L.D. AI Marketing", description: "Campaign Management", icon: Target, color: "text-pink-400", gradient: "from-pink-500/20 to-rose-500/20", link: "/admin", category: "marketing" },
-
-    // Media & Creative
-    { id: "studios", name: "S.H.I.E.L.D. AI Studios", description: "Media Production", icon: Film, color: "text-red-400", gradient: "from-red-500/20 to-pink-500/20", link: "/technology", category: "media" },
-    { id: "creative-media", name: "S.H.I.E.L.D. AI Creative Media", description: "Content Creation", icon: Palette, color: "text-pink-400", gradient: "from-pink-500/20 to-purple-500/20", link: "/technology", category: "media" },
-
-    // Compliance & Legal
-    { id: "compliance", name: "Compliance & KYC", description: "Regulatory Compliance", icon: FileCheck, color: "text-green-400", gradient: "from-green-500/20 to-emerald-500/20", link: "/compliance-kyc", category: "compliance" },
-    { id: "sovereign-court", name: "Sovereign Court", description: "Validation System", icon: Scale, color: "text-amber-400", gradient: "from-amber-500/20 to-yellow-500/20", link: "/sovereign-court", category: "compliance" },
-    { id: "international-law", name: "International Law", description: "Legal Framework", icon: Scale, color: "text-blue-400", gradient: "from-blue-500/20 to-indigo-500/20", link: "/international-law", category: "compliance" },
-
-    // Blanch Network
-    { id: "blanch-network", name: "Blanch Network", description: "Global Network", icon: Globe, color: "text-indigo-400", gradient: "from-indigo-500/20 to-purple-500/20", link: "/blanch-network", category: "network" },
-    { id: "oracle", name: "Blanch Oracle", description: "Decentralized Oracle", icon: Eye, color: "text-amber-400", gradient: "from-amber-500/20 to-yellow-500/20", link: "/oracle", category: "network" },
-    { id: "blanch-group", name: "Blanch Group", description: "Enterprise Group", icon: Building2, color: "text-blue-400", gradient: "from-blue-500/20 to-indigo-500/20", link: "/about", category: "network" },
-    { id: "corridor", name: "Blanch Corridor", description: "Global Infrastructure", icon: Globe, color: "text-purple-400", gradient: "from-purple-500/20 to-pink-500/20", link: "/blanch-corridor", category: "network" },
-
-    // Programs & Ventures
-    { id: "ventures", name: "H.E.E.D. Ventures", description: "Submit Your Ventures", icon: Rocket, color: "text-orange-400", gradient: "from-orange-500/20 to-red-500/20", link: "/heed-ventures", category: "programs" },
-    { id: "affiliates", name: "Affiliate Programs", description: "Circle Agent ID", icon: Users2, color: "text-pink-400", gradient: "from-pink-500/20 to-rose-500/20", link: "/admin", category: "programs" },
-    { id: "blessings", name: "Blessings & Rewards", description: "Rewards Program", icon: Gift, color: "text-amber-400", gradient: "from-amber-500/20 to-yellow-500/20", link: "/admin", category: "programs" },
-    { id: "blessing-tiers", name: "Blessing Tiers", description: "Tier Management", icon: Medal, color: "text-yellow-400", gradient: "from-yellow-500/20 to-amber-500/20", link: "/admin", category: "programs" },
-
-    // Philanthropy
-    { id: "philanthropy", name: "Philanthropy Hub", description: "Blanch Foundation", icon: Heart, color: "text-pink-400", gradient: "from-pink-500/20 to-rose-500/20", link: "/philanthropy", category: "philanthropy" },
-
-    // Special Projects
-    { id: "food-replicator", name: "Food Replicator", description: "Blanch Food Tech", icon: Utensils, color: "text-green-400", gradient: "from-green-500/20 to-lime-500/20", link: "/food-replicator", category: "projects" },
-    { id: "watchman", name: "H.I.I. Project Watchman", description: "AI Surveillance", icon: Eye, color: "text-red-400", gradient: "from-red-500/20 to-orange-500/20", link: "/watchman", category: "ai" },
-    { id: "energy", name: "Blanch Energy", description: "Energy Solutions", icon: Zap, color: "text-yellow-400", gradient: "from-yellow-500/20 to-amber-500/20", link: "/technology", category: "projects" },
-    { id: "hospitality", name: "Hospitality", description: "Hotel & Travel", icon: Building2, color: "text-blue-400", gradient: "from-blue-500/20 to-cyan-500/20", link: "/technology", category: "projects" },
-    { id: "projects", name: "Projects", description: "Create & Manage", icon: Layers, color: "text-violet-400", gradient: "from-violet-500/20 to-purple-500/20", link: "/admin", category: "projects" },
-
-    // Support & Services
-    { id: "concierge", name: "Concierge", description: "Personal Assistant", icon: UserCheck, color: "text-amber-400", gradient: "from-amber-500/20 to-yellow-500/20", link: "/dashboard", category: "support" },
-    { id: "personal-assistant", name: "Personal Assistant", description: "AI Assistant", icon: Headphones, color: "text-blue-400", gradient: "from-blue-500/20 to-indigo-500/20", link: "/dashboard", category: "support" },
-    { id: "support", name: "Support", description: "Help Center", icon: Headphones, color: "text-green-400", gradient: "from-green-500/20 to-emerald-500/20", link: "/contact", category: "support" },
-
-    // Data Management
-    { id: "data-management", name: "S.H.I.E.L.D. AI Data Management", description: "Data Systems", icon: Database, color: "text-blue-400", gradient: "from-blue-500/20 to-cyan-500/20", link: "/admin", category: "data" },
-    { id: "uscpb", name: "USCPB Integration", description: "USCPB Banking Integration", icon: Landmark, color: "text-emerald-400", gradient: "from-emerald-500/20 to-green-500/20", link: "/uscpb", category: "finance" },
-
-    // External Sync
-    { id: "blanch-sync", name: "Blanch Sync", description: "Blanch Integration", icon: Monitor, color: "text-blue-400", gradient: "from-blue-500/20 to-cyan-500/20", link: "/admin", category: "integrations" },
-    { id: "google-sync", name: "Google Sync", description: "Google Integration", icon: Globe, color: "text-red-400", gradient: "from-red-500/20 to-orange-500/20", link: "/admin", category: "integrations" },
-    { id: "apple-sync", name: "Apple Sync", description: "Apple Integration", icon: Smartphone, color: "text-slate-400", gradient: "from-slate-500/20 to-gray-500/20", link: "/admin", category: "integrations" },
-    { id: "microsoft-sync", name: "Microsoft Sync", description: "Microsoft Integration", icon: Monitor, color: "text-blue-400", gradient: "from-blue-500/20 to-cyan-500/20", link: "/admin", category: "integrations" },
-    
-
   ];
 
   const categories = [
     { id: "all", name: "All", icon: Grid },
-    { id: "core", name: "Core", icon: Shield },
-    { id: "ai", name: "AI", icon: Brain },
-    { id: "finance", name: "Finance", icon: TrendingUp },
+    { id: "blanch", name: "Blanch Brand", icon: Crown },
+    { id: "shield", name: "S.H.I.E.L.D. AI", icon: Shield },
+    { id: "identity", name: "Identity", icon: BadgeCheck },
     { id: "knowledge", name: "Knowledge", icon: BookOpen },
-    { id: "business", name: "Business", icon: Building2 },
-    { id: "technology", name: "Technology", icon: Code2 },
-    { id: "cloud", name: "Cloud", icon: Cloud },
-    { id: "virtual", name: "Virtual", icon: Boxes },
-    { id: "analytics", name: "Analytics", icon: LineChart },
-    { id: "marketing", name: "Marketing", icon: Megaphone },
-    { id: "media", name: "Media", icon: Film },
-    { id: "compliance", name: "Compliance", icon: FileCheck },
-    { id: "network", name: "Network", icon: Network },
-    { id: "programs", name: "Programs", icon: Rocket },
-    { id: "philanthropy", name: "Philanthropy", icon: Heart },
-    { id: "projects", name: "Projects", icon: Layers },
-    { id: "support", name: "Support", icon: Headphones },
-    { id: "data", name: "Data", icon: Database },
     { id: "integrations", name: "Integrations", icon: Link2 },
+    { id: "tools", name: "Tools", icon: Wrench },
   ];
 
   const filteredActions = quickActions.filter(action => {
@@ -217,10 +293,10 @@ const CommandCenterPage = () => {
               </div>
             </div>
             <h1 className="text-4xl md:text-5xl font-display font-bold gradient-text mb-4">
-              S.H.I.E.L.D. AI Command Center
+              S.H.I.E.L.D. AI OS Command Center
             </h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Access all platform features, tools, and services from one unified command center
+              S.H.I.E.L.D. AI OS & S.H.I.E.L.D. AI OS Cloud — Access all platform features, tools, and services
             </p>
           </motion.div>
 
@@ -243,7 +319,6 @@ const CommandCenterPage = () => {
               </div>
             </div>
 
-            {/* Category Tabs */}
             <div className="flex flex-wrap gap-2 justify-center">
               {categories.map((category) => (
                 <Button
@@ -274,19 +349,14 @@ const CommandCenterPage = () => {
                   initial={{ opacity: 0, y: 20, scale: 0.9 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.9 }}
-                  transition={{ delay: index * 0.02, type: "spring", stiffness: 300 }}
-                  whileHover={{
-                    scale: 1.05,
-                    y: -5,
-                    transition: { type: "spring", stiffness: 400 }
-                  }}
+                  transition={{ delay: index * 0.01, type: "spring", stiffness: 300 }}
+                  whileHover={{ scale: 1.05, y: -5, transition: { type: "spring", stiffness: 400 } }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => handleActionClick(action)}
                   onMouseEnter={() => setHoveredAction(action.id)}
                   onMouseLeave={() => setHoveredAction(null)}
                   className="relative flex flex-col items-center p-4 rounded-2xl bg-card/50 border border-border/30 hover:border-primary/30 transition-all duration-300 group cursor-pointer"
                 >
-                  {/* 3D Icon Container */}
                   <motion.div
                     className={`relative p-4 rounded-2xl bg-gradient-to-br ${action.gradient} mb-3`}
                     animate={{
@@ -295,40 +365,30 @@ const CommandCenterPage = () => {
                     }}
                     style={{ transformStyle: "preserve-3d", perspective: 1000 }}
                   >
-                    {/* Glow effect */}
                     <div className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${action.gradient} blur-xl opacity-0 group-hover:opacity-50 transition-opacity duration-300`} />
-
-                    {/* Icon with 3D shadow */}
                     <div className="relative">
                       <action.icon className={`w-8 h-8 ${action.color} relative z-10`} />
                       <div className={`absolute inset-0 ${action.color} blur-md opacity-30`} />
                     </div>
                   </motion.div>
 
-                  {/* Label */}
-                  <span className="text-sm font-medium text-foreground text-center leading-tight">
+                  <span className="text-xs font-medium text-foreground text-center leading-tight">
                     {action.name}
                   </span>
-                  <span className="text-xs text-muted-foreground text-center mt-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200 line-clamp-2">
+                  <span className="text-[10px] text-muted-foreground text-center mt-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200 line-clamp-2">
                     {action.description}
                   </span>
 
-                  {/* Link indicator */}
                   <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <ArrowUpRight className="w-4 h-4 text-primary" />
+                    <ArrowUpRight className="w-3 h-3 text-primary" />
                   </div>
                 </motion.button>
               ))}
             </AnimatePresence>
           </motion.div>
 
-          {/* No Results */}
           {filteredActions.length === 0 && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="text-center py-12"
-            >
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-12">
               <Search className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
               <h3 className="text-lg font-semibold mb-2">No commands found</h3>
               <p className="text-muted-foreground">Try adjusting your search or filter criteria</p>
@@ -345,10 +405,10 @@ const CommandCenterPage = () => {
             <div className="flex items-center justify-between p-4 rounded-xl bg-card/30 border border-border/20 max-w-2xl mx-auto">
               <div className="flex items-center gap-3">
                 <div className="w-3 h-3 rounded-full bg-green-500 animate-pulse" />
-                <span className="text-muted-foreground">All Systems Operational</span>
+                <span className="text-muted-foreground text-sm">S.H.I.E.L.D. AI OS — All Systems Operational</span>
               </div>
-              <span className="text-sm text-muted-foreground">
-                H.I.I. AI Network Active • {quickActions.length} Commands Available
+              <span className="text-xs text-muted-foreground">
+                {quickActions.length} Commands Available
               </span>
             </div>
           </motion.div>
@@ -362,4 +422,3 @@ const CommandCenterPage = () => {
 };
 
 export default CommandCenterPage;
-
