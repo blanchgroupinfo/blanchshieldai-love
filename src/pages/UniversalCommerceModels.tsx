@@ -227,12 +227,12 @@ const UniversalCommerceModels = () => {
         <div className="container px-4">
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 max-w-6xl mx-auto">
             {[
-              { value: "$∞", label: "Annual Volume", icon: "💲" },
-              { value: "∞", label: "Merchants", icon: "#" },
-              { value: "99.9%", label: "Success Rate", icon: "%" },
-              { value: "0%", label: "Transaction Fees", icon: "0%" },
-              { value: "Instant", label: "Settlement", icon: "⚡" },
-              { value: "150+", label: "Currencies", icon: "🌐" },
+              { value: "$∞", label: "Annual Volume", animated: false },
+              { value: "∞", label: "Merchants", animated: false },
+              { value: "99.9%", label: "Success Rate", animatedValue: "99.9%", animated: true },
+              { value: "0%", label: "Transaction Fees", animated: false },
+              { value: "Instant", label: "Settlement", animated: false },
+              { value: "150+", label: "Currencies", animatedValue: "150+", animated: true },
             ].map((stat, i) => (
               <ScrollAnimationWrapper key={stat.label}>
                 <motion.div
@@ -241,7 +241,13 @@ const UniversalCommerceModels = () => {
                   transition={{ duration: 0.4, delay: i * 0.08 }}
                   className="glass-card rounded-xl p-6 text-center hover:border-primary/50 transition-all duration-300"
                 >
-                  <div className="text-2xl md:text-3xl font-display font-bold text-primary mb-1">{stat.value}</div>
+                  <div className="text-2xl md:text-3xl font-display font-bold text-primary mb-1">
+                    {stat.animated ? (
+                      <AnimatedCounter value={stat.animatedValue!} duration={1.5} />
+                    ) : (
+                      stat.value
+                    )}
+                  </div>
                   <div className="text-xs text-muted-foreground font-display">{stat.label}</div>
                 </motion.div>
               </ScrollAnimationWrapper>
