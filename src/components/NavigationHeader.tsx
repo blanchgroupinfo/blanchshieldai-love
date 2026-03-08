@@ -98,26 +98,18 @@ const NavigationHeader = () => {
             </div>
           </Link>
 
-          {/* Desktop Quick Links */}
+          {/* Active Page Indicator */}
           <nav className="hidden md:flex items-center gap-1">
-            {[
-            { label: "Home", href: "/" },
-            { label: "Trading", href: "/trading" },
-            { label: "Agents", href: "/agents" },
-            { label: "Knowledge", href: "/knowledge-base" }].
-            map((item) =>
-            <Link
-              key={item.href}
-              to={item.href}
-              className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
-              location.pathname === item.href ?
-              "bg-primary/15 text-primary" :
-              "text-muted-foreground hover:text-foreground hover:bg-card/50"}`
-              }>
-              
-                {item.label}
-              </Link>
-            )}
+            {(() => {
+              const currentPage = navItems.find(item => item.href === location.pathname) || 
+                (location.pathname === "/shield-ai-chat" ? { label: "ASK S.H.I.E.L.D. AI", href: "/shield-ai-chat" } :
+                location.pathname.startsWith("/agents/") ? { label: "Agents", href: "/agents" } : null);
+              return currentPage ? (
+                <span className="px-3 py-1.5 rounded-md text-xs font-medium bg-primary/15 text-primary">
+                  {currentPage.label}
+                </span>
+              ) : null;
+            })()
           </nav>
 
           {/* CTA + Auth + Command Center + Menu */}
