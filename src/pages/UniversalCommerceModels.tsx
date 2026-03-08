@@ -239,7 +239,8 @@ const UniversalCommerceModels = () => {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.4, delay: i * 0.08 }}
-                  className="glass-card rounded-xl p-6 text-center hover:border-primary/50 transition-all duration-300"
+                  className="glass-card rounded-xl p-6 text-center hover:border-primary/50 hover:scale-110 hover:shadow-[0_0_24px_hsl(var(--primary)/0.35)] transition-all duration-300 cursor-pointer"
+                  whileHover={{ y: -6 }}
                 >
                   <div className="text-2xl md:text-3xl font-display font-bold text-primary mb-1">
                     {stat.animated ? (
