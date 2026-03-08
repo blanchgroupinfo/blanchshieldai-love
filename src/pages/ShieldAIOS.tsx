@@ -75,7 +75,7 @@ const ShieldAIOS = () => {
     ];
 
     const commands: Record<string, string> = {
-      help: "Available commands:\n  help        — Show this help message\n  status      — System status overview\n  agents      — List active agents\n  uptime      — Show system uptime\n  whoami      — Current user info\n  version     — OS version\n  clear       — Clear terminal\n  neofetch    — System info\n  ping        — Test connectivity\n  ls          — List files\n  date        — Current date/time\n  exit        — Close terminal",
+      help: "Available commands:\n  help        — Show this help message\n  status      — System status overview\n  agents      — List active agents\n  uptime      — Show system uptime\n  whoami      — Current user info\n  version     — OS version\n  clear       — Clear terminal\n  neofetch    — System info\n  ping        — Test connectivity\n  ls          — List files\n  date        — Current date/time\n  deploy      — Deploy an agent\n  scan        — Run security scan\n  encrypt     — Encrypt data stream\n  connect     — Connect to network node\n  exit        — Close terminal",
       status: "✅ CPU: 47% | Memory: 62% | Storage: 38% | Network: 89 Mbps\n   All systems operational. Security level: MAXIMUM.",
       agents: "888 H.I.I. AI Agents deployed.\n  Active: 886 | Idle: 2 | Errors: 0\n  Last deployment: 2 minutes ago",
       uptime: "System uptime: ∞ (Eternal)\n  Last reboot: Never — S.H.I.E.L.D. AI OS runs perpetually.",
