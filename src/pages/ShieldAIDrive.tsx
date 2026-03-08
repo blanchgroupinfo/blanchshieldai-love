@@ -2,7 +2,7 @@ import NavigationHeader from "@/components/NavigationHeader";
 import Footer from "@/components/Footer";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { HardDrive, Upload, Download, FolderOpen, Cloud, Lock, Share2, Database, Shield, Zap, Search, FileText, Image, Video, Music, Archive, Trash2, Star, Clock, Users, File, Loader2, Eye, X, LayoutGrid, FolderPlus, ChevronRight, Home, ArrowRight, Pencil, Link, Copy, Check, Brain, ArrowUpCircle } from "lucide-react";
+import { HardDrive, Upload, Download, FolderOpen, Cloud, Lock, Share2, Database, Shield, Zap, Search, FileText, Image, Video, Music, Archive, Trash2, Star, Clock, Users, File, Loader2, Eye, X, LayoutGrid, FolderPlus, ChevronRight, Home, ArrowRight, Pencil, Link, Copy, Check, Brain, ArrowUpCircle, History, RotateCcw } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -95,7 +95,12 @@ const ShieldAIDrive = () => {
   const [shareCopied, setShareCopied] = useState(false);
   const [sharingLoading, setSharingLoading] = useState(false);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+  const [versionFile, setVersionFile] = useState<StorageFile | null>(null);
+  const [versionHistory, setVersionHistory] = useState<any[]>([]);
+  const [versionLoading, setVersionLoading] = useState(false);
+  const [versionUploadRef] = useState(() => ({ current: null as HTMLInputElement | null }));
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const versionInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -338,6 +343,85 @@ const ShieldAIDrive = () => {
       .eq("file_path", filePath);
     toast({ title: "Share link revoked" });
     setShareLink("");
+  };
+
+  const openVersionHistory = async (file: StorageFile) => {
+    if (!user) return;
+    setVersionFile(file);
+    setVersionLoading(true);
+    const filePath = getStoragePath(file.name);
+    const { data } = await supabase
+      .from("file_versions")
+      .select("*")
+      .eq("user_id", user.id)
+      .eq("file_path", filePath)
+      .order("version_number", { ascending: false });
+    setVersionHistory(data || []);
+    setVersionLoading(false);
+  };
+
+  const handleUploadNewVersion = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!user || !versionFile || !e.target.files?.length) return;
+    const file = e.target.files[0];
+    const filePath = getStoragePath(versionFile.name);
+
+    // Save current version to history before overwriting
+    const nextVersion = (versionHistory[0]?.version_number || 0) + 1;
+    const versionedPath = `${filePath}.v${nextVersion - 1}`;
+    
+    // Download current file and save as versioned copy
+    const { data: currentData } = await supabase.storage.from("shield-drive").download(filePath);
+    if (currentData) {
+      await supabase.storage.from("shield-drive").upload(versionedPath, currentData, { upsert: true });
+    }
+
+    // Record version in database
+    await supabase.from("file_versions").insert({
+      user_id: user.id,
+      file_path: filePath,
+      version_number: nextVersion - 1,
+      file_size: versionFile.metadata?.size || 0,
+      notes: `Replaced by v${nextVersion}`,
+    });
+
+    // Upload new file to the same path (overwrite)
+    const { error } = await supabase.storage.from("shield-drive").upload(filePath, file, { upsert: true });
+    if (error) {
+      toast({ title: "Version upload failed", description: error.message, variant: "destructive" });
+    } else {
+      // Record new version
+      await supabase.from("file_versions").insert({
+        user_id: user.id,
+        file_path: filePath,
+        version_number: nextVersion,
+        file_size: file.size,
+        notes: "Current version",
+      });
+      toast({ title: `New version (v${nextVersion}) uploaded` });
+      fetchFiles();
+      openVersionHistory(versionFile);
+    }
+    if (versionInputRef.current) versionInputRef.current.value = "";
+  };
+
+  const handleRestoreVersion = async (version: any) => {
+    if (!user || !versionFile) return;
+    const filePath = getStoragePath(versionFile.name);
+    const versionedPath = `${filePath}.v${version.version_number}`;
+
+    const { data, error: dlError } = await supabase.storage.from("shield-drive").download(versionedPath);
+    if (dlError || !data) {
+      toast({ title: "Restore failed", description: "Could not download the versioned file.", variant: "destructive" });
+      return;
+    }
+
+    const { error } = await supabase.storage.from("shield-drive").upload(filePath, data, { upsert: true });
+    if (error) {
+      toast({ title: "Restore failed", description: error.message, variant: "destructive" });
+    } else {
+      toast({ title: `Restored to v${version.version_number}` });
+      fetchFiles();
+    }
   };
   useEffect(() => {
     if (moveFile && user) {
@@ -642,6 +726,9 @@ const ShieldAIDrive = () => {
                               </Button>
                               <Button variant="ghost" size="sm" className="h-7 w-7 p-0 opacity-0 group-hover:opacity-100 transition-opacity" onClick={(e) => { e.stopPropagation(); setShareFile(file); setShareLink(""); setShareCopied(false); }} title="Share">
                                 <Share2 className="h-3.5 w-3.5" />
+                              </Button>
+                              <Button variant="ghost" size="sm" className="h-7 w-7 p-0 opacity-0 group-hover:opacity-100 transition-opacity" onClick={(e) => { e.stopPropagation(); openVersionHistory(file); }} title="Version History">
+                                <History className="h-3.5 w-3.5" />
                               </Button>
                               {(folders.length > 0 || currentPath.length > 0) && (
                                 <Button variant="ghost" size="sm" className="h-7 w-7 p-0 opacity-0 group-hover:opacity-100 transition-opacity" onClick={(e) => { e.stopPropagation(); setMoveFile(file); }} title="Move to folder">
@@ -988,6 +1075,59 @@ const ShieldAIDrive = () => {
                       Revoke Share Link
                     </Button>
                   </>
+                )}
+              </div>
+            </DialogContent>
+          </Dialog>
+
+          {/* Version History Dialog */}
+          <Dialog open={!!versionFile} onOpenChange={(open) => { if (!open) setVersionFile(null); }}>
+            <DialogContent className="max-w-md bg-card border-border/50">
+              <DialogHeader>
+                <DialogTitle className="flex items-center gap-2 text-sm">
+                  <History className="h-4 w-4 text-primary" /> Version History — {versionFile?.name.replace(/^\d+_/, "")}
+                </DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4">
+                <div className="flex gap-2">
+                  <input ref={versionInputRef} type="file" className="hidden" onChange={handleUploadNewVersion} />
+                  <Button variant="shield" size="sm" className="w-full gap-1.5 text-xs" onClick={() => versionInputRef.current?.click()}>
+                    <Upload className="h-3.5 w-3.5" /> Upload New Version
+                  </Button>
+                </div>
+
+                {versionLoading ? (
+                  <div className="text-center py-6">
+                    <Loader2 className="h-6 w-6 animate-spin mx-auto text-primary" />
+                  </div>
+                ) : versionHistory.length === 0 ? (
+                  <div className="text-center py-6">
+                    <Clock className="h-8 w-8 mx-auto mb-2 text-muted-foreground/30" />
+                    <p className="text-xs text-muted-foreground">No version history yet. Upload a new version to start tracking.</p>
+                  </div>
+                ) : (
+                  <div className="space-y-2 max-h-60 overflow-y-auto">
+                    {versionHistory.map((v) => (
+                      <div key={v.id} className="flex items-center justify-between p-3 rounded-lg bg-muted/20 border border-border/30">
+                        <div>
+                          <p className="text-sm font-medium flex items-center gap-1.5">
+                            Version {v.version_number}
+                            {v.notes === "Current version" && (
+                              <Badge variant="default" className="text-[10px] px-1.5 py-0">Current</Badge>
+                            )}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            {v.file_size ? formatFileSize(v.file_size) : "—"} • {new Date(v.created_at).toLocaleDateString()}
+                          </p>
+                        </div>
+                        {v.notes !== "Current version" && (
+                          <Button variant="outline" size="sm" className="h-7 text-xs gap-1" onClick={() => handleRestoreVersion(v)}>
+                            <RotateCcw className="h-3 w-3" /> Restore
+                          </Button>
+                        )}
+                      </div>
+                    ))}
+                  </div>
                 )}
               </div>
             </DialogContent>
