@@ -315,7 +315,7 @@ const ShieldAIDrive = () => {
     if (error) {
       toast({ title: "Failed to create share link", description: error.message, variant: "destructive" });
     } else {
-      const link = `${window.location.origin}/shield-ai-drive?share=${data.share_token}`;
+      const link = `${window.location.origin}/shared?token=${data.share_token}`;
       setShareLink(link);
       toast({ title: "Share link created!" });
     }
