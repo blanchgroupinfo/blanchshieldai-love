@@ -11,7 +11,7 @@ import {
   LayoutGrid, FileText, Globe, Database, Cloud, Lock,
   Zap, BarChart3, Users, Bell, Power, Layers
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 
 const desktopApps = [
