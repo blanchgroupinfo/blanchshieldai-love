@@ -47,9 +47,20 @@ const systemStats = [
   { label: "Network", value: 89, icon: Wifi, suffix: "Mbps" },
 ];
 
+const notifications = [
+  { id: 1, type: "alert" as const, title: "Security Scan Complete", message: "All 888 agents passed integrity check. No threats detected.", time: "2 min ago", read: false },
+  { id: 2, type: "agent" as const, title: "Agent AI-042 Deployed", message: "Commerce Guardian agent activated and operational.", time: "5 min ago", read: false },
+  { id: 3, type: "system" as const, title: "System Update Available", message: "S.H.I.E.L.D. AI OS v3.0.2 patch ready for installation.", time: "12 min ago", read: false },
+  { id: 4, type: "alert" as const, title: "Firewall Block", message: "Blocked 47 unauthorized access attempts from external IPs.", time: "18 min ago", read: true },
+  { id: 5, type: "agent" as const, title: "Agent AI-777 Task Complete", message: "Sovereign Compliance audit finished — 100% pass rate.", time: "25 min ago", read: true },
+  { id: 6, type: "system" as const, title: "Backup Completed", message: "Full system backup to encrypted vault successful (128 TB).", time: "1 hr ago", read: true },
+  { id: 7, type: "agent" as const, title: "Agent AI-001 Status Change", message: "Master Orchestrator switched from idle to active mode.", time: "1.5 hr ago", read: true },
+  { id: 8, type: "alert" as const, title: "Network Latency Spike", message: "Brief latency spike detected on node-7. Auto-resolved.", time: "2 hr ago", read: true },
+];
+
 const ShieldAIOS = () => {
   const navigate = useNavigate();
-  const [activeView, setActiveView] = useState<"desktop" | "apps" | "monitor" | "files" | "terminal">("desktop");
+  const [activeView, setActiveView] = useState<"desktop" | "apps" | "monitor" | "files" | "terminal" | "notifications">("desktop");
   const [terminalHistory, setTerminalHistory] = useState<{ type: "input" | "output"; text: string }[]>([
     { type: "output", text: "S.H.I.E.L.D. AI OS Terminal v3.0.1" },
     { type: "output", text: "Type 'help' for available commands.\n" },
