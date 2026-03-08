@@ -2,7 +2,7 @@ import NavigationHeader from "@/components/NavigationHeader";
 import Footer from "@/components/Footer";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { HardDrive, Upload, Download, FolderOpen, Cloud, Lock, Share2, Database, Shield, Zap, Search, FileText, Image, Video, Music, Archive, Trash2, Star, Clock, Users, File, Loader2, Eye, X, LayoutGrid, FolderPlus, ChevronRight, Home, ArrowRight, Pencil, Link, Copy, Check } from "lucide-react";
+import { HardDrive, Upload, Download, FolderOpen, Cloud, Lock, Share2, Database, Shield, Zap, Search, FileText, Image, Video, Music, Archive, Trash2, Star, Clock, Users, File, Loader2, Eye, X, LayoutGrid, FolderPlus, ChevronRight, Home, ArrowRight, Pencil, Link, Copy, Check, Brain, ArrowUpCircle } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -356,7 +356,8 @@ const ShieldAIDrive = () => {
     { icon: Video, label: "Videos", count: files.filter(f => /\.(mp4|mov|avi|mkv)$/i.test(f.name)).length, color: "text-purple-400" },
     { icon: Music, label: "Audio", count: files.filter(f => /\.(mp3|wav|flac|aac)$/i.test(f.name)).length, color: "text-amber-400" },
     { icon: Archive, label: "Archives", count: files.filter(f => /\.(zip|tar|gz|rar|7z)$/i.test(f.name)).length, color: "text-rose-400" },
-    { icon: File, label: "Other", count: files.filter(f => !/\.(pdf|doc|docx|txt|md|xlsx|csv|jpg|jpeg|png|gif|webp|svg|mp4|mov|avi|mkv|mp3|wav|flac|aac|zip|tar|gz|rar|7z)$/i.test(f.name)).length, color: "text-cyan-400" },
+    { icon: Brain, label: "AI Models", count: files.filter(f => /\.(pt|pth|onnx|h5|pb|safetensors|gguf|bin|model)$/i.test(f.name)).length, color: "text-violet-400" },
+    { icon: File, label: "Other", count: files.filter(f => !/\.(pdf|doc|docx|txt|md|xlsx|csv|jpg|jpeg|png|gif|webp|svg|mp4|mov|avi|mkv|mp3|wav|flac|aac|zip|tar|gz|rar|7z|pt|pth|onnx|h5|pb|safetensors|gguf|bin|model)$/i.test(f.name)).length, color: "text-cyan-400" },
   ];
 
   return (
@@ -413,6 +414,14 @@ const ShieldAIDrive = () => {
                         <Upload className="h-3.5 w-3.5" /> Upload Files
                       </Button>
                     )}
+                    <Button
+                      variant="shield"
+                      size="sm"
+                      className="gap-1.5"
+                      onClick={() => toast({ title: "Upgrade Storage", description: "Premium storage plans coming soon. Stay tuned!" })}
+                    >
+                      <ArrowUpCircle className="h-3.5 w-3.5" /> Upgrade Storage
+                    </Button>
                   </div>
                 </div>
                 <Progress value={files.length > 0 ? Math.min((totalSize / (1024 * 1024 * 1024)) * 10, 100) : 0} className="h-3 mb-2" />
