@@ -77,8 +77,15 @@ const ShieldAIDrive = () => {
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [previewFile, setPreviewFile] = useState<StorageFile | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
+
+  const getPublicUrl = (fileName: string) => {
+    if (!user) return "";
+    const { data } = supabase.storage.from("shield-drive").getPublicUrl(`${user.id}/${fileName}`);
+    return data.publicUrl;
+  };
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => setUser(session?.user ?? null));
