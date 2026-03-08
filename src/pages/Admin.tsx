@@ -34,7 +34,6 @@ import {
   Crown,
   UserPlus,
   Send,
-  Send,
   FileText,
   ClipboardCheck,
 } from "lucide-react";
