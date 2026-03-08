@@ -45,6 +45,11 @@ const capabilities = [
     scripture: "John 4:24 — Most High AHAYAH is a Spirit: and they that worship him must worship him in spirit and in truth."
   },
   {
+    icon: Megaphone, title: "Marketing & Advertising",
+    items: ["Digital & Traditional Marketing", "Brand Strategy & Development", "Social Media & Content Creation", "Global Advertising Campaigns"],
+    scripture: "Proverbs 22:29 — Seest thou a man diligent in his business? he shall stand before kings."
+  },
+  {
     icon: Scale, title: "Legal & Governance",
     items: ["Sovereign Trust & Compliance", "Arbitration & Emancipation", "Human Rights"],
     scripture: "Isaiah 33:22 — For the Most High AHAYAH is our judge, the Most High AHAYAH is our lawgiver, the Most High AHAYAH is our king."
