@@ -211,7 +211,7 @@ const CommandCenterPage = () => {
     { id: "shield-conference", name: "S.H.I.E.L.D. AI Virtual Conference", description: "Voice, Video & Hologram", icon: Video, color: "text-blue-400", gradient: "from-blue-500/20 to-indigo-500/20", link: "/command-center", category: "media" },
 
     // ==================== NETWORK ====================
-    { id: "blanch-network", name: "Blanch Network", description: "Global Network", icon: Network, color: "text-indigo-400", gradient: "from-indigo-500/20 to-purple-500/20", link: "/command-center", category: "network" },
+    { id: "blanch-network", name: "Blanch Network", description: "Global Network", icon: Network, color: "text-indigo-400", gradient: "from-indigo-500/20 to-purple-500/20", link: "/blanch-network", category: "network" },
     { id: "shield-community", name: "S.H.I.E.L.D. AI Community", description: "Community Hub", icon: Users, color: "text-blue-400", gradient: "from-blue-500/20 to-cyan-500/20", link: "/command-center", category: "network" },
     { id: "shield-community-portal", name: "S.H.I.E.L.D. AI Community Portal", description: "Community Portal", icon: Globe, color: "text-indigo-400", gradient: "from-indigo-500/20 to-violet-500/20", link: "/command-center", category: "network" },
     { id: "blanch-notifications", name: "Blanch Notifications", description: "Notification Center", icon: Bell, color: "text-yellow-400", gradient: "from-yellow-500/20 to-amber-500/20", link: "/command-center", category: "network" },
