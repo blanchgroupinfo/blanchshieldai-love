@@ -376,7 +376,7 @@ const Admin = () => {
     {
       id: "agents",
       name: "H.I.I. AI Agent Network",
-      description: "402 Universal Unified AI Agents",
+      description: `${PLATFORM.totalAgents} Universal Unified AI Agents`,
       icon: Cpu,
       status: "active",
       lastSync: "Real-time",
