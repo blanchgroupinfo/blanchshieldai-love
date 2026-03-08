@@ -71,7 +71,7 @@ const features = [
   {
     icon: FileText,
     title: "SWIFT Migration",
-    description: "Complete MT101-MT999 to MX migration support for modern payments.",
+    description: "Complete Bi-Directional MT101-MT999 to MX migration support for modern payments.",
   },
   {
     icon: Coins,
