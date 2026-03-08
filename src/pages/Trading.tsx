@@ -37,15 +37,6 @@ const Trading = () => {
           <TradingHero />
         </div>
         <TradingFeatures />
-        <div id="charts">
-          <TradingCharts />
-        </div>
-        <div id="wallet">
-          <TradingWallet />
-        </div>
-        <div id="hedging">
-          <AIHedgingCenter />
-        </div>
         <div id="markets">
           <TradingMarkets />
         </div>
@@ -54,6 +45,15 @@ const Trading = () => {
         </div>
         <div id="programs">
           <TradingPrograms />
+        </div>
+        <div id="charts">
+          <TradingCharts />
+        </div>
+        <div id="wallet">
+          <TradingWallet />
+        </div>
+        <div id="hedging">
+          <AIHedgingCenter />
         </div>
         <div id="education">
           <TradingEducation />
