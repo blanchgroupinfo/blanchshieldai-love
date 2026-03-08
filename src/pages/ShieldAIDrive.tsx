@@ -39,6 +39,17 @@ const formatFileSize = (bytes: number) => {
   return (bytes / (1024 * 1024 * 1024)).toFixed(1) + " GB";
 };
 
+const isImageFile = (name: string) => {
+  const ext = name.split(".").pop()?.toLowerCase() || "";
+  return ["jpg", "jpeg", "png", "gif", "webp", "svg"].includes(ext);
+};
+
+const isPdfFile = (name: string) => {
+  return name.split(".").pop()?.toLowerCase() === "pdf";
+};
+
+const isPreviewable = (name: string) => isImageFile(name) || isPdfFile(name);
+
 const getFileIcon = (name: string) => {
   const ext = name.split(".").pop()?.toLowerCase() || "";
   if (["jpg", "jpeg", "png", "gif", "webp", "svg"].includes(ext)) return Image;
