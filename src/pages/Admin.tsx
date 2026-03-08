@@ -276,6 +276,44 @@ const Admin = () => {
     }
   };
 
+  const fetchEnrollments = async () => {
+    const { data, error } = await supabase
+      .from("enrollment_submissions")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (!error && data) {
+      setEnrollmentList(data as EnrollmentSubmission[]);
+    }
+  };
+
+  const updateEnrollmentStatus = async (id: string, status: string) => {
+    const { error } = await supabase
+      .from("enrollment_submissions")
+      .update({ status })
+      .eq("id", id);
+
+    if (!error) {
+      setEnrollmentList(prev => prev.map(e => e.id === id ? { ...e, status } : e));
+      toast.success(`Enrollment ${status}`);
+    } else {
+      toast.error("Failed to update status");
+    }
+  };
+
+  const deleteEnrollment = async (id: string) => {
+    const { error } = await supabase
+      .from("enrollment_submissions")
+      .delete()
+      .eq("id", id);
+
+    if (!error) {
+      setEnrollmentList(prev => prev.filter(e => e.id !== id));
+      toast.success("Enrollment deleted");
+      fetchStats();
+    }
+  };
+
   const getUserRole = (userId: string): string => {
     const role = userRoles.find(r => r.user_id === userId);
     return role?.role || 'user';
