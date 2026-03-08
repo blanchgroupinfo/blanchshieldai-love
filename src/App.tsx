@@ -58,6 +58,7 @@ import ShieldAIOS from "./pages/ShieldAIOS";
 import ShieldAIDrive from "./pages/ShieldAIDrive";
 import SharedFileViewer from "./pages/SharedFileViewer";
 import UniversalCommerceModels from "./pages/UniversalCommerceModels";
+import PlatformFeatures from "./pages/PlatformFeatures";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
