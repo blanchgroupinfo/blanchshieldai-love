@@ -1,18 +1,18 @@
-import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 import NavigationHeader from "@/components/NavigationHeader";
 import Footer from "@/components/Footer";
 import FloatingChat from "@/components/FloatingChat";
 import { agents, agentCategories, generateHIIAgentNumber } from "@/data/agents";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
 import {
   Bot, Search, Activity, CheckCircle2, XCircle, Clock,
-  Zap, BarChart3, Shield, RefreshCw, Trash2, Eye,
-  MessageSquare, ArrowUpRight, Power
+  Zap, BarChart3, RefreshCw, Eye, MessageSquare, Power, ToggleLeft
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -21,7 +21,7 @@ export interface DeployedAgent {
   activatedAt: string;
   status: "active" | "idle" | "error";
   tasksCompleted: number;
-  uptime: number; // percentage
+  uptime: number;
 }
 
 export const getDeployedAgents = (): DeployedAgent[] => {
@@ -54,51 +54,105 @@ export const removeDeployedAgent = (agentId: string): DeployedAgent[] => {
   return current;
 };
 
+// All 888 agents excluding AI001 (the system itself), so AI002-AI888
+const allAgentIds = agents.filter(a => !a.isCategory && a.id !== "AI001").map(a => a.id);
+
 const statusConfig = {
   active: { color: "text-emerald-400", bg: "bg-emerald-500/20", border: "border-emerald-500/30", icon: CheckCircle2, label: "Active" },
   idle: { color: "text-amber-400", bg: "bg-amber-500/20", border: "border-amber-500/30", icon: Clock, label: "Idle" },
   error: { color: "text-red-400", bg: "bg-red-500/20", border: "border-red-500/30", icon: XCircle, label: "Error" },
 };
 
+const ITEMS_PER_PAGE = 50;
+
 const DeployedAgentsDashboard = () => {
   const [deployed, setDeployed] = useState<DeployedAgent[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStatus, setFilterStatus] = useState<string>("all");
+  const [visibleCount, setVisibleCount] = useState(ITEMS_PER_PAGE);
   const navigate = useNavigate();
 
   useEffect(() => {
     setDeployed(getDeployedAgents());
   }, []);
 
-  const enrichedAgents = deployed.map(d => ({
-    ...d,
-    agent: agents.find(a => a.id === d.agentId),
-    category: agentCategories.find(c => c.number === agents.find(a => a.id === d.agentId)?.categoryNumber),
-  })).filter(d => d.agent);
+  const deployedMap = useMemo(() => {
+    const map = new Map<string, DeployedAgent>();
+    deployed.forEach(d => map.set(d.agentId, d));
+    return map;
+  }, [deployed]);
 
-  const filtered = enrichedAgents.filter(d => {
-    const matchesSearch = d.agent!.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      generateHIIAgentNumber(d.agentId).toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesStatus = filterStatus === "all" || d.status === filterStatus;
-    return matchesSearch && matchesStatus;
-  });
+  const enrichedAgents = useMemo(() => {
+    return allAgentIds.map(id => {
+      const agent = agents.find(a => a.id === id)!;
+      const dep = deployedMap.get(id);
+      const category = agentCategories.find(c => c.number === agent.categoryNumber);
+      return { id, agent, deployed: dep, category, isOn: !!dep };
+    });
+  }, [deployedMap]);
+
+  const filtered = useMemo(() => {
+    return enrichedAgents.filter(item => {
+      const matchesSearch = searchQuery === "" ||
+        item.agent.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        generateHIIAgentNumber(item.id).toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesStatus =
+        filterStatus === "all" ||
+        (filterStatus === "on" && item.isOn) ||
+        (filterStatus === "off" && !item.isOn) ||
+        (item.deployed && item.deployed.status === filterStatus);
+      return matchesSearch && matchesStatus;
+    });
+  }, [enrichedAgents, searchQuery, filterStatus]);
+
+  const visible = filtered.slice(0, visibleCount);
 
   const stats = {
-    total: deployed.length,
+    total: allAgentIds.length,
+    on: deployed.length,
     active: deployed.filter(d => d.status === "active").length,
     idle: deployed.filter(d => d.status === "idle").length,
     error: deployed.filter(d => d.status === "error").length,
-    avgUptime: deployed.length > 0 ? (deployed.reduce((sum, d) => sum + d.uptime, 0) / deployed.length).toFixed(1) : "0",
     totalTasks: deployed.reduce((sum, d) => sum + d.tasksCompleted, 0),
   };
 
-  const handleDeactivate = (agentId: string, agentName: string) => {
-    const updated = removeDeployedAgent(agentId);
-    setDeployed(updated);
-    toast.info(`${generateHIIAgentNumber(agentId)} — ${agentName} deactivated`, {
-      description: "Agent has been removed from active deployment.",
-    });
+  const handleToggle = (agentId: string, agentName: string, currentlyOn: boolean) => {
+    if (currentlyOn) {
+      const updated = removeDeployedAgent(agentId);
+      setDeployed(updated);
+      toast.info(`${generateHIIAgentNumber(agentId)} — ${agentName} deactivated`);
+    } else {
+      const updated = deployAgent(agentId);
+      setDeployed(updated);
+      toast.success(`${generateHIIAgentNumber(agentId)} — ${agentName} activated`);
+    }
   };
+
+  const handleSelectAll = (turnOn: boolean) => {
+    if (turnOn) {
+      const now = new Date().toISOString();
+      const all: DeployedAgent[] = allAgentIds.map(id => {
+        const existing = deployedMap.get(id);
+        if (existing) return existing;
+        return {
+          agentId: id,
+          activatedAt: now,
+          status: "active" as const,
+          tasksCompleted: Math.floor(Math.random() * 50),
+          uptime: 95 + Math.random() * 5,
+        };
+      });
+      localStorage.setItem("shield-deployed-agents", JSON.stringify(all));
+      setDeployed(all);
+      toast.success(`All ${allAgentIds.length} agents activated`);
+    } else {
+      localStorage.setItem("shield-deployed-agents", JSON.stringify([]));
+      setDeployed([]);
+      toast.info("All agents deactivated");
+    }
+  };
+
+  const allOn = deployed.length === allAgentIds.length;
 
   const handleRefreshStatus = () => {
     const updated = deployed.map(d => ({
@@ -133,11 +187,11 @@ const DeployedAgentsDashboard = () => {
               Deployed Agents Dashboard
             </h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Monitor and manage all activated H.I.I. AI Agents in real-time
+              Manage all 887 H.I.I. AI Agents (AI002–AI888) with on/off deployment controls
             </p>
           </motion.div>
 
-          {/* Stats Overview */}
+          {/* Stats */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -145,13 +199,13 @@ const DeployedAgentsDashboard = () => {
             className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8"
           >
             {[
-              { label: "Total Deployed", value: stats.total, icon: Bot, color: "text-primary" },
+              { label: "Total Agents", value: stats.total, icon: Bot, color: "text-primary" },
+              { label: "Deployed", value: stats.on, icon: Power, color: "text-cyan-400" },
               { label: "Active", value: stats.active, icon: CheckCircle2, color: "text-emerald-400" },
               { label: "Idle", value: stats.idle, icon: Clock, color: "text-amber-400" },
               { label: "Errors", value: stats.error, icon: XCircle, color: "text-red-400" },
-              { label: "Avg Uptime", value: `${stats.avgUptime}%`, icon: BarChart3, color: "text-cyan-400" },
               { label: "Tasks Done", value: stats.totalTasks, icon: Zap, color: "text-violet-400" },
-            ].map((stat, i) => (
+            ].map((stat) => (
               <Card key={stat.label} className="bg-card/50 border-border/50">
                 <CardContent className="p-4 text-center">
                   <stat.icon className={`w-6 h-6 ${stat.color} mx-auto mb-2`} />
@@ -167,132 +221,142 @@ const DeployedAgentsDashboard = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.15 }}
-            className="flex flex-col md:flex-row gap-4 items-center justify-between mb-8"
+            className="flex flex-col gap-4 mb-8"
           >
-            <div className="relative w-full max-w-md">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-              <Input
-                placeholder="Search deployed agents..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 bg-card/50 border-border/50"
-              />
-            </div>
-            <div className="flex gap-2 flex-wrap">
-              {["all", "active", "idle", "error"].map(status => (
-                <Button
-                  key={status}
-                  variant={filterStatus === status ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setFilterStatus(status)}
-                  className="capitalize"
-                >
-                  {status}
+            <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
+              <div className="relative w-full max-w-md">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                <Input
+                  placeholder="Search agents by name or ID..."
+                  value={searchQuery}
+                  onChange={(e) => { setSearchQuery(e.target.value); setVisibleCount(ITEMS_PER_PAGE); }}
+                  className="pl-10 bg-card/50 border-border/50"
+                />
+              </div>
+              <div className="flex gap-2 flex-wrap">
+                {["all", "on", "off", "active", "idle", "error"].map(status => (
+                  <Button
+                    key={status}
+                    variant={filterStatus === status ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => { setFilterStatus(status); setVisibleCount(ITEMS_PER_PAGE); }}
+                    className="capitalize"
+                  >
+                    {status}
+                  </Button>
+                ))}
+                <Button variant="outline" size="sm" onClick={handleRefreshStatus} className="gap-2">
+                  <RefreshCw className="w-4 h-4" /> Refresh
                 </Button>
-              ))}
-              <Button variant="outline" size="sm" onClick={handleRefreshStatus} className="gap-2">
-                <RefreshCw className="w-4 h-4" /> Refresh
-              </Button>
-              <Button variant="shield" size="sm" onClick={() => navigate("/agents")} className="gap-2">
-                <Bot className="w-4 h-4" /> Deploy More
-              </Button>
+              </div>
             </div>
+
+            {/* Select All Toggle */}
+            <Card className="bg-card/50 border-border/50">
+              <CardContent className="p-4 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <ToggleLeft className="w-5 h-5 text-primary" />
+                  <div>
+                    <p className="font-semibold text-foreground text-sm">Select All Agents</p>
+                    <p className="text-xs text-muted-foreground">
+                      {allOn ? "All 887 agents are deployed" : `${deployed.length} / ${allAgentIds.length} agents deployed`}
+                    </p>
+                  </div>
+                </div>
+                <Switch
+                  checked={allOn}
+                  onCheckedChange={handleSelectAll}
+                  className="data-[state=checked]:bg-primary"
+                />
+              </CardContent>
+            </Card>
           </motion.div>
 
           {/* Agent List */}
-          {filtered.length === 0 ? (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-20">
-              <Bot className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-              <h3 className="text-xl font-semibold mb-2">
-                {deployed.length === 0 ? "No Agents Deployed" : "No Matching Agents"}
-              </h3>
-              <p className="text-muted-foreground mb-6">
-                {deployed.length === 0
-                  ? "Activate agents from the Agents registry to see them here."
-                  : "Try adjusting your search or filter criteria."}
-              </p>
-              {deployed.length === 0 && (
-                <Button variant="shield" onClick={() => navigate("/agents")} className="gap-2">
-                  <Bot className="w-4 h-4" /> Browse 888 H.I.I. AI Agents
-                </Button>
-              )}
-            </motion.div>
-          ) : (
-            <div className="grid gap-4">
-              <AnimatePresence mode="popLayout">
-                {filtered.map((item, index) => {
-                  const sc = statusConfig[item.status];
-                  const agentNum = generateHIIAgentNumber(item.agentId);
-                  const timeSince = getTimeSince(item.activatedAt);
+          <div className="space-y-2">
+            {visible.map((item, index) => {
+              const dep = item.deployed;
+              const sc = dep ? statusConfig[dep.status] : null;
+              const agentNum = generateHIIAgentNumber(item.id);
 
-                  return (
-                    <motion.div
-                      key={item.agentId}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, scale: 0.95 }}
-                      transition={{ delay: index * 0.03 }}
-                    >
-                      <Card className="bg-card/50 border-border/50 hover:border-primary/30 transition-all duration-300">
-                        <CardContent className="p-4 md:p-6">
-                          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                            {/* Agent Info */}
-                            <div className="flex items-center gap-4 flex-1 min-w-0">
-                              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center shrink-0">
-                                <Bot className="w-6 h-6 text-primary" />
-                              </div>
-                              <div className="min-w-0">
-                                <div className="flex items-center gap-2 flex-wrap">
-                                  <span className="text-xs font-mono text-primary/70">{agentNum}</span>
-                                  <Badge className={`${sc.bg} ${sc.color} ${sc.border} text-xs`}>
-                                    <sc.icon className="w-3 h-3 mr-1" />
-                                    {sc.label}
-                                  </Badge>
-                                </div>
-                                <h3 className="font-semibold text-foreground truncate">{item.agent!.name}</h3>
-                                <p className="text-xs text-muted-foreground">{item.category?.name} • Deployed {timeSince}</p>
-                              </div>
+              return (
+                <motion.div
+                  key={item.id}
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: Math.min(index * 0.01, 0.5) }}
+                >
+                  <Card className={`border-border/50 transition-all duration-300 ${item.isOn ? 'bg-card/60 hover:border-primary/30' : 'bg-card/20 opacity-70 hover:opacity-90'}`}>
+                    <CardContent className="p-3 md:p-4">
+                      <div className="flex items-center justify-between gap-3">
+                        {/* Left: Toggle + Info */}
+                        <div className="flex items-center gap-3 flex-1 min-w-0">
+                          <Switch
+                            checked={item.isOn}
+                            onCheckedChange={() => handleToggle(item.id, item.agent.name, item.isOn)}
+                            className="data-[state=checked]:bg-emerald-500 shrink-0"
+                          />
+                          <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center shrink-0">
+                            <Bot className="w-5 h-5 text-primary" />
+                          </div>
+                          <div className="min-w-0">
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <span className="text-xs font-mono text-primary/70">{agentNum}</span>
+                              {sc && (
+                                <Badge className={`${sc.bg} ${sc.color} ${sc.border} text-[10px] px-1.5 py-0`}>
+                                  <sc.icon className="w-2.5 h-2.5 mr-0.5" />
+                                  {sc.label}
+                                </Badge>
+                              )}
                             </div>
+                            <h3 className="font-medium text-foreground text-sm truncate">{item.agent.name}</h3>
+                            <p className="text-[11px] text-muted-foreground truncate">{item.category?.name}</p>
+                          </div>
+                        </div>
 
-                            {/* Metrics */}
-                            <div className="flex items-center gap-6 text-sm">
-                              <div className="text-center hidden sm:block">
-                                <p className="text-muted-foreground text-xs">Tasks</p>
-                                <p className="font-semibold text-foreground">{item.tasksCompleted}</p>
+                        {/* Right: Metrics + Actions */}
+                        <div className="flex items-center gap-4 shrink-0">
+                          {dep && (
+                            <>
+                              <div className="text-center hidden lg:block">
+                                <p className="text-[10px] text-muted-foreground">Tasks</p>
+                                <p className="font-semibold text-foreground text-xs">{dep.tasksCompleted}</p>
                               </div>
-                              <div className="text-center hidden sm:block">
-                                <p className="text-muted-foreground text-xs">Uptime</p>
-                                <p className={`font-semibold ${item.uptime > 98 ? 'text-emerald-400' : item.uptime > 90 ? 'text-amber-400' : 'text-red-400'}`}>
-                                  {item.uptime.toFixed(1)}%
+                              <div className="text-center hidden lg:block">
+                                <p className="text-[10px] text-muted-foreground">Uptime</p>
+                                <p className={`font-semibold text-xs ${dep.uptime > 98 ? 'text-emerald-400' : dep.uptime > 90 ? 'text-amber-400' : 'text-red-400'}`}>
+                                  {dep.uptime.toFixed(1)}%
                                 </p>
                               </div>
-
-                              {/* Actions */}
-                              <div className="flex gap-2">
-                                <Button variant="ghost" size="icon" onClick={() => navigate(`/agents/${item.agentId}`)} title="View Agent">
-                                  <Eye className="w-4 h-4" />
-                                </Button>
-                                <Button variant="ghost" size="icon" onClick={() => navigate("/shield-ai-chat")} title="Ask Agent">
-                                  <MessageSquare className="w-4 h-4" />
-                                </Button>
-                                <Button
-                                  variant="ghost"
-                                  size="icon"
-                                  onClick={() => handleDeactivate(item.agentId, item.agent!.name)}
-                                  title="Deactivate"
-                                  className="text-red-400 hover:text-red-300 hover:bg-red-500/10"
-                                >
-                                  <Power className="w-4 h-4" />
-                                </Button>
-                              </div>
-                            </div>
+                            </>
+                          )}
+                          <div className="flex gap-1">
+                            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => navigate(`/agents/${item.id}`)} title="View">
+                              <Eye className="w-3.5 h-3.5" />
+                            </Button>
+                            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => navigate("/shield-ai-chat")} title="Ask">
+                              <MessageSquare className="w-3.5 h-3.5" />
+                            </Button>
                           </div>
-                        </CardContent>
-                      </Card>
-                    </motion.div>
-                  );
-                })}
-              </AnimatePresence>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              );
+            })}
+          </div>
+
+          {/* Load More */}
+          {visibleCount < filtered.length && (
+            <div className="text-center mt-6">
+              <Button
+                variant="outline"
+                onClick={() => setVisibleCount(prev => prev + ITEMS_PER_PAGE)}
+                className="gap-2"
+              >
+                Load More ({filtered.length - visibleCount} remaining)
+              </Button>
             </div>
           )}
 
@@ -319,18 +383,5 @@ const DeployedAgentsDashboard = () => {
     </div>
   );
 };
-
-function getTimeSince(dateStr: string): string {
-  const now = new Date();
-  const then = new Date(dateStr);
-  const diffMs = now.getTime() - then.getTime();
-  const mins = Math.floor(diffMs / 60000);
-  if (mins < 1) return "just now";
-  if (mins < 60) return `${mins}m ago`;
-  const hours = Math.floor(mins / 60);
-  if (hours < 24) return `${hours}h ago`;
-  const days = Math.floor(hours / 24);
-  return `${days}d ago`;
-}
 
 export default DeployedAgentsDashboard;
