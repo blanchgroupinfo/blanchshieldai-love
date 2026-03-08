@@ -194,7 +194,35 @@ const UniversalCommerceModels = () => {
         </div>
       </section>
 
-      {/* Full X2X Pathways */}
+      {/* Global Transaction Stats */}
+      <section className="py-16">
+        <div className="container px-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 max-w-6xl mx-auto">
+            {[
+              { value: "$∞", label: "Annual Volume", icon: "💲" },
+              { value: "∞", label: "Merchants", icon: "#" },
+              { value: "99.9%", label: "Success Rate", icon: "%" },
+              { value: "0%", label: "Transaction Fees", icon: "0%" },
+              { value: "Instant", label: "Settlement", icon: "⚡" },
+              { value: "150+", label: "Currencies", icon: "🌐" },
+            ].map((stat, i) => (
+              <ScrollAnimationWrapper key={stat.label}>
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4, delay: i * 0.08 }}
+                  className="glass-card rounded-xl p-6 text-center hover:border-primary/50 transition-all duration-300"
+                >
+                  <div className="text-2xl md:text-3xl font-display font-bold text-primary mb-1">{stat.value}</div>
+                  <div className="text-xs text-muted-foreground font-display">{stat.label}</div>
+                </motion.div>
+              </ScrollAnimationWrapper>
+            ))}
+          </div>
+        </div>
+      </section>
+
+
       <section className="py-16">
         <div className="container px-4">
           <ScrollAnimationWrapper>
