@@ -139,6 +139,36 @@ export type Database = {
         }
         Relationships: []
       }
+      file_versions: {
+        Row: {
+          created_at: string
+          file_path: string
+          file_size: number | null
+          id: string
+          notes: string | null
+          user_id: string
+          version_number: number
+        }
+        Insert: {
+          created_at?: string
+          file_path: string
+          file_size?: number | null
+          id?: string
+          notes?: string | null
+          user_id: string
+          version_number?: number
+        }
+        Update: {
+          created_at?: string
+          file_path?: string
+          file_size?: number | null
+          id?: string
+          notes?: string | null
+          user_id?: string
+          version_number?: number
+        }
+        Relationships: []
+      }
       holy_day_reminders: {
         Row: {
           created_at: string
