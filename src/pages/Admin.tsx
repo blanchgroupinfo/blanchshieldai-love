@@ -111,6 +111,20 @@ interface UserRole {
   created_at: string;
 }
 
+interface EnrollmentSubmission {
+  id: string;
+  full_name: string;
+  email: string;
+  phone: string;
+  program_name: string;
+  program_duration: string;
+  deposit_amount: string;
+  compounding: string;
+  status: string;
+  created_at: string;
+  updated_at: string;
+}
+
 const Admin = () => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
