@@ -250,9 +250,20 @@ const ShieldAIOS = () => {
             >
               <Bell className="h-3.5 w-3.5" />
               Notifications
-              <span className="ml-1 bg-destructive text-destructive-foreground rounded-full w-4 h-4 text-[10px] flex items-center justify-center">
-                {notifications.filter(n => !n.read).length}
-              </span>
+              {unreadCount > 0 && (
+                <span className="ml-1 bg-destructive text-destructive-foreground rounded-full w-4 h-4 text-[10px] flex items-center justify-center">
+                  {unreadCount}
+                </span>
+              )}
+            </Button>
+            <Button
+              variant={activeView === "settings" ? "shield" : "ghost"}
+              size="sm"
+              onClick={() => setActiveView("settings")}
+              className="gap-1.5 text-xs"
+            >
+              <Settings className="h-3.5 w-3.5" />
+              Settings
             </Button>
           </div>
 
