@@ -194,7 +194,7 @@ const ShieldAIOS = () => {
       <NavigationHeader />
 
       {/* OS Taskbar */}
-      <div className="bg-card/90 backdrop-blur-xl border-b border-border/50">
+      <div className="pt-24 bg-card/90 backdrop-blur-xl border-b border-border/50">
         <div className="max-w-[1800px] mx-auto px-4 flex items-center justify-between h-12">
           <div className="flex items-center gap-1">
             <Button
