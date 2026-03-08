@@ -257,6 +257,7 @@ const ShieldAIDrive = () => {
             {[
               { key: "overview" as const, label: "Overview", icon: HardDrive },
               { key: "files" as const, label: "All Files", icon: FolderOpen },
+              { key: "gallery" as const, label: "Gallery", icon: LayoutGrid },
               { key: "upload" as const, label: "Upload", icon: Upload },
             ].map((tab) => (
               <Button
