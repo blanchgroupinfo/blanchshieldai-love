@@ -463,7 +463,7 @@ const ShieldAIDrive = () => {
                       <Loader2 className="h-8 w-8 mx-auto mb-3 animate-spin text-primary" />
                       <p className="text-sm text-muted-foreground">Loading files...</p>
                     </div>
-                  ) : filteredFiles.length === 0 ? (
+                  ) : filteredFiles.length === 0 && folders.length === 0 ? (
                     <div className="text-center py-12">
                       <FolderOpen className="h-12 w-12 mx-auto mb-3 text-muted-foreground/30" />
                       <p className="text-sm text-muted-foreground">
@@ -472,6 +472,27 @@ const ShieldAIDrive = () => {
                     </div>
                   ) : (
                     <div className="space-y-1">
+                      {/* Folders */}
+                      {folders.filter(f => f.toLowerCase().includes(searchQuery.toLowerCase())).map((folder, i) => (
+                        <motion.div
+                          key={`folder-${folder}`}
+                          initial={{ opacity: 0, x: -10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: i * 0.03 }}
+                          className="flex items-center justify-between px-3 py-3 rounded-lg hover:bg-muted/20 cursor-pointer transition-colors group"
+                          onClick={() => navigateToFolder(folder)}
+                        >
+                          <div className="flex items-center gap-3">
+                            <FolderOpen className="h-5 w-5 text-primary shrink-0" />
+                            <div>
+                              <p className="text-sm font-medium group-hover:text-primary transition-colors">{folder}</p>
+                              <p className="text-xs text-muted-foreground">Folder</p>
+                            </div>
+                          </div>
+                          <ChevronRight className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+                        </motion.div>
+                      ))}
+                      {/* Files */}
                       {filteredFiles.map((file, i) => {
                         const FileIcon = getFileIcon(file.name);
                         const displayName = file.name.replace(/^\d+_/, "");
