@@ -93,7 +93,7 @@ const navItems: NavItem[] = [{
     label: "MT101-MT999"
   }, {
     id: "mx",
-    label: "MX Format"
+    label: "MX Format - MT (MX → MT)"
   }, {
     id: "mt103",
     label: "MT103 / GPI"
