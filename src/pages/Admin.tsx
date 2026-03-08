@@ -130,11 +130,12 @@ const Admin = () => {
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
   const [stats, setStats] = useState({
-    totalAgents: 402,
+    totalAgents: PLATFORM.totalAgents,
     activeUsers: 0,
     newsletterSubs: 0,
     contactMessages: 0,
     chatConversations: 0,
+    enrollments: 0,
   });
   const [newsletterList, setNewsletterList] = useState<NewsletterSub[]>([]);
   const [contactList, setContactList] = useState<ContactMessage[]>([]);
