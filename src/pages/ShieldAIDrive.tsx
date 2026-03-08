@@ -112,19 +112,16 @@ const ShieldAIDrive = () => {
     if (user) fetchFiles();
   }, [user, fetchFiles]);
 
-  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!user || !e.target.files?.length) return;
+  const uploadFiles = async (fileList: FileList | File[]) => {
+    if (!user || !fileList.length) return;
     setUploading(true);
     const uploadedCount = { success: 0, fail: 0 };
 
-    for (const file of Array.from(e.target.files)) {
+    for (const file of Array.from(fileList)) {
       const filePath = `${user.id}/${Date.now()}_${file.name}`;
       const { error } = await supabase.storage.from("shield-drive").upload(filePath, file);
-      if (error) {
-        uploadedCount.fail++;
-      } else {
-        uploadedCount.success++;
-      }
+      if (error) uploadedCount.fail++;
+      else uploadedCount.success++;
     }
 
     toast({
@@ -136,6 +133,19 @@ const ShieldAIDrive = () => {
     fetchFiles();
     setActiveTab("files");
   };
+
+  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) uploadFiles(e.target.files);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setDragging(false);
+    if (e.dataTransfer.files) uploadFiles(e.dataTransfer.files);
+  };
+
+  const handleDragOver = (e: React.DragEvent) => { e.preventDefault(); setDragging(true); };
+  const handleDragLeave = (e: React.DragEvent) => { e.preventDefault(); setDragging(false); };
 
   const handleDownload = async (fileName: string) => {
     if (!user) return;
