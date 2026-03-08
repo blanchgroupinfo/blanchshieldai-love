@@ -66,7 +66,7 @@ const X2XAccordion = ({ model, searchQuery }: { model: CommerceModel; searchQuer
           <span className="text-sm text-foreground font-display">— {model.fullLabel}</span>
           <span className="text-xs text-muted-foreground hidden sm:inline">({filteredConnections.length} pathways)</span>
         </div>
-        <ChevronDown className={`w-5 h-5 text-muted-foreground transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
+        <ChevronDown className={`w-5 h-5 text-muted-foreground transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`} />
       </button>
       <AnimatePresence>
         {open && (
