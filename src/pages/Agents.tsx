@@ -1,5 +1,5 @@
-import { useState, useMemo } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useState, useMemo, useCallback } from "react";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import NavigationHeader from "@/components/NavigationHeader";
 import Footer from "@/components/Footer";
 import ScrollAnimationWrapper from "@/components/ScrollAnimationWrapper";
