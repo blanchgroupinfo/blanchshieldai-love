@@ -8,46 +8,45 @@ const programs = [
   {
     category: "Short-Term Programs",
     items: [
-      { name: "24hrs Profit Trade", duration: "24 Hours", icon: Clock },
-      { name: "48hrs Profit Trade", duration: "48 Hours", icon: Clock },
-      { name: "72hrs Profit Trade", duration: "72 Hours", icon: Clock },
-      { name: "5 Day Profit Trade", duration: "5 Days", icon: TrendingUp },
-      { name: "7 Day Profit Trade", duration: "7 Days", icon: TrendingUp },
+      { name: "24hrs Profit Trade", duration: "24 Hours", icon: Clock, deposit: "$500 - $10,000", returnPct: "10%" },
+      { name: "48hrs Profit Trade", duration: "48 Hours", icon: Clock, deposit: "$1,000 - $25,000", returnPct: "15%" },
+      { name: "72hrs Profit Trade", duration: "72 Hours", icon: Clock, deposit: "$2,000 - $50,000", returnPct: "18%" },
+      { name: "5 Day Profit Trade", duration: "5 Days", icon: TrendingUp, deposit: "$5,000 - $100,000", returnPct: "22%" },
+      { name: "7 Day Profit Trade", duration: "7 Days", icon: TrendingUp, deposit: "$5,000 - $150,000", returnPct: "28%" },
     ],
   },
   {
     category: "Weekly & Monthly Programs",
     items: [
-      { name: "Weekly Profit Trade", duration: "Weekly", icon: RefreshCcw },
-      { name: "10 Day Profit Trade", duration: "10 Days", icon: TrendingUp },
-      { name: "30 Day Profit Trade", duration: "30 Days", icon: Target },
-      { name: "Recurring Monthly", duration: "Monthly", icon: RefreshCcw },
-      { name: "60 Day Profit Trade", duration: "60 Days", icon: Target },
+      { name: "Weekly Profit Trade", duration: "Weekly", icon: RefreshCcw, deposit: "$2,500 - $75,000", returnPct: "20%" },
+      { name: "10 Day Profit Trade", duration: "10 Days", icon: TrendingUp, deposit: "$5,000 - $100,000", returnPct: "30%" },
+      { name: "30 Day Profit Trade", duration: "30 Days", icon: Target, deposit: "$10,000 - $250,000", returnPct: "40%" },
+      { name: "Recurring Monthly", duration: "Monthly", icon: RefreshCcw, deposit: "$10,000 - $500,000", returnPct: "35%" },
+      { name: "60 Day Profit Trade", duration: "60 Days", icon: Target, deposit: "$25,000 - $500,000", returnPct: "55%" },
     ],
   },
   {
     category: "Long-Term Programs",
     items: [
-      { name: "90 Day Profit Trade", duration: "90 Days", icon: Target },
-      { name: "120 Day Profit Trade", duration: "120 Days", icon: Target },
-      { name: "180 Day Profit Trade", duration: "180 Days", icon: Target },
-      { name: "210 Day Profit Trade", duration: "210 Days", icon: Target },
-      { name: "40 Week Profit Trade", duration: "40 Weeks", icon: Layers },
-      { name: "3-5 Year Profit Trade", duration: "3-5 Years", icon: TrendingUp },
+      { name: "90 Day Profit Trade", duration: "90 Days", icon: Target, deposit: "$25,000 - $1,000,000", returnPct: "70%" },
+      { name: "120 Day Profit Trade", duration: "120 Days", icon: Target, deposit: "$50,000 - $1,000,000", returnPct: "85%" },
+      { name: "180 Day Profit Trade", duration: "180 Days", icon: Target, deposit: "$50,000 - $2,000,000", returnPct: "110%" },
+      { name: "210 Day Profit Trade", duration: "210 Days", icon: Target, deposit: "$100,000 - $2,000,000", returnPct: "130%" },
+      { name: "40 Week Profit Trade", duration: "40 Weeks", icon: Layers, deposit: "$100,000 - $5,000,000", returnPct: "150%" },
+      { name: "3-5 Year Profit Trade", duration: "3-5 Years", icon: TrendingUp, deposit: "$250,000 - $10,000,000", returnPct: "300-500%" },
     ],
   },
   {
     category: "Specialty Programs",
     items: [
-      { name: "Bullet Trades", duration: "Variable", icon: Zap },
-      { name: "Multi Mix Trades", duration: "Variable", icon: Layers },
-      { name: "Multi Mix Bullet Trades", duration: "Variable", icon: Zap },
-      { name: "Compound Interest Trades", duration: "Variable", icon: TrendingUp },
-      { name: "Multi Mix Compound Interest", duration: "Variable", icon: Layers },
+      { name: "Bullet Trades", duration: "Variable", icon: Zap, deposit: "$10,000 - $500,000", returnPct: "25-50%" },
+      { name: "Multi Mix Trades", duration: "Variable", icon: Layers, deposit: "$25,000 - $1,000,000", returnPct: "35-75%" },
+      { name: "Multi Mix Bullet Trades", duration: "Variable", icon: Zap, deposit: "$50,000 - $2,000,000", returnPct: "40-90%" },
+      { name: "Compound Interest Trades", duration: "Variable", icon: TrendingUp, deposit: "$10,000 - $1,000,000", returnPct: "50-120%" },
+      { name: "Multi Mix Compound Interest", duration: "Variable", icon: Layers, deposit: "$25,000 - $5,000,000", returnPct: "75-200%" },
     ],
   },
 ];
-
 const TradingPrograms = () => {
   return (
     <section className="py-20 bg-muted/30">
