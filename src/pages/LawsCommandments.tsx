@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Book, ScrollText, Scale, Shield, Heart, Users, Coins, Home, Search, ChevronRight } from "lucide-react";
 import NavigationHeader from "@/components/NavigationHeader";
 import Footer from "@/components/Footer";
-import FloatingChat from "@/components/FloatingChat";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
