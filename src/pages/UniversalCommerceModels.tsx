@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import NavigationHeader from "@/components/NavigationHeader";
 import Footer from "@/components/Footer";
 import ScrollAnimationWrapper from "@/components/ScrollAnimationWrapper";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useInView } from "framer-motion";
 import { ArrowRight, Globe, Zap, Network, ShoppingBag, Shield, Users, Bot, Monitor, Briefcase, Building2, Code2, Factory, Landmark, Scale, Cpu, Layers, AppWindow, UserCog, ChevronDown, Search } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip";
 import { commerceModels } from "@/data/commerceModels";
@@ -90,6 +90,34 @@ const X2XAccordion = ({ model, searchQuery }: { model: CommerceModel; searchQuer
       </AnimatePresence>
     </div>
   );
+};
+
+const AnimatedCounter = ({ value, duration = 2 }: { value: string; duration?: number }) => {
+  const ref = useRef<HTMLDivElement>(null);
+  const isInView = useInView(ref, { once: true, margin: "-50px" });
+  const [display, setDisplay] = useState("0");
+
+  useEffect(() => {
+    if (!isInView) return;
+    const match = value.match(/^([^\d]*)(\d+\.?\d*)([^\d]*)$/);
+    if (!match) { setDisplay(value); return; }
+    const prefix = match[1];
+    const num = parseFloat(match[2]);
+    const suffix = match[3];
+    const hasDecimal = match[2].includes(".");
+    const startTime = performance.now();
+    const animate = (now: number) => {
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / (duration * 1000), 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const current = eased * num;
+      setDisplay(`${prefix}${hasDecimal ? current.toFixed(1) : Math.floor(current)}${suffix}`);
+      if (progress < 1) requestAnimationFrame(animate);
+    };
+    requestAnimationFrame(animate);
+  }, [isInView, value, duration]);
+
+  return <div ref={ref}>{display}</div>;
 };
 
 const UniversalCommerceModels = () => {
@@ -199,12 +227,12 @@ const UniversalCommerceModels = () => {
         <div className="container px-4">
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 max-w-6xl mx-auto">
             {[
-              { value: "$∞", label: "Annual Volume", icon: "💲" },
-              { value: "∞", label: "Merchants", icon: "#" },
-              { value: "99.9%", label: "Success Rate", icon: "%" },
-              { value: "0%", label: "Transaction Fees", icon: "0%" },
-              { value: "Instant", label: "Settlement", icon: "⚡" },
-              { value: "150+", label: "Currencies", icon: "🌐" },
+              { value: "$∞", label: "Annual Volume", animated: false },
+              { value: "∞", label: "Merchants", animated: false },
+              { value: "99.9%", label: "Success Rate", animatedValue: "99.9%", animated: true },
+              { value: "0%", label: "Transaction Fees", animated: false },
+              { value: "Instant", label: "Settlement", animated: false },
+              { value: "150+", label: "Currencies", animatedValue: "150+", animated: true },
             ].map((stat, i) => (
               <ScrollAnimationWrapper key={stat.label}>
                 <motion.div
@@ -213,7 +241,13 @@ const UniversalCommerceModels = () => {
                   transition={{ duration: 0.4, delay: i * 0.08 }}
                   className="glass-card rounded-xl p-6 text-center hover:border-primary/50 transition-all duration-300"
                 >
-                  <div className="text-2xl md:text-3xl font-display font-bold text-primary mb-1">{stat.value}</div>
+                  <div className="text-2xl md:text-3xl font-display font-bold text-primary mb-1">
+                    {stat.animated ? (
+                      <AnimatedCounter value={stat.animatedValue!} duration={1.5} />
+                    ) : (
+                      stat.value
+                    )}
+                  </div>
                   <div className="text-xs text-muted-foreground font-display">{stat.label}</div>
                 </motion.div>
               </ScrollAnimationWrapper>
