@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
+import { PLATFORM } from "@/data/platformConfig";
 import NavigationHeader from "@/components/NavigationHeader";
 import Footer from "@/components/Footer";
 import {
@@ -33,6 +34,8 @@ import {
   Crown,
   UserPlus,
   Send,
+  FileText,
+  ClipboardCheck,
 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -107,16 +110,31 @@ interface UserRole {
   created_at: string;
 }
 
+interface EnrollmentSubmission {
+  id: string;
+  full_name: string;
+  email: string;
+  phone: string;
+  program_name: string;
+  program_duration: string;
+  deposit_amount: string;
+  compounding: string;
+  status: string;
+  created_at: string;
+  updated_at: string;
+}
+
 const Admin = () => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
   const [stats, setStats] = useState({
-    totalAgents: 402,
+    totalAgents: PLATFORM.totalAgents,
     activeUsers: 0,
     newsletterSubs: 0,
     contactMessages: 0,
     chatConversations: 0,
+    enrollments: 0,
   });
   const [newsletterList, setNewsletterList] = useState<NewsletterSub[]>([]);
   const [contactList, setContactList] = useState<ContactMessage[]>([]);
@@ -124,6 +142,7 @@ const Admin = () => {
   const [userProfiles, setUserProfiles] = useState<UserProfile[]>([]);
   const [userRoles, setUserRoles] = useState<UserRole[]>([]);
   const [selectedMessage, setSelectedMessage] = useState<ContactMessage | null>(null);
+  const [enrollmentList, setEnrollmentList] = useState<EnrollmentSubmission[]>([]);
   const [inviteEmail, setInviteEmail] = useState("");
   const [inviteRole, setInviteRole] = useState<'user' | 'moderator' | 'admin'>("user");
   const [inviteLoading, setInviteLoading] = useState(false);
@@ -163,6 +182,7 @@ const Admin = () => {
       fetchChatHistory(),
       fetchUserProfiles(),
       fetchUserRoles(),
+      fetchEnrollments(),
     ]);
   };
 
@@ -184,12 +204,17 @@ const Admin = () => {
         .from("chat_conversations")
         .select("*", { count: "exact", head: true });
 
+      const { count: enrollmentCount } = await supabase
+        .from("enrollment_submissions")
+        .select("*", { count: "exact", head: true });
+
       setStats({
-        totalAgents: 402,
+        totalAgents: PLATFORM.totalAgents,
         activeUsers: userCount || 0,
         newsletterSubs: newsletterCount || 0,
         contactMessages: contactCount || 0,
         chatConversations: chatCount || 0,
+        enrollments: enrollmentCount || 0,
       });
     } catch (error) {
       console.error("Error fetching stats:", error);
@@ -248,6 +273,44 @@ const Admin = () => {
 
     if (!error && data) {
       setUserRoles(data as UserRole[]);
+    }
+  };
+
+  const fetchEnrollments = async () => {
+    const { data, error } = await supabase
+      .from("enrollment_submissions")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (!error && data) {
+      setEnrollmentList(data as EnrollmentSubmission[]);
+    }
+  };
+
+  const updateEnrollmentStatus = async (id: string, status: string) => {
+    const { error } = await supabase
+      .from("enrollment_submissions")
+      .update({ status })
+      .eq("id", id);
+
+    if (!error) {
+      setEnrollmentList(prev => prev.map(e => e.id === id ? { ...e, status } : e));
+      toast.success(`Enrollment ${status}`);
+    } else {
+      toast.error("Failed to update status");
+    }
+  };
+
+  const deleteEnrollment = async (id: string) => {
+    const { error } = await supabase
+      .from("enrollment_submissions")
+      .delete()
+      .eq("id", id);
+
+    if (!error) {
+      setEnrollmentList(prev => prev.filter(e => e.id !== id));
+      toast.success("Enrollment deleted");
+      fetchStats();
     }
   };
 
@@ -350,7 +413,7 @@ const Admin = () => {
     {
       id: "agents",
       name: "H.I.I. AI Agent Network",
-      description: "402 Universal Unified AI Agents",
+      description: `${PLATFORM.totalAgents} Universal Unified AI Agents`,
       icon: Cpu,
       status: "active",
       lastSync: "Real-time",
@@ -560,6 +623,7 @@ const Admin = () => {
           <Tabs defaultValue="overview" className="space-y-6">
             <TabsList className="bg-card/50 border border-border/30 flex-wrap h-auto gap-1 p-1">
               <TabsTrigger value="overview">Overview</TabsTrigger>
+              <TabsTrigger value="enrollments">Enrollments</TabsTrigger>
               <TabsTrigger value="subscribers">Subscribers</TabsTrigger>
               <TabsTrigger value="messages">Messages</TabsTrigger>
               <TabsTrigger value="chats">Chat History</TabsTrigger>
@@ -604,6 +668,105 @@ const Admin = () => {
                   </motion.div>
                 ))}
               </div>
+            </TabsContent>
+
+            <TabsContent value="enrollments">
+              <Card className="bg-card/50 border-border/30">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <ClipboardCheck className="w-5 h-5 text-emerald-400" />
+                    Trading Program Enrollments
+                  </CardTitle>
+                  <CardDescription>
+                    View, approve, and manage enrollment submissions ({enrollmentList.length} total)
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Name</TableHead>
+                        <TableHead>Program</TableHead>
+                        <TableHead>Deposit</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead>Date</TableHead>
+                        <TableHead className="text-right">Actions</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {enrollmentList.length === 0 ? (
+                        <TableRow>
+                          <TableCell colSpan={6} className="text-center text-muted-foreground py-8">
+                            No enrollment submissions yet
+                          </TableCell>
+                        </TableRow>
+                      ) : (
+                        enrollmentList.map((enrollment) => (
+                          <TableRow key={enrollment.id}>
+                            <TableCell>
+                              <div>
+                                <p className="font-medium">{enrollment.full_name}</p>
+                                <p className="text-xs text-muted-foreground">{enrollment.email}</p>
+                              </div>
+                            </TableCell>
+                            <TableCell>
+                              <div>
+                                <p className="text-sm">{enrollment.program_name}</p>
+                                <p className="text-xs text-muted-foreground">{enrollment.program_duration}</p>
+                              </div>
+                            </TableCell>
+                            <TableCell>${enrollment.deposit_amount}</TableCell>
+                            <TableCell>
+                              <Badge className={
+                                enrollment.status === 'approved'
+                                  ? "bg-green-500/20 text-green-400 border-green-500/30"
+                                  : enrollment.status === 'rejected'
+                                    ? "bg-red-500/20 text-red-400 border-red-500/30"
+                                    : "bg-amber-500/20 text-amber-400 border-amber-500/30"
+                              }>
+                                {enrollment.status.charAt(0).toUpperCase() + enrollment.status.slice(1)}
+                              </Badge>
+                            </TableCell>
+                            <TableCell>{new Date(enrollment.created_at).toLocaleDateString()}</TableCell>
+                            <TableCell className="text-right">
+                              <div className="flex justify-end gap-1">
+                                {enrollment.status !== 'approved' && (
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => updateEnrollmentStatus(enrollment.id, 'approved')}
+                                    className="text-xs text-green-400"
+                                  >
+                                    Approve
+                                  </Button>
+                                )}
+                                {enrollment.status !== 'rejected' && (
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => updateEnrollmentStatus(enrollment.id, 'rejected')}
+                                    className="text-xs text-red-400"
+                                  >
+                                    Reject
+                                  </Button>
+                                )}
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  onClick={() => deleteEnrollment(enrollment.id)}
+                                  className="text-destructive/70 hover:text-destructive"
+                                >
+                                  <Trash2 className="w-4 h-4" />
+                                </Button>
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        ))
+                      )}
+                    </TableBody>
+                  </Table>
+                </CardContent>
+              </Card>
             </TabsContent>
 
             <TabsContent value="subscribers">
@@ -962,7 +1125,7 @@ const Admin = () => {
                     <div className="p-4 rounded-xl bg-primary/5 border border-primary/20">
                       <h4 className="font-semibold mb-2">AI-Agents</h4>
                       <p className="text-sm text-muted-foreground">
-                        402 Universal Unified AI Agents with H.I.I. AI Numbers (Hebrew Israelite Implementer Aboriginal Identity)
+                        {PLATFORM.totalAgents} Universal Unified AI Agents with H.I.I. AI Numbers ({PLATFORM.agentSystemFull})
                       </p>
                     </div>
                     <div className="p-4 rounded-xl bg-green-500/5 border border-green-500/20">
@@ -1013,36 +1176,18 @@ const Admin = () => {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    {[
-                      { name: "Knowledge Base", synced: true },
-                      { name: "Agent Registry (402 Agents)", synced: true },
-                      { name: "Pages & Sections", synced: true },
-                      { name: "Newsletter System", synced: true },
-                      { name: "User Profiles", synced: true },
-                      { name: "Chat History", synced: true },
-                      { name: "H.I.I. AI Numbers", synced: true },
-                      { name: "Project Watchman", synced: true },
-                    ].map((item, index) => (
+                    {PLATFORM.syncItems.map((itemName, index) => (
                       <motion.div
-                        key={item.name}
+                        key={itemName}
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: index * 0.05 }}
                         className="flex items-center justify-between p-3 rounded-xl bg-card/30 border border-border/20"
                       >
-                        <span className="font-medium">{item.name}</span>
+                        <span className="font-medium">{itemName}</span>
                         <div className="flex items-center gap-2">
-                          {item.synced ? (
-                            <>
-                              <CheckCircle className="w-4 h-4 text-green-400" />
-                              <span className="text-sm text-green-400">Synced</span>
-                            </>
-                          ) : (
-                            <>
-                              <AlertCircle className="w-4 h-4 text-amber-400" />
-                              <span className="text-sm text-amber-400">Pending</span>
-                            </>
-                          )}
+                            <CheckCircle className="w-4 h-4 text-green-400" />
+                            <span className="text-sm text-green-400">Synced</span>
                         </div>
                       </motion.div>
                     ))}

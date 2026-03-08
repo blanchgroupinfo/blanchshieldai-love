@@ -58,6 +58,7 @@ import ShieldAIOS from "./pages/ShieldAIOS";
 import ShieldAIDrive from "./pages/ShieldAIDrive";
 import SharedFileViewer from "./pages/SharedFileViewer";
 import UniversalCommerceModels from "./pages/UniversalCommerceModels";
+import PlatformFeatures from "./pages/PlatformFeatures";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -127,6 +128,7 @@ const App = () => (
           <Route path="/shield-ai-drive" element={<ShieldAIDrive />} />
           <Route path="/shared" element={<SharedFileViewer />} />
           <Route path="/universal-commerce" element={<UniversalCommerceModels />} />
+          <Route path="/platform-features" element={<PlatformFeatures />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

@@ -15,6 +15,13 @@ const CRYPTO_IDS: Record<string, string> = {
   "ETH/USD": "ethereum",
 };
 
+// ExchangeRate-API base currencies
+const FOREX_PAIRS: Record<string, { base: string; quote: string }> = {
+  "EUR/USD": { base: "EUR", quote: "USD" },
+  "GBP/USD": { base: "GBP", quote: "USD" },
+  "JPY/USD": { base: "JPY", quote: "USD" },
+};
+
 // Fallback base prices for simulated data
 const FALLBACK_PRICES: Record<string, { price: number; volume?: string }> = {
   "BTC/USD": { price: 87500, volume: "28.5B" },
@@ -92,6 +99,36 @@ async function fetchCryptoPrices(): Promise<Map<string, { price: number; change:
   return result;
 }
 
+async function fetchForexPrices(): Promise<Map<string, { price: number; change: number }>> {
+  const result = new Map<string, { price: number; change: number }>();
+  try {
+    // Using the open ExchangeRate-API (free, no key required)
+    const response = await fetch(
+      "https://open.er-api.com/v6/latest/USD",
+      { signal: AbortSignal.timeout(5000) }
+    );
+    if (!response.ok) throw new Error("ExchangeRate API error");
+    const data = await response.json();
+
+    if (data.rates) {
+      for (const [symbol, pair] of Object.entries(FOREX_PAIRS)) {
+        const rate = data.rates[pair.base];
+        if (rate) {
+          // For XXX/USD, the price is 1/rate (since API gives USD-based rates)
+          const price = pair.quote === "USD" ? 1 / rate : rate;
+          const fallback = FALLBACK_PRICES[symbol]?.price ?? price;
+          // Estimate change as deviation from fallback
+          const change = parseFloat((((price - fallback) / fallback) * 100).toFixed(2));
+          result.set(symbol, { price: parseFloat(price.toFixed(4)), change });
+        }
+      }
+    }
+  } catch {
+    // Silently fail
+  }
+  return result;
+}
+
 export function useMarketData(updateIntervalMs: number = 3000) {
   const [markets, setMarkets] = useState<MarketItem[]>(() =>
     ALL_SYMBOLS.map((s) => ({
@@ -105,18 +142,25 @@ export function useMarketData(updateIntervalMs: number = 3000) {
   const lastApiFetch = useRef(0);
   const apiCache = useRef<Map<string, { price: number; change: number }>>(new Map());
 
-  // Fetch real API data every 60s (CoinGecko rate limit friendly)
+  // Fetch real API data every 60s (rate limit friendly)
   const fetchApiData = useCallback(async () => {
     const now = Date.now();
     if (now - lastApiFetch.current < 60000) return;
     lastApiFetch.current = now;
 
-    const cryptoPrices = await fetchCryptoPrices();
-    if (cryptoPrices.size > 0) {
-      apiCache.current = cryptoPrices;
+    const [cryptoPrices, forexPrices] = await Promise.all([
+      fetchCryptoPrices(),
+      fetchForexPrices(),
+    ]);
+
+    // Merge both maps
+    const allApiPrices = new Map([...cryptoPrices, ...forexPrices]);
+
+    if (allApiPrices.size > 0) {
+      apiCache.current = allApiPrices;
       setMarkets((prev) =>
         prev.map((m) => {
-          const apiData = cryptoPrices.get(m.symbol);
+          const apiData = allApiPrices.get(m.symbol);
           if (apiData) {
             return { ...m, price: apiData.price, change: apiData.change, source: "api" };
           }
