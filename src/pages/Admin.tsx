@@ -1049,17 +1049,8 @@ const Admin = () => {
                       >
                         <span className="font-medium">{itemName}</span>
                         <div className="flex items-center gap-2">
-                          {item.synced ? (
-                            <>
-                              <CheckCircle className="w-4 h-4 text-green-400" />
-                              <span className="text-sm text-green-400">Synced</span>
-                            </>
-                          ) : (
-                            <>
-                              <AlertCircle className="w-4 h-4 text-amber-400" />
-                              <span className="text-sm text-amber-400">Pending</span>
-                            </>
-                          )}
+                            <CheckCircle className="w-4 h-4 text-green-400" />
+                            <span className="text-sm text-green-400">Synced</span>
                         </div>
                       </motion.div>
                     ))}
