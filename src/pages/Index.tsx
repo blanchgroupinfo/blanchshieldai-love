@@ -18,7 +18,7 @@ import MissionSection from "@/components/MissionSection";
 import WatchmanHomeSection from "@/components/WatchmanHomeSection";
 import Footer from "@/components/Footer";
 import SectionNavigation from "@/components/SectionNavigation";
-import FloatingChat from "@/components/FloatingChat";
+
 
 const Index = () => {
   return (
