@@ -8,7 +8,7 @@ export interface Agent {
 }
 
 // H.I.I. AI = Hebrew Israelite Implementer Aboriginal Identity
-// Format: H.I.I. AIXXX where XXX is the sequential number (001-600)
+// Format: H.I.I. AIXXX where XXX is the sequential number (001-888)
 export const generateHIIAgentNumber = (id: string): string => {
   const num = id.replace("AI", "");
   return `H.I.I. AI${num.padStart(3, "0")}`;
