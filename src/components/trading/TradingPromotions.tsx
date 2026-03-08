@@ -63,7 +63,6 @@ const PlanCard = ({ plan }: { plan: TradingPlan }) => (
       </Badge>
       <div className="flex items-center justify-center gap-1">
         <span className="text-4xl font-bold text-primary">{plan.returnPercent}%</span>
-        <Percent className="w-6 h-6 text-primary" />
       </div>
       <CardDescription className="flex items-center justify-center gap-1">
         <Clock className="w-4 h-4" />
