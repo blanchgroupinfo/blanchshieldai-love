@@ -80,7 +80,53 @@ const incomingNotifications: Omit<Notification, "id" | "read" | "time">[] = [
 
 const ShieldAIOS = () => {
   const navigate = useNavigate();
-  const [activeView, setActiveView] = useState<"desktop" | "apps" | "monitor" | "files" | "terminal" | "notifications">("desktop");
+  const [activeView, setActiveView] = useState<"desktop" | "apps" | "monitor" | "files" | "terminal" | "notifications" | "settings">("desktop");
+  const [osNotifications, setOsNotifications] = useState<Notification[]>(initialNotifications);
+  const [nextId, setNextId] = useState(9);
+  const incomingIndexRef = useRef(0);
+
+  // Settings state
+  const [settings, setSettings] = useState({
+    darkMode: true,
+    soundEnabled: true,
+    notificationsEnabled: true,
+    agentAlerts: true,
+    securityAlerts: true,
+    systemUpdates: true,
+    language: "English",
+    autoLock: true,
+    telemetry: false,
+  });
+
+  // Periodic new notifications
+  useEffect(() => {
+    if (!settings.notificationsEnabled) return;
+    const interval = setInterval(() => {
+      const incoming = incomingNotifications[incomingIndexRef.current % incomingNotifications.length];
+      incomingIndexRef.current += 1;
+      setOsNotifications(prev => [{
+        ...incoming,
+        id: nextId + incomingIndexRef.current,
+        read: false,
+        time: "Just now",
+      }, ...prev]);
+    }, 30000);
+    return () => clearInterval(interval);
+  }, [settings.notificationsEnabled, nextId]);
+
+  const markAsRead = useCallback((id: number) => {
+    setOsNotifications(prev => prev.map(n => n.id === id ? { ...n, read: true } : n));
+  }, []);
+
+  const markAllAsRead = useCallback(() => {
+    setOsNotifications(prev => prev.map(n => ({ ...n, read: true })));
+  }, []);
+
+  const dismissNotification = useCallback((id: number) => {
+    setOsNotifications(prev => prev.filter(n => n.id !== id));
+  }, []);
+
+  const unreadCount = osNotifications.filter(n => !n.read).length;
   const [terminalHistory, setTerminalHistory] = useState<{ type: "input" | "output"; text: string }[]>([
     { type: "output", text: "S.H.I.E.L.D. AI OS Terminal v3.0.1" },
     { type: "output", text: "Type 'help' for available commands.\n" },
