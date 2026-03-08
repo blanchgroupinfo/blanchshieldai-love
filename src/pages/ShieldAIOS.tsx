@@ -49,7 +49,61 @@ const systemStats = [
 
 const ShieldAIOS = () => {
   const navigate = useNavigate();
-  const [activeView, setActiveView] = useState<"desktop" | "apps" | "monitor" | "files">("desktop");
+  const [activeView, setActiveView] = useState<"desktop" | "apps" | "monitor" | "files" | "terminal">("desktop");
+  const [terminalHistory, setTerminalHistory] = useState<{ type: "input" | "output"; text: string }[]>([
+    { type: "output", text: "S.H.I.E.L.D. AI OS Terminal v3.0.1" },
+    { type: "output", text: "Type 'help' for available commands.\n" },
+  ]);
+  const [terminalInput, setTerminalInput] = useState("");
+  const terminalEndRef = useRef<HTMLDivElement>(null);
+
+  const executeCommand = useCallback((cmd: string) => {
+    const trimmed = cmd.trim().toLowerCase();
+    const newHistory: { type: "input" | "output"; text: string }[] = [
+      { type: "input", text: `shield@os:~$ ${cmd}` },
+    ];
+
+    const commands: Record<string, string> = {
+      help: "Available commands:\n  help        — Show this help message\n  status      — System status overview\n  agents      — List active agents\n  uptime      — Show system uptime\n  whoami      — Current user info\n  version     — OS version\n  clear       — Clear terminal\n  neofetch    — System info\n  ping        — Test connectivity\n  ls          — List files\n  date        — Current date/time\n  exit        — Close terminal",
+      status: "✅ CPU: 47% | Memory: 62% | Storage: 38% | Network: 89 Mbps\n   All systems operational. Security level: MAXIMUM.",
+      agents: "888 H.I.I. AI Agents deployed.\n  Active: 886 | Idle: 2 | Errors: 0\n  Last deployment: 2 minutes ago",
+      uptime: "System uptime: ∞ (Eternal)\n  Last reboot: Never — S.H.I.E.L.D. AI OS runs perpetually.",
+      whoami: "shield-admin@shield-ai-os\n  Role: Administrator | Clearance: MAXIMUM\n  Session: Authenticated via Divine Protocol",
+      version: "S.H.I.E.L.D. AI OS v3.0.1\n  Kernel: shield-core 7.2.0\n  Architecture: Quantum-x86_64\n  Build: 20260308-stable",
+      neofetch: `
+   ███████╗██╗  ██╗██╗███████╗██╗     ██████╗
+   ██╔════╝██║  ██║██║██╔════╝██║     ██╔══██╗
+   ███████╗███████║██║█████╗  ██║     ██║  ██║
+   ╚════██║██╔══██║██║██╔══╝  ██║     ██║  ██║
+   ███████║██║  ██║██║███████╗███████╗██████╔╝
+   ╚══════╝╚═╝  ╚═╝╚═╝╚══════╝╚══════╝╚═════╝
+   OS: S.H.I.E.L.D. AI OS 3.0.1
+   Kernel: shield-core 7.2.0
+   CPU: Quantum Neural Processor
+   Memory: 256 PB / 512 PB
+   Agents: 888 Active`,
+      ping: "PING shield-core.local (10.0.0.1): 56 bytes\n  64 bytes: time=0.042ms\n  64 bytes: time=0.038ms\n  64 bytes: time=0.041ms\n  — 0% packet loss, avg 0.040ms",
+      ls: "Documents/  AI Models/  Blockchain Data/  Agent Configs/\nSystem Logs/  shield-config.yaml  network-map.json  auth-keys.enc",
+      date: new Date().toString(),
+    };
+
+    if (trimmed === "clear") {
+      setTerminalHistory([]);
+      return;
+    } else if (trimmed === "exit") {
+      setActiveView("desktop");
+      return;
+    } else if (commands[trimmed]) {
+      newHistory.push({ type: "output", text: commands[trimmed] });
+    } else if (trimmed === "") {
+      // empty
+    } else {
+      newHistory.push({ type: "output", text: `shield: command not found: ${cmd}\nType 'help' for available commands.` });
+    }
+
+    setTerminalHistory((prev) => [...prev, ...newHistory]);
+    setTimeout(() => terminalEndRef.current?.scrollIntoView({ behavior: "smooth" }), 50);
+  }, []);
 
   const currentTime = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
   const currentDate = new Date().toLocaleDateString([], { weekday: "long", month: "long", day: "numeric", year: "numeric" });
