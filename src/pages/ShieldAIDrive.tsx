@@ -437,7 +437,10 @@ const ShieldAIDrive = () => {
                   {!user ? (
                     <div className="text-center py-12">
                       <Lock className="h-12 w-12 mx-auto mb-3 text-muted-foreground/30" />
-                      <p className="text-sm text-muted-foreground">Sign in to view your gallery</p>
+                      <p className="text-sm text-muted-foreground mb-4">Sign in to view your gallery</p>
+                      <Button variant="shield" size="sm" className="gap-1.5" onClick={() => navigate("/auth")}>
+                        <Lock className="h-3.5 w-3.5" /> Sign In
+                      </Button>
                     </div>
                   ) : loading ? (
                     <div className="text-center py-12">
