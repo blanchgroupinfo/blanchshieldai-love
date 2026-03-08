@@ -344,6 +344,85 @@ const ShieldAIDrive = () => {
     toast({ title: "Share link revoked" });
     setShareLink("");
   };
+
+  const openVersionHistory = async (file: StorageFile) => {
+    if (!user) return;
+    setVersionFile(file);
+    setVersionLoading(true);
+    const filePath = getStoragePath(file.name);
+    const { data } = await supabase
+      .from("file_versions")
+      .select("*")
+      .eq("user_id", user.id)
+      .eq("file_path", filePath)
+      .order("version_number", { ascending: false });
+    setVersionHistory(data || []);
+    setVersionLoading(false);
+  };
+
+  const handleUploadNewVersion = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!user || !versionFile || !e.target.files?.length) return;
+    const file = e.target.files[0];
+    const filePath = getStoragePath(versionFile.name);
+
+    // Save current version to history before overwriting
+    const nextVersion = (versionHistory[0]?.version_number || 0) + 1;
+    const versionedPath = `${filePath}.v${nextVersion - 1}`;
+    
+    // Download current file and save as versioned copy
+    const { data: currentData } = await supabase.storage.from("shield-drive").download(filePath);
+    if (currentData) {
+      await supabase.storage.from("shield-drive").upload(versionedPath, currentData, { upsert: true });
+    }
+
+    // Record version in database
+    await supabase.from("file_versions").insert({
+      user_id: user.id,
+      file_path: filePath,
+      version_number: nextVersion - 1,
+      file_size: versionFile.metadata?.size || 0,
+      notes: `Replaced by v${nextVersion}`,
+    });
+
+    // Upload new file to the same path (overwrite)
+    const { error } = await supabase.storage.from("shield-drive").upload(filePath, file, { upsert: true });
+    if (error) {
+      toast({ title: "Version upload failed", description: error.message, variant: "destructive" });
+    } else {
+      // Record new version
+      await supabase.from("file_versions").insert({
+        user_id: user.id,
+        file_path: filePath,
+        version_number: nextVersion,
+        file_size: file.size,
+        notes: "Current version",
+      });
+      toast({ title: `New version (v${nextVersion}) uploaded` });
+      fetchFiles();
+      openVersionHistory(versionFile);
+    }
+    if (versionInputRef.current) versionInputRef.current.value = "";
+  };
+
+  const handleRestoreVersion = async (version: any) => {
+    if (!user || !versionFile) return;
+    const filePath = getStoragePath(versionFile.name);
+    const versionedPath = `${filePath}.v${version.version_number}`;
+
+    const { data, error: dlError } = await supabase.storage.from("shield-drive").download(versionedPath);
+    if (dlError || !data) {
+      toast({ title: "Restore failed", description: "Could not download the versioned file.", variant: "destructive" });
+      return;
+    }
+
+    const { error } = await supabase.storage.from("shield-drive").upload(filePath, data, { upsert: true });
+    if (error) {
+      toast({ title: "Restore failed", description: error.message, variant: "destructive" });
+    } else {
+      toast({ title: `Restored to v${version.version_number}` });
+      fetchFiles();
+    }
+  };
   useEffect(() => {
     if (moveFile && user) {
       const listPath = [user.id, ...currentPath].join("/");
