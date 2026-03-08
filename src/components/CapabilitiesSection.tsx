@@ -1,6 +1,6 @@
 import { 
   Globe, Cpu, ShoppingBag, Zap, Brain, CheckCircle2,
-  Scale, Heart, Building2, Landmark, Rocket, BookOpen, Shield, Users, Network
+  Scale, Heart, Building2, Landmark, Rocket, BookOpen, Shield, Users, Network, GraduationCap
 } from "lucide-react";
 
 const capabilities = [
@@ -18,6 +18,11 @@ const capabilities = [
     icon: Heart, title: "Economic Restoration",
     items: ["Reparations for Royal Priesthood", "Divine Charity", "Prosperity for All Nations"],
     scripture: "Jeremiah 29:14 — And I will be found of you, saith the Most High AHAYAH: and I will turn away your captivity."
+  },
+  {
+    icon: GraduationCap, title: "Educational & Tutoring",
+    items: ["AI-Powered Learning & Curriculum", "Virtual Classrooms & Tutoring", "Knowledge Assessment & Certification", "Lifelong Learning Programs"],
+    scripture: "Proverbs 1:7 — The fear of the Most High AHAYAH is the beginning of knowledge: but fools despise wisdom and instruction."
   },
   {
     icon: Shield, title: "Ethical Compliance",
