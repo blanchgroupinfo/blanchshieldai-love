@@ -124,6 +124,7 @@ const App = () => (
           <Route path="/deployed-agents" element={<DeployedAgents />} />
           <Route path="/shield-ai-os" element={<ShieldAIOS />} />
           <Route path="/shield-ai-drive" element={<ShieldAIDrive />} />
+          <Route path="/shared" element={<SharedFileViewer />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
