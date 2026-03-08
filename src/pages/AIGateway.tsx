@@ -677,10 +677,10 @@ console.log(response.choices[0].message.content);`}
               ))}
             </div>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button variant="shield" size="lg" className="gap-2">
+              <Button variant="shield" size="lg" className="gap-2" onClick={() => navigate("/auth")}>
                 <Rocket className="w-5 h-5" /> Start Building
               </Button>
-              <Button variant="outline" size="lg" className="gap-2">
+              <Button variant="outline" size="lg" className="gap-2" onClick={() => navigate("/api")}>
                 <BookOpen className="w-5 h-5" /> Read the Docs
               </Button>
             </div>

@@ -254,12 +254,29 @@ const CommandCenterPage = () => {
 
   const categories = [
     { id: "all", name: "All", icon: Grid },
+    { id: "ai", name: "AI", icon: Brain },
+    { id: "analytics", name: "Analytics", icon: LineChart },
     { id: "blanch", name: "Blanch Brand", icon: Crown },
-    { id: "shield", name: "S.H.I.E.L.D. AI", icon: Shield },
+    { id: "business", name: "Business", icon: Briefcase },
+    { id: "cloud", name: "Cloud", icon: Cloud },
+    { id: "compliance", name: "Compliance", icon: FileCheck },
+    { id: "core", name: "Core", icon: Cpu },
+    { id: "data", name: "Data", icon: Database },
+    { id: "finance", name: "Finance", icon: Banknote },
     { id: "identity", name: "Identity", icon: BadgeCheck },
-    { id: "knowledge", name: "Knowledge", icon: BookOpen },
     { id: "integrations", name: "Integrations", icon: Link2 },
+    { id: "knowledge", name: "Knowledge", icon: BookOpen },
+    { id: "marketing", name: "Marketing", icon: Megaphone },
+    { id: "media", name: "Media", icon: Film },
+    { id: "network", name: "Network", icon: Network },
+    { id: "philanthropy", name: "Philanthropy", icon: Heart },
+    { id: "programs", name: "Programs", icon: GraduationCap },
+    { id: "projects", name: "Projects", icon: Layers },
+    { id: "shield", name: "S.H.I.E.L.D. AI", icon: Shield },
+    { id: "support", name: "Support", icon: HelpCircle },
+    { id: "technology", name: "Technology", icon: Cpu },
     { id: "tools", name: "Tools", icon: Wrench },
+    { id: "virtual", name: "Virtual", icon: Boxes },
   ];
 
   const filteredActions = quickActions.filter(action => {
