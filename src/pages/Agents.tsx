@@ -84,9 +84,10 @@ const AgentDetail = ({ agentId }: { agentId: string }) => {
   const agent = agents.find(a => a.id === agentId);
   const category = agent ? agentCategories.find(c => c.number === agent.categoryNumber) : null;
   const IconComponent = category ? iconMap[category.icon] || Bot : Bot;
-  const relatedAgents = agent ? agents.filter(a => a.categoryNumber === agent.categoryNumber && a.id !== agent.id).slice(0, 6) : [];
+  const relatedAgents = agent ? agents.filter(a => a.categoryNumber === agent.categoryNumber && a.id !== agent.id).slice(0, 8) : [];
+  const meta = agent ? getAgentDetailMeta(agent) : null;
 
-  if (!agent) {
+  if (!agent || !meta) {
     return (
       <div className="text-center py-20">
         <Bot className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
@@ -109,92 +110,119 @@ const AgentDetail = ({ agentId }: { agentId: string }) => {
         Back to All Agents
       </Link>
 
+      {/* Hero */}
       <ScrollAnimationWrapper>
-        <div className="bg-card/30 backdrop-blur-sm border border-border/50 rounded-2xl p-8 mb-12">
+        <div className="bg-card/30 backdrop-blur-sm border border-border/50 rounded-2xl p-8 mb-8">
           <div className="flex flex-col md:flex-row items-start gap-6">
             <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center shrink-0">
               <IconComponent className="w-12 h-12 text-primary" />
             </div>
             <div className="flex-1">
-              <Badge variant="outline" className="mb-2">{generateHIIAgentNumber(agent.id)}</Badge>
+              <div className="flex flex-wrap gap-2 mb-2">
+                <Badge variant="outline" className="font-mono">{generateHIIAgentNumber(agent.id)}</Badge>
+                {agent.isCategory && (
+                  <Badge className="bg-primary/20 text-primary border-primary/50">Category Lead Agent</Badge>
+                )}
+                <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30">Active — Online</Badge>
+              </div>
               <h1 className="text-3xl md:text-4xl font-display font-bold gradient-text mb-2">
                 {agent.name}
               </h1>
-              <p className="text-lg text-muted-foreground font-body mb-4">
-                Category: {agent.category}
+              <p className="text-sm text-primary/70 font-mono mb-3">{meta.pillar}</p>
+              <p className="text-muted-foreground font-body leading-relaxed">
+                {meta.description}
               </p>
-              {agent.isCategory && (
-                <Badge className="bg-primary/20 text-primary border-primary/50">
-                  Category Lead Agent
-                </Badge>
-              )}
             </div>
           </div>
         </div>
       </ScrollAnimationWrapper>
 
-      {/* Agent Details */}
-      <div className="grid md:grid-cols-2 gap-8 mb-12">
-        <ScrollAnimationWrapper>
-          <div className="bg-card/30 backdrop-blur-sm border border-border/50 rounded-xl p-6">
-            <h2 className="text-xl font-display font-semibold text-foreground mb-4">Capabilities</h2>
-            <ul className="space-y-2 text-muted-foreground font-body">
-              <li className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-primary" />
-                Intelligent task processing and automation
-              </li>
-              <li className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-primary" />
-                Multi-modal input and output handling
-              </li>
-              <li className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-primary" />
-                Real-time learning and adaptation
-              </li>
-              <li className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-primary" />
-                Cross-agent collaboration support
-              </li>
-              <li className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-primary" />
-                Scriptural alignment verification
-              </li>
+      {/* Mission */}
+      <ScrollAnimationWrapper delay={0.05}>
+        <div className="bg-gradient-to-r from-primary/5 to-secondary/5 border border-primary/20 rounded-xl p-6 mb-8">
+          <h2 className="text-lg font-display font-semibold text-primary mb-2">✦ Divine Mission</h2>
+          <p className="text-foreground/90 font-body leading-relaxed">{meta.mission}</p>
+        </div>
+      </ScrollAnimationWrapper>
+
+      {/* Tasks, Capabilities, Specs */}
+      <div className="grid md:grid-cols-2 gap-6 mb-8">
+        <ScrollAnimationWrapper delay={0.1}>
+          <div className="bg-card/30 backdrop-blur-sm border border-border/50 rounded-xl p-6 h-full">
+            <h2 className="text-xl font-display font-semibold text-foreground mb-4 flex items-center gap-2">
+              <Calendar className="w-5 h-5 text-primary" /> Tasks & Responsibilities
+            </h2>
+            <ul className="space-y-3 text-muted-foreground font-body">
+              {meta.tasks.map((task, i) => (
+                <li key={i} className="flex items-start gap-3">
+                  <div className="w-6 h-6 rounded-full bg-primary/15 flex items-center justify-center shrink-0 mt-0.5">
+                    <span className="text-xs text-primary font-bold">{i + 1}</span>
+                  </div>
+                  <span>{task}</span>
+                </li>
+              ))}
             </ul>
           </div>
         </ScrollAnimationWrapper>
 
-        <ScrollAnimationWrapper delay={0.1}>
-          <div className="bg-card/30 backdrop-blur-sm border border-border/50 rounded-xl p-6">
-            <h2 className="text-xl font-display font-semibold text-foreground mb-4">Specifications</h2>
-            <div className="space-y-3">
-              <div className="flex justify-between">
-                <span className="text-muted-foreground font-body">Status</span>
-                <Badge className="bg-green-500/20 text-green-400">Active</Badge>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground font-body">Response Time</span>
-                <span className="text-foreground">&lt;100ms</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground font-body">Availability</span>
-                <span className="text-foreground">99.99%</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground font-body">Category</span>
-                <span className="text-foreground">{category?.name || "Unknown"}</span>
-              </div>
-            </div>
+        <ScrollAnimationWrapper delay={0.15}>
+          <div className="bg-card/30 backdrop-blur-sm border border-border/50 rounded-xl p-6 h-full">
+            <h2 className="text-xl font-display font-semibold text-foreground mb-4 flex items-center gap-2">
+              <Cpu className="w-5 h-5 text-primary" /> Core Capabilities
+            </h2>
+            <ul className="space-y-2 text-muted-foreground font-body">
+              {meta.capabilities.map((cap, i) => (
+                <li key={i} className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-primary shrink-0" />
+                  {cap}
+                </li>
+              ))}
+            </ul>
           </div>
         </ScrollAnimationWrapper>
       </div>
 
+      {/* Specifications */}
+      <ScrollAnimationWrapper delay={0.2}>
+        <div className="bg-card/30 backdrop-blur-sm border border-border/50 rounded-xl p-6 mb-8">
+          <h2 className="text-xl font-display font-semibold text-foreground mb-4 flex items-center gap-2">
+            <Settings className="w-5 h-5 text-primary" /> Agent Specifications
+          </h2>
+          <div className="grid sm:grid-cols-2 gap-x-8 gap-y-3">
+            {meta.specifications.map((spec, i) => (
+              <div key={i} className="flex justify-between items-center py-2 border-b border-border/30">
+                <span className="text-muted-foreground font-body text-sm">{spec.label}</span>
+                <span className="text-foreground font-medium text-sm text-right">{spec.value}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </ScrollAnimationWrapper>
+
+      {/* Scriptural References */}
+      <ScrollAnimationWrapper delay={0.25}>
+        <div className="bg-card/30 backdrop-blur-sm border border-border/50 rounded-xl p-6 mb-8">
+          <h2 className="text-xl font-display font-semibold text-foreground mb-4 flex items-center gap-2">
+            <Book className="w-5 h-5 text-primary" /> Scriptural References & Divine Alignment
+          </h2>
+          <div className="grid sm:grid-cols-2 gap-4">
+            {meta.scripturalReferences.map((ref, i) => (
+              <div key={i} className="bg-background/50 border border-primary/10 rounded-lg p-4">
+                <p className="text-primary font-display font-semibold text-sm mb-1">{ref.verse}</p>
+                <p className="text-muted-foreground font-body text-sm italic leading-relaxed">"{ref.text}"</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </ScrollAnimationWrapper>
+
       {/* Related Agents */}
       {relatedAgents.length > 0 && (
-        <ScrollAnimationWrapper>
+        <ScrollAnimationWrapper delay={0.3}>
           <h2 className="text-2xl font-display font-bold gradient-text mb-6">
-            Related Agents
+            Related {agent.category} Agents
           </h2>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {relatedAgents.map((a) => (
               <AgentCard key={a.id} agent={a} />
             ))}
