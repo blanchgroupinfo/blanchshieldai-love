@@ -52,6 +52,7 @@ import ShieldAISettings from "./pages/ShieldAISettings";
 import ShieldAIProfile from "./pages/ShieldAIProfile";
 import ShieldAIAbout from "./pages/ShieldAIAbout";
 import UniversalFileSystem from "./pages/UniversalFileSystem";
+import DeployedAgents from "./pages/DeployedAgents";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
