@@ -1,5 +1,5 @@
-import { useState, useMemo } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useState, useMemo, useCallback } from "react";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import NavigationHeader from "@/components/NavigationHeader";
 import Footer from "@/components/Footer";
 import ScrollAnimationWrapper from "@/components/ScrollAnimationWrapper";
@@ -14,8 +14,10 @@ import {
   TrendingUp, ShieldCheck, BarChart, BookOpen, Wallet,
   Gamepad2, Heart, HandHeart, Scale, Truck, Car,
   Calendar, Home, Book, Star, Lock, Server, Globe,
-  RefreshCw, Activity, Leaf, Gem, Sun, Rocket
+  RefreshCw, Activity, Leaf, Gem, Sun, Rocket,
+  Zap, Play, MessageSquare, CheckCircle2
 } from "lucide-react";
+import { toast } from "sonner";
 
 const iconMap: Record<string, any> = {
   "cpu": Cpu,
@@ -81,11 +83,29 @@ const AgentCard = ({ agent, showCategory = false }: { agent: Agent; showCategory
 };
 
 const AgentDetail = ({ agentId }: { agentId: string }) => {
+  const [activated, setActivated] = useState(false);
+  const [deploying, setDeploying] = useState(false);
+  const navigate = useNavigate();
   const agent = agents.find(a => a.id === agentId);
   const category = agent ? agentCategories.find(c => c.number === agent.categoryNumber) : null;
   const IconComponent = category ? iconMap[category.icon] || Bot : Bot;
   const relatedAgents = agent ? agents.filter(a => a.categoryNumber === agent.categoryNumber && a.id !== agent.id).slice(0, 8) : [];
   const meta = agent ? getAgentDetailMeta(agent) : null;
+
+  const handleActivate = useCallback(() => {
+    setDeploying(true);
+    setTimeout(() => {
+      setDeploying(false);
+      setActivated(true);
+      toast.success(`${generateHIIAgentNumber(agentId)} — ${agent?.name} activated successfully`, {
+        description: "Agent is now deployed and operational within the S.H.I.E.L.D. AI OS ecosystem.",
+      });
+    }, 1500);
+  }, [agentId, agent?.name]);
+
+  const handleAskAgent = useCallback(() => {
+    navigate("/shield-ai-chat");
+  }, [navigate]);
 
   if (!agent || !meta) {
     return (
@@ -129,9 +149,28 @@ const AgentDetail = ({ agentId }: { agentId: string }) => {
                 {agent.name}
               </h1>
               <p className="text-sm text-primary/70 font-mono mb-3">{meta.pillar}</p>
-              <p className="text-muted-foreground font-body leading-relaxed">
+              <p className="text-muted-foreground font-body leading-relaxed mb-4">
                 {meta.description}
               </p>
+              <div className="flex flex-wrap gap-3">
+                <Button
+                  variant="shield"
+                  onClick={handleActivate}
+                  disabled={activated || deploying}
+                  className="gap-2"
+                >
+                  {deploying ? (
+                    <><RefreshCw className="w-4 h-4 animate-spin" /> Deploying...</>
+                  ) : activated ? (
+                    <><CheckCircle2 className="w-4 h-4" /> Agent Activated</>
+                  ) : (
+                    <><Zap className="w-4 h-4" /> Activate Agent</>
+                  )}
+                </Button>
+                <Button variant="outline" onClick={handleAskAgent} className="gap-2">
+                  <MessageSquare className="w-4 h-4" /> Ask This Agent
+                </Button>
+              </div>
             </div>
           </div>
         </div>
