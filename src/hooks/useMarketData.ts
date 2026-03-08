@@ -142,18 +142,25 @@ export function useMarketData(updateIntervalMs: number = 3000) {
   const lastApiFetch = useRef(0);
   const apiCache = useRef<Map<string, { price: number; change: number }>>(new Map());
 
-  // Fetch real API data every 60s (CoinGecko rate limit friendly)
+  // Fetch real API data every 60s (rate limit friendly)
   const fetchApiData = useCallback(async () => {
     const now = Date.now();
     if (now - lastApiFetch.current < 60000) return;
     lastApiFetch.current = now;
 
-    const cryptoPrices = await fetchCryptoPrices();
-    if (cryptoPrices.size > 0) {
-      apiCache.current = cryptoPrices;
+    const [cryptoPrices, forexPrices] = await Promise.all([
+      fetchCryptoPrices(),
+      fetchForexPrices(),
+    ]);
+
+    // Merge both maps
+    const allApiPrices = new Map([...cryptoPrices, ...forexPrices]);
+
+    if (allApiPrices.size > 0) {
+      apiCache.current = allApiPrices;
       setMarkets((prev) =>
         prev.map((m) => {
-          const apiData = cryptoPrices.get(m.symbol);
+          const apiData = allApiPrices.get(m.symbol);
           if (apiData) {
             return { ...m, price: apiData.price, change: apiData.change, source: "api" };
           }
