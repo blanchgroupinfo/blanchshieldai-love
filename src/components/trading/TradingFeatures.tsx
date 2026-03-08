@@ -11,7 +11,7 @@ const features = [
   {
     icon: BarChart3,
     title: "Overview of All Markets",
-    description: "Real-time market data across 30+ asset classes including stocks, crypto, forex, and more.",
+    description: "Real-time market data across 40+ asset classes including stocks, crypto, forex, and more.",
   },
   {
     icon: LineChart,
