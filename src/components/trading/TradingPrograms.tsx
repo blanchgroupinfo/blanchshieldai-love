@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Clock, TrendingUp, Zap, RefreshCcw, Target, Layers, ChevronRight, Shield, AlertTriangle, CheckCircle2, GitCompareArrows, X } from "lucide-react";
+import { Clock, TrendingUp, Zap, RefreshCcw, Target, Layers, ChevronRight, Shield, AlertTriangle, CheckCircle2, GitCompareArrows, X, User, Mail, DollarSign, Phone } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -16,6 +16,10 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { toast } from "sonner";
 
 interface ProgramItem {
   name: string;
@@ -79,8 +83,6 @@ const programs: { category: string; items: ProgramItem[] }[] = [
   },
 ];
 
-const allPrograms = programs.flatMap((p) => p.items);
-
 const riskColors: Record<string, string> = {
   "Low": "text-green-400 border-green-500/30 bg-green-500/10",
   "Low-Medium": "text-green-400 border-green-500/30 bg-green-500/10",
@@ -90,10 +92,174 @@ const riskColors: Record<string, string> = {
   "High": "text-red-400 border-red-500/30 bg-red-500/10",
 };
 
+const EnrollmentForm = ({ program, onBack }: { program: ProgramItem; onBack: () => void }) => {
+  const [formData, setFormData] = useState({
+    fullName: "",
+    email: "",
+    phone: "",
+    depositAmount: "",
+    compounding: "no",
+    agreeTerms: false,
+  });
+  const [submitting, setSubmitting] = useState(false);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!formData.fullName.trim() || formData.fullName.length > 100) {
+      toast.error("Please enter a valid name (max 100 characters)");
+      return;
+    }
+    if (!formData.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      toast.error("Please enter a valid email address");
+      return;
+    }
+    if (!formData.phone.trim() || formData.phone.length > 20) {
+      toast.error("Please enter a valid phone number");
+      return;
+    }
+    if (!formData.depositAmount) {
+      toast.error("Please select a deposit amount");
+      return;
+    }
+    if (!formData.agreeTerms) {
+      toast.error("You must agree to the terms and conditions");
+      return;
+    }
+
+    setSubmitting(true);
+    setTimeout(() => {
+      toast.success(`Enrollment request submitted for ${program.name}!`, {
+        description: "Our team will review your application and contact you within 24 hours.",
+      });
+      setSubmitting(false);
+      onBack();
+    }, 1500);
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div className="bg-muted/50 rounded-lg p-3 flex items-center justify-between">
+        <div>
+          <p className="text-sm font-semibold">{program.name}</p>
+          <p className="text-xs text-muted-foreground">{program.duration} · {program.returnPct} Return</p>
+        </div>
+        <Badge variant="outline" className="text-xs text-green-400 border-green-500/30 bg-green-500/10">
+          {program.deposit}
+        </Badge>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <Label htmlFor="fullName" className="text-sm">Full Name</Label>
+          <div className="relative">
+            <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <Input
+              id="fullName"
+              placeholder="John Doe"
+              value={formData.fullName}
+              onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+              className="pl-10"
+              maxLength={100}
+              required
+            />
+          </div>
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="email" className="text-sm">Email Address</Label>
+          <div className="relative">
+            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <Input
+              id="email"
+              type="email"
+              placeholder="john@example.com"
+              value={formData.email}
+              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              className="pl-10"
+              maxLength={255}
+              required
+            />
+          </div>
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="phone" className="text-sm">Phone Number</Label>
+          <div className="relative">
+            <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <Input
+              id="phone"
+              type="tel"
+              placeholder="+1 (555) 000-0000"
+              value={formData.phone}
+              onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+              className="pl-10"
+              maxLength={20}
+              required
+            />
+          </div>
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="depositAmount" className="text-sm">Deposit Amount</Label>
+          <Select value={formData.depositAmount} onValueChange={(v) => setFormData({ ...formData, depositAmount: v })}>
+            <SelectTrigger id="depositAmount">
+              <div className="flex items-center gap-2">
+                <DollarSign className="w-4 h-4 text-muted-foreground" />
+                <SelectValue placeholder="Select amount" />
+              </div>
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="minimum">Minimum Deposit</SelectItem>
+              <SelectItem value="mid-range">Mid-Range</SelectItem>
+              <SelectItem value="maximum">Maximum Deposit</SelectItem>
+              <SelectItem value="custom">Custom Amount</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+
+      {program.terms?.compounding !== "Not available" && (
+        <div className="space-y-2">
+          <Label htmlFor="compounding" className="text-sm">Compounding Preference</Label>
+          <Select value={formData.compounding} onValueChange={(v) => setFormData({ ...formData, compounding: v })}>
+            <SelectTrigger id="compounding">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="no">No Compounding</SelectItem>
+              <SelectItem value="yes">Enable Compounding</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      )}
+
+      <div className="flex items-start gap-2">
+        <Checkbox
+          id="agreeTerms"
+          checked={formData.agreeTerms}
+          onCheckedChange={(checked) => setFormData({ ...formData, agreeTerms: checked === true })}
+          className="mt-1"
+        />
+        <Label htmlFor="agreeTerms" className="text-xs text-muted-foreground leading-relaxed cursor-pointer">
+          I have read and agree to the program terms and conditions, including the early withdrawal fee of {program.terms?.earlyWithdrawalFee} and minimum lock-in period of {program.terms?.minLockIn}. I understand that returns are subject to market conditions.
+        </Label>
+      </div>
+
+      <div className="flex gap-2 pt-2">
+        <Button type="button" variant="outline" onClick={onBack} className="w-full">
+          Back to Details
+        </Button>
+        <Button type="submit" className="w-full bg-primary hover:bg-primary/90" disabled={submitting}>
+          {submitting ? "Submitting..." : "Submit Enrollment"}
+        </Button>
+      </div>
+    </form>
+  );
+};
+
 const TradingPrograms = () => {
   const [selectedProgram, setSelectedProgram] = useState<ProgramItem | null>(null);
   const [compareList, setCompareList] = useState<ProgramItem[]>([]);
   const [showCompare, setShowCompare] = useState(false);
+  const [showEnrollForm, setShowEnrollForm] = useState(false);
 
   const toggleCompare = (item: ProgramItem) => {
     setCompareList((prev) =>
@@ -184,7 +350,7 @@ const TradingPrograms = () => {
                           />
                           <div
                             className="flex items-center gap-3 cursor-pointer flex-1"
-                            onClick={() => setSelectedProgram(item)}
+                            onClick={() => { setSelectedProgram(item); setShowEnrollForm(false); }}
                           >
                             <div className="w-8 h-8 rounded-md bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
                               <item.icon className="w-4 h-4 text-primary" />
@@ -195,7 +361,7 @@ const TradingPrograms = () => {
                             </div>
                           </div>
                         </div>
-                        <div className="flex items-center gap-2 cursor-pointer" onClick={() => setSelectedProgram(item)}>
+                        <div className="flex items-center gap-2 cursor-pointer" onClick={() => { setSelectedProgram(item); setShowEnrollForm(false); }}>
                           <Badge variant="outline" className="text-xs text-green-400 border-green-500/30 bg-green-500/10">
                             {item.returnPct} Return
                           </Badge>
@@ -237,8 +403,8 @@ const TradingPrograms = () => {
         </motion.div>
       </div>
 
-      {/* Program Detail Modal */}
-      <Dialog open={!!selectedProgram} onOpenChange={(open) => !open && setSelectedProgram(null)}>
+      {/* Program Detail Modal with Enrollment Form */}
+      <Dialog open={!!selectedProgram} onOpenChange={(open) => { if (!open) { setSelectedProgram(null); setShowEnrollForm(false); } }}>
         <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto bg-card border-border">
           {selectedProgram && selectedProgram.terms && (
             <>
@@ -248,93 +414,104 @@ const TradingPrograms = () => {
                     <selectedProgram.icon className="w-5 h-5 text-primary" />
                   </div>
                   <div>
-                    <DialogTitle className="text-xl">{selectedProgram.name}</DialogTitle>
+                    <DialogTitle className="text-xl">
+                      {showEnrollForm ? `Enroll: ${selectedProgram.name}` : selectedProgram.name}
+                    </DialogTitle>
                     <DialogDescription className="mt-1">
-                      {selectedProgram.terms.description}
+                      {showEnrollForm ? "Complete the form below to submit your enrollment request." : selectedProgram.terms.description}
                     </DialogDescription>
                   </div>
                 </div>
               </DialogHeader>
 
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 my-4">
-                <div className="bg-muted/50 rounded-lg p-3 text-center">
-                  <p className="text-xs text-muted-foreground mb-1">Return</p>
-                  <p className="text-lg font-bold text-green-400">{selectedProgram.returnPct}</p>
-                </div>
-                <div className="bg-muted/50 rounded-lg p-3 text-center">
-                  <p className="text-xs text-muted-foreground mb-1">Duration</p>
-                  <p className="text-lg font-bold text-primary">{selectedProgram.duration}</p>
-                </div>
-                <div className="bg-muted/50 rounded-lg p-3 text-center">
-                  <p className="text-xs text-muted-foreground mb-1">Deposit Range</p>
-                  <p className="text-sm font-bold">{selectedProgram.deposit}</p>
-                </div>
-                <div className="bg-muted/50 rounded-lg p-3 text-center">
-                  <p className="text-xs text-muted-foreground mb-1">Risk Level</p>
-                  <Badge variant="outline" className={`text-xs ${riskColors[selectedProgram.terms.riskLevel] || ""}`}>
-                    {selectedProgram.terms.riskLevel}
-                  </Badge>
-                </div>
-              </div>
-
-              <Separator className="bg-border/50" />
-
-              <div className="space-y-4 my-4">
-                <h4 className="font-semibold flex items-center gap-2">
-                  <Shield className="w-4 h-4 text-primary" />
-                  Program Details
-                </h4>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  <div className="bg-muted/30 rounded-lg p-3">
-                    <p className="text-xs text-muted-foreground mb-1">Minimum Lock-In Period</p>
-                    <p className="text-sm font-medium">{selectedProgram.terms.minLockIn}</p>
+              {showEnrollForm ? (
+                <EnrollmentForm
+                  program={selectedProgram}
+                  onBack={() => setShowEnrollForm(false)}
+                />
+              ) : (
+                <>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3 my-4">
+                    <div className="bg-muted/50 rounded-lg p-3 text-center">
+                      <p className="text-xs text-muted-foreground mb-1">Return</p>
+                      <p className="text-lg font-bold text-green-400">{selectedProgram.returnPct}</p>
+                    </div>
+                    <div className="bg-muted/50 rounded-lg p-3 text-center">
+                      <p className="text-xs text-muted-foreground mb-1">Duration</p>
+                      <p className="text-lg font-bold text-primary">{selectedProgram.duration}</p>
+                    </div>
+                    <div className="bg-muted/50 rounded-lg p-3 text-center">
+                      <p className="text-xs text-muted-foreground mb-1">Deposit Range</p>
+                      <p className="text-sm font-bold">{selectedProgram.deposit}</p>
+                    </div>
+                    <div className="bg-muted/50 rounded-lg p-3 text-center">
+                      <p className="text-xs text-muted-foreground mb-1">Risk Level</p>
+                      <Badge variant="outline" className={`text-xs ${riskColors[selectedProgram.terms.riskLevel] || ""}`}>
+                        {selectedProgram.terms.riskLevel}
+                      </Badge>
+                    </div>
                   </div>
-                  <div className="bg-muted/30 rounded-lg p-3">
-                    <p className="text-xs text-muted-foreground mb-1">Payout Schedule</p>
-                    <p className="text-sm font-medium">{selectedProgram.terms.payoutSchedule}</p>
-                  </div>
-                  <div className="bg-muted/30 rounded-lg p-3">
-                    <p className="text-xs text-muted-foreground mb-1">Early Withdrawal Fee</p>
-                    <p className="text-sm font-medium">{selectedProgram.terms.earlyWithdrawalFee}</p>
-                  </div>
-                  <div className="bg-muted/30 rounded-lg p-3">
-                    <p className="text-xs text-muted-foreground mb-1">Compounding</p>
-                    <p className="text-sm font-medium">{selectedProgram.terms.compounding}</p>
-                  </div>
-                  <div className="bg-muted/30 rounded-lg p-3">
-                    <p className="text-xs text-muted-foreground mb-1">Eligibility</p>
-                    <p className="text-sm font-medium">{selectedProgram.terms.eligibility}</p>
-                  </div>
-                </div>
-              </div>
 
-              <Separator className="bg-border/50" />
+                  <Separator className="bg-border/50" />
 
-              <div className="space-y-3 my-4">
-                <h4 className="font-semibold flex items-center gap-2">
-                  <AlertTriangle className="w-4 h-4 text-yellow-400" />
-                  Terms & Conditions
-                </h4>
-                <ul className="space-y-2">
-                  {selectedProgram.terms.conditions.map((condition, i) => (
-                    <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
-                      <CheckCircle2 className="w-4 h-4 text-primary mt-0.5 shrink-0" />
-                      {condition}
-                    </li>
-                  ))}
-                </ul>
-              </div>
+                  <div className="space-y-4 my-4">
+                    <h4 className="font-semibold flex items-center gap-2">
+                      <Shield className="w-4 h-4 text-primary" />
+                      Program Details
+                    </h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      <div className="bg-muted/30 rounded-lg p-3">
+                        <p className="text-xs text-muted-foreground mb-1">Minimum Lock-In Period</p>
+                        <p className="text-sm font-medium">{selectedProgram.terms.minLockIn}</p>
+                      </div>
+                      <div className="bg-muted/30 rounded-lg p-3">
+                        <p className="text-xs text-muted-foreground mb-1">Payout Schedule</p>
+                        <p className="text-sm font-medium">{selectedProgram.terms.payoutSchedule}</p>
+                      </div>
+                      <div className="bg-muted/30 rounded-lg p-3">
+                        <p className="text-xs text-muted-foreground mb-1">Early Withdrawal Fee</p>
+                        <p className="text-sm font-medium">{selectedProgram.terms.earlyWithdrawalFee}</p>
+                      </div>
+                      <div className="bg-muted/30 rounded-lg p-3">
+                        <p className="text-xs text-muted-foreground mb-1">Compounding</p>
+                        <p className="text-sm font-medium">{selectedProgram.terms.compounding}</p>
+                      </div>
+                      <div className="bg-muted/30 rounded-lg p-3">
+                        <p className="text-xs text-muted-foreground mb-1">Eligibility</p>
+                        <p className="text-sm font-medium">{selectedProgram.terms.eligibility}</p>
+                      </div>
+                    </div>
+                  </div>
 
-              <Separator className="bg-border/50" />
+                  <Separator className="bg-border/50" />
 
-              <DialogFooter className="mt-4 flex-col sm:flex-row gap-2">
-                <DialogClose asChild>
-                  <Button variant="outline" className="w-full sm:w-auto">Close</Button>
-                </DialogClose>
-                <Button className="w-full sm:w-auto bg-primary hover:bg-primary/90">
-                  Enroll in Program
-                </Button>
-              </DialogFooter>
+                  <div className="space-y-3 my-4">
+                    <h4 className="font-semibold flex items-center gap-2">
+                      <AlertTriangle className="w-4 h-4 text-yellow-400" />
+                      Terms & Conditions
+                    </h4>
+                    <ul className="space-y-2">
+                      {selectedProgram.terms.conditions.map((condition, i) => (
+                        <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
+                          <CheckCircle2 className="w-4 h-4 text-primary mt-0.5 shrink-0" />
+                          {condition}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <Separator className="bg-border/50" />
+
+                  <DialogFooter className="mt-4 flex-col sm:flex-row gap-2">
+                    <DialogClose asChild>
+                      <Button variant="outline" className="w-full sm:w-auto">Close</Button>
+                    </DialogClose>
+                    <Button className="w-full sm:w-auto bg-primary hover:bg-primary/90" onClick={() => setShowEnrollForm(true)}>
+                      Enroll in Program
+                    </Button>
+                  </DialogFooter>
+                </>
+              )}
             </>
           )}
         </DialogContent>

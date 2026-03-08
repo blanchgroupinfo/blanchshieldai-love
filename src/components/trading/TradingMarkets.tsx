@@ -6,11 +6,12 @@ import {
   RefreshCcw, LineChart, Banknote, TrendingUp, Building2,
   PieChart, Image, Users, Home, ShieldCheck, ArrowUpDown,
   Layers, Target, Zap, Timer, ArrowDownUp, ListOrdered,
-  CircleDot, Shield, Search
+  CircleDot, Shield, Search, ArrowDownAZ, LayoutGrid
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const markets = [
   { name: "Bank Instruments", icon: Landmark, category: "Finance" },
@@ -59,20 +60,36 @@ const markets = [
 ];
 
 const ALL_TAB = "All";
-
 const categories = [ALL_TAB, ...Array.from(new Set(markets.map((m) => m.category))).sort()];
+
+type SortOption = "default" | "alpha-asc" | "alpha-desc" | "category";
 
 const TradingMarkets = () => {
   const [activeCategory, setActiveCategory] = useState(ALL_TAB);
   const [search, setSearch] = useState("");
+  const [sortBy, setSortBy] = useState<SortOption>("default");
 
   const filtered = useMemo(() => {
-    return markets.filter((m) => {
+    let result = markets.filter((m) => {
       const matchesCategory = activeCategory === ALL_TAB || m.category === activeCategory;
       const matchesSearch = !search || m.name.toLowerCase().includes(search.toLowerCase()) || m.category.toLowerCase().includes(search.toLowerCase());
       return matchesCategory && matchesSearch;
     });
-  }, [activeCategory, search]);
+
+    switch (sortBy) {
+      case "alpha-asc":
+        result = [...result].sort((a, b) => a.name.localeCompare(b.name));
+        break;
+      case "alpha-desc":
+        result = [...result].sort((a, b) => b.name.localeCompare(a.name));
+        break;
+      case "category":
+        result = [...result].sort((a, b) => a.category.localeCompare(b.category) || a.name.localeCompare(b.name));
+        break;
+    }
+
+    return result;
+  }, [activeCategory, search, sortBy]);
 
   return (
     <section className="py-20 bg-muted/30">
@@ -95,9 +112,9 @@ const TradingMarkets = () => {
           </p>
         </motion.div>
 
-        {/* Search Bar */}
-        <div className="max-w-md mx-auto mb-6">
-          <div className="relative">
+        {/* Search & Sort Row */}
+        <div className="flex flex-col sm:flex-row items-center gap-3 max-w-2xl mx-auto mb-6">
+          <div className="relative flex-1 w-full">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input
               placeholder="Search markets..."
@@ -106,6 +123,20 @@ const TradingMarkets = () => {
               className="pl-10 bg-card/70 border-border/50"
             />
           </div>
+          <Select value={sortBy} onValueChange={(v) => setSortBy(v as SortOption)}>
+            <SelectTrigger className="w-full sm:w-[200px] bg-card/70 border-border/50">
+              <div className="flex items-center gap-2">
+                <ArrowDownAZ className="w-4 h-4 text-muted-foreground" />
+                <SelectValue placeholder="Sort by..." />
+              </div>
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="default">Default Order</SelectItem>
+              <SelectItem value="alpha-asc">A → Z</SelectItem>
+              <SelectItem value="alpha-desc">Z → A</SelectItem>
+              <SelectItem value="category">By Category</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
         {/* Category Tabs */}
@@ -128,6 +159,11 @@ const TradingMarkets = () => {
         {/* Results count */}
         <p className="text-sm text-muted-foreground text-center mb-6">
           Showing {filtered.length} of {markets.length} markets
+          {sortBy !== "default" && (
+            <span className="ml-2">
+              · Sorted {sortBy === "alpha-asc" ? "A → Z" : sortBy === "alpha-desc" ? "Z → A" : "by category"}
+            </span>
+          )}
         </p>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3">
