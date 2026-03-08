@@ -99,6 +99,36 @@ async function fetchCryptoPrices(): Promise<Map<string, { price: number; change:
   return result;
 }
 
+async function fetchForexPrices(): Promise<Map<string, { price: number; change: number }>> {
+  const result = new Map<string, { price: number; change: number }>();
+  try {
+    // Using the open ExchangeRate-API (free, no key required)
+    const response = await fetch(
+      "https://open.er-api.com/v6/latest/USD",
+      { signal: AbortSignal.timeout(5000) }
+    );
+    if (!response.ok) throw new Error("ExchangeRate API error");
+    const data = await response.json();
+
+    if (data.rates) {
+      for (const [symbol, pair] of Object.entries(FOREX_PAIRS)) {
+        const rate = data.rates[pair.base];
+        if (rate) {
+          // For XXX/USD, the price is 1/rate (since API gives USD-based rates)
+          const price = pair.quote === "USD" ? 1 / rate : rate;
+          const fallback = FALLBACK_PRICES[symbol]?.price ?? price;
+          // Estimate change as deviation from fallback
+          const change = parseFloat((((price - fallback) / fallback) * 100).toFixed(2));
+          result.set(symbol, { price: parseFloat(price.toFixed(4)), change });
+        }
+      }
+    }
+  } catch {
+    // Silently fail
+  }
+  return result;
+}
+
 export function useMarketData(updateIntervalMs: number = 3000) {
   const [markets, setMarkets] = useState<MarketItem[]>(() =>
     ALL_SYMBOLS.map((s) => ({
