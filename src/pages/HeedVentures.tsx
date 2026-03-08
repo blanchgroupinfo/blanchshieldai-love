@@ -1,7 +1,7 @@
 import { useState } from "react";
 import NavigationHeader from "@/components/NavigationHeader";
 import Footer from "@/components/Footer";
-import FloatingChat from "@/components/FloatingChat";
+
 import { motion } from "framer-motion";
 import { Rocket, Target, Lightbulb, Users, TrendingUp, Shield, CheckCircle, ArrowRight, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
