@@ -1,6 +1,6 @@
 import NavigationHeader from "@/components/NavigationHeader";
 import Footer from "@/components/Footer";
-import FloatingChat from "@/components/FloatingChat";
+
 import { motion } from "framer-motion";
 import { Scale, Globe, FileText, Shield, Gavel, BookOpen, Users, Building, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
