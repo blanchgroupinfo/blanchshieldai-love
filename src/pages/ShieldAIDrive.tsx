@@ -1079,6 +1079,59 @@ const ShieldAIDrive = () => {
               </div>
             </DialogContent>
           </Dialog>
+
+          {/* Version History Dialog */}
+          <Dialog open={!!versionFile} onOpenChange={(open) => { if (!open) setVersionFile(null); }}>
+            <DialogContent className="max-w-md bg-card border-border/50">
+              <DialogHeader>
+                <DialogTitle className="flex items-center gap-2 text-sm">
+                  <History className="h-4 w-4 text-primary" /> Version History — {versionFile?.name.replace(/^\d+_/, "")}
+                </DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4">
+                <div className="flex gap-2">
+                  <input ref={versionInputRef} type="file" className="hidden" onChange={handleUploadNewVersion} />
+                  <Button variant="shield" size="sm" className="w-full gap-1.5 text-xs" onClick={() => versionInputRef.current?.click()}>
+                    <Upload className="h-3.5 w-3.5" /> Upload New Version
+                  </Button>
+                </div>
+
+                {versionLoading ? (
+                  <div className="text-center py-6">
+                    <Loader2 className="h-6 w-6 animate-spin mx-auto text-primary" />
+                  </div>
+                ) : versionHistory.length === 0 ? (
+                  <div className="text-center py-6">
+                    <Clock className="h-8 w-8 mx-auto mb-2 text-muted-foreground/30" />
+                    <p className="text-xs text-muted-foreground">No version history yet. Upload a new version to start tracking.</p>
+                  </div>
+                ) : (
+                  <div className="space-y-2 max-h-60 overflow-y-auto">
+                    {versionHistory.map((v) => (
+                      <div key={v.id} className="flex items-center justify-between p-3 rounded-lg bg-muted/20 border border-border/30">
+                        <div>
+                          <p className="text-sm font-medium flex items-center gap-1.5">
+                            Version {v.version_number}
+                            {v.notes === "Current version" && (
+                              <Badge variant="default" className="text-[10px] px-1.5 py-0">Current</Badge>
+                            )}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            {v.file_size ? formatFileSize(v.file_size) : "—"} • {new Date(v.created_at).toLocaleDateString()}
+                          </p>
+                        </div>
+                        {v.notes !== "Current version" && (
+                          <Button variant="outline" size="sm" className="h-7 text-xs gap-1" onClick={() => handleRestoreVersion(v)}>
+                            <RotateCcw className="h-3 w-3" /> Restore
+                          </Button>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
       <StorageUpgradeModal open={showUpgradeModal} onOpenChange={setShowUpgradeModal} />
