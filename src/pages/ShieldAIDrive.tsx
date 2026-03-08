@@ -1,6 +1,7 @@
 import NavigationHeader from "@/components/NavigationHeader";
 import Footer from "@/components/Footer";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import { HardDrive, Upload, Download, FolderOpen, Cloud, Lock, Share2, Database, Shield, Zap, Search, FileText, Image, Video, Music, Archive, Trash2, Star, Clock, Users, File, Loader2, Eye, X, LayoutGrid } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -81,6 +82,7 @@ const ShieldAIDrive = () => {
   const [dragging, setDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const getPublicUrl = (fileName: string) => {
     if (!user) return "";
@@ -347,7 +349,10 @@ const ShieldAIDrive = () => {
                   {!user ? (
                     <div className="text-center py-12">
                       <Lock className="h-12 w-12 mx-auto mb-3 text-muted-foreground/30" />
-                      <p className="text-sm text-muted-foreground">Sign in to access your files</p>
+                      <p className="text-sm text-muted-foreground mb-4">Sign in to access your files</p>
+                      <Button variant="shield" size="sm" className="gap-1.5" onClick={() => navigate("/auth")}>
+                        <Lock className="h-3.5 w-3.5" /> Sign In
+                      </Button>
                     </div>
                   ) : loading ? (
                     <div className="text-center py-12">
@@ -432,7 +437,10 @@ const ShieldAIDrive = () => {
                   {!user ? (
                     <div className="text-center py-12">
                       <Lock className="h-12 w-12 mx-auto mb-3 text-muted-foreground/30" />
-                      <p className="text-sm text-muted-foreground">Sign in to view your gallery</p>
+                      <p className="text-sm text-muted-foreground mb-4">Sign in to view your gallery</p>
+                      <Button variant="shield" size="sm" className="gap-1.5" onClick={() => navigate("/auth")}>
+                        <Lock className="h-3.5 w-3.5" /> Sign In
+                      </Button>
                     </div>
                   ) : loading ? (
                     <div className="text-center py-12">
@@ -499,7 +507,10 @@ const ShieldAIDrive = () => {
                 <div className="text-center py-16">
                   <Lock className="h-16 w-16 mx-auto mb-4 text-muted-foreground/30" />
                   <h3 className="text-lg font-semibold mb-2">Sign In Required</h3>
-                  <p className="text-sm text-muted-foreground">Please sign in to upload files to your S.H.I.E.L.D. AI Drive.</p>
+                  <p className="text-sm text-muted-foreground mb-4">Please sign in to upload files to your S.H.I.E.L.D. AI Drive.</p>
+                  <Button variant="shield" size="sm" className="gap-1.5" onClick={() => navigate("/auth")}>
+                    <Lock className="h-3.5 w-3.5" /> Sign In
+                  </Button>
                 </div>
               ) : (
                 <Card className="bg-card/60 border-border/50">
