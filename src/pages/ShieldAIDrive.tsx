@@ -418,6 +418,80 @@ const ShieldAIDrive = () => {
             </motion.div>
           )}
 
+          {/* Gallery Tab */}
+          {activeTab === "gallery" && (
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+              <Card className="bg-card/60 border-border/50">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-base flex items-center gap-2">
+                    <LayoutGrid className="h-4 w-4 text-primary" />
+                    Image Gallery
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {!user ? (
+                    <div className="text-center py-12">
+                      <Lock className="h-12 w-12 mx-auto mb-3 text-muted-foreground/30" />
+                      <p className="text-sm text-muted-foreground">Sign in to view your gallery</p>
+                    </div>
+                  ) : loading ? (
+                    <div className="text-center py-12">
+                      <Loader2 className="h-8 w-8 mx-auto mb-3 animate-spin text-primary" />
+                      <p className="text-sm text-muted-foreground">Loading gallery...</p>
+                    </div>
+                  ) : (() => {
+                    const imageFiles = files.filter(f => isImageFile(f.name));
+                    return imageFiles.length === 0 ? (
+                      <div className="text-center py-12">
+                        <Image className="h-12 w-12 mx-auto mb-3 text-muted-foreground/30" />
+                        <p className="text-sm text-muted-foreground">No images yet — upload some to see them here!</p>
+                      </div>
+                    ) : (
+                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+                        {imageFiles.map((file, i) => {
+                          const displayName = file.name.replace(/^\d+_/, "");
+                          return (
+                            <motion.div
+                              key={file.id || file.name}
+                              initial={{ opacity: 0, scale: 0.9 }}
+                              animate={{ opacity: 1, scale: 1 }}
+                              transition={{ delay: i * 0.03 }}
+                              className="group relative aspect-square rounded-lg overflow-hidden border border-border/50 hover:border-primary/40 cursor-pointer transition-all hover:shadow-lg"
+                              onClick={() => setPreviewFile(file)}
+                            >
+                              <img
+                                src={getPublicUrl(file.name)}
+                                alt={displayName}
+                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                loading="lazy"
+                              />
+                              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+                                <div className="absolute bottom-0 left-0 right-0 p-2">
+                                  <p className="text-xs text-white font-medium truncate">{displayName}</p>
+                                  <p className="text-[10px] text-white/70">
+                                    {file.metadata?.size ? formatFileSize(file.metadata.size) : ""}
+                                  </p>
+                                </div>
+                                <div className="absolute top-2 right-2 flex gap-1">
+                                  <Button variant="ghost" size="sm" className="h-6 w-6 p-0 bg-black/40 hover:bg-black/60 text-white" onClick={(e) => { e.stopPropagation(); handleDownload(file.name); }}>
+                                    <Download className="h-3 w-3" />
+                                  </Button>
+                                  <Button variant="ghost" size="sm" className="h-6 w-6 p-0 bg-black/40 hover:bg-destructive/80 text-white" onClick={(e) => { e.stopPropagation(); handleDelete(file.name); }}>
+                                    <Trash2 className="h-3 w-3" />
+                                  </Button>
+                                </div>
+                              </div>
+                            </motion.div>
+                          );
+                        })}
+                      </div>
+                    );
+                  })()}
+                </CardContent>
+              </Card>
+            </motion.div>
+          )}
+
           {/* Upload Tab */}
           {activeTab === "upload" && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
