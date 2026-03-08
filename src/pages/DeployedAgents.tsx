@@ -61,7 +61,7 @@ export const removeDeployedAgent = (agentId: string): DeployedAgent[] => {
   return current;
 };
 
-// All 888 agents AI001-AI888 (including category headers)
+// All 888 agents H.I.I. AI001–H.I.I. AI888 (including category headers)
 const allAgentIds = agents.map(a => a.id);
 
 const statusConfig = {
