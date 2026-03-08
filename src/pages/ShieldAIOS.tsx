@@ -61,20 +61,20 @@ interface Notification {
 
 const initialNotifications: Notification[] = [
   { id: 1, type: "alert", title: "Security Scan Complete", message: "All 888 agents passed integrity check. No threats detected.", time: "2 min ago", read: false },
-  { id: 2, type: "agent", title: "Agent AI-042 Deployed", message: "Commerce Guardian agent activated and operational.", time: "5 min ago", read: false },
+  { id: 2, type: "agent", title: "H.I.I. AI042 Deployed", message: "Commerce Guardian agent activated and operational.", time: "5 min ago", read: false },
   { id: 3, type: "system", title: "System Update Available", message: "S.H.I.E.L.D. AI OS v3.0.2 patch ready for installation.", time: "12 min ago", read: false },
   { id: 4, type: "alert", title: "Firewall Block", message: "Blocked 47 unauthorized access attempts from external IPs.", time: "18 min ago", read: true },
-  { id: 5, type: "agent", title: "Agent AI-777 Task Complete", message: "Sovereign Compliance audit finished — 100% pass rate.", time: "25 min ago", read: true },
+  { id: 5, type: "agent", title: "H.I.I. AI777 Task Complete", message: "Sovereign Compliance audit finished — 100% pass rate.", time: "25 min ago", read: true },
   { id: 6, type: "system", title: "Backup Completed", message: "Full system backup to encrypted vault successful (128 TB).", time: "1 hr ago", read: true },
-  { id: 7, type: "agent", title: "Agent AI-001 Status Change", message: "Master Orchestrator switched from idle to active mode.", time: "1.5 hr ago", read: true },
+  { id: 7, type: "agent", title: "H.I.I. AI001 Status Change", message: "Master Orchestrator switched from idle to active mode.", time: "1.5 hr ago", read: true },
   { id: 8, type: "alert", title: "Network Latency Spike", message: "Brief latency spike detected on node-7. Auto-resolved.", time: "2 hr ago", read: true },
 ];
 
 const incomingNotifications: Omit<Notification, "id" | "read" | "time">[] = [
-  { type: "agent", title: "Agent AI-333 Restarted", message: "Financial Oracle agent restarted after scheduled maintenance." },
+  { type: "agent", title: "H.I.I. AI333 Restarted", message: "Financial Oracle agent restarted after scheduled maintenance." },
   { type: "alert", title: "Intrusion Attempt Blocked", message: "Quantum firewall neutralized brute-force attack from 3 IPs." },
   { type: "system", title: "Memory Optimization", message: "Auto-defrag completed. Freed 12 TB of quantum memory." },
-  { type: "agent", title: "Agent AI-144 Milestone", message: "Treaty Compliance agent processed 10,000th document." },
+  { type: "agent", title: "H.I.I. AI144 Milestone", message: "Treaty Compliance agent processed 10,000th document." },
   { type: "alert", title: "SSL Certificates Renewed", message: "All 888 agent endpoints renewed with quantum-resistant certs." },
   { type: "system", title: "Cloud Sync Complete", message: "All sovereign data synced to distributed vault nodes." },
 ];
@@ -163,7 +163,7 @@ const ShieldAIOS = () => {
       ping: "PING shield-core.local (10.0.0.1): 56 bytes\n  64 bytes: time=0.042ms\n  64 bytes: time=0.038ms\n  64 bytes: time=0.041ms\n  — 0% packet loss, avg 0.040ms",
       ls: "Documents/  AI Models/  Blockchain Data/  Agent Configs/\nSystem Logs/  shield-config.yaml  network-map.json  auth-keys.enc",
       date: new Date().toString(),
-      deploy: "⚙ Initializing deployment sequence...\n  [██████████████████████████████] 100%\n  ✅ Agent AI-" + String(Math.floor(Math.random() * 888) + 1).padStart(3, "0") + " deployed successfully.\n  Status: ACTIVE | Latency: 0.003ms\n  Endpoint: shield-core://agents/live",
+      deploy: "⚙ Initializing deployment sequence...\n  [██████████████████████████████] 100%\n  ✅ H.I.I. AI" + String(Math.floor(Math.random() * 888) + 1).padStart(3, "0") + " deployed successfully.\n  Status: ACTIVE | Latency: 0.003ms\n  Endpoint: shield-core://agents/live",
       scan: "🔍 Running S.H.I.E.L.D. Security Scan...\n  [1/5] Scanning network perimeter... ✅ CLEAR\n  [2/5] Checking agent integrity... ✅ 888/888 PASSED\n  [3/5] Auditing access logs... ✅ NO ANOMALIES\n  [4/5] Validating encryption keys... ✅ AES-256 INTACT\n  [5/5] Blockchain consensus check... ✅ ALL NODES SYNCED\n\n  ✅ SCAN COMPLETE — Threat Level: NONE\n  Security Rating: 100/100 (DIVINE SHIELD)",
       encrypt: "🔐 Encrypting data stream...\n  Algorithm: AES-256-GCM + RSA-4096\n  [████████████████████░░░░░░░░░░] 67%...\n  [██████████████████████████████] 100%\n  ✅ Encryption complete.\n  Key fingerprint: 7A:3F:D2:91:BC:48:EE:5C:A0:F1\n  Cipher strength: UNBREAKABLE\n  Stored in: /shield-os/vault/encrypted/",
       connect: "📡 Establishing secure connection...\n  Resolving shield-node-prime.sovereign.net...\n  Handshake: TLS 1.3 + Quantum Key Exchange\n  Latency: 0.012ms\n  ✅ Connected to S.H.I.E.L.D. Network Node #1\n  Peers: 144 nodes online\n  Bandwidth: 10 Gbps symmetric\n  Encryption: End-to-end quantum-resistant",
