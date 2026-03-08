@@ -531,6 +531,11 @@ const ShieldAIDrive = () => {
                                   <Eye className="h-3.5 w-3.5" />
                                 </Button>
                               )}
+                              {folders.length > 0 && (
+                                <Button variant="ghost" size="sm" className="h-7 w-7 p-0 opacity-0 group-hover:opacity-100 transition-opacity" onClick={(e) => { e.stopPropagation(); setMoveFile(file); }} title="Move to folder">
+                                  <ArrowRight className="h-3.5 w-3.5" />
+                                </Button>
+                              )}
                               <Button variant="ghost" size="sm" className="h-7 w-7 p-0 opacity-0 group-hover:opacity-100 transition-opacity" onClick={(e) => { e.stopPropagation(); handleDownload(file.name); }}>
                                 <Download className="h-3.5 w-3.5" />
                               </Button>
