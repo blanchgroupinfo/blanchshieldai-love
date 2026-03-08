@@ -988,7 +988,7 @@ const Admin = () => {
                     <div className="p-4 rounded-xl bg-primary/5 border border-primary/20">
                       <h4 className="font-semibold mb-2">AI-Agents</h4>
                       <p className="text-sm text-muted-foreground">
-                        402 Universal Unified AI Agents with H.I.I. AI Numbers (Hebrew Israelite Implementer Aboriginal Identity)
+                        {PLATFORM.totalAgents} Universal Unified AI Agents with H.I.I. AI Numbers ({PLATFORM.agentSystemFull})
                       </p>
                     </div>
                     <div className="p-4 rounded-xl bg-green-500/5 border border-green-500/20">
