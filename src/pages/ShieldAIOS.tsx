@@ -47,9 +47,20 @@ const systemStats = [
   { label: "Network", value: 89, icon: Wifi, suffix: "Mbps" },
 ];
 
+const notifications = [
+  { id: 1, type: "alert" as const, title: "Security Scan Complete", message: "All 888 agents passed integrity check. No threats detected.", time: "2 min ago", read: false },
+  { id: 2, type: "agent" as const, title: "Agent AI-042 Deployed", message: "Commerce Guardian agent activated and operational.", time: "5 min ago", read: false },
+  { id: 3, type: "system" as const, title: "System Update Available", message: "S.H.I.E.L.D. AI OS v3.0.2 patch ready for installation.", time: "12 min ago", read: false },
+  { id: 4, type: "alert" as const, title: "Firewall Block", message: "Blocked 47 unauthorized access attempts from external IPs.", time: "18 min ago", read: true },
+  { id: 5, type: "agent" as const, title: "Agent AI-777 Task Complete", message: "Sovereign Compliance audit finished — 100% pass rate.", time: "25 min ago", read: true },
+  { id: 6, type: "system" as const, title: "Backup Completed", message: "Full system backup to encrypted vault successful (128 TB).", time: "1 hr ago", read: true },
+  { id: 7, type: "agent" as const, title: "Agent AI-001 Status Change", message: "Master Orchestrator switched from idle to active mode.", time: "1.5 hr ago", read: true },
+  { id: 8, type: "alert" as const, title: "Network Latency Spike", message: "Brief latency spike detected on node-7. Auto-resolved.", time: "2 hr ago", read: true },
+];
+
 const ShieldAIOS = () => {
   const navigate = useNavigate();
-  const [activeView, setActiveView] = useState<"desktop" | "apps" | "monitor" | "files" | "terminal">("desktop");
+  const [activeView, setActiveView] = useState<"desktop" | "apps" | "monitor" | "files" | "terminal" | "notifications">("desktop");
   const [terminalHistory, setTerminalHistory] = useState<{ type: "input" | "output"; text: string }[]>([
     { type: "output", text: "S.H.I.E.L.D. AI OS Terminal v3.0.1" },
     { type: "output", text: "Type 'help' for available commands.\n" },
@@ -64,7 +75,7 @@ const ShieldAIOS = () => {
     ];
 
     const commands: Record<string, string> = {
-      help: "Available commands:\n  help        — Show this help message\n  status      — System status overview\n  agents      — List active agents\n  uptime      — Show system uptime\n  whoami      — Current user info\n  version     — OS version\n  clear       — Clear terminal\n  neofetch    — System info\n  ping        — Test connectivity\n  ls          — List files\n  date        — Current date/time\n  exit        — Close terminal",
+      help: "Available commands:\n  help        — Show this help message\n  status      — System status overview\n  agents      — List active agents\n  uptime      — Show system uptime\n  whoami      — Current user info\n  version     — OS version\n  clear       — Clear terminal\n  neofetch    — System info\n  ping        — Test connectivity\n  ls          — List files\n  date        — Current date/time\n  deploy      — Deploy an agent\n  scan        — Run security scan\n  encrypt     — Encrypt data stream\n  connect     — Connect to network node\n  exit        — Close terminal",
       status: "✅ CPU: 47% | Memory: 62% | Storage: 38% | Network: 89 Mbps\n   All systems operational. Security level: MAXIMUM.",
       agents: "888 H.I.I. AI Agents deployed.\n  Active: 886 | Idle: 2 | Errors: 0\n  Last deployment: 2 minutes ago",
       uptime: "System uptime: ∞ (Eternal)\n  Last reboot: Never — S.H.I.E.L.D. AI OS runs perpetually.",
@@ -85,6 +96,10 @@ const ShieldAIOS = () => {
       ping: "PING shield-core.local (10.0.0.1): 56 bytes\n  64 bytes: time=0.042ms\n  64 bytes: time=0.038ms\n  64 bytes: time=0.041ms\n  — 0% packet loss, avg 0.040ms",
       ls: "Documents/  AI Models/  Blockchain Data/  Agent Configs/\nSystem Logs/  shield-config.yaml  network-map.json  auth-keys.enc",
       date: new Date().toString(),
+      deploy: "⚙ Initializing deployment sequence...\n  [██████████████████████████████] 100%\n  ✅ Agent AI-" + String(Math.floor(Math.random() * 888) + 1).padStart(3, "0") + " deployed successfully.\n  Status: ACTIVE | Latency: 0.003ms\n  Endpoint: shield-core://agents/live",
+      scan: "🔍 Running S.H.I.E.L.D. Security Scan...\n  [1/5] Scanning network perimeter... ✅ CLEAR\n  [2/5] Checking agent integrity... ✅ 888/888 PASSED\n  [3/5] Auditing access logs... ✅ NO ANOMALIES\n  [4/5] Validating encryption keys... ✅ AES-256 INTACT\n  [5/5] Blockchain consensus check... ✅ ALL NODES SYNCED\n\n  ✅ SCAN COMPLETE — Threat Level: NONE\n  Security Rating: 100/100 (DIVINE SHIELD)",
+      encrypt: "🔐 Encrypting data stream...\n  Algorithm: AES-256-GCM + RSA-4096\n  [████████████████████░░░░░░░░░░] 67%...\n  [██████████████████████████████] 100%\n  ✅ Encryption complete.\n  Key fingerprint: 7A:3F:D2:91:BC:48:EE:5C:A0:F1\n  Cipher strength: UNBREAKABLE\n  Stored in: /shield-os/vault/encrypted/",
+      connect: "📡 Establishing secure connection...\n  Resolving shield-node-prime.sovereign.net...\n  Handshake: TLS 1.3 + Quantum Key Exchange\n  Latency: 0.012ms\n  ✅ Connected to S.H.I.E.L.D. Network Node #1\n  Peers: 144 nodes online\n  Bandwidth: 10 Gbps symmetric\n  Encryption: End-to-end quantum-resistant",
     };
 
     if (trimmed === "clear") {
@@ -160,6 +175,18 @@ const ShieldAIOS = () => {
             >
               <Terminal className="h-3.5 w-3.5" />
               Terminal
+            </Button>
+            <Button
+              variant={activeView === "notifications" ? "shield" : "ghost"}
+              size="sm"
+              onClick={() => setActiveView("notifications")}
+              className="gap-1.5 text-xs"
+            >
+              <Bell className="h-3.5 w-3.5" />
+              Notifications
+              <span className="ml-1 bg-destructive text-destructive-foreground rounded-full w-4 h-4 text-[10px] flex items-center justify-center">
+                {notifications.filter(n => !n.read).length}
+              </span>
             </Button>
           </div>
 
@@ -486,6 +513,63 @@ const ShieldAIOS = () => {
                 </div>
               </CardContent>
             </Card>
+          </motion.div>
+        )}
+        {/* Notifications View */}
+        {activeView === "notifications" && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
+            <div className="text-center py-4">
+              <h2 className="text-2xl font-bold font-heading">Notification Center</h2>
+              <p className="text-muted-foreground text-sm">System alerts, agent updates & activity log</p>
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-3 mb-4">
+              {[
+                { label: "Unread", count: notifications.filter(n => !n.read).length, color: "text-destructive" },
+                { label: "Agent Updates", count: notifications.filter(n => n.type === "agent").length, color: "text-primary" },
+                { label: "Security Alerts", count: notifications.filter(n => n.type === "alert").length, color: "text-amber-500" },
+              ].map((stat) => (
+                <Card key={stat.label} className="bg-card/60 border-border/50">
+                  <CardContent className="p-4 text-center">
+                    <div className={`text-3xl font-bold font-heading ${stat.color}`}>{stat.count}</div>
+                    <p className="text-xs text-muted-foreground mt-1">{stat.label}</p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+
+            <div className="space-y-2">
+              {notifications.map((notif, i) => (
+                <motion.div
+                  key={notif.id}
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.05 }}
+                >
+                  <Card className={`bg-card/60 border-border/50 transition-all hover:bg-card/80 ${!notif.read ? "border-l-4 border-l-primary" : ""}`}>
+                    <CardContent className="p-4 flex items-start gap-4">
+                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
+                        notif.type === "alert" ? "bg-amber-500/10 text-amber-500" :
+                        notif.type === "agent" ? "bg-primary/10 text-primary" :
+                        "bg-muted text-muted-foreground"
+                      }`}>
+                        {notif.type === "alert" ? <Shield className="h-5 w-5" /> :
+                         notif.type === "agent" ? <Users className="h-5 w-5" /> :
+                         <Settings className="h-5 w-5" />}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between gap-2">
+                          <h4 className={`text-sm font-semibold ${!notif.read ? "text-foreground" : "text-muted-foreground"}`}>{notif.title}</h4>
+                          <span className="text-[10px] text-muted-foreground shrink-0">{notif.time}</span>
+                        </div>
+                        <p className="text-xs text-muted-foreground mt-1">{notif.message}</p>
+                      </div>
+                      {!notif.read && <div className="w-2.5 h-2.5 rounded-full bg-primary shrink-0 mt-1" />}
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              ))}
+            </div>
           </motion.div>
         )}
       </div>
