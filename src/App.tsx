@@ -52,6 +52,7 @@ import ShieldAISettings from "./pages/ShieldAISettings";
 import ShieldAIProfile from "./pages/ShieldAIProfile";
 import ShieldAIAbout from "./pages/ShieldAIAbout";
 import UniversalFileSystem from "./pages/UniversalFileSystem";
+import DeployedAgents from "./pages/DeployedAgents";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -116,6 +117,7 @@ const App = () => (
           <Route path="/shield-ai-profile" element={<ShieldAIProfile />} />
           <Route path="/shield-ai-about" element={<ShieldAIAbout />} />
           <Route path="/universal-file-system" element={<UniversalFileSystem />} />
+          <Route path="/deployed-agents" element={<DeployedAgents />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
