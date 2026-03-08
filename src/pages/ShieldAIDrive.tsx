@@ -1,12 +1,16 @@
 import NavigationHeader from "@/components/NavigationHeader";
 import Footer from "@/components/Footer";
 import { motion } from "framer-motion";
-import { HardDrive, Upload, Download, FolderOpen, Cloud, Lock, Share2, Database, Shield, Zap, Search, FileText, Image, Video, Music, Archive, Trash2, Star, Clock, Users } from "lucide-react";
+import { HardDrive, Upload, Download, FolderOpen, Cloud, Lock, Share2, Database, Shield, Zap, Search, FileText, Image, Video, Music, Archive, Trash2, Star, Clock, Users, File, Loader2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { useState } from "react";
+import { Input } from "@/components/ui/input";
+import { useState, useEffect, useRef, useCallback } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
+import type { User } from "@supabase/supabase-js";
 
 const features = [
   { icon: Shield, title: "Quantum Encryption", description: "Military-grade AES-256 + quantum-resistant encryption for all stored data" },
@@ -19,29 +23,143 @@ const features = [
   { icon: Zap, title: "Lightning Access", description: "Edge-cached delivery with sub-millisecond retrieval from any location" },
 ];
 
-const fileCategories = [
-  { icon: FileText, label: "Documents", count: 2847, size: "12.4 GB", color: "text-blue-400" },
-  { icon: Image, label: "Images", count: 15203, size: "45.8 GB", color: "text-emerald-400" },
-  { icon: Video, label: "Videos", count: 342, size: "128.6 GB", color: "text-purple-400" },
-  { icon: Music, label: "Audio", count: 1856, size: "22.1 GB", color: "text-amber-400" },
-  { icon: Archive, label: "Archives", count: 89, size: "34.2 GB", color: "text-rose-400" },
-  { icon: Database, label: "AI Models", count: 24, size: "256.0 GB", color: "text-cyan-400" },
-];
+interface StorageFile {
+  name: string;
+  id: string;
+  created_at: string;
+  updated_at: string;
+  metadata: { size?: number; mimetype?: string } | null;
+}
 
-const recentFiles = [
-  { name: "shield-protocol-v3.pdf", type: "Document", size: "4.2 MB", modified: "2 min ago", starred: true },
-  { name: "agent-deployment-logs.json", type: "Data", size: "12.8 MB", modified: "15 min ago", starred: false },
-  { name: "blockchain-audit-2026.xlsx", type: "Spreadsheet", size: "8.1 MB", modified: "1 hr ago", starred: true },
-  { name: "sovereign-identity-backup.enc", type: "Encrypted", size: "2.4 GB", modified: "3 hr ago", starred: false },
-  { name: "hii-ai-training-data.tar.gz", type: "Archive", size: "45.6 GB", modified: "6 hr ago", starred: false },
-  { name: "divine-protocol-whitepaper.docx", type: "Document", size: "1.8 MB", modified: "1 day ago", starred: true },
-];
+const formatFileSize = (bytes: number) => {
+  if (bytes < 1024) return bytes + " B";
+  if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
+  if (bytes < 1024 * 1024 * 1024) return (bytes / (1024 * 1024)).toFixed(1) + " MB";
+  return (bytes / (1024 * 1024 * 1024)).toFixed(1) + " GB";
+};
+
+const getFileIcon = (name: string) => {
+  const ext = name.split(".").pop()?.toLowerCase() || "";
+  if (["jpg", "jpeg", "png", "gif", "webp", "svg"].includes(ext)) return Image;
+  if (["mp4", "mov", "avi", "mkv"].includes(ext)) return Video;
+  if (["mp3", "wav", "flac", "aac"].includes(ext)) return Music;
+  if (["zip", "tar", "gz", "rar", "7z"].includes(ext)) return Archive;
+  if (["pdf", "doc", "docx", "txt", "md"].includes(ext)) return FileText;
+  return File;
+};
+
+const timeAgo = (dateStr: string) => {
+  const diff = Date.now() - new Date(dateStr).getTime();
+  const mins = Math.floor(diff / 60000);
+  if (mins < 1) return "Just now";
+  if (mins < 60) return `${mins} min ago`;
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24) return `${hrs} hr ago`;
+  return `${Math.floor(hrs / 24)} day(s) ago`;
+};
 
 const ShieldAIDrive = () => {
-  const [activeTab, setActiveTab] = useState<"overview" | "files" | "shared">("overview");
-  const totalStorage = 512;
-  const usedStorage = 499.1;
-  const storagePercent = Math.round((usedStorage / totalStorage) * 100);
+  const [activeTab, setActiveTab] = useState<"overview" | "files" | "upload">("overview");
+  const [user, setUser] = useState<User | null>(null);
+  const [files, setFiles] = useState<StorageFile[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const { toast } = useToast();
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => setUser(session?.user ?? null));
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_, session) => setUser(session?.user ?? null));
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const fetchFiles = useCallback(async () => {
+    if (!user) return;
+    setLoading(true);
+    const { data, error } = await supabase.storage
+      .from("shield-drive")
+      .list(user.id, { limit: 100, sortBy: { column: "created_at", order: "desc" } });
+    if (error) {
+      toast({ title: "Error loading files", description: error.message, variant: "destructive" });
+    } else {
+      setFiles((data as StorageFile[]) || []);
+    }
+    setLoading(false);
+  }, [user, toast]);
+
+  useEffect(() => {
+    if (user) fetchFiles();
+  }, [user, fetchFiles]);
+
+  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!user || !e.target.files?.length) return;
+    setUploading(true);
+    const uploadedCount = { success: 0, fail: 0 };
+
+    for (const file of Array.from(e.target.files)) {
+      const filePath = `${user.id}/${Date.now()}_${file.name}`;
+      const { error } = await supabase.storage.from("shield-drive").upload(filePath, file);
+      if (error) {
+        uploadedCount.fail++;
+      } else {
+        uploadedCount.success++;
+      }
+    }
+
+    toast({
+      title: "Upload Complete",
+      description: `${uploadedCount.success} file(s) uploaded${uploadedCount.fail ? `, ${uploadedCount.fail} failed` : ""}`,
+    });
+    setUploading(false);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+    fetchFiles();
+    setActiveTab("files");
+  };
+
+  const handleDownload = async (fileName: string) => {
+    if (!user) return;
+    const { data, error } = await supabase.storage
+      .from("shield-drive")
+      .download(`${user.id}/${fileName}`);
+    if (error) {
+      toast({ title: "Download failed", description: error.message, variant: "destructive" });
+      return;
+    }
+    const url = URL.createObjectURL(data);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = fileName.replace(/^\d+_/, "");
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const handleDelete = async (fileName: string) => {
+    if (!user) return;
+    const { error } = await supabase.storage
+      .from("shield-drive")
+      .remove([`${user.id}/${fileName}`]);
+    if (error) {
+      toast({ title: "Delete failed", description: error.message, variant: "destructive" });
+    } else {
+      toast({ title: "File deleted" });
+      fetchFiles();
+    }
+  };
+
+  const totalSize = files.reduce((sum, f) => sum + (f.metadata?.size || 0), 0);
+  const filteredFiles = files.filter((f) =>
+    f.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const fileCategoryCounts = [
+    { icon: FileText, label: "Documents", count: files.filter(f => /\.(pdf|doc|docx|txt|md|xlsx|csv)$/i.test(f.name)).length, color: "text-blue-400" },
+    { icon: Image, label: "Images", count: files.filter(f => /\.(jpg|jpeg|png|gif|webp|svg)$/i.test(f.name)).length, color: "text-emerald-400" },
+    { icon: Video, label: "Videos", count: files.filter(f => /\.(mp4|mov|avi|mkv)$/i.test(f.name)).length, color: "text-purple-400" },
+    { icon: Music, label: "Audio", count: files.filter(f => /\.(mp3|wav|flac|aac)$/i.test(f.name)).length, color: "text-amber-400" },
+    { icon: Archive, label: "Archives", count: files.filter(f => /\.(zip|tar|gz|rar|7z)$/i.test(f.name)).length, color: "text-rose-400" },
+    { icon: File, label: "Other", count: files.filter(f => !/\.(pdf|doc|docx|txt|md|xlsx|csv|jpg|jpeg|png|gif|webp|svg|mp4|mov|avi|mkv|mp3|wav|flac|aac|zip|tar|gz|rar|7z)$/i.test(f.name)).length, color: "text-cyan-400" },
+  ];
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -69,22 +187,37 @@ const ShieldAIDrive = () => {
                       <HardDrive className="h-5 w-5 text-primary" />
                       Storage Usage
                     </h3>
-                    <p className="text-sm text-muted-foreground">{usedStorage} TB of {totalStorage} TB used</p>
+                    <p className="text-sm text-muted-foreground">
+                      {formatFileSize(totalSize)} used • {files.length} file(s)
+                    </p>
                   </div>
                   <div className="flex gap-2">
-                    <Button variant="outline" size="sm" className="gap-1.5">
-                      <Upload className="h-3.5 w-3.5" /> Upload
-                    </Button>
-                    <Button variant="shield" size="sm" className="gap-1.5">
-                      <Zap className="h-3.5 w-3.5" /> Upgrade Storage
-                    </Button>
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      multiple
+                      className="hidden"
+                      onChange={handleUpload}
+                    />
+                    {user ? (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="gap-1.5"
+                        onClick={() => fileInputRef.current?.click()}
+                        disabled={uploading}
+                      >
+                        {uploading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Upload className="h-3.5 w-3.5" />}
+                        {uploading ? "Uploading..." : "Upload Files"}
+                      </Button>
+                    ) : (
+                      <Button variant="outline" size="sm" className="gap-1.5" onClick={() => toast({ title: "Sign in required", description: "Please sign in to upload files." })}>
+                        <Upload className="h-3.5 w-3.5" /> Upload Files
+                      </Button>
+                    )}
                   </div>
                 </div>
-                <Progress value={storagePercent} className="h-3 mb-2" />
-                <div className="flex justify-between text-xs text-muted-foreground">
-                  <span>{storagePercent}% used</span>
-                  <span>{(totalStorage - usedStorage).toFixed(1)} TB free</span>
-                </div>
+                <Progress value={files.length > 0 ? Math.min((totalSize / (1024 * 1024 * 1024)) * 10, 100) : 0} className="h-3 mb-2" />
               </CardContent>
             </Card>
           </motion.div>
@@ -93,8 +226,8 @@ const ShieldAIDrive = () => {
           <div className="flex gap-2 mb-8">
             {[
               { key: "overview" as const, label: "Overview", icon: HardDrive },
-              { key: "files" as const, label: "Recent Files", icon: Clock },
-              { key: "shared" as const, label: "Shared with Me", icon: Users },
+              { key: "files" as const, label: "All Files", icon: FolderOpen },
+              { key: "upload" as const, label: "Upload", icon: Upload },
             ].map((tab) => (
               <Button
                 key={tab.key}
@@ -119,14 +252,13 @@ const ShieldAIDrive = () => {
                   File Categories
                 </h2>
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
-                  {fileCategories.map((cat, i) => (
+                  {fileCategoryCounts.map((cat, i) => (
                     <motion.div key={cat.label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}>
-                      <Card className="bg-card/50 border-border/50 hover:border-primary/30 transition-all cursor-pointer group">
+                      <Card className="bg-card/50 border-border/50 hover:border-primary/30 transition-all cursor-pointer group" onClick={() => setActiveTab("files")}>
                         <CardContent className="p-4 text-center">
                           <cat.icon className={`h-8 w-8 mx-auto mb-2 ${cat.color} group-hover:scale-110 transition-transform`} />
                           <p className="text-sm font-medium">{cat.label}</p>
-                          <p className="text-xs text-muted-foreground">{cat.count.toLocaleString()} files</p>
-                          <p className="text-xs text-primary font-mono mt-1">{cat.size}</p>
+                          <p className="text-xs text-muted-foreground">{cat.count} file(s)</p>
                         </CardContent>
                       </Card>
                     </motion.div>
@@ -159,63 +291,121 @@ const ShieldAIDrive = () => {
             </motion.div>
           )}
 
-          {/* Recent Files Tab */}
+          {/* All Files Tab */}
           {activeTab === "files" && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
               <Card className="bg-card/60 border-border/50">
                 <CardHeader className="pb-3">
-                  <div className="flex items-center justify-between">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                     <CardTitle className="text-base flex items-center gap-2">
-                      <Clock className="h-4 w-4 text-primary" />
-                      Recent Files
+                      <FolderOpen className="h-4 w-4 text-primary" />
+                      All Files ({files.length})
                     </CardTitle>
-                    <div className="flex gap-2">
-                      <Button variant="ghost" size="sm" className="gap-1 text-xs">
-                        <Search className="h-3.5 w-3.5" /> Search
-                      </Button>
+                    <div className="relative w-full sm:w-64">
+                      <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
+                      <Input
+                        placeholder="Search files..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="pl-8 h-8 text-xs"
+                      />
                     </div>
                   </div>
                 </CardHeader>
-                <CardContent className="space-y-1">
-                  {recentFiles.map((file, i) => (
-                    <motion.div
-                      key={file.name}
-                      initial={{ opacity: 0, x: -10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: i * 0.05 }}
-                      className="flex items-center justify-between px-3 py-3 rounded-lg hover:bg-muted/20 cursor-pointer transition-colors group"
-                    >
-                      <div className="flex items-center gap-3">
-                        <FileText className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
-                        <div>
-                          <p className="text-sm font-medium group-hover:text-primary transition-colors">{file.name}</p>
-                          <p className="text-xs text-muted-foreground">{file.type} • {file.size}</p>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <span className="text-xs text-muted-foreground">{file.modified}</span>
-                        {file.starred && <Star className="h-4 w-4 text-amber-400 fill-amber-400" />}
-                        <Button variant="ghost" size="sm" className="h-7 w-7 p-0 opacity-0 group-hover:opacity-100 transition-opacity">
-                          <Download className="h-3.5 w-3.5" />
-                        </Button>
-                      </div>
-                    </motion.div>
-                  ))}
+                <CardContent>
+                  {!user ? (
+                    <div className="text-center py-12">
+                      <Lock className="h-12 w-12 mx-auto mb-3 text-muted-foreground/30" />
+                      <p className="text-sm text-muted-foreground">Sign in to access your files</p>
+                    </div>
+                  ) : loading ? (
+                    <div className="text-center py-12">
+                      <Loader2 className="h-8 w-8 mx-auto mb-3 animate-spin text-primary" />
+                      <p className="text-sm text-muted-foreground">Loading files...</p>
+                    </div>
+                  ) : filteredFiles.length === 0 ? (
+                    <div className="text-center py-12">
+                      <FolderOpen className="h-12 w-12 mx-auto mb-3 text-muted-foreground/30" />
+                      <p className="text-sm text-muted-foreground">
+                        {searchQuery ? "No files match your search" : "No files yet — upload your first file!"}
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="space-y-1">
+                      {filteredFiles.map((file, i) => {
+                        const FileIcon = getFileIcon(file.name);
+                        const displayName = file.name.replace(/^\d+_/, "");
+                        return (
+                          <motion.div
+                            key={file.id || file.name}
+                            initial={{ opacity: 0, x: -10 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: i * 0.03 }}
+                            className="flex items-center justify-between px-3 py-3 rounded-lg hover:bg-muted/20 cursor-pointer transition-colors group"
+                          >
+                            <div className="flex items-center gap-3 min-w-0">
+                              <FileIcon className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors shrink-0" />
+                              <div className="min-w-0">
+                                <p className="text-sm font-medium group-hover:text-primary transition-colors truncate">{displayName}</p>
+                                <p className="text-xs text-muted-foreground">
+                                  {file.metadata?.size ? formatFileSize(file.metadata.size) : "—"} • {timeAgo(file.created_at)}
+                                </p>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-1 shrink-0">
+                              <Button variant="ghost" size="sm" className="h-7 w-7 p-0 opacity-0 group-hover:opacity-100 transition-opacity" onClick={() => handleDownload(file.name)}>
+                                <Download className="h-3.5 w-3.5" />
+                              </Button>
+                              <Button variant="ghost" size="sm" className="h-7 w-7 p-0 opacity-0 group-hover:opacity-100 transition-opacity text-destructive" onClick={() => handleDelete(file.name)}>
+                                <Trash2 className="h-3.5 w-3.5" />
+                              </Button>
+                            </div>
+                          </motion.div>
+                        );
+                      })}
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             </motion.div>
           )}
 
-          {/* Shared Tab */}
-          {activeTab === "shared" && (
+          {/* Upload Tab */}
+          {activeTab === "upload" && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-              <div className="text-center py-16">
-                <Users className="h-16 w-16 mx-auto mb-4 text-muted-foreground/30" />
-                <h3 className="text-lg font-semibold mb-2">Shared Files</h3>
-                <p className="text-sm text-muted-foreground max-w-md mx-auto">
-                  Files shared with you through S.H.I.E.L.D. AI's sovereign sharing protocol will appear here.
-                </p>
-              </div>
+              {!user ? (
+                <div className="text-center py-16">
+                  <Lock className="h-16 w-16 mx-auto mb-4 text-muted-foreground/30" />
+                  <h3 className="text-lg font-semibold mb-2">Sign In Required</h3>
+                  <p className="text-sm text-muted-foreground">Please sign in to upload files to your S.H.I.E.L.D. AI Drive.</p>
+                </div>
+              ) : (
+                <Card className="bg-card/60 border-border/50">
+                  <CardContent className="p-8">
+                    <div
+                      className="border-2 border-dashed border-border/60 hover:border-primary/40 rounded-xl p-12 text-center cursor-pointer transition-colors"
+                      onClick={() => fileInputRef.current?.click()}
+                    >
+                      {uploading ? (
+                        <>
+                          <Loader2 className="h-16 w-16 mx-auto mb-4 text-primary animate-spin" />
+                          <h3 className="text-lg font-semibold mb-2">Uploading...</h3>
+                          <p className="text-sm text-muted-foreground">Your files are being encrypted and uploaded securely.</p>
+                        </>
+                      ) : (
+                        <>
+                          <Upload className="h-16 w-16 mx-auto mb-4 text-muted-foreground/40" />
+                          <h3 className="text-lg font-semibold mb-2">Drop files or click to upload</h3>
+                          <p className="text-sm text-muted-foreground mb-4">Upload any file type — documents, images, videos, archives, AI models</p>
+                          <Button variant="shield" size="sm" className="gap-1.5">
+                            <Upload className="h-3.5 w-3.5" /> Select Files
+                          </Button>
+                        </>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
             </motion.div>
           )}
 
