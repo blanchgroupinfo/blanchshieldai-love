@@ -29,7 +29,11 @@ const programs = [
     category: "Long-Term Programs",
     items: [
       { name: "90 Day Profit Trade", duration: "90 Days", icon: Target },
-      { name: "40 Week Trade Program", duration: "40 Weeks", icon: Layers },
+      { name: "120 Day Profit Trade", duration: "120 Days", icon: Target },
+      { name: "180 Day Profit Trade", duration: "180 Days", icon: Target },
+      { name: "210 Day Profit Trade", duration: "210 Days", icon: Target },
+      { name: "40 Week Profit Trade", duration: "40 Weeks", icon: Layers },
+      { name: "3-5 Year Profit Trade", duration: "3-5 Years", icon: TrendingUp },
     ],
   },
   {
