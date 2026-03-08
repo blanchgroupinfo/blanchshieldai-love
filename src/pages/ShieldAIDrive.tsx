@@ -95,7 +95,12 @@ const ShieldAIDrive = () => {
   const [shareCopied, setShareCopied] = useState(false);
   const [sharingLoading, setSharingLoading] = useState(false);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+  const [versionFile, setVersionFile] = useState<StorageFile | null>(null);
+  const [versionHistory, setVersionHistory] = useState<any[]>([]);
+  const [versionLoading, setVersionLoading] = useState(false);
+  const [versionUploadRef] = useState(() => ({ current: null as HTMLInputElement | null }));
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const versionInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
   const navigate = useNavigate();
 
