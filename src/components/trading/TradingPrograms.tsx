@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Clock, TrendingUp, Zap, RefreshCcw, Target, Layers, ChevronRight, Shield, AlertTriangle, CheckCircle2 } from "lucide-react";
+import { Clock, TrendingUp, Zap, RefreshCcw, Target, Layers, ChevronRight, Shield, AlertTriangle, CheckCircle2, GitCompareArrows, X } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -14,6 +14,8 @@ import {
   DialogClose,
 } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 
 interface ProgramItem {
   name: string;
@@ -77,6 +79,8 @@ const programs: { category: string; items: ProgramItem[] }[] = [
   },
 ];
 
+const allPrograms = programs.flatMap((p) => p.items);
+
 const riskColors: Record<string, string> = {
   "Low": "text-green-400 border-green-500/30 bg-green-500/10",
   "Low-Medium": "text-green-400 border-green-500/30 bg-green-500/10",
@@ -88,6 +92,20 @@ const riskColors: Record<string, string> = {
 
 const TradingPrograms = () => {
   const [selectedProgram, setSelectedProgram] = useState<ProgramItem | null>(null);
+  const [compareList, setCompareList] = useState<ProgramItem[]>([]);
+  const [showCompare, setShowCompare] = useState(false);
+
+  const toggleCompare = (item: ProgramItem) => {
+    setCompareList((prev) =>
+      prev.find((p) => p.name === item.name)
+        ? prev.filter((p) => p.name !== item.name)
+        : prev.length < 4
+        ? [...prev, item]
+        : prev
+    );
+  };
+
+  const isInCompare = (name: string) => compareList.some((p) => p.name === name);
 
   return (
     <section className="py-20 bg-muted/30">
@@ -108,6 +126,32 @@ const TradingPrograms = () => {
             From short-term gains to long-term wealth building, we have a program for every investment strategy.
           </p>
         </motion.div>
+
+        {/* Compare Bar */}
+        {compareList.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-8 p-4 rounded-xl bg-primary/10 border border-primary/30 flex flex-wrap items-center justify-between gap-3"
+          >
+            <div className="flex items-center gap-2 flex-wrap">
+              <GitCompareArrows className="w-5 h-5 text-primary" />
+              <span className="text-sm font-medium">Comparing {compareList.length} program{compareList.length > 1 ? "s" : ""}</span>
+              {compareList.map((p) => (
+                <Badge key={p.name} variant="secondary" className="text-xs gap-1">
+                  {p.name}
+                  <X className="w-3 h-3 cursor-pointer" onClick={() => toggleCompare(p)} />
+                </Badge>
+              ))}
+            </div>
+            <div className="flex gap-2">
+              <Button size="sm" variant="outline" onClick={() => setCompareList([])}>Clear</Button>
+              <Button size="sm" onClick={() => setShowCompare(true)} disabled={compareList.length < 2}>
+                Compare Side by Side
+              </Button>
+            </div>
+          </motion.div>
+        )}
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {programs.map((program, programIndex) => (
@@ -130,19 +174,28 @@ const TradingPrograms = () => {
                     {program.items.map((item) => (
                       <div
                         key={item.name}
-                        onClick={() => setSelectedProgram(item)}
-                        className="flex items-center justify-between p-3 rounded-lg bg-muted/50 hover:bg-muted transition-colors cursor-pointer group"
+                        className="flex items-center justify-between p-3 rounded-lg bg-muted/50 hover:bg-muted transition-colors group"
                       >
                         <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-md bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                            <item.icon className="w-4 h-4 text-primary" />
-                          </div>
-                          <div>
-                            <span className="font-medium text-sm block">{item.name}</span>
-                            <span className="text-xs text-muted-foreground">Deposit: {item.deposit}</span>
+                          <Checkbox
+                            checked={isInCompare(item.name)}
+                            onCheckedChange={() => toggleCompare(item)}
+                            className="shrink-0"
+                          />
+                          <div
+                            className="flex items-center gap-3 cursor-pointer flex-1"
+                            onClick={() => setSelectedProgram(item)}
+                          >
+                            <div className="w-8 h-8 rounded-md bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                              <item.icon className="w-4 h-4 text-primary" />
+                            </div>
+                            <div>
+                              <span className="font-medium text-sm block">{item.name}</span>
+                              <span className="text-xs text-muted-foreground">Deposit: {item.deposit}</span>
+                            </div>
                           </div>
                         </div>
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2 cursor-pointer" onClick={() => setSelectedProgram(item)}>
                           <Badge variant="outline" className="text-xs text-green-400 border-green-500/30 bg-green-500/10">
                             {item.returnPct} Return
                           </Badge>
@@ -203,7 +256,6 @@ const TradingPrograms = () => {
                 </div>
               </DialogHeader>
 
-              {/* Key Stats */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3 my-4">
                 <div className="bg-muted/50 rounded-lg p-3 text-center">
                   <p className="text-xs text-muted-foreground mb-1">Return</p>
@@ -227,7 +279,6 @@ const TradingPrograms = () => {
 
               <Separator className="bg-border/50" />
 
-              {/* Program Details */}
               <div className="space-y-4 my-4">
                 <h4 className="font-semibold flex items-center gap-2">
                   <Shield className="w-4 h-4 text-primary" />
@@ -259,7 +310,6 @@ const TradingPrograms = () => {
 
               <Separator className="bg-border/50" />
 
-              {/* Terms & Conditions */}
               <div className="space-y-3 my-4">
                 <h4 className="font-semibold flex items-center gap-2">
                   <AlertTriangle className="w-4 h-4 text-yellow-400" />
@@ -287,6 +337,91 @@ const TradingPrograms = () => {
               </DialogFooter>
             </>
           )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Comparison Modal */}
+      <Dialog open={showCompare} onOpenChange={setShowCompare}>
+        <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto bg-card border-border">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <GitCompareArrows className="w-5 h-5 text-primary" />
+              Program Comparison
+            </DialogTitle>
+            <DialogDescription>
+              Side-by-side comparison of {compareList.length} selected programs
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="min-w-[140px]">Feature</TableHead>
+                  {compareList.map((p) => (
+                    <TableHead key={p.name} className="min-w-[160px] text-center">
+                      <div className="flex flex-col items-center gap-1">
+                        <p.icon className="w-5 h-5 text-primary" />
+                        <span className="text-xs font-semibold">{p.name}</span>
+                      </div>
+                    </TableHead>
+                  ))}
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                <TableRow>
+                  <TableCell className="font-medium">Duration</TableCell>
+                  {compareList.map((p) => <TableCell key={p.name} className="text-center text-sm">{p.duration}</TableCell>)}
+                </TableRow>
+                <TableRow>
+                  <TableCell className="font-medium">Deposit Range</TableCell>
+                  {compareList.map((p) => <TableCell key={p.name} className="text-center text-sm">{p.deposit}</TableCell>)}
+                </TableRow>
+                <TableRow>
+                  <TableCell className="font-medium">Return</TableCell>
+                  {compareList.map((p) => (
+                    <TableCell key={p.name} className="text-center">
+                      <Badge variant="outline" className="text-xs text-green-400 border-green-500/30 bg-green-500/10">{p.returnPct}</Badge>
+                    </TableCell>
+                  ))}
+                </TableRow>
+                <TableRow>
+                  <TableCell className="font-medium">Risk Level</TableCell>
+                  {compareList.map((p) => (
+                    <TableCell key={p.name} className="text-center">
+                      <Badge variant="outline" className={`text-xs ${riskColors[p.terms?.riskLevel || ""] || ""}`}>{p.terms?.riskLevel}</Badge>
+                    </TableCell>
+                  ))}
+                </TableRow>
+                <TableRow>
+                  <TableCell className="font-medium">Lock-In Period</TableCell>
+                  {compareList.map((p) => <TableCell key={p.name} className="text-center text-sm">{p.terms?.minLockIn}</TableCell>)}
+                </TableRow>
+                <TableRow>
+                  <TableCell className="font-medium">Payout Schedule</TableCell>
+                  {compareList.map((p) => <TableCell key={p.name} className="text-center text-sm">{p.terms?.payoutSchedule}</TableCell>)}
+                </TableRow>
+                <TableRow>
+                  <TableCell className="font-medium">Early Withdrawal Fee</TableCell>
+                  {compareList.map((p) => <TableCell key={p.name} className="text-center text-sm">{p.terms?.earlyWithdrawalFee}</TableCell>)}
+                </TableRow>
+                <TableRow>
+                  <TableCell className="font-medium">Compounding</TableCell>
+                  {compareList.map((p) => <TableCell key={p.name} className="text-center text-sm">{p.terms?.compounding}</TableCell>)}
+                </TableRow>
+                <TableRow>
+                  <TableCell className="font-medium">Eligibility</TableCell>
+                  {compareList.map((p) => <TableCell key={p.name} className="text-center text-sm">{p.terms?.eligibility}</TableCell>)}
+                </TableRow>
+              </TableBody>
+            </Table>
+          </div>
+
+          <DialogFooter className="mt-4">
+            <DialogClose asChild>
+              <Button variant="outline">Close</Button>
+            </DialogClose>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </section>
