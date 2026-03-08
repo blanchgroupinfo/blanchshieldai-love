@@ -1,6 +1,6 @@
 import { 
   Globe, Cpu, ShoppingBag, Zap, Brain, CheckCircle2,
-  Scale, Heart, Building2, Landmark, Rocket, BookOpen, Shield, Users, Network, GraduationCap
+  Scale, Heart, Building2, Landmark, Rocket, BookOpen, Shield, Users, Network, GraduationCap, Megaphone
 } from "lucide-react";
 
 const capabilities = [
