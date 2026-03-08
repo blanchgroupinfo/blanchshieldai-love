@@ -166,8 +166,8 @@ const NavigationHeader = () => {
               </Link>
             }
 
-            <Button variant="shield" size="sm" onClick={() => isHomePage ? scrollToSection("#chat") : navigate("/#chat")} className="hidden sm:flex text-xs">
-              <MessageSquare className="w-3.5 h-3.5 mr-1" /> Ask AI
+            <Button variant="shield" size="sm" onClick={() => navigate("/shield-ai-chat")} className="hidden sm:flex text-xs">
+              <MessageSquare className="w-3.5 h-3.5 mr-1" /> ASK S.H.I.E.L.D. AI
             </Button>
 
             {/* Hamburger Menu */}
