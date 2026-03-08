@@ -61,7 +61,7 @@ export const removeDeployedAgent = (agentId: string): DeployedAgent[] => {
   return current;
 };
 
-// All 888 agents AI001-AI888 (including category headers)
+// All 888 agents H.I.I. AI001–H.I.I. AI888 (including category headers)
 const allAgentIds = agents.map(a => a.id);
 
 const statusConfig = {
@@ -205,7 +205,7 @@ const DeployedAgentsDashboard = () => {
               Deployed Agents Dashboard
             </h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Manage all 888 H.I.I. AI Agents (AI001–AI888) with on/off deployment controls
+              Manage all 888 H.I.I. AI Agents (H.I.I. AI001–H.I.I. AI888) with on/off deployment controls
             </p>
           </motion.div>
 

@@ -187,18 +187,18 @@ const categoryCapabilities: Record<string, string[]> = {
 };
 
 function getPillarForCategory(categoryNumber: number): string {
-  if (categoryNumber <= 7) return "Pillar 1: Core Intelligence (AI001–AI074)";
-  if (categoryNumber <= 14) return "Pillar 2: Sovereign Identity, Culture & Representation (AI075–AI148)";
-  if (categoryNumber <= 19) return "Pillar 3: Automation & Operations (AI149–AI222)";
-  if (categoryNumber <= 26) return "Pillar 4: Business, Banking, Finance & Economics (AI223–AI296)";
-  if (categoryNumber <= 33) return "Pillar 5: Creative, Media & Entertainment (AI297–AI370)";
-  if (categoryNumber <= 40) return "Pillar 6: Governance, Sovereign & Law (AI371–AI444)";
-  if (categoryNumber <= 47) return "Pillar 7: Human Development (AI445–AI518)";
-  if (categoryNumber <= 53) return "Pillar 8: Health & Wellness (AI519–AI592)";
-  if (categoryNumber <= 60) return "Pillar 9: Infrastructure, Security & Technology (AI593–AI666)";
-  if (categoryNumber <= 67) return "Pillar 10: Environment & Earth Systems (AI667–AI740)";
-  if (categoryNumber <= 74) return "Pillar 11: Science & Exploration (AI741–AI814)";
-  return "Pillar 12: Spiritual, Sovereign Intelligence & Ethical Systems (AI815–AI888)";
+  if (categoryNumber <= 7) return "Pillar 1: Core Intelligence (H.I.I. AI001–H.I.I. AI074)";
+  if (categoryNumber <= 14) return "Pillar 2: Sovereign Identity, Culture & Representation (H.I.I. AI075–H.I.I. AI148)";
+  if (categoryNumber <= 19) return "Pillar 3: Automation & Operations (H.I.I. AI149–H.I.I. AI222)";
+  if (categoryNumber <= 26) return "Pillar 4: Business, Banking, Finance & Economics (H.I.I. AI223–H.I.I. AI296)";
+  if (categoryNumber <= 33) return "Pillar 5: Creative, Media & Entertainment (H.I.I. AI297–H.I.I. AI370)";
+  if (categoryNumber <= 40) return "Pillar 6: Governance, Sovereign & Law (H.I.I. AI371–H.I.I. AI444)";
+  if (categoryNumber <= 47) return "Pillar 7: Human Development (H.I.I. AI445–H.I.I. AI518)";
+  if (categoryNumber <= 53) return "Pillar 8: Health & Wellness (H.I.I. AI519–H.I.I. AI592)";
+  if (categoryNumber <= 60) return "Pillar 9: Infrastructure, Security & Technology (H.I.I. AI593–H.I.I. AI666)";
+  if (categoryNumber <= 67) return "Pillar 10: Environment & Earth Systems (H.I.I. AI667–H.I.I. AI740)";
+  if (categoryNumber <= 74) return "Pillar 11: Science & Exploration (H.I.I. AI741–H.I.I. AI814)";
+  return "Pillar 12: Spiritual, Sovereign Intelligence & Ethical Systems (H.I.I. AI815–H.I.I. AI888)";
 }
 
 function getPillarNumber(categoryNumber: number): number {

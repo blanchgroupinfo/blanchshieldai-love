@@ -3,7 +3,7 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import NavigationHeader from "@/components/NavigationHeader";
 import Footer from "@/components/Footer";
 import ScrollAnimationWrapper from "@/components/ScrollAnimationWrapper";
-import { agents, agentCategories, Agent, generateHIIAgentNumber } from "@/data/agents";
+import { agents, agentCategories, Agent, generateHIIAgentNumber, totalAgents, totalCategories, totalPillars } from "@/data/agents";
 import { getAgentDetailMeta } from "@/data/agentDetails";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -329,10 +329,24 @@ const Agents = () => {
             <h1 className="text-4xl md:text-6xl font-display font-bold gradient-text mb-6">
               AI Agent Registry
             </h1>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto font-body">
-              Explore our comprehensive registry of {agents.length}+ specialized AI agents 
-              across {agentCategories.length} categories.
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto font-body mb-8">
+              Explore our comprehensive registry of specialized H.I.I. AI agents — 
+              H.I.I. AI001 through H.I.I. AI888.
             </p>
+            <div className="flex flex-wrap justify-center gap-6 md:gap-10">
+              <div className="text-center">
+                <p className="text-3xl md:text-4xl font-display font-bold text-primary">{totalAgents}</p>
+                <p className="text-sm text-muted-foreground font-body">Total Agents</p>
+              </div>
+              <div className="text-center">
+                <p className="text-3xl md:text-4xl font-display font-bold text-primary">{totalCategories}</p>
+                <p className="text-sm text-muted-foreground font-body">Categories</p>
+              </div>
+              <div className="text-center">
+                <p className="text-3xl md:text-4xl font-display font-bold text-primary">{totalPillars}</p>
+                <p className="text-sm text-muted-foreground font-body">Sovereign Pillars</p>
+              </div>
+            </div>
           </ScrollAnimationWrapper>
         </div>
       </section>

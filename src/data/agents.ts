@@ -8,7 +8,7 @@ export interface Agent {
 }
 
 // H.I.I. AI = Hebrew Israelite Implementer Aboriginal Identity
-// Format: H.I.I. AIXXX where XXX is the sequential number (001-600)
+// Format: H.I.I. AIXXX where XXX is the sequential number (001-888)
 export const generateHIIAgentNumber = (id: string): string => {
   const num = id.replace("AI", "");
   return `H.I.I. AI${num.padStart(3, "0")}`;
@@ -76,6 +76,30 @@ export const agentCategories = [
   { number: 55, name: "Education & Knowledge Systems", icon: "library" },
   { number: 56, name: "Culture & Heritage", icon: "scroll" },
   { number: 57, name: "Justice, Law & Public Safety", icon: "badge" },
+  { number: 58, name: "Sovereign Banking & Treasury", icon: "wallet" },
+  { number: 59, name: "Sovereign Trade & Markets", icon: "trending-up" },
+  { number: 60, name: "Reparations & Divine Charity", icon: "hand-heart" },
+  { number: 61, name: "Smart City & Urban Planning", icon: "home" },
+  { number: 62, name: "Distributed Ledger & Blockchain", icon: "server" },
+  { number: 63, name: "Universal Commerce Models", icon: "globe" },
+  { number: 64, name: "Interstellar & Celestial", icon: "rocket" },
+  { number: 65, name: "Holographic & Immersive", icon: "gem" },
+  { number: 66, name: "Sovereign OS & Platform", icon: "cpu" },
+  { number: 67, name: "Clean Food & Non-GMO", icon: "leaf" },
+  { number: 68, name: "Automotive & Mobility", icon: "car" },
+  { number: 69, name: "Energy & Crystal Systems", icon: "sun" },
+  { number: 70, name: "Quantum & Advanced Computing", icon: "activity" },
+  { number: 71, name: "Media Production & Publishing", icon: "video" },
+  { number: 72, name: "Sovereign Governance & Diplomacy", icon: "crown" },
+  { number: 73, name: "Real Estate & Properties", icon: "home" },
+  { number: 74, name: "Insurance & Risk Management", icon: "shield-check" },
+  { number: 75, name: "Hospitality & Tourism", icon: "star" },
+  { number: 76, name: "Watchman & Covenant", icon: "book" },
+  { number: 77, name: "Affiliate & Rewards", icon: "star" },
+  { number: 78, name: "Mechanical Android & Robotics", icon: "settings" },
+  { number: 79, name: "LLM & Model Intelligence", icon: "cpu" },
+  { number: 80, name: "Gateway & API Management", icon: "server" },
+  { number: 81, name: "Sovereign Spiritual Intelligence", icon: "sun" },
 ];
 
 export const agents: Agent[] = [
@@ -1132,6 +1156,7 @@ export const agents: Agent[] = [
 
 export const totalAgents = 888;
 export const totalCategories = 81;
+export const totalPillars = 12;
 
 // H.I.I. AI = Hebrew Israelite Implementer Aboriginal Identity
 export const HIIAIMeaning = "Hebrew Israelite Implementer Aboriginal Identity";
