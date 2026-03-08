@@ -93,6 +93,7 @@ const X2XAccordion = ({ model, searchQuery }: { model: CommerceModel; searchQuer
 };
 
 const UniversalCommerceModels = () => {
+  const [pathwaySearch, setPathwaySearch] = useState("");
   return (
     <div className="min-h-screen bg-background text-foreground">
       <NavigationHeader />
