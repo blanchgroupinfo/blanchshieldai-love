@@ -131,8 +131,8 @@ const CommandCenterPage = () => {
     { id: "shield-true-structure", name: "S.H.I.E.L.D. AI True Structure", description: "Architecture Framework", icon: Layers, color: "text-indigo-400", gradient: "from-indigo-500/20 to-violet-500/20", link: "/command-center", category: "core" },
     { id: "shield-home", name: "S.H.I.E.L.D. AI Home", description: "Home Page", icon: Home, color: "text-primary", gradient: "from-primary/20 to-accent/20", link: "/", category: "core" },
     { id: "shield-about", name: "S.H.I.E.L.D. AI About", description: "About the Platform", icon: BookOpen, color: "text-amber-400", gradient: "from-amber-500/20 to-orange-500/20", link: "/about", category: "core" },
-    { id: "blanch-os", name: "Blanch OS", description: "Sovereign Operating System", icon: Monitor, color: "text-cyan-400", gradient: "from-cyan-500/20 to-blue-500/20", link: "/command-center", category: "core" },
-    { id: "shield-os", name: "S.H.I.E.L.D. AI OS", description: "Sovereign Operating System", icon: Monitor, color: "text-cyan-400", gradient: "from-cyan-500/20 to-blue-500/20", link: "/command-center", category: "core" },
+    { id: "blanch-os", name: "Blanch OS", description: "Sovereign Operating System", icon: Monitor, color: "text-cyan-400", gradient: "from-cyan-500/20 to-blue-500/20", link: "/blanch-os", category: "core" },
+    { id: "shield-os", name: "S.H.I.E.L.D. AI OS", description: "Sovereign Operating System", icon: Monitor, color: "text-cyan-400", gradient: "from-cyan-500/20 to-blue-500/20", link: "/shield-ai-os", category: "core" },
 
     // ==================== DATA ====================
     { id: "shield-data-mgmt", name: "S.H.I.E.L.D. AI Data Management", description: "Data Systems", icon: Database, color: "text-blue-400", gradient: "from-blue-500/20 to-cyan-500/20", link: "/command-center", category: "data" },
