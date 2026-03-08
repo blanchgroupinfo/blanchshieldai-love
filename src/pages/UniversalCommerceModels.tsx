@@ -105,7 +105,7 @@ const UniversalCommerceModels = () => {
         </div>
       </section>
 
-      {/* Transaction Framework */}
+      {/* Transaction Framework Capabilities */}
       <section className="py-16">
         <div className="container px-4">
           <ScrollAnimationWrapper>
@@ -119,7 +119,7 @@ const UniversalCommerceModels = () => {
             </div>
           </ScrollAnimationWrapper>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto mb-16">
             {transactionFramework.map((item, i) => (
               <ScrollAnimationWrapper key={item.title}>
                 <motion.div
@@ -133,6 +133,28 @@ const UniversalCommerceModels = () => {
                   <p className="text-xs text-muted-foreground">{item.desc}</p>
                 </motion.div>
               </ScrollAnimationWrapper>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Full X2X Pathways */}
+      <section className="py-16">
+        <div className="container px-4">
+          <ScrollAnimationWrapper>
+            <div className="text-center mb-12">
+              <h2 className="text-2xl md:text-4xl font-display font-bold mb-3">
+                380+ Commerce <span className="gradient-text">Pathways</span>
+              </h2>
+              <p className="text-muted-foreground max-w-2xl mx-auto text-sm">
+                Expand each primary model to explore all its target connections.
+              </p>
+            </div>
+          </ScrollAnimationWrapper>
+
+          <div className="max-w-4xl mx-auto space-y-3">
+            {commerceModels.map((model) => (
+              <X2XAccordion key={model.id} model={model} />
             ))}
           </div>
         </div>
