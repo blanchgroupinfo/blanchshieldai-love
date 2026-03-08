@@ -34,7 +34,7 @@ const TradingHero = () => {
 
           <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
             Access global markets, AI hedging strategies, and profit trade programs. 
-            Trade Bank Instruments, Cryptocurrencies, BRICS, CBDCs, and over 30+ asset classes 
+            Trade Bank Instruments, Cryptocurrencies, BRICS, CBDCs, and over 40+ asset classes 
             with our advanced trading platform.
           </p>
 
