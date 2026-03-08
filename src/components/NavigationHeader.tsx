@@ -103,14 +103,14 @@ const NavigationHeader = () => {
           {/* Active Page Indicator */}
           <nav className="hidden md:flex items-center gap-1">
             {(() => {
-              const currentPage = navItems.find(item => item.href === location.pathname) || 
-                (location.pathname === "/shield-ai-chat" ? { label: "ASK S.H.I.E.L.D. AI", href: "/shield-ai-chat" } :
-                location.pathname.startsWith("/agents/") ? { label: "Agents", href: "/agents" } : null);
-              return currentPage ? (
-                <span className="px-3 py-1.5 rounded-md text-xs font-medium bg-primary/15 text-primary">
+              const currentPage = navItems.find((item) => item.href === location.pathname) || (
+              location.pathname === "/shield-ai-chat" ? { label: "ASK S.H.I.E.L.D. AI", href: "/shield-ai-chat" } :
+              location.pathname.startsWith("/agents/") ? { label: "Agents", href: "/agents" } : null);
+              return currentPage ?
+              <span className="px-3 py-1.5 rounded-md text-xs font-medium bg-primary/15 text-primary">
                   {currentPage.label}
-                </span>
-              ) : null;
+                </span> :
+              null;
             })()}
           </nav>
 
@@ -176,7 +176,7 @@ const NavigationHeader = () => {
                   <div className="flex items-center gap-3">
                     <img src={shieldLogo} alt="S.H.I.E.L.D. AI" className="w-10 h-10 rounded-lg" />
                     <div>
-                      <span className="font-display font-bold gradient-text text-sm">S.H.I.E.L.D.</span>
+                      <span className="font-display font-bold gradient-text text-sm">Blanch S.H.I.E.L.D.</span>
                       <span className="font-display font-bold text-primary ml-1 text-sm">AI OS</span>
                     </div>
                   </div>
