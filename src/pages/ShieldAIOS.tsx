@@ -9,10 +9,12 @@ import {
   Monitor, FolderOpen, Cpu, Activity, AppWindow, Terminal,
   HardDrive, Wifi, Shield, Clock, Settings, Search,
   LayoutGrid, FileText, Globe, Database, Cloud, Lock,
-  Zap, BarChart3, Users, Bell, Power, Layers
+  Zap, BarChart3, Users, Bell, Power, Layers, Check,
+  CheckCheck, Eye, Volume2, VolumeX, Sun, Moon, Languages
 } from "lucide-react";
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { Switch } from "@/components/ui/switch";
 
 const desktopApps = [
   { name: "S.H.I.E.L.D. AI Chat", icon: Terminal, color: "from-primary to-accent", link: "/shield-ai-chat" },
