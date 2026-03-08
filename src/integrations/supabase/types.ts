@@ -223,6 +223,39 @@ export type Database = {
         }
         Relationships: []
       }
+      shared_files: {
+        Row: {
+          access_type: string
+          created_at: string
+          expires_at: string | null
+          file_path: string
+          id: string
+          is_active: boolean
+          owner_id: string
+          share_token: string
+        }
+        Insert: {
+          access_type?: string
+          created_at?: string
+          expires_at?: string | null
+          file_path: string
+          id?: string
+          is_active?: boolean
+          owner_id: string
+          share_token?: string
+        }
+        Update: {
+          access_type?: string
+          created_at?: string
+          expires_at?: string | null
+          file_path?: string
+          id?: string
+          is_active?: boolean
+          owner_id?: string
+          share_token?: string
+        }
+        Relationships: []
+      }
       user_locations: {
         Row: {
           created_at: string

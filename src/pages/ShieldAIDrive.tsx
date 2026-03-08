@@ -2,7 +2,7 @@ import NavigationHeader from "@/components/NavigationHeader";
 import Footer from "@/components/Footer";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { HardDrive, Upload, Download, FolderOpen, Cloud, Lock, Share2, Database, Shield, Zap, Search, FileText, Image, Video, Music, Archive, Trash2, Star, Clock, Users, File, Loader2, Eye, X, LayoutGrid, FolderPlus, ChevronRight, Home, ArrowRight } from "lucide-react";
+import { HardDrive, Upload, Download, FolderOpen, Cloud, Lock, Share2, Database, Shield, Zap, Search, FileText, Image, Video, Music, Archive, Trash2, Star, Clock, Users, File, Loader2, Eye, X, LayoutGrid, FolderPlus, ChevronRight, Home, ArrowRight, Pencil, Link, Copy, Check } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -86,6 +86,13 @@ const ShieldAIDrive = () => {
   const [newFolderName, setNewFolderName] = useState("");
   const [moveFile, setMoveFile] = useState<StorageFile | null>(null);
   const [moveFolders, setMoveFolders] = useState<string[]>([]);
+  const [renameTarget, setRenameTarget] = useState<{ name: string; type: "file" | "folder" } | null>(null);
+  const [renameValue, setRenameValue] = useState("");
+  const [shareFile, setShareFile] = useState<StorageFile | null>(null);
+  const [shareAccessType, setShareAccessType] = useState<"view" | "download">("view");
+  const [shareLink, setShareLink] = useState("");
+  const [shareCopied, setShareCopied] = useState(false);
+  const [sharingLoading, setSharingLoading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -247,6 +254,89 @@ const ShieldAIDrive = () => {
   };
 
   const totalSize = files.reduce((sum, f) => sum + (f.metadata?.size || 0), 0);
+
+  const handleRename = async () => {
+    if (!user || !renameTarget || !renameValue.trim()) return;
+    if (renameTarget.type === "file") {
+      const oldPath = getStoragePath(renameTarget.name);
+      // Preserve timestamp prefix, replace display name
+      const timestamp = renameTarget.name.match(/^(\d+_)/)?.[1] || "";
+      const newFileName = timestamp + renameValue.trim();
+      const newPath = getStoragePath(newFileName);
+      
+      const { data, error: dlError } = await supabase.storage.from("shield-drive").download(oldPath);
+      if (dlError) { toast({ title: "Rename failed", description: dlError.message, variant: "destructive" }); return; }
+      const { error: upError } = await supabase.storage.from("shield-drive").upload(newPath, data);
+      if (upError) { toast({ title: "Rename failed", description: upError.message, variant: "destructive" }); return; }
+      await supabase.storage.from("shield-drive").remove([oldPath]);
+      toast({ title: `Renamed to "${renameValue.trim()}"` });
+    } else {
+      // Rename folder: create new folder placeholder, move all contents, delete old
+      const oldBase = `${getStoragePath()}/${renameTarget.name}`;
+      const newBase = `${getStoragePath()}/${renameValue.trim()}`;
+      
+      // Create new folder
+      await supabase.storage.from("shield-drive").upload(`${newBase}/.emptyFolderPlaceholder`, new Blob([""]), { contentType: "text/plain" });
+      
+      // List and move contents
+      const { data: contents } = await supabase.storage.from("shield-drive").list(oldBase, { limit: 100 });
+      if (contents) {
+        for (const item of contents) {
+          if (item.name === ".emptyFolderPlaceholder") continue;
+          const { data: fileData } = await supabase.storage.from("shield-drive").download(`${oldBase}/${item.name}`);
+          if (fileData) {
+            await supabase.storage.from("shield-drive").upload(`${newBase}/${item.name}`, fileData);
+            await supabase.storage.from("shield-drive").remove([`${oldBase}/${item.name}`]);
+          }
+        }
+      }
+      // Remove old placeholder
+      await supabase.storage.from("shield-drive").remove([`${oldBase}/.emptyFolderPlaceholder`]);
+      toast({ title: `Folder renamed to "${renameValue.trim()}"` });
+    }
+    setRenameTarget(null);
+    setRenameValue("");
+    fetchFiles();
+  };
+
+  const handleCreateShareLink = async () => {
+    if (!user || !shareFile) return;
+    setSharingLoading(true);
+    const filePath = getStoragePath(shareFile.name);
+    
+    const { data, error } = await supabase
+      .from("shared_files")
+      .insert({ owner_id: user.id, file_path: filePath, access_type: shareAccessType })
+      .select()
+      .single();
+    
+    if (error) {
+      toast({ title: "Failed to create share link", description: error.message, variant: "destructive" });
+    } else {
+      const link = `${window.location.origin}/shield-ai-drive?share=${data.share_token}`;
+      setShareLink(link);
+      toast({ title: "Share link created!" });
+    }
+    setSharingLoading(false);
+  };
+
+  const handleCopyShareLink = () => {
+    navigator.clipboard.writeText(shareLink);
+    setShareCopied(true);
+    setTimeout(() => setShareCopied(false), 2000);
+  };
+
+  const handleRevokeShare = async () => {
+    if (!shareFile || !user) return;
+    const filePath = getStoragePath(shareFile.name);
+    await supabase
+      .from("shared_files")
+      .update({ is_active: false })
+      .eq("owner_id", user.id)
+      .eq("file_path", filePath);
+    toast({ title: "Share link revoked" });
+    setShareLink("");
+  };
   useEffect(() => {
     if (moveFile && user) {
       const listPath = [user.id, ...currentPath].join("/");
@@ -489,7 +579,12 @@ const ShieldAIDrive = () => {
                               <p className="text-xs text-muted-foreground">Folder</p>
                             </div>
                           </div>
-                          <ChevronRight className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+                          <div className="flex items-center gap-1">
+                            <Button variant="ghost" size="sm" className="h-7 w-7 p-0 opacity-0 group-hover:opacity-100 transition-opacity" onClick={(e) => { e.stopPropagation(); setRenameTarget({ name: folder, type: "folder" }); setRenameValue(folder); }} title="Rename">
+                              <Pencil className="h-3.5 w-3.5" />
+                            </Button>
+                            <ChevronRight className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+                          </div>
                         </motion.div>
                       ))}
                       {/* Files */}
@@ -531,7 +626,13 @@ const ShieldAIDrive = () => {
                                   <Eye className="h-3.5 w-3.5" />
                                 </Button>
                               )}
-                              {folders.length > 0 && (
+                              <Button variant="ghost" size="sm" className="h-7 w-7 p-0 opacity-0 group-hover:opacity-100 transition-opacity" onClick={(e) => { e.stopPropagation(); setRenameTarget({ name: file.name, type: "file" }); setRenameValue(file.name.replace(/^\d+_/, "")); }} title="Rename">
+                                <Pencil className="h-3.5 w-3.5" />
+                              </Button>
+                              <Button variant="ghost" size="sm" className="h-7 w-7 p-0 opacity-0 group-hover:opacity-100 transition-opacity" onClick={(e) => { e.stopPropagation(); setShareFile(file); setShareLink(""); setShareCopied(false); }} title="Share">
+                                <Share2 className="h-3.5 w-3.5" />
+                              </Button>
+                              {(folders.length > 0 || currentPath.length > 0) && (
                                 <Button variant="ghost" size="sm" className="h-7 w-7 p-0 opacity-0 group-hover:opacity-100 transition-opacity" onClick={(e) => { e.stopPropagation(); setMoveFile(file); }} title="Move to folder">
                                   <ArrowRight className="h-3.5 w-3.5" />
                                 </Button>
@@ -789,6 +890,93 @@ const ShieldAIDrive = () => {
                 ))}
                 {moveFolders.length === 0 && currentPath.length === 0 && (
                   <p className="text-xs text-muted-foreground text-center py-4">No folders available. Create a folder first.</p>
+                )}
+              </div>
+            </DialogContent>
+          </Dialog>
+
+          {/* Rename Dialog */}
+          <Dialog open={!!renameTarget} onOpenChange={(open) => !open && setRenameTarget(null)}>
+            <DialogContent className="max-w-sm">
+              <DialogHeader>
+                <DialogTitle className="flex items-center gap-2">
+                  <Pencil className="h-4 w-4 text-primary" /> Rename {renameTarget?.type === "folder" ? "Folder" : "File"}
+                </DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4">
+                <Input
+                  placeholder="New name..."
+                  value={renameValue}
+                  onChange={(e) => setRenameValue(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && handleRename()}
+                  autoFocus
+                />
+                <div className="flex justify-end gap-2">
+                  <Button variant="outline" size="sm" onClick={() => setRenameTarget(null)}>Cancel</Button>
+                  <Button variant="shield" size="sm" onClick={handleRename} disabled={!renameValue.trim()}>Rename</Button>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
+
+          {/* Share File Dialog */}
+          <Dialog open={!!shareFile} onOpenChange={(open) => { if (!open) { setShareFile(null); setShareLink(""); } }}>
+            <DialogContent className="max-w-md">
+              <DialogHeader>
+                <DialogTitle className="flex items-center gap-2 text-sm">
+                  <Share2 className="h-4 w-4 text-primary" /> Share "{shareFile?.name.replace(/^\d+_/, "")}"
+                </DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4">
+                {!shareLink ? (
+                  <>
+                    <div>
+                      <p className="text-xs text-muted-foreground mb-2">Access type</p>
+                      <div className="flex gap-2">
+                        <Button
+                          variant={shareAccessType === "view" ? "shield" : "outline"}
+                          size="sm"
+                          className="text-xs"
+                          onClick={() => setShareAccessType("view")}
+                        >
+                          <Eye className="h-3 w-3 mr-1" /> View Only
+                        </Button>
+                        <Button
+                          variant={shareAccessType === "download" ? "shield" : "outline"}
+                          size="sm"
+                          className="text-xs"
+                          onClick={() => setShareAccessType("download")}
+                        >
+                          <Download className="h-3 w-3 mr-1" /> Download
+                        </Button>
+                      </div>
+                    </div>
+                    <Button
+                      variant="shield"
+                      size="sm"
+                      className="w-full gap-1.5"
+                      onClick={handleCreateShareLink}
+                      disabled={sharingLoading}
+                    >
+                      {sharingLoading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Link className="h-3.5 w-3.5" />}
+                      Generate Share Link
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <div className="flex items-center gap-2">
+                      <Input value={shareLink} readOnly className="text-xs h-8" />
+                      <Button variant="outline" size="sm" className="shrink-0 h-8 w-8 p-0" onClick={handleCopyShareLink}>
+                        {shareCopied ? <Check className="h-3.5 w-3.5 text-green-500" /> : <Copy className="h-3.5 w-3.5" />}
+                      </Button>
+                    </div>
+                    <p className="text-[10px] text-muted-foreground">
+                      Access: {shareAccessType === "view" ? "View only" : "Download enabled"} • Anyone with this link can access the file
+                    </p>
+                    <Button variant="outline" size="sm" className="w-full text-destructive text-xs" onClick={handleRevokeShare}>
+                      Revoke Share Link
+                    </Button>
+                  </>
                 )}
               </div>
             </DialogContent>
