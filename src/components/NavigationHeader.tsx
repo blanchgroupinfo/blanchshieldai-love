@@ -10,37 +10,37 @@ import shieldLogo from "@/assets/shield-logo.jpg";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
 
 const navItems = [
-  { label: "Home", href: "/", icon: Home, isPage: true },
-  { label: "About", href: "/about", icon: Info, isPage: true },
-  { label: "Technology", href: "/technology", icon: Cpu, isPage: true },
-  { label: "Trading", href: "/trading", icon: TrendingUp, isPage: true },
-  { label: "Agents", href: "/agents", icon: Users, isPage: true },
-  { label: "Project Watchman", href: "/watchman", icon: Eye, isPage: true },
-  { label: "Knowledge Base", href: "/knowledge-base", icon: BookOpen, isPage: true },
-  { label: "Creators Calendar", href: "/creators-calendar", icon: Calendar, isPage: true },
-  { label: "Laws & Commandments", href: "/laws-commandments", icon: ScrollText, isPage: true },
-  { label: "S.H.I.E.L.D. AI LLM", href: "/shield-llm", icon: Zap, isPage: true },
-  { label: "S.H.I.E.L.D. AI Gateway", href: "/ai-gateway", icon: Globe, isPage: true },
-  { label: "Virtual Marketplace", href: "/marketplace", icon: ShoppingBag, isPage: true },
-  { label: "Business Networks", href: "/business-network", icon: Building2, isPage: true },
-  { label: "Philanthropy Hub", href: "/philanthropy", icon: Heart, isPage: true },
-  { label: "Compliance & KYC", href: "/compliance-kyc", icon: Shield, isPage: true },
-  { label: "International Law", href: "/international-law", icon: Scale, isPage: true },
-  { label: "Sovereign Court", href: "/sovereign-court", icon: Scale, isPage: true },
-  { label: "API", href: "/api", icon: Code, isPage: true },
-  { label: "Contact", href: "/contact", icon: Mail, isPage: true },
-];
+{ label: "Home", href: "/", icon: Home, isPage: true },
+{ label: "About", href: "/about", icon: Info, isPage: true },
+{ label: "Technology", href: "/technology", icon: Cpu, isPage: true },
+{ label: "Trading", href: "/trading", icon: TrendingUp, isPage: true },
+{ label: "Agents", href: "/agents", icon: Users, isPage: true },
+{ label: "Project Watchman", href: "/watchman", icon: Eye, isPage: true },
+{ label: "Knowledge Base", href: "/knowledge-base", icon: BookOpen, isPage: true },
+{ label: "Creators Calendar", href: "/creators-calendar", icon: Calendar, isPage: true },
+{ label: "Laws & Commandments", href: "/laws-commandments", icon: ScrollText, isPage: true },
+{ label: "S.H.I.E.L.D. AI LLM", href: "/shield-llm", icon: Zap, isPage: true },
+{ label: "S.H.I.E.L.D. AI Gateway", href: "/ai-gateway", icon: Globe, isPage: true },
+{ label: "Virtual Marketplace", href: "/marketplace", icon: ShoppingBag, isPage: true },
+{ label: "Business Networks", href: "/business-network", icon: Building2, isPage: true },
+{ label: "Philanthropy Hub", href: "/philanthropy", icon: Heart, isPage: true },
+{ label: "Compliance & KYC", href: "/compliance-kyc", icon: Shield, isPage: true },
+{ label: "International Law", href: "/international-law", icon: Scale, isPage: true },
+{ label: "Sovereign Court", href: "/sovereign-court", icon: Scale, isPage: true },
+{ label: "API", href: "/api", icon: Code, isPage: true },
+{ label: "Contact", href: "/contact", icon: Mail, isPage: true }];
+
 
 const backendNavItems = [
-  { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { label: "Admin", href: "/admin", icon: Settings },
-];
+{ label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+{ label: "Admin", href: "/admin", icon: Settings }];
+
 
 const scrollNavItems = [
-  { label: "Modules", href: "#modules", icon: Shield },
-  { label: "Capabilities", href: "#capabilities", icon: Scale },
-  { label: "Compliance", href: "#compliance", icon: Scale },
-];
+{ label: "Modules", href: "#modules", icon: Shield },
+{ label: "Capabilities", href: "#capabilities", icon: Scale },
+{ label: "Compliance", href: "#compliance", icon: Scale }];
+
 
 const NavigationHeader = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -94,30 +94,30 @@ const NavigationHeader = () => {
             <img alt="S.H.I.E.L.D. AI" className="w-8 h-8 rounded-lg object-contain" src="/lovable-uploads/07dc7f9b-5404-4ddb-8c5c-d24b1b61d6dd.png" />
             <div className="hidden sm:block">
               <span className="font-display font-bold text-sm gradient-text">S.H.I.E.L.D.</span>
-              <span className="font-display font-bold text-sm text-primary ml-1">AI OS</span>
+              <span className="font-display font-bold text-sm text-primary ml-1">AI </span>
             </div>
           </Link>
 
           {/* Desktop Quick Links */}
           <nav className="hidden md:flex items-center gap-1">
             {[
-              { label: "Home", href: "/" },
-              { label: "Trading", href: "/trading" },
-              { label: "Agents", href: "/agents" },
-              { label: "Knowledge", href: "/knowledge-base" },
-            ].map(item => (
-              <Link
-                key={item.href}
-                to={item.href}
-                className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
-                  location.pathname === item.href 
-                    ? "bg-primary/15 text-primary" 
-                    : "text-muted-foreground hover:text-foreground hover:bg-card/50"
-                }`}
-              >
+            { label: "Home", href: "/" },
+            { label: "Trading", href: "/trading" },
+            { label: "Agents", href: "/agents" },
+            { label: "Knowledge", href: "/knowledge-base" }].
+            map((item) =>
+            <Link
+              key={item.href}
+              to={item.href}
+              className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
+              location.pathname === item.href ?
+              "bg-primary/15 text-primary" :
+              "text-muted-foreground hover:text-foreground hover:bg-card/50"}`
+              }>
+              
                 {item.label}
               </Link>
-            ))}
+            )}
           </nav>
 
           {/* CTA + Auth + Command Center + Menu */}
@@ -127,18 +127,18 @@ const NavigationHeader = () => {
                 variant="outline"
                 size="sm"
                 className={`hidden sm:flex gap-1.5 text-xs ${
-                  location.pathname === "/command-center" 
-                    ? "border-primary bg-primary/10 text-primary" 
-                    : "border-primary/30 bg-primary/5 hover:bg-primary/10 text-primary"
-                }`}
-              >
+                location.pathname === "/command-center" ?
+                "border-primary bg-primary/10 text-primary" :
+                "border-primary/30 bg-primary/5 hover:bg-primary/10 text-primary"}`
+                }>
+                
                 <Cpu className="w-3.5 h-3.5" />
                 Command Center
               </Button>
             </RouterLink>
 
-            {user ? (
-              <DropdownMenu>
+            {user ?
+            <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="outline" size="sm" className="hidden sm:flex text-xs">
                     <User className="w-3.5 h-3.5 mr-1.5" />
@@ -157,14 +157,14 @@ const NavigationHeader = () => {
                     <LogOut className="w-4 h-4 mr-2" /> Sign Out
                   </DropdownMenuItem>
                 </DropdownMenuContent>
-              </DropdownMenu>
-            ) : (
-              <Link to="/auth" className="hidden sm:block">
+              </DropdownMenu> :
+
+            <Link to="/auth" className="hidden sm:block">
                 <Button variant="outline" size="sm" className={`text-xs ${location.pathname === "/auth" ? "border-primary bg-primary/10 text-primary" : ""}`}>
                   <LogIn className="w-3.5 h-3.5 mr-1.5" /> Sign In
                 </Button>
               </Link>
-            )}
+            }
 
             <Button variant="shield" size="sm" onClick={() => isHomePage ? scrollToSection("#chat") : navigate("/#chat")} className="hidden sm:flex text-xs">
               <MessageSquare className="w-3.5 h-3.5 mr-1" /> Ask AI
@@ -188,55 +188,55 @@ const NavigationHeader = () => {
                   </div>
 
                   <nav className="flex flex-col gap-0.5">
-                    {navItems.map(item => (
-                      <Link 
-                        key={item.label} 
-                        to={item.href} 
-                        onClick={() => setIsOpen(false)} 
-                        className={`flex items-center gap-3 px-3 py-2.5 rounded-lg font-body text-sm text-left transition-all duration-200 ${
-                          location.pathname === item.href 
-                            ? "bg-primary/10 text-primary font-medium" 
-                            : "text-muted-foreground hover:text-foreground hover:bg-card/50"
-                        }`}
-                      >
+                    {navItems.map((item) =>
+                    <Link
+                      key={item.label}
+                      to={item.href}
+                      onClick={() => setIsOpen(false)}
+                      className={`flex items-center gap-3 px-3 py-2.5 rounded-lg font-body text-sm text-left transition-all duration-200 ${
+                      location.pathname === item.href ?
+                      "bg-primary/10 text-primary font-medium" :
+                      "text-muted-foreground hover:text-foreground hover:bg-card/50"}`
+                      }>
+                      
                         <item.icon className="w-4 h-4" />
                         {item.label}
                       </Link>
-                    ))}
+                    )}
                     
-                    {isHomePage && scrollNavItems.map(item => (
-                      <button 
-                        key={item.label} 
-                        onClick={() => scrollToSection(item.href)} 
-                        className="flex items-center gap-3 px-3 py-2.5 rounded-lg font-body text-sm text-left text-muted-foreground hover:text-foreground hover:bg-card/50 transition-all duration-200"
-                      >
+                    {isHomePage && scrollNavItems.map((item) =>
+                    <button
+                      key={item.label}
+                      onClick={() => scrollToSection(item.href)}
+                      className="flex items-center gap-3 px-3 py-2.5 rounded-lg font-body text-sm text-left text-muted-foreground hover:text-foreground hover:bg-card/50 transition-all duration-200">
+                      
                         <item.icon className="w-4 h-4" />
                         {item.label}
                       </button>
-                    ))}
+                    )}
                   </nav>
 
                   <div className="space-y-2 mt-2 border-t border-border/50 pt-4">
-                    {user ? (
-                      <>
-                        {backendNavItems.map(item => (
-                          <Link key={item.href} to={item.href} onClick={() => setIsOpen(false)}>
+                    {user ?
+                    <>
+                        {backendNavItems.map((item) =>
+                      <Link key={item.href} to={item.href} onClick={() => setIsOpen(false)}>
                             <Button variant="outline" className={`w-full mb-1 text-xs ${location.pathname === item.href ? "border-primary bg-primary/10 text-primary" : ""}`}>
                               <item.icon className="w-4 h-4 mr-2" /> {item.label}
                             </Button>
                           </Link>
-                        ))}
+                      )}
                         <Button variant="outline" onClick={handleSignOut} className="w-full text-xs">
                           <LogOut className="w-4 h-4 mr-2" /> Sign Out
                         </Button>
-                      </>
-                    ) : (
-                      <Link to="/auth" onClick={() => setIsOpen(false)}>
+                      </> :
+
+                    <Link to="/auth" onClick={() => setIsOpen(false)}>
                         <Button variant="outline" className="w-full text-xs">
                           <LogIn className="w-4 h-4 mr-2" /> Sign In
                         </Button>
                       </Link>
-                    )}
+                    }
                     <Button variant="shield" onClick={() => isHomePage ? scrollToSection("#chat") : navigate("/#chat")} className="w-full text-xs">
                       <MessageSquare className="w-4 h-4 mr-2" /> Ask S.H.I.E.L.D. AI
                     </Button>
@@ -247,8 +247,8 @@ const NavigationHeader = () => {
           </div>
         </div>
       </div>
-    </header>
-  );
+    </header>);
+
 };
 
 export default NavigationHeader;
