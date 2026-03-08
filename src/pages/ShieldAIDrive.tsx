@@ -732,6 +732,67 @@ const ShieldAIDrive = () => {
               )}
             </DialogContent>
           </Dialog>
+
+          {/* New Folder Dialog */}
+          <Dialog open={showNewFolderDialog} onOpenChange={setShowNewFolderDialog}>
+            <DialogContent className="max-w-sm">
+              <DialogHeader>
+                <DialogTitle className="flex items-center gap-2">
+                  <FolderPlus className="h-4 w-4 text-primary" /> Create New Folder
+                </DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4">
+                <Input
+                  placeholder="Folder name..."
+                  value={newFolderName}
+                  onChange={(e) => setNewFolderName(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && handleCreateFolder()}
+                  autoFocus
+                />
+                <div className="flex justify-end gap-2">
+                  <Button variant="outline" size="sm" onClick={() => { setShowNewFolderDialog(false); setNewFolderName(""); }}>Cancel</Button>
+                  <Button variant="shield" size="sm" onClick={handleCreateFolder} disabled={!newFolderName.trim()}>Create</Button>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
+
+          {/* Move File Dialog */}
+          <Dialog open={!!moveFile} onOpenChange={(open) => !open && setMoveFile(null)}>
+            <DialogContent className="max-w-sm">
+              <DialogHeader>
+                <DialogTitle className="flex items-center gap-2 text-sm">
+                  <ArrowRight className="h-4 w-4 text-primary" /> Move "{moveFile?.name.replace(/^\d+_/, "")}"
+                </DialogTitle>
+              </DialogHeader>
+              <div className="space-y-1">
+                {currentPath.length > 0 && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="w-full justify-start gap-2 text-xs"
+                    onClick={() => handleMoveFile("__root__")}
+                  >
+                    <Home className="h-3.5 w-3.5" /> Root folder
+                  </Button>
+                )}
+                {moveFolders.map((folder) => (
+                  <Button
+                    key={folder}
+                    variant="ghost"
+                    size="sm"
+                    className="w-full justify-start gap-2 text-xs"
+                    onClick={() => handleMoveFile(folder)}
+                  >
+                    <FolderOpen className="h-3.5 w-3.5 text-primary" /> {folder}
+                  </Button>
+                ))}
+                {moveFolders.length === 0 && currentPath.length === 0 && (
+                  <p className="text-xs text-muted-foreground text-center py-4">No folders available. Create a folder first.</p>
+                )}
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
       <Footer />
