@@ -1,9 +1,11 @@
+import { useState } from "react";
 import NavigationHeader from "@/components/NavigationHeader";
 import Footer from "@/components/Footer";
 import ScrollAnimationWrapper from "@/components/ScrollAnimationWrapper";
-import { motion } from "framer-motion";
-import { ArrowRight, Globe, Zap, Network, ShoppingBag, Shield, Users, Bot, Monitor, Briefcase, Building2, Code2, Factory, Landmark, Scale, Cpu, Layers, AppWindow, UserCog } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ArrowRight, Globe, Zap, Network, ShoppingBag, Shield, Users, Bot, Monitor, Briefcase, Building2, Code2, Factory, Landmark, Scale, Cpu, Layers, AppWindow, UserCog, ChevronDown } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip";
+import { commerceModels } from "@/data/commerceModels";
 
 const models = [
   { id: "A2X", label: "Account", desc: "Account to Everything", icon: Users, detail: "Enables account-level transactions across all entity types — wallets, services, platforms, and networks." },
