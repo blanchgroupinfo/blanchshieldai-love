@@ -20,6 +20,11 @@ import FloatingChat from "@/components/FloatingChat";
 
 const AIGateway = () => {
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
+  const navigate = useNavigate();
+
+  const scrollToSection = (id: string) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+  };
 
   const middlewareFeatures = [
     {
