@@ -440,7 +440,7 @@ console.log(response.choices[0].message.content);`}
       </section>
 
       {/* Evaluation Platform */}
-      <section className="py-20 px-4 bg-muted/20">
+      <section id="evaluation-platform" className="py-20 px-4 bg-muted/20">
         <div className="max-w-7xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-8">
             <Badge variant="outline" className="mb-4 border-primary/30 text-primary">Benchmarking & Ranking</Badge>
