@@ -172,7 +172,7 @@ const KnowledgeBasePage = () => {
       <NavigationHeader />
       
       {/* Hero Section */}
-      <section className="pt-32 pb-12 px-4 relative overflow-hidden">
+      <section className="pt-32 pb-8 px-4 relative overflow-hidden">
         <div className="absolute inset-0 divine-radial opacity-30" />
         <div className="container mx-auto text-center relative z-10">
           <ScrollAnimationWrapper>
@@ -182,47 +182,49 @@ const KnowledgeBasePage = () => {
             <h1 className="text-4xl md:text-6xl font-display font-bold gradient-text mb-6">
               Knowledge Base
             </h1>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto font-body">
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto font-body mb-8">
               Comprehensive documentation of BLANCH S.H.I.E.L.D. AI platform features, 
               technology, and organizational knowledge.
             </p>
+
+            {/* Search Bar - Above Everything */}
+            <div className="max-w-2xl mx-auto">
+              <div className="relative">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                <Input
+                  placeholder="Search knowledge base..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-12 py-6 text-base bg-card/50 border-border/50 backdrop-blur-sm"
+                />
+              </div>
+            </div>
           </ScrollAnimationWrapper>
         </div>
       </section>
 
-      {/* Search & Filter */}
-      <section className="py-8 px-4 border-y border-border/50 bg-card/20 sticky top-16 md:top-20 z-40 backdrop-blur-xl">
+      {/* Category Filter */}
+      <section className="py-4 px-4 border-y border-border/50 bg-card/20 sticky top-16 md:top-20 z-40 backdrop-blur-xl">
         <div className="container mx-auto">
-          <div className="flex flex-col md:flex-row gap-4">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-              <Input
-                placeholder="Search knowledge base..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 bg-background/50"
-              />
-            </div>
-            <div className="flex items-center gap-2 overflow-x-auto pb-2 md:pb-0">
+          <div className="flex items-center gap-2 overflow-x-auto pb-2 md:pb-0">
+            <Button
+              variant={selectedCategory === null ? "shield" : "outline"}
+              size="sm"
+              onClick={() => setSelectedCategory(null)}
+            >
+              All
+            </Button>
+            {categories.map((cat) => (
               <Button
-                variant={selectedCategory === null ? "shield" : "outline"}
+                key={cat}
+                variant={selectedCategory === cat ? "shield" : "outline"}
                 size="sm"
-                onClick={() => setSelectedCategory(null)}
+                onClick={() => setSelectedCategory(cat)}
+                className="whitespace-nowrap"
               >
-                All
+                {cat}
               </Button>
-              {categories.map((cat) => (
-                <Button
-                  key={cat}
-                  variant={selectedCategory === cat ? "shield" : "outline"}
-                  size="sm"
-                  onClick={() => setSelectedCategory(cat)}
-                  className="whitespace-nowrap"
-                >
-                  {cat}
-                </Button>
-              ))}
-            </div>
+            ))}
           </div>
         </div>
       </section>
