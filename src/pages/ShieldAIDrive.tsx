@@ -579,7 +579,12 @@ const ShieldAIDrive = () => {
                               <p className="text-xs text-muted-foreground">Folder</p>
                             </div>
                           </div>
-                          <ChevronRight className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+                          <div className="flex items-center gap-1">
+                            <Button variant="ghost" size="sm" className="h-7 w-7 p-0 opacity-0 group-hover:opacity-100 transition-opacity" onClick={(e) => { e.stopPropagation(); setRenameTarget({ name: folder, type: "folder" }); setRenameValue(folder); }} title="Rename">
+                              <Pencil className="h-3.5 w-3.5" />
+                            </Button>
+                            <ChevronRight className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+                          </div>
                         </motion.div>
                       ))}
                       {/* Files */}
