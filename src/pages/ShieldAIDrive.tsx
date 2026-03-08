@@ -507,7 +507,10 @@ const ShieldAIDrive = () => {
                 <div className="text-center py-16">
                   <Lock className="h-16 w-16 mx-auto mb-4 text-muted-foreground/30" />
                   <h3 className="text-lg font-semibold mb-2">Sign In Required</h3>
-                  <p className="text-sm text-muted-foreground">Please sign in to upload files to your S.H.I.E.L.D. AI Drive.</p>
+                  <p className="text-sm text-muted-foreground mb-4">Please sign in to upload files to your S.H.I.E.L.D. AI Drive.</p>
+                  <Button variant="shield" size="sm" className="gap-1.5" onClick={() => navigate("/auth")}>
+                    <Lock className="h-3.5 w-3.5" /> Sign In
+                  </Button>
                 </div>
               ) : (
                 <Card className="bg-card/60 border-border/50">
