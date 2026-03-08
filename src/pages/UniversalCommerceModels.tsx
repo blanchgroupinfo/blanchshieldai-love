@@ -37,6 +37,47 @@ const transactionFramework = [
   { title: "Identity-Verified", desc: "All transactions flow through the ID2X identity layer ensuring trust and regulatory compliance.", icon: Shield },
 ];
 
+import type { CommerceModel } from "@/data/commerceModels";
+
+const X2XAccordion = ({ model }: { model: CommerceModel }) => {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="glass-card rounded-xl overflow-hidden">
+      <button
+        onClick={() => setOpen(!open)}
+        className="w-full flex items-center justify-between p-4 hover:bg-primary/5 transition-colors"
+      >
+        <div className="flex items-center gap-3">
+          <span className="text-lg font-display font-bold text-primary">{model.id}</span>
+          <span className="text-sm text-foreground font-display">— {model.fullLabel}</span>
+          <span className="text-xs text-muted-foreground hidden sm:inline">({model.connections.length} pathways)</span>
+        </div>
+        <ChevronDown className={`w-5 h-5 text-muted-foreground transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
+      </button>
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.25 }}
+            className="overflow-hidden"
+          >
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 p-4 pt-0">
+              {model.connections.map((conn) => (
+                <div key={conn.code} className="flex items-center gap-2 py-1.5 px-3 rounded-lg hover:bg-primary/5 transition-colors">
+                  <span className="text-xs font-mono font-bold text-primary min-w-[80px]">{conn.code}</span>
+                  <span className="text-xs text-muted-foreground">{conn.label}</span>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+};
+
 const UniversalCommerceModels = () => {
   return (
     <div className="min-h-screen bg-background text-foreground">
