@@ -1039,24 +1039,15 @@ const Admin = () => {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    {[
-                      { name: "Knowledge Base", synced: true },
-                      { name: "Agent Registry (402 Agents)", synced: true },
-                      { name: "Pages & Sections", synced: true },
-                      { name: "Newsletter System", synced: true },
-                      { name: "User Profiles", synced: true },
-                      { name: "Chat History", synced: true },
-                      { name: "H.I.I. AI Numbers", synced: true },
-                      { name: "Project Watchman", synced: true },
-                    ].map((item, index) => (
+                    {PLATFORM.syncItems.map((itemName, index) => (
                       <motion.div
-                        key={item.name}
+                        key={itemName}
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: index * 0.05 }}
                         className="flex items-center justify-between p-3 rounded-xl bg-card/30 border border-border/20"
                       >
-                        <span className="font-medium">{item.name}</span>
+                        <span className="font-medium">{itemName}</span>
                         <div className="flex items-center gap-2">
                           {item.synced ? (
                             <>
