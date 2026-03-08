@@ -152,6 +152,15 @@ const ShieldAIOS = () => {
               <FolderOpen className="h-3.5 w-3.5" />
               File Manager
             </Button>
+            <Button
+              variant={activeView === "terminal" ? "shield" : "ghost"}
+              size="sm"
+              onClick={() => setActiveView("terminal")}
+              className="gap-1.5 text-xs"
+            >
+              <Terminal className="h-3.5 w-3.5" />
+              Terminal
+            </Button>
           </div>
 
           <div className="flex items-center gap-3 text-xs text-muted-foreground">
