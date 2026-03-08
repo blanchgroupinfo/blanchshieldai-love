@@ -994,6 +994,7 @@ const ShieldAIDrive = () => {
           </Dialog>
         </div>
       </div>
+      <StorageUpgradeModal open={showUpgradeModal} onOpenChange={setShowUpgradeModal} />
       <Footer />
     </div>
   );
