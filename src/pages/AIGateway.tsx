@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { 
   Zap, Shield, Globe, Lock, Server, Activity, 
@@ -19,6 +20,11 @@ import FloatingChat from "@/components/FloatingChat";
 
 const AIGateway = () => {
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
+  const navigate = useNavigate();
+
+  const scrollToSection = (id: string) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+  };
 
   const middlewareFeatures = [
     {
@@ -225,16 +231,16 @@ const AIGateway = () => {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button variant="shield" size="lg" className="gap-2">
+              <Button variant="shield" size="lg" className="gap-2" onClick={() => navigate("/auth")}>
                 <Key className="w-5 h-5" />
                 Get API Key
                 <ArrowRight className="w-4 h-4" />
               </Button>
-              <Button variant="outline" size="lg" className="gap-2">
+              <Button variant="outline" size="lg" className="gap-2" onClick={() => navigate("/api")}>
                 <Code2 className="w-5 h-5" />
                 S.H.I.E.L.D. AI Docs
               </Button>
-              <Button variant="divine" size="lg" className="gap-2">
+              <Button variant="divine" size="lg" className="gap-2" onClick={() => scrollToSection("evaluation-platform")}>
                 <Eye className="w-5 h-5" />
                 Evaluation Platform
               </Button>
@@ -434,7 +440,7 @@ console.log(response.choices[0].message.content);`}
       </section>
 
       {/* Evaluation Platform */}
-      <section className="py-20 px-4 bg-muted/20">
+      <section id="evaluation-platform" className="py-20 px-4 bg-muted/20">
         <div className="max-w-7xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-8">
             <Badge variant="outline" className="mb-4 border-primary/30 text-primary">Benchmarking & Ranking</Badge>
@@ -671,10 +677,10 @@ console.log(response.choices[0].message.content);`}
               ))}
             </div>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button variant="shield" size="lg" className="gap-2">
+              <Button variant="shield" size="lg" className="gap-2" onClick={() => navigate("/auth")}>
                 <Rocket className="w-5 h-5" /> Start Building
               </Button>
-              <Button variant="outline" size="lg" className="gap-2">
+              <Button variant="outline" size="lg" className="gap-2" onClick={() => navigate("/api")}>
                 <BookOpen className="w-5 h-5" /> Read the Docs
               </Button>
             </div>
