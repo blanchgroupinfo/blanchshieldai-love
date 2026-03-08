@@ -138,7 +138,7 @@ const ShieldAIDrive = () => {
     const uploadedCount = { success: 0, fail: 0 };
 
     for (const file of Array.from(fileList)) {
-      const filePath = `${user.id}/${Date.now()}_${file.name}`;
+      const filePath = `${getStoragePath()}/${Date.now()}_${file.name}`;
       const { error } = await supabase.storage.from("shield-drive").upload(filePath, file);
       if (error) uploadedCount.fail++;
       else uploadedCount.success++;
