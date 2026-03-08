@@ -132,10 +132,10 @@ const AgentRegistry = () => {
 
         {/* Agent Grid */}
         <motion.div
+          key={selectedCategory || "all"}
           variants={containerVariants}
           initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
+          animate="visible"
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 max-w-7xl mx-auto"
         >
           {filteredAgents.slice(0, 48).map((agent) => (
