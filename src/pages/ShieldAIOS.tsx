@@ -176,6 +176,18 @@ const ShieldAIOS = () => {
               <Terminal className="h-3.5 w-3.5" />
               Terminal
             </Button>
+            <Button
+              variant={activeView === "notifications" ? "shield" : "ghost"}
+              size="sm"
+              onClick={() => setActiveView("notifications")}
+              className="gap-1.5 text-xs"
+            >
+              <Bell className="h-3.5 w-3.5" />
+              Notifications
+              <span className="ml-1 bg-destructive text-destructive-foreground rounded-full w-4 h-4 text-[10px] flex items-center justify-center">
+                {notifications.filter(n => !n.read).length}
+              </span>
+            </Button>
           </div>
 
           <div className="flex items-center gap-3 text-xs text-muted-foreground">
