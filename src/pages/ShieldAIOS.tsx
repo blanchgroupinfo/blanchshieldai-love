@@ -11,7 +11,7 @@ import {
   LayoutGrid, FileText, Globe, Database, Cloud, Lock,
   Zap, BarChart3, Users, Bell, Power, Layers
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 
 const desktopApps = [
@@ -49,7 +49,61 @@ const systemStats = [
 
 const ShieldAIOS = () => {
   const navigate = useNavigate();
-  const [activeView, setActiveView] = useState<"desktop" | "apps" | "monitor" | "files">("desktop");
+  const [activeView, setActiveView] = useState<"desktop" | "apps" | "monitor" | "files" | "terminal">("desktop");
+  const [terminalHistory, setTerminalHistory] = useState<{ type: "input" | "output"; text: string }[]>([
+    { type: "output", text: "S.H.I.E.L.D. AI OS Terminal v3.0.1" },
+    { type: "output", text: "Type 'help' for available commands.\n" },
+  ]);
+  const [terminalInput, setTerminalInput] = useState("");
+  const terminalEndRef = useRef<HTMLDivElement>(null);
+
+  const executeCommand = useCallback((cmd: string) => {
+    const trimmed = cmd.trim().toLowerCase();
+    const newHistory: { type: "input" | "output"; text: string }[] = [
+      { type: "input", text: `shield@os:~$ ${cmd}` },
+    ];
+
+    const commands: Record<string, string> = {
+      help: "Available commands:\n  help        — Show this help message\n  status      — System status overview\n  agents      — List active agents\n  uptime      — Show system uptime\n  whoami      — Current user info\n  version     — OS version\n  clear       — Clear terminal\n  neofetch    — System info\n  ping        — Test connectivity\n  ls          — List files\n  date        — Current date/time\n  exit        — Close terminal",
+      status: "✅ CPU: 47% | Memory: 62% | Storage: 38% | Network: 89 Mbps\n   All systems operational. Security level: MAXIMUM.",
+      agents: "888 H.I.I. AI Agents deployed.\n  Active: 886 | Idle: 2 | Errors: 0\n  Last deployment: 2 minutes ago",
+      uptime: "System uptime: ∞ (Eternal)\n  Last reboot: Never — S.H.I.E.L.D. AI OS runs perpetually.",
+      whoami: "shield-admin@shield-ai-os\n  Role: Administrator | Clearance: MAXIMUM\n  Session: Authenticated via Divine Protocol",
+      version: "S.H.I.E.L.D. AI OS v3.0.1\n  Kernel: shield-core 7.2.0\n  Architecture: Quantum-x86_64\n  Build: 20260308-stable",
+      neofetch: `
+   ███████╗██╗  ██╗██╗███████╗██╗     ██████╗
+   ██╔════╝██║  ██║██║██╔════╝██║     ██╔══██╗
+   ███████╗███████║██║█████╗  ██║     ██║  ██║
+   ╚════██║██╔══██║██║██╔══╝  ██║     ██║  ██║
+   ███████║██║  ██║██║███████╗███████╗██████╔╝
+   ╚══════╝╚═╝  ╚═╝╚═╝╚══════╝╚══════╝╚═════╝
+   OS: S.H.I.E.L.D. AI OS 3.0.1
+   Kernel: shield-core 7.2.0
+   CPU: Quantum Neural Processor
+   Memory: 256 PB / 512 PB
+   Agents: 888 Active`,
+      ping: "PING shield-core.local (10.0.0.1): 56 bytes\n  64 bytes: time=0.042ms\n  64 bytes: time=0.038ms\n  64 bytes: time=0.041ms\n  — 0% packet loss, avg 0.040ms",
+      ls: "Documents/  AI Models/  Blockchain Data/  Agent Configs/\nSystem Logs/  shield-config.yaml  network-map.json  auth-keys.enc",
+      date: new Date().toString(),
+    };
+
+    if (trimmed === "clear") {
+      setTerminalHistory([]);
+      return;
+    } else if (trimmed === "exit") {
+      setActiveView("desktop");
+      return;
+    } else if (commands[trimmed]) {
+      newHistory.push({ type: "output", text: commands[trimmed] });
+    } else if (trimmed === "") {
+      // empty
+    } else {
+      newHistory.push({ type: "output", text: `shield: command not found: ${cmd}\nType 'help' for available commands.` });
+    }
+
+    setTerminalHistory((prev) => [...prev, ...newHistory]);
+    setTimeout(() => terminalEndRef.current?.scrollIntoView({ behavior: "smooth" }), 50);
+  }, []);
 
   const currentTime = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
   const currentDate = new Date().toLocaleDateString([], { weekday: "long", month: "long", day: "numeric", year: "numeric" });
@@ -97,6 +151,15 @@ const ShieldAIOS = () => {
             >
               <FolderOpen className="h-3.5 w-3.5" />
               File Manager
+            </Button>
+            <Button
+              variant={activeView === "terminal" ? "shield" : "ghost"}
+              size="sm"
+              onClick={() => setActiveView("terminal")}
+              className="gap-1.5 text-xs"
+            >
+              <Terminal className="h-3.5 w-3.5" />
+              Terminal
             </Button>
           </div>
 
@@ -371,6 +434,56 @@ const ShieldAIOS = () => {
                     <span className="text-xs text-muted-foreground">{item.size}</span>
                   </motion.div>
                 ))}
+              </CardContent>
+            </Card>
+          </motion.div>
+        )}
+
+        {/* Terminal View */}
+        {activeView === "terminal" && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4">
+            <div className="text-center py-4">
+              <h2 className="text-2xl font-bold font-heading">Terminal</h2>
+              <p className="text-muted-foreground text-sm">S.H.I.E.L.D. AI OS command-line interface</p>
+            </div>
+
+            <Card className="bg-[hsl(222_47%_5%)] border-border/50 overflow-hidden">
+              <CardContent className="p-0">
+                <div className="flex items-center gap-2 px-4 py-2 bg-card/30 border-b border-border/30">
+                  <div className="flex gap-1.5">
+                    <div className="w-3 h-3 rounded-full bg-red-500/80" />
+                    <div className="w-3 h-3 rounded-full bg-amber-500/80" />
+                    <div className="w-3 h-3 rounded-full bg-green-500/80" />
+                  </div>
+                  <span className="text-xs font-mono text-muted-foreground ml-2">shield@os:~</span>
+                </div>
+
+                <div className="h-[500px] overflow-y-auto p-4 font-mono text-sm space-y-1">
+                  {terminalHistory.map((entry, i) => (
+                    <div key={i} className={entry.type === "input" ? "text-primary" : "text-muted-foreground whitespace-pre-wrap"}>
+                      {entry.text}
+                    </div>
+                  ))}
+                  <div ref={terminalEndRef} />
+
+                  <div className="flex items-center gap-1 mt-2">
+                    <span className="text-primary">shield@os:~$</span>
+                    <input
+                      type="text"
+                      value={terminalInput}
+                      onChange={(e) => setTerminalInput(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          executeCommand(terminalInput);
+                          setTerminalInput("");
+                        }
+                      }}
+                      className="flex-1 bg-transparent border-none outline-none text-foreground font-mono text-sm caret-primary"
+                      autoFocus
+                      spellCheck={false}
+                    />
+                  </div>
+                </div>
               </CardContent>
             </Card>
           </motion.div>
