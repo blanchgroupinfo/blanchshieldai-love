@@ -404,22 +404,50 @@ const ShieldAIDrive = () => {
           {activeTab === "files" && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
               <Card className="bg-card/60 border-border/50">
-                <CardHeader className="pb-3">
+                <CardHeader className="pb-3 space-y-3">
                   <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                     <CardTitle className="text-base flex items-center gap-2">
                       <FolderOpen className="h-4 w-4 text-primary" />
-                      All Files ({files.length})
+                      All Files ({files.length + folders.length})
                     </CardTitle>
-                    <div className="relative w-full sm:w-64">
-                      <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
-                      <Input
-                        placeholder="Search files..."
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className="pl-8 h-8 text-xs"
-                      />
+                    <div className="flex items-center gap-2">
+                      {user && (
+                        <Button variant="outline" size="sm" className="gap-1.5 h-8 text-xs" onClick={() => setShowNewFolderDialog(true)}>
+                          <FolderPlus className="h-3.5 w-3.5" /> New Folder
+                        </Button>
+                      )}
+                      <div className="relative w-full sm:w-48">
+                        <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
+                        <Input
+                          placeholder="Search..."
+                          value={searchQuery}
+                          onChange={(e) => setSearchQuery(e.target.value)}
+                          className="pl-8 h-8 text-xs"
+                        />
+                      </div>
                     </div>
                   </div>
+                  {/* Breadcrumb */}
+                  {currentPath.length > 0 && (
+                    <div className="flex items-center gap-1 text-xs flex-wrap">
+                      <Button variant="ghost" size="sm" className="h-6 px-2 text-xs gap-1" onClick={() => navigateToBreadcrumb(0)}>
+                        <Home className="h-3 w-3" /> Root
+                      </Button>
+                      {currentPath.map((seg, i) => (
+                        <span key={i} className="flex items-center gap-1">
+                          <ChevronRight className="h-3 w-3 text-muted-foreground" />
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-6 px-2 text-xs"
+                            onClick={() => navigateToBreadcrumb(i + 1)}
+                          >
+                            {seg}
+                          </Button>
+                        </span>
+                      ))}
+                    </div>
+                  )}
                 </CardHeader>
                 <CardContent>
                   {!user ? (
