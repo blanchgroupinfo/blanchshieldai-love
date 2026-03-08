@@ -1,9 +1,11 @@
+import { useState } from "react";
 import NavigationHeader from "@/components/NavigationHeader";
 import Footer from "@/components/Footer";
 import ScrollAnimationWrapper from "@/components/ScrollAnimationWrapper";
-import { motion } from "framer-motion";
-import { ArrowRight, Globe, Zap, Network, ShoppingBag, Shield, Users, Bot, Monitor, Briefcase, Building2, Code2, Factory, Landmark, Scale, Cpu, Layers, AppWindow, UserCog } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ArrowRight, Globe, Zap, Network, ShoppingBag, Shield, Users, Bot, Monitor, Briefcase, Building2, Code2, Factory, Landmark, Scale, Cpu, Layers, AppWindow, UserCog, ChevronDown } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip";
+import { commerceModels } from "@/data/commerceModels";
 
 const models = [
   { id: "A2X", label: "Account", desc: "Account to Everything", icon: Users, detail: "Enables account-level transactions across all entity types — wallets, services, platforms, and networks." },
@@ -34,6 +36,47 @@ const transactionFramework = [
   { title: "AI-Orchestrated", desc: "S.H.I.E.L.D. AI optimizes routing, pricing, and risk assessment for every transaction.", icon: Bot },
   { title: "Identity-Verified", desc: "All transactions flow through the ID2X identity layer ensuring trust and regulatory compliance.", icon: Shield },
 ];
+
+import type { CommerceModel } from "@/data/commerceModels";
+
+const X2XAccordion = ({ model }: { model: CommerceModel }) => {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="glass-card rounded-xl overflow-hidden">
+      <button
+        onClick={() => setOpen(!open)}
+        className="w-full flex items-center justify-between p-4 hover:bg-primary/5 transition-colors"
+      >
+        <div className="flex items-center gap-3">
+          <span className="text-lg font-display font-bold text-primary">{model.id}</span>
+          <span className="text-sm text-foreground font-display">— {model.fullLabel}</span>
+          <span className="text-xs text-muted-foreground hidden sm:inline">({model.connections.length} pathways)</span>
+        </div>
+        <ChevronDown className={`w-5 h-5 text-muted-foreground transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
+      </button>
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.25 }}
+            className="overflow-hidden"
+          >
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 p-4 pt-0">
+              {model.connections.map((conn) => (
+                <div key={conn.code} className="flex items-center gap-2 py-1.5 px-3 rounded-lg hover:bg-primary/5 transition-colors">
+                  <span className="text-xs font-mono font-bold text-primary min-w-[80px]">{conn.code}</span>
+                  <span className="text-xs text-muted-foreground">{conn.label}</span>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+};
 
 const UniversalCommerceModels = () => {
   return (
@@ -103,7 +146,7 @@ const UniversalCommerceModels = () => {
         </div>
       </section>
 
-      {/* Transaction Framework */}
+      {/* Transaction Framework Capabilities */}
       <section className="py-16">
         <div className="container px-4">
           <ScrollAnimationWrapper>
@@ -117,7 +160,7 @@ const UniversalCommerceModels = () => {
             </div>
           </ScrollAnimationWrapper>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto mb-16">
             {transactionFramework.map((item, i) => (
               <ScrollAnimationWrapper key={item.title}>
                 <motion.div
@@ -131,6 +174,28 @@ const UniversalCommerceModels = () => {
                   <p className="text-xs text-muted-foreground">{item.desc}</p>
                 </motion.div>
               </ScrollAnimationWrapper>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Full X2X Pathways */}
+      <section className="py-16">
+        <div className="container px-4">
+          <ScrollAnimationWrapper>
+            <div className="text-center mb-12">
+              <h2 className="text-2xl md:text-4xl font-display font-bold mb-3">
+                380+ Commerce <span className="gradient-text">Pathways</span>
+              </h2>
+              <p className="text-muted-foreground max-w-2xl mx-auto text-sm">
+                Expand each primary model to explore all its target connections.
+              </p>
+            </div>
+          </ScrollAnimationWrapper>
+
+          <div className="max-w-4xl mx-auto space-y-3">
+            {commerceModels.map((model) => (
+              <X2XAccordion key={model.id} model={model} />
             ))}
           </div>
         </div>
