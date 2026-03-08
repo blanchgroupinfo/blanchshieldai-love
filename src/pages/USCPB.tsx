@@ -11,7 +11,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import NavigationHeader from "@/components/NavigationHeader";
 import Footer from "@/components/Footer";
-import FloatingChat from "@/components/FloatingChat";
+
 
 const USCPB = () => {
     const [activeService, setActiveService] = useState<string | null>(null);
