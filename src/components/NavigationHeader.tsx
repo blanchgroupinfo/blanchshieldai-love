@@ -177,7 +177,7 @@ const NavigationHeader = () => {
                     <img src={shieldLogo} alt="S.H.I.E.L.D. AI" className="w-10 h-10 rounded-lg" />
                     <div>
                       <span className="font-display font-bold gradient-text text-sm">Blanch S.H.I.E.L.D.</span>
-                      <span className="font-display font-bold text-primary ml-1 text-sm">AI OS</span>
+                      <span className="font-display font-bold text-primary ml-1 text-sm">AI </span>
                     </div>
                   </div>
 
