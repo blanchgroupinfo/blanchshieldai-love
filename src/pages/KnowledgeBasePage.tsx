@@ -130,12 +130,26 @@ const platformFeatures = [
 ];
 
 const businessModels = [
-  { code: "A2A", name: "Account to Account" },
-  { code: "B2B", name: "Business to Business" },
-  { code: "B2C", name: "Business to Consumer" },
-  { code: "G2G", name: "Government to Government" },
-  { code: "M2M", name: "Machine to Machine" },
-  { code: "AI2AI", name: "Agent to Agent" },
+  { code: "A2X", name: "Account to Everything" },
+  { code: "AG2X", name: "Agent to Everything" },
+  { code: "AI2X", name: "AI to Everything" },
+  { code: "AV2X", name: "Avatar to Everything" },
+  { code: "B2X", name: "Business to Everything" },
+  { code: "C2X", name: "Consumer to Everything" },
+  { code: "D2X", name: "Direct to Everything" },
+  { code: "DAO2X", name: "DAO to Everything" },
+  { code: "DEV2X", name: "Developer to Everything" },
+  { code: "E2X", name: "Employee to Everything" },
+  { code: "G2X", name: "Government to Everything" },
+  { code: "I2X", name: "Institution to Everything" },
+  { code: "ID2X", name: "Identity to Everything" },
+  { code: "LAW2X", name: "Legal/Compliance to Everything" },
+  { code: "M2X", name: "Machine to Everything" },
+  { code: "MF2X", name: "Manufacturer to Everything" },
+  { code: "N2X", name: "Many to Everything" },
+  { code: "P2X", name: "Prosumer to Everything" },
+  { code: "Apps2X", name: "Apps to Everything" },
+  { code: "AD2X", name: "Administration to Everything" },
 ];
 
 const KnowledgeBasePage = () => {
