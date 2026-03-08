@@ -198,20 +198,41 @@ const UniversalCommerceModels = () => {
       <section className="py-16">
         <div className="container px-4">
           <ScrollAnimationWrapper>
-            <div className="text-center mb-12">
+            <div className="text-center mb-8">
               <h2 className="text-2xl md:text-4xl font-display font-bold mb-3">
                 380+ Commerce <span className="gradient-text">Pathways</span>
               </h2>
-              <p className="text-muted-foreground max-w-2xl mx-auto text-sm">
-                Expand each primary model to explore all its target connections.
+              <p className="text-muted-foreground max-w-2xl mx-auto text-sm mb-6">
+                Search or expand each primary model to explore all its target connections.
               </p>
+              <div className="relative max-w-md mx-auto">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <input
+                  type="text"
+                  placeholder="Search pathways… e.g. B2C, Machine, DAO"
+                  value={pathwaySearch}
+                  onChange={(e) => setPathwaySearch(e.target.value)}
+                  className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-card border border-border text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary/50 transition-colors"
+                />
+              </div>
             </div>
           </ScrollAnimationWrapper>
 
           <div className="max-w-4xl mx-auto space-y-3">
             {commerceModels.map((model) => (
-              <X2XAccordion key={model.id} model={model} />
+              <X2XAccordion key={model.id} model={model} searchQuery={pathwaySearch} />
             ))}
+            {pathwaySearch && commerceModels.every((m) => {
+              const q = pathwaySearch.toLowerCase();
+              return !m.id.toLowerCase().includes(q) &&
+                !m.label.toLowerCase().includes(q) &&
+                !m.fullLabel.toLowerCase().includes(q) &&
+                m.connections.every((c) => !c.code.toLowerCase().includes(q) && !c.label.toLowerCase().includes(q));
+            }) && (
+              <div className="text-center py-8 text-muted-foreground text-sm">
+                No pathways found for "{pathwaySearch}"
+              </div>
+            )}
           </div>
         </div>
       </section>
