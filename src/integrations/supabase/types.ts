@@ -139,6 +139,48 @@ export type Database = {
         }
         Relationships: []
       }
+      enrollment_submissions: {
+        Row: {
+          compounding: string
+          created_at: string
+          deposit_amount: string
+          email: string
+          full_name: string
+          id: string
+          phone: string
+          program_duration: string
+          program_name: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          compounding?: string
+          created_at?: string
+          deposit_amount: string
+          email: string
+          full_name: string
+          id?: string
+          phone: string
+          program_duration: string
+          program_name: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          compounding?: string
+          created_at?: string
+          deposit_amount?: string
+          email?: string
+          full_name?: string
+          id?: string
+          phone?: string
+          program_duration?: string
+          program_name?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       file_versions: {
         Row: {
           created_at: string
