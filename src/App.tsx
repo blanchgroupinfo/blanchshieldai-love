@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import LiveMarketTicker from "@/components/LiveMarketTicker";
 import SpiritualTicker from "@/components/SpiritualTicker";
+import FloatingChat from "@/components/FloatingChat";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import About from "./pages/About";
