@@ -52,7 +52,7 @@ const TradingHero = () => {
           {/* Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
             {[
-              { label: "Markets", value: "30+", icon: Globe },
+              { label: "Markets", value: "40+", icon: Globe },
               { label: "Trade Programs", value: "20+", icon: TrendingUp },
               { label: "Daily Volume", value: "$50T+", icon: BarChart3 },
               { label: "Active Traders", value: "100K+", icon: Wallet },
