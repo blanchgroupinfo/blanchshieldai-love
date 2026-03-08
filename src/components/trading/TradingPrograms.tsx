@@ -95,11 +95,19 @@ const TradingPrograms = () => {
                           <div className="w-8 h-8 rounded-md bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
                             <item.icon className="w-4 h-4 text-primary" />
                           </div>
-                          <span className="font-medium text-sm">{item.name}</span>
+                          <div>
+                            <span className="font-medium text-sm block">{item.name}</span>
+                            <span className="text-xs text-muted-foreground">Deposit: {item.deposit}</span>
+                          </div>
                         </div>
-                        <Badge variant="secondary" className="text-xs">
-                          {item.duration}
-                        </Badge>
+                        <div className="flex items-center gap-2">
+                          <Badge variant="outline" className="text-xs text-green-400 border-green-500/30 bg-green-500/10">
+                            {item.returnPct} Return
+                          </Badge>
+                          <Badge variant="secondary" className="text-xs">
+                            {item.duration}
+                          </Badge>
+                        </div>
                       </div>
                     ))}
                   </div>
