@@ -15,6 +15,13 @@ const CRYPTO_IDS: Record<string, string> = {
   "ETH/USD": "ethereum",
 };
 
+// ExchangeRate-API base currencies
+const FOREX_PAIRS: Record<string, { base: string; quote: string }> = {
+  "EUR/USD": { base: "EUR", quote: "USD" },
+  "GBP/USD": { base: "GBP", quote: "USD" },
+  "JPY/USD": { base: "JPY", quote: "USD" },
+};
+
 // Fallback base prices for simulated data
 const FALLBACK_PRICES: Record<string, { price: number; volume?: string }> = {
   "BTC/USD": { price: 87500, volume: "28.5B" },
