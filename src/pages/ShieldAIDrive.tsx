@@ -71,7 +71,7 @@ const timeAgo = (dateStr: string) => {
 };
 
 const ShieldAIDrive = () => {
-  const [activeTab, setActiveTab] = useState<"overview" | "files" | "upload">("overview");
+  const [activeTab, setActiveTab] = useState<"overview" | "files" | "gallery" | "upload">("overview");
   const [user, setUser] = useState<User | null>(null);
   const [files, setFiles] = useState<StorageFile[]>([]);
   const [loading, setLoading] = useState(false);
