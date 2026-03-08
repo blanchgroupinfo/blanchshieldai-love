@@ -183,6 +183,7 @@ const Admin = () => {
       fetchChatHistory(),
       fetchUserProfiles(),
       fetchUserRoles(),
+      fetchEnrollments(),
     ]);
   };
 
