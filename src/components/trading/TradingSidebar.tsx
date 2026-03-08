@@ -193,7 +193,7 @@ const TradingSidebar = ({
   }} transition={{
     duration: 0.3,
     ease: "easeInOut"
-  }} className="fixed left-0 top-[72px] bottom-0 z-40 bg-card/95 backdrop-blur-xl border-r border-border/50 flex flex-col">
+  }} className="fixed left-0 top-[120px] bottom-0 z-40 bg-card/95 backdrop-blur-xl border-r border-border/50 flex flex-col">
       {/* Toggle Button */}
       <Button variant="ghost" size="icon" className="absolute -right-3 top-4 z-50 h-6 w-6 rounded-full border border-border bg-card shadow-md hover:bg-accent" onClick={() => setIsCollapsed(!isCollapsed)}>
         {isCollapsed ? <ChevronRight className="h-3 w-3" /> : <ChevronLeft className="h-3 w-3" />}
