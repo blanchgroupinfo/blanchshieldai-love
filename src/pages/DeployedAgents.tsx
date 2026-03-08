@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import NavigationHeader from "@/components/NavigationHeader";
 import Footer from "@/components/Footer";
-import FloatingChat from "@/components/FloatingChat";
+
 import { agents, agentCategories, generateHIIAgentNumber } from "@/data/agents";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
