@@ -24,6 +24,7 @@ const desktopApps = [
   { name: "AI Gateway", icon: Globe, color: "from-cyan-500 to-blue-600", link: "/ai-gateway" },
   { name: "Database", icon: Database, color: "from-rose-500 to-pink-600", link: "/distributed-ledger" },
   { name: "Cloud Services", icon: Cloud, color: "from-sky-500 to-indigo-600", link: "/shield-ai-cloud" },
+  { name: "S.H.I.E.L.D. AI Drive", icon: HardDrive, color: "from-teal-500 to-cyan-600", link: "/shield-ai-drive" },
   { name: "Security Center", icon: Lock, color: "from-red-500 to-rose-600", link: "/compliance-kyc" },
   { name: "Trading Hub", icon: BarChart3, color: "from-green-500 to-emerald-600", link: "/trading" },
   { name: "Deployed Agents", icon: Users, color: "from-fuchsia-500 to-purple-600", link: "/deployed-agents" },
