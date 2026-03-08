@@ -109,7 +109,7 @@ const NavigationHeader = () => {
                   {currentPage.label}
                 </span>
               ) : null;
-            })()
+            })()}
           </nav>
 
           {/* CTA + Auth + Command Center + Menu */}
