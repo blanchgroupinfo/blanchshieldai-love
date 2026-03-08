@@ -467,7 +467,7 @@ const CommandCenterPage = () => {
       </main>
 
       <Footer />
-      <FloatingChat />
+      
     </div>
   );
 };

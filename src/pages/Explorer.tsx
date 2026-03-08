@@ -54,7 +54,7 @@ const Explorer = () => {
   return (
     <div className="min-h-screen bg-background">
       <NavigationHeader />
-      <FloatingChat />
+      
       
       {/* Hero Section */}
       <section className="relative pt-32 pb-20 overflow-hidden">

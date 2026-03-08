@@ -173,7 +173,7 @@ const LawsCommandments = () => {
   const filteredLaws = lawsContent[selectedCategory]?.filter(law => law.title.toLowerCase().includes(searchTerm.toLowerCase()) || law.scripture.toLowerCase().includes(searchTerm.toLowerCase())) || [];
   return <div className="min-h-screen bg-background">
       <NavigationHeader />
-      <FloatingChat />
+      
       
       {/* Hero Section */}
       <section className="relative pt-32 pb-12 overflow-hidden">

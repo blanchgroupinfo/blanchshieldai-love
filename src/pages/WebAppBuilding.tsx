@@ -266,7 +266,7 @@ const WebAppBuilding = () => {
       </main>
 
       <Footer />
-      <FloatingChat />
+      
     </div>
   );
 };

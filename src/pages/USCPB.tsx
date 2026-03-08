@@ -530,7 +530,7 @@ const USCPB = () => {
             </main>
 
             <Footer />
-            <FloatingChat />
+            
         </div>
     );
 };

@@ -311,7 +311,7 @@ const AutoCAD = () => {
       </main>
 
       <Footer />
-      <FloatingChat />
+      
     </div>
   );
 };

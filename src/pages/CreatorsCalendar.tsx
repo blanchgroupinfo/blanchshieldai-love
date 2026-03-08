@@ -280,7 +280,7 @@ const CreatorsCalendar = () => {
   const yearStartInfo = getYearStartDate(currentYear);
   return <div className="min-h-screen bg-background">
       <NavigationHeader />
-      <FloatingChat />
+      
       
       {/* Print styles */}
       <style>{`

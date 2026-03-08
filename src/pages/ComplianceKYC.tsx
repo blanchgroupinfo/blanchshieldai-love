@@ -49,7 +49,7 @@ const kycTiers = [{
 const ComplianceKYC = () => {
   return <div className="min-h-screen bg-background pt-20">
       <NavigationHeader />
-      <FloatingChat />
+      
       
       {/* Hero Section */}
       <section className="relative py-24 overflow-hidden">

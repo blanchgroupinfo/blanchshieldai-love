@@ -433,7 +433,7 @@ const DeployedAgentsDashboard = () => {
       </main>
 
       <Footer />
-      <FloatingChat />
+      
     </div>
   );
 };
