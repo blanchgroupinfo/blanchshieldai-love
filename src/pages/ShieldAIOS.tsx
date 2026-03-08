@@ -96,6 +96,10 @@ const ShieldAIOS = () => {
       ping: "PING shield-core.local (10.0.0.1): 56 bytes\n  64 bytes: time=0.042ms\n  64 bytes: time=0.038ms\n  64 bytes: time=0.041ms\n  — 0% packet loss, avg 0.040ms",
       ls: "Documents/  AI Models/  Blockchain Data/  Agent Configs/\nSystem Logs/  shield-config.yaml  network-map.json  auth-keys.enc",
       date: new Date().toString(),
+      deploy: "⚙ Initializing deployment sequence...\n  [██████████████████████████████] 100%\n  ✅ Agent AI-" + String(Math.floor(Math.random() * 888) + 1).padStart(3, "0") + " deployed successfully.\n  Status: ACTIVE | Latency: 0.003ms\n  Endpoint: shield-core://agents/live",
+      scan: "🔍 Running S.H.I.E.L.D. Security Scan...\n  [1/5] Scanning network perimeter... ✅ CLEAR\n  [2/5] Checking agent integrity... ✅ 888/888 PASSED\n  [3/5] Auditing access logs... ✅ NO ANOMALIES\n  [4/5] Validating encryption keys... ✅ AES-256 INTACT\n  [5/5] Blockchain consensus check... ✅ ALL NODES SYNCED\n\n  ✅ SCAN COMPLETE — Threat Level: NONE\n  Security Rating: 100/100 (DIVINE SHIELD)",
+      encrypt: "🔐 Encrypting data stream...\n  Algorithm: AES-256-GCM + RSA-4096\n  [████████████████████░░░░░░░░░░] 67%...\n  [██████████████████████████████] 100%\n  ✅ Encryption complete.\n  Key fingerprint: 7A:3F:D2:91:BC:48:EE:5C:A0:F1\n  Cipher strength: UNBREAKABLE\n  Stored in: /shield-os/vault/encrypted/",
+      connect: "📡 Establishing secure connection...\n  Resolving shield-node-prime.sovereign.net...\n  Handshake: TLS 1.3 + Quantum Key Exchange\n  Latency: 0.012ms\n  ✅ Connected to S.H.I.E.L.D. Network Node #1\n  Peers: 144 nodes online\n  Bandwidth: 10 Gbps symmetric\n  Encryption: End-to-end quantum-resistant",
     };
 
     if (trimmed === "clear") {
