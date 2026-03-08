@@ -1,6 +1,6 @@
 import NavigationHeader from "@/components/NavigationHeader";
 import Footer from "@/components/Footer";
-import FloatingChat from "@/components/FloatingChat";
+
 import { motion } from "framer-motion";
 import { Utensils, Leaf, Zap, Shield, Globe, Heart, Droplets, Sun, Recycle, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
