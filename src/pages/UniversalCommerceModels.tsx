@@ -64,7 +64,7 @@ const X2XAccordion = ({ model, searchQuery }: { model: CommerceModel; searchQuer
         <div className="flex items-center gap-3">
           <span className="text-lg font-display font-bold text-primary">{model.id}</span>
           <span className="text-sm text-foreground font-display">— {model.fullLabel}</span>
-          <span className="text-xs text-muted-foreground hidden sm:inline">({model.connections.length} pathways)</span>
+          <span className="text-xs text-muted-foreground hidden sm:inline">({filteredConnections.length} pathways)</span>
         </div>
         <ChevronDown className={`w-5 h-5 text-muted-foreground transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
       </button>
