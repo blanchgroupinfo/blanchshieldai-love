@@ -14,8 +14,10 @@ import {
   TrendingUp, ShieldCheck, BarChart, BookOpen, Wallet,
   Gamepad2, Heart, HandHeart, Scale, Truck, Car,
   Calendar, Home, Book, Star, Lock, Server, Globe,
-  RefreshCw, Activity, Leaf, Gem, Sun, Rocket
+  RefreshCw, Activity, Leaf, Gem, Sun, Rocket,
+  Zap, Play, MessageSquare, CheckCircle2
 } from "lucide-react";
+import { toast } from "sonner";
 
 const iconMap: Record<string, any> = {
   "cpu": Cpu,
