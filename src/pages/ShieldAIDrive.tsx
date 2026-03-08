@@ -86,6 +86,13 @@ const ShieldAIDrive = () => {
   const [newFolderName, setNewFolderName] = useState("");
   const [moveFile, setMoveFile] = useState<StorageFile | null>(null);
   const [moveFolders, setMoveFolders] = useState<string[]>([]);
+  const [renameTarget, setRenameTarget] = useState<{ name: string; type: "file" | "folder" } | null>(null);
+  const [renameValue, setRenameValue] = useState("");
+  const [shareFile, setShareFile] = useState<StorageFile | null>(null);
+  const [shareAccessType, setShareAccessType] = useState<"view" | "download">("view");
+  const [shareLink, setShareLink] = useState("");
+  const [shareCopied, setShareCopied] = useState(false);
+  const [sharingLoading, setSharingLoading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
   const navigate = useNavigate();
