@@ -117,6 +117,7 @@ const App = () => (
           <Route path="/shield-ai-profile" element={<ShieldAIProfile />} />
           <Route path="/shield-ai-about" element={<ShieldAIAbout />} />
           <Route path="/universal-file-system" element={<UniversalFileSystem />} />
+          <Route path="/deployed-agents" element={<DeployedAgents />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

@@ -97,6 +97,21 @@ const AgentDetail = ({ agentId }: { agentId: string }) => {
     setTimeout(() => {
       setDeploying(false);
       setActivated(true);
+      // Persist to localStorage for the deployed agents dashboard
+      try {
+        const stored = localStorage.getItem("shield-deployed-agents");
+        const current = stored ? JSON.parse(stored) : [];
+        if (!current.find((a: any) => a.agentId === agentId)) {
+          current.push({
+            agentId,
+            activatedAt: new Date().toISOString(),
+            status: "active",
+            tasksCompleted: Math.floor(Math.random() * 50),
+            uptime: 95 + Math.random() * 5,
+          });
+          localStorage.setItem("shield-deployed-agents", JSON.stringify(current));
+        }
+      } catch {}
       toast.success(`${generateHIIAgentNumber(agentId)} — ${agent?.name} activated successfully`, {
         description: "Agent is now deployed and operational within the S.H.I.E.L.D. AI OS ecosystem.",
       });
