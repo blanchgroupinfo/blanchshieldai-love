@@ -54,8 +54,8 @@ export const removeDeployedAgent = (agentId: string): DeployedAgent[] => {
   return current;
 };
 
-// All 888 agents excluding AI001 (the system itself), so AI002-AI888
-const allAgentIds = agents.filter(a => !a.isCategory && a.id !== "AI001").map(a => a.id);
+// All 888 agents AI001-AI888
+const allAgentIds = agents.filter(a => !a.isCategory).map(a => a.id);
 
 const statusConfig = {
   active: { color: "text-emerald-400", bg: "bg-emerald-500/20", border: "border-emerald-500/30", icon: CheckCircle2, label: "Active" },
