@@ -20,6 +20,11 @@ const capabilities = [
     scripture: "Jeremiah 29:14 — And I will be found of you, saith the Most High AHAYAH: and I will turn away your captivity."
   },
   {
+    icon: GraduationCap, title: "Educational & Tutoring",
+    items: ["AI-Powered Learning & Curriculum", "Virtual Classrooms & Tutoring", "Knowledge Assessment & Certification", "Lifelong Learning Programs"],
+    scripture: "Proverbs 1:7 — The fear of the Most High AHAYAH is the beginning of knowledge: but fools despise wisdom and instruction."
+  },
+  {
     icon: Shield, title: "Ethical Compliance",
     items: ["Strict Laws & Commandments", "No Weapons, Violence, Unclean Substances", "Biological Integrity"],
     scripture: "Proverbs 7:2 — Keep my commandments, and live; and my law as the apple of thine eye."
