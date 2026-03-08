@@ -71,10 +71,10 @@ const initialNotifications: Notification[] = [
 ];
 
 const incomingNotifications: Omit<Notification, "id" | "read" | "time">[] = [
-  { type: "agent", title: "Agent AI-333 Restarted", message: "Financial Oracle agent restarted after scheduled maintenance." },
+  { type: "agent", title: "H.I.I. AI333 Restarted", message: "Financial Oracle agent restarted after scheduled maintenance." },
   { type: "alert", title: "Intrusion Attempt Blocked", message: "Quantum firewall neutralized brute-force attack from 3 IPs." },
   { type: "system", title: "Memory Optimization", message: "Auto-defrag completed. Freed 12 TB of quantum memory." },
-  { type: "agent", title: "Agent AI-144 Milestone", message: "Treaty Compliance agent processed 10,000th document." },
+  { type: "agent", title: "H.I.I. AI144 Milestone", message: "Treaty Compliance agent processed 10,000th document." },
   { type: "alert", title: "SSL Certificates Renewed", message: "All 888 agent endpoints renewed with quantum-resistant certs." },
   { type: "system", title: "Cloud Sync Complete", message: "All sovereign data synced to distributed vault nodes." },
 ];
