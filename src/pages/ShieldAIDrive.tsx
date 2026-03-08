@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import StorageUpgradeModal from "@/components/StorageUpgradeModal";
 import type { User } from "@supabase/supabase-js";
 
 const features = [
