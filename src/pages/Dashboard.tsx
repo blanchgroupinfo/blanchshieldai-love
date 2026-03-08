@@ -11,18 +11,18 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { User, Session } from "@supabase/supabase-js";
-import { 
-  User as UserIcon, 
-  Settings, 
-  Shield, 
-  Bot, 
-  Activity, 
+import {
+  User as UserIcon,
+  Settings,
+  Shield,
+  Bot,
+  Activity,
   MessageSquare,
   BookOpen,
   Star,
   Zap,
-  Globe
-} from "lucide-react";
+  Globe } from
+"lucide-react";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -64,18 +64,18 @@ const Dashboard = () => {
 
   const fetchProfile = async (userId: string) => {
     try {
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("user_id", userId)
-        .maybeSingle();
+      const { data, error } = await supabase.
+      from("profiles").
+      select("*").
+      eq("user_id", userId).
+      maybeSingle();
 
       if (data) {
         setProfile({
           full_name: data.full_name,
           email: data.email,
           bio: data.bio,
-          avatar_url: data.avatar_url,
+          avatar_url: data.avatar_url
         });
       }
     } catch (error) {
@@ -89,26 +89,26 @@ const Dashboard = () => {
     if (!user) return;
 
     try {
-      const { error } = await supabase
-        .from("profiles")
-        .update({
-          full_name: profile.full_name,
-          bio: profile.bio,
-        })
-        .eq("user_id", user.id);
+      const { error } = await supabase.
+      from("profiles").
+      update({
+        full_name: profile.full_name,
+        bio: profile.bio
+      }).
+      eq("user_id", user.id);
 
       if (error) throw error;
 
       toast({
         title: "Profile updated",
-        description: "Your profile has been updated successfully.",
+        description: "Your profile has been updated successfully."
       });
       setIsEditing(false);
     } catch (error: any) {
       toast({
         title: "Error",
         description: error.message,
-        variant: "destructive",
+        variant: "destructive"
       });
     }
   };
@@ -117,8 +117,8 @@ const Dashboard = () => {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
-      </div>
-    );
+      </div>);
+
   }
 
   return (
@@ -159,7 +159,7 @@ const Dashboard = () => {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-3xl font-display font-bold text-foreground">402+</p>
+                  <p className="text-3xl font-display font-bold text-foreground">888+</p>
                   <Badge className="mt-2 bg-green-500/20 text-green-400">Unlimited</Badge>
                 </CardContent>
               </Card>
@@ -225,16 +225,16 @@ const Dashboard = () => {
                       value={profile.full_name || ""}
                       onChange={(e) => setProfile({ ...profile, full_name: e.target.value })}
                       disabled={!isEditing}
-                      className="mt-1"
-                    />
+                      className="mt-1" />
+                    
                   </div>
                   <div>
                     <label className="text-sm text-muted-foreground">Email</label>
                     <Input
                       value={user?.email || ""}
                       disabled
-                      className="mt-1"
-                    />
+                      className="mt-1" />
+                    
                   </div>
                   <div>
                     <label className="text-sm text-muted-foreground">Bio</label>
@@ -243,24 +243,24 @@ const Dashboard = () => {
                       onChange={(e) => setProfile({ ...profile, bio: e.target.value })}
                       disabled={!isEditing}
                       className="mt-1"
-                      rows={3}
-                    />
+                      rows={3} />
+                    
                   </div>
                   <div className="flex gap-2">
-                    {isEditing ? (
-                      <>
+                    {isEditing ?
+                    <>
                         <Button variant="shield" onClick={handleUpdateProfile}>
                           Save Changes
                         </Button>
                         <Button variant="outline" onClick={() => setIsEditing(false)}>
                           Cancel
                         </Button>
-                      </>
-                    ) : (
-                      <Button variant="outline" onClick={() => setIsEditing(true)}>
+                      </> :
+
+                    <Button variant="outline" onClick={() => setIsEditing(true)}>
                         Edit Profile
                       </Button>
-                    )}
+                    }
                   </div>
                 </CardContent>
               </Card>
@@ -279,11 +279,11 @@ const Dashboard = () => {
                 </CardHeader>
                 <CardContent>
                   <div className="grid sm:grid-cols-2 gap-4">
-                    <Button 
-                      variant="outline" 
+                    <Button
+                      variant="outline"
                       className="h-auto p-4 flex flex-col items-start gap-2"
-                      onClick={() => navigate("/")}
-                    >
+                      onClick={() => navigate("/")}>
+                      
                       <MessageSquare className="w-6 h-6 text-primary" />
                       <div className="text-left">
                         <p className="font-semibold">AI Chat</p>
@@ -291,11 +291,11 @@ const Dashboard = () => {
                       </div>
                     </Button>
                     
-                    <Button 
-                      variant="outline" 
+                    <Button
+                      variant="outline"
                       className="h-auto p-4 flex flex-col items-start gap-2"
-                      onClick={() => navigate("/agents")}
-                    >
+                      onClick={() => navigate("/agents")}>
+                      
                       <Bot className="w-6 h-6 text-primary" />
                       <div className="text-left">
                         <p className="font-semibold">Agent Registry</p>
@@ -303,11 +303,11 @@ const Dashboard = () => {
                       </div>
                     </Button>
                     
-                    <Button 
-                      variant="outline" 
+                    <Button
+                      variant="outline"
                       className="h-auto p-4 flex flex-col items-start gap-2"
-                      onClick={() => navigate("/api")}
-                    >
+                      onClick={() => navigate("/api")}>
+                      
                       <Zap className="w-6 h-6 text-primary" />
                       <div className="text-left">
                         <p className="font-semibold">API Access</p>
@@ -315,11 +315,11 @@ const Dashboard = () => {
                       </div>
                     </Button>
                     
-                    <Button 
-                      variant="outline" 
+                    <Button
+                      variant="outline"
                       className="h-auto p-4 flex flex-col items-start gap-2"
-                      onClick={() => navigate("/technology")}
-                    >
+                      onClick={() => navigate("/technology")}>
+                      
                       <BookOpen className="w-6 h-6 text-primary" />
                       <div className="text-left">
                         <p className="font-semibold">Technology</p>
@@ -383,8 +383,8 @@ const Dashboard = () => {
       </section>
 
       <Footer />
-    </div>
-  );
+    </div>);
+
 };
 
 export default Dashboard;
