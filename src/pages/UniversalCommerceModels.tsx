@@ -3,7 +3,7 @@ import NavigationHeader from "@/components/NavigationHeader";
 import Footer from "@/components/Footer";
 import ScrollAnimationWrapper from "@/components/ScrollAnimationWrapper";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight, Globe, Zap, Network, ShoppingBag, Shield, Users, Bot, Monitor, Briefcase, Building2, Code2, Factory, Landmark, Scale, Cpu, Layers, AppWindow, UserCog, ChevronDown } from "lucide-react";
+import { ArrowRight, Globe, Zap, Network, ShoppingBag, Shield, Users, Bot, Monitor, Briefcase, Building2, Code2, Factory, Landmark, Scale, Cpu, Layers, AppWindow, UserCog, ChevronDown, Search } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip";
 import { commerceModels } from "@/data/commerceModels";
 
@@ -39,8 +39,22 @@ const transactionFramework = [
 
 import type { CommerceModel } from "@/data/commerceModels";
 
-const X2XAccordion = ({ model }: { model: CommerceModel }) => {
+const X2XAccordion = ({ model, searchQuery }: { model: CommerceModel; searchQuery: string }) => {
   const [open, setOpen] = useState(false);
+
+  const filteredConnections = searchQuery
+    ? model.connections.filter(
+        (c) =>
+          c.code.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          c.label.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : model.connections;
+
+  // Auto-open if search matches connections but not the parent
+  const hasMatchingConnections = searchQuery && filteredConnections.length > 0;
+  const isOpen = open || !!hasMatchingConnections;
+
+  if (searchQuery && filteredConnections.length === 0) return null;
   return (
     <div className="glass-card rounded-xl overflow-hidden">
       <button
@@ -50,12 +64,12 @@ const X2XAccordion = ({ model }: { model: CommerceModel }) => {
         <div className="flex items-center gap-3">
           <span className="text-lg font-display font-bold text-primary">{model.id}</span>
           <span className="text-sm text-foreground font-display">— {model.fullLabel}</span>
-          <span className="text-xs text-muted-foreground hidden sm:inline">({model.connections.length} pathways)</span>
+          <span className="text-xs text-muted-foreground hidden sm:inline">({filteredConnections.length} pathways)</span>
         </div>
-        <ChevronDown className={`w-5 h-5 text-muted-foreground transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
+        <ChevronDown className={`w-5 h-5 text-muted-foreground transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`} />
       </button>
       <AnimatePresence>
-        {open && (
+        {isOpen && (
           <motion.div
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
@@ -64,7 +78,7 @@ const X2XAccordion = ({ model }: { model: CommerceModel }) => {
             className="overflow-hidden"
           >
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 p-4 pt-0">
-              {model.connections.map((conn) => (
+              {filteredConnections.map((conn) => (
                 <div key={conn.code} className="flex items-center gap-2 py-1.5 px-3 rounded-lg hover:bg-primary/5 transition-colors">
                   <span className="text-xs font-mono font-bold text-primary min-w-[80px]">{conn.code}</span>
                   <span className="text-xs text-muted-foreground">{conn.label}</span>
@@ -79,6 +93,7 @@ const X2XAccordion = ({ model }: { model: CommerceModel }) => {
 };
 
 const UniversalCommerceModels = () => {
+  const [pathwaySearch, setPathwaySearch] = useState("");
   return (
     <div className="min-h-screen bg-background text-foreground">
       <NavigationHeader />
@@ -183,20 +198,41 @@ const UniversalCommerceModels = () => {
       <section className="py-16">
         <div className="container px-4">
           <ScrollAnimationWrapper>
-            <div className="text-center mb-12">
+            <div className="text-center mb-8">
               <h2 className="text-2xl md:text-4xl font-display font-bold mb-3">
                 380+ Commerce <span className="gradient-text">Pathways</span>
               </h2>
-              <p className="text-muted-foreground max-w-2xl mx-auto text-sm">
-                Expand each primary model to explore all its target connections.
+              <p className="text-muted-foreground max-w-2xl mx-auto text-sm mb-6">
+                Search or expand each primary model to explore all its target connections.
               </p>
+              <div className="relative max-w-md mx-auto">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <input
+                  type="text"
+                  placeholder="Search pathways… e.g. B2C, Machine, DAO"
+                  value={pathwaySearch}
+                  onChange={(e) => setPathwaySearch(e.target.value)}
+                  className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-card border border-border text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary/50 transition-colors"
+                />
+              </div>
             </div>
           </ScrollAnimationWrapper>
 
           <div className="max-w-4xl mx-auto space-y-3">
             {commerceModels.map((model) => (
-              <X2XAccordion key={model.id} model={model} />
+              <X2XAccordion key={model.id} model={model} searchQuery={pathwaySearch} />
             ))}
+            {pathwaySearch && commerceModels.every((m) => {
+              const q = pathwaySearch.toLowerCase();
+              return !m.id.toLowerCase().includes(q) &&
+                !m.label.toLowerCase().includes(q) &&
+                !m.fullLabel.toLowerCase().includes(q) &&
+                m.connections.every((c) => !c.code.toLowerCase().includes(q) && !c.label.toLowerCase().includes(q));
+            }) && (
+              <div className="text-center py-8 text-muted-foreground text-sm">
+                No pathways found for "{pathwaySearch}"
+              </div>
+            )}
           </div>
         </div>
       </section>

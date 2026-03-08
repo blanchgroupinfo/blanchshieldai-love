@@ -1,3 +1,5 @@
+import { useNavigate } from "react-router-dom";
+
 const models = [
   { id: "A2X", label: "Account", desc: "Account to Everything" },
   { id: "AG2X", label: "Agent", desc: "Agent to Everything" },
@@ -22,6 +24,8 @@ const models = [
 ];
 
 const UniversalCommerce = () => {
+  const navigate = useNavigate();
+
   return (
     <section className="relative py-24 overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-b from-card via-background to-card" />
@@ -39,12 +43,21 @@ const UniversalCommerce = () => {
         
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 max-w-6xl mx-auto">
           {models.map((model) => (
-            <div key={model.id} className="glass-card rounded-xl p-4 text-center hover:border-primary/50 transition-all duration-300 hover:-translate-y-1">
+            <div key={model.id} className="glass-card rounded-xl p-4 text-center hover:border-primary/50 transition-all duration-300 hover:-translate-y-1 cursor-pointer" onClick={() => navigate("/universal-commerce")}>
               <div className="text-lg font-display font-bold text-primary mb-1">{model.id}</div>
               <div className="text-xs font-display text-foreground mb-1">{model.label}</div>
               <div className="text-[10px] text-muted-foreground">{model.desc}</div>
             </div>
           ))}
+        </div>
+
+        <div className="text-center mt-8">
+          <button
+            onClick={() => navigate("/universal-commerce")}
+            className="text-sm text-primary hover:text-primary/80 font-display transition-colors underline underline-offset-4"
+          >
+            Explore all 380+ Commerce Pathways →
+          </button>
         </div>
       </div>
     </section>
