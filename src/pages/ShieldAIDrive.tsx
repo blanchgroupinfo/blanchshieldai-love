@@ -75,18 +75,30 @@ const ShieldAIDrive = () => {
   const [activeTab, setActiveTab] = useState<"overview" | "files" | "gallery" | "upload">("overview");
   const [user, setUser] = useState<User | null>(null);
   const [files, setFiles] = useState<StorageFile[]>([]);
+  const [folders, setFolders] = useState<string[]>([]);
+  const [currentPath, setCurrentPath] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [previewFile, setPreviewFile] = useState<StorageFile | null>(null);
   const [dragging, setDragging] = useState(false);
+  const [showNewFolderDialog, setShowNewFolderDialog] = useState(false);
+  const [newFolderName, setNewFolderName] = useState("");
+  const [moveFile, setMoveFile] = useState<StorageFile | null>(null);
+  const [moveFolders, setMoveFolders] = useState<string[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
   const navigate = useNavigate();
 
+  const getStoragePath = (fileName?: string) => {
+    if (!user) return "";
+    const base = [user.id, ...currentPath].join("/");
+    return fileName ? `${base}/${fileName}` : base;
+  };
+
   const getPublicUrl = (fileName: string) => {
     if (!user) return "";
-    const { data } = supabase.storage.from("shield-drive").getPublicUrl(`${user.id}/${fileName}`);
+    const { data } = supabase.storage.from("shield-drive").getPublicUrl(getStoragePath(fileName));
     return data.publicUrl;
   };
 
