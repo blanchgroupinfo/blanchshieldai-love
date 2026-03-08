@@ -90,7 +90,7 @@ const navItems: NavItem[] = [{
   icon: ArrowLeftRight,
   subItems: [{
     id: "mt101",
-    label: "MT101-MT999"
+    label: "MT101-MT999-MX (MT → MX)"
   }, {
     id: "mx",
     label: "MX Format - MT (MX → MT)"
