@@ -354,6 +354,8 @@ const ShieldAIDrive = () => {
                       {filteredFiles.map((file, i) => {
                         const FileIcon = getFileIcon(file.name);
                         const displayName = file.name.replace(/^\d+_/, "");
+                        const previewable = isPreviewable(file.name);
+                        const isImage = isImageFile(file.name);
                         return (
                           <motion.div
                             key={file.id || file.name}
@@ -361,9 +363,19 @@ const ShieldAIDrive = () => {
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: i * 0.03 }}
                             className="flex items-center justify-between px-3 py-3 rounded-lg hover:bg-muted/20 cursor-pointer transition-colors group"
+                            onClick={() => previewable ? setPreviewFile(file) : undefined}
                           >
                             <div className="flex items-center gap-3 min-w-0">
-                              <FileIcon className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors shrink-0" />
+                              {isImage ? (
+                                <img
+                                  src={getPublicUrl(file.name)}
+                                  alt={displayName}
+                                  className="h-10 w-10 rounded object-cover border border-border/50 shrink-0"
+                                  loading="lazy"
+                                />
+                              ) : (
+                                <FileIcon className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors shrink-0" />
+                              )}
                               <div className="min-w-0">
                                 <p className="text-sm font-medium group-hover:text-primary transition-colors truncate">{displayName}</p>
                                 <p className="text-xs text-muted-foreground">
@@ -372,10 +384,15 @@ const ShieldAIDrive = () => {
                               </div>
                             </div>
                             <div className="flex items-center gap-1 shrink-0">
-                              <Button variant="ghost" size="sm" className="h-7 w-7 p-0 opacity-0 group-hover:opacity-100 transition-opacity" onClick={() => handleDownload(file.name)}>
+                              {previewable && (
+                                <Button variant="ghost" size="sm" className="h-7 w-7 p-0 opacity-0 group-hover:opacity-100 transition-opacity" onClick={(e) => { e.stopPropagation(); setPreviewFile(file); }}>
+                                  <Eye className="h-3.5 w-3.5" />
+                                </Button>
+                              )}
+                              <Button variant="ghost" size="sm" className="h-7 w-7 p-0 opacity-0 group-hover:opacity-100 transition-opacity" onClick={(e) => { e.stopPropagation(); handleDownload(file.name); }}>
                                 <Download className="h-3.5 w-3.5" />
                               </Button>
-                              <Button variant="ghost" size="sm" className="h-7 w-7 p-0 opacity-0 group-hover:opacity-100 transition-opacity text-destructive" onClick={() => handleDelete(file.name)}>
+                              <Button variant="ghost" size="sm" className="h-7 w-7 p-0 opacity-0 group-hover:opacity-100 transition-opacity text-destructive" onClick={(e) => { e.stopPropagation(); handleDelete(file.name); }}>
                                 <Trash2 className="h-3.5 w-3.5" />
                               </Button>
                             </div>
