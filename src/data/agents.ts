@@ -1156,6 +1156,7 @@ export const agents: Agent[] = [
 
 export const totalAgents = 888;
 export const totalCategories = 81;
+export const totalPillars = 12;
 
 // H.I.I. AI = Hebrew Israelite Implementer Aboriginal Identity
 export const HIIAIMeaning = "Hebrew Israelite Implementer Aboriginal Identity";
