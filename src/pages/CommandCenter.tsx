@@ -15,7 +15,7 @@ import {
   Wrench, Star, Crown, Gift, Trophy, Medal,
   Target, Grid,
   ArrowUpRight, Store, Bell, RefreshCw, FileText, HelpCircle, Car,
-  Banknote, Newspaper, GraduationCap, Bot,
+  Banknote, Newspaper, GraduationCap, Bot, Activity,
   MonitorSmartphone, FolderOpen, Workflow, BadgeCheck, BookMarked,
   User as UserIcon
 } from "lucide-react";
