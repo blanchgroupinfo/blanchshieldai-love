@@ -171,7 +171,7 @@ const ShieldAIDrive = () => {
     if (!user) return;
     const { data, error } = await supabase.storage
       .from("shield-drive")
-      .download(`${user.id}/${fileName}`);
+      .download(getStoragePath(fileName));
     if (error) {
       toast({ title: "Download failed", description: error.message, variant: "destructive" });
       return;
@@ -188,7 +188,7 @@ const ShieldAIDrive = () => {
     if (!user) return;
     const { error } = await supabase.storage
       .from("shield-drive")
-      .remove([`${user.id}/${fileName}`]);
+      .remove([getStoragePath(fileName)]);
     if (error) {
       toast({ title: "Delete failed", description: error.message, variant: "destructive" });
     } else {
@@ -197,7 +197,65 @@ const ShieldAIDrive = () => {
     }
   };
 
-  const totalSize = files.reduce((sum, f) => sum + (f.metadata?.size || 0), 0);
+  const handleCreateFolder = async () => {
+    if (!user || !newFolderName.trim()) return;
+    const folderPath = `${getStoragePath()}/${newFolderName.trim()}/.emptyFolderPlaceholder`;
+    const { error } = await supabase.storage
+      .from("shield-drive")
+      .upload(folderPath, new Blob([""]), { contentType: "text/plain" });
+    if (error) {
+      toast({ title: "Failed to create folder", description: error.message, variant: "destructive" });
+    } else {
+      toast({ title: `Folder "${newFolderName.trim()}" created` });
+      setNewFolderName("");
+      setShowNewFolderDialog(false);
+      fetchFiles();
+    }
+  };
+
+  const navigateToFolder = (folderName: string) => {
+    setCurrentPath(prev => [...prev, folderName]);
+    setSearchQuery("");
+  };
+
+  const navigateToBreadcrumb = (index: number) => {
+    setCurrentPath(prev => prev.slice(0, index));
+    setSearchQuery("");
+  };
+
+  const handleMoveFile = async (targetFolder: string) => {
+    if (!user || !moveFile) return;
+    const sourcePath = getStoragePath(moveFile.name);
+    const targetPath = targetFolder === "__root__"
+      ? `${user.id}/${moveFile.name}`
+      : `${getStoragePath()}/${targetFolder}/${moveFile.name}`;
+
+    const { data, error: dlError } = await supabase.storage.from("shield-drive").download(sourcePath);
+    if (dlError) {
+      toast({ title: "Move failed", description: dlError.message, variant: "destructive" });
+      return;
+    }
+    const { error: upError } = await supabase.storage.from("shield-drive").upload(targetPath, data);
+    if (upError) {
+      toast({ title: "Move failed", description: upError.message, variant: "destructive" });
+      return;
+    }
+    await supabase.storage.from("shield-drive").remove([sourcePath]);
+    toast({ title: `File moved to ${targetFolder === "__root__" ? "root" : targetFolder}` });
+    setMoveFile(null);
+    fetchFiles();
+  };
+
+  // When moveFile dialog opens, fetch sibling folders
+  useEffect(() => {
+    if (moveFile && user) {
+      const listPath = [user.id, ...currentPath].join("/");
+      supabase.storage.from("shield-drive").list(listPath, { limit: 100 }).then(({ data }) => {
+        const folderNames = (data || []).filter((f: any) => f.id === null && f.name !== ".emptyFolderPlaceholder").map((f: any) => f.name);
+        setMoveFolders(folderNames);
+      });
+    }
+  }, [moveFile, user, currentPath]);
   const filteredFiles = files.filter((f) =>
     f.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
