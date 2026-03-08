@@ -82,6 +82,7 @@ const ShieldAIDrive = () => {
   const [dragging, setDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const getPublicUrl = (fileName: string) => {
     if (!user) return "";
