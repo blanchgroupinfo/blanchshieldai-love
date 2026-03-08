@@ -1,3 +1,4 @@
+import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { 
   Landmark, FileText, Gem, Link, Globe, Coins, 
@@ -5,9 +6,11 @@ import {
   RefreshCcw, LineChart, Banknote, TrendingUp, Building2,
   PieChart, Image, Users, Home, ShieldCheck, ArrowUpDown,
   Layers, Target, Zap, Timer, ArrowDownUp, ListOrdered,
-  CircleDot, Shield
+  CircleDot, Shield, Search
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const markets = [
   { name: "Bank Instruments", icon: Landmark, category: "Finance" },
@@ -16,7 +19,7 @@ const markets = [
   { name: "Blanch Brand Digital Assets", icon: Gem, category: "Digital" },
   { name: "Bonds", icon: Link, category: "Fixed Income" },
   { name: "BRICS", icon: Globe, category: "International" },
-  { name: "CBDC", icon: Coins, category: "Digital Currency" },
+  { name: "CBDC", icon: Coins, category: "Digital" },
   { name: "CFD (Contracts for Difference)", icon: BarChart3, category: "Derivatives" },
   { name: "Commodities", icon: Box, category: "Physical" },
   { name: "Crypto Currency", icon: Bitcoin, category: "Digital" },
@@ -25,7 +28,7 @@ const markets = [
   { name: "Currency Swap", icon: RefreshCcw, category: "Forex" },
   { name: "Derivatives", icon: LineChart, category: "Derivatives" },
   { name: "Digital Currency", icon: Banknote, category: "Digital" },
-  { name: "Equities", icon: TrendingUp, category: "Stocks" },
+  { name: "Equities", icon: TrendingUp, category: "Equities" },
   { name: "ETFs (Exchange-Traded Funds)", icon: PieChart, category: "Funds" },
   { name: "Forex", icon: ArrowUpDown, category: "Forex" },
   { name: "Futures", icon: BarChart3, category: "Derivatives" },
@@ -40,14 +43,14 @@ const markets = [
   { name: "NFTs", icon: Image, category: "Digital" },
   { name: "OCO", icon: Layers, category: "Order Types" },
   { name: "OTC (Over-The-Counter)", icon: Building2, category: "Trading" },
-  { name: "OTCQB Venture Market", icon: TrendingUp, category: "Stocks" },
-  { name: "OTCQX Best Market", icon: ShieldCheck, category: "Stocks" },
+  { name: "OTCQB Venture Market", icon: TrendingUp, category: "Equities" },
+  { name: "OTCQX Best Market", icon: ShieldCheck, category: "Equities" },
   { name: "Options", icon: LineChart, category: "Derivatives" },
-  { name: "Pink Open Market", icon: BarChart3, category: "Stocks" },
+  { name: "Pink Open Market", icon: BarChart3, category: "Equities" },
   { name: "PPP Programs (Private Placement Programs)", icon: Landmark, category: "Finance" },
-  { name: "Private Companies", icon: Building2, category: "Equity" },
+  { name: "Private Companies", icon: Building2, category: "Equities" },
   { name: "Real Estate", icon: Home, category: "Physical" },
-  { name: "Stablecoins", icon: Coins, category: "Crypto" },
+  { name: "Stablecoins", icon: Coins, category: "Digital" },
   { name: "Stocks", icon: TrendingUp, category: "Equities" },
   { name: "STP", icon: ArrowDownUp, category: "Order Types" },
   { name: "STP-LMT", icon: ArrowDownUp, category: "Order Types" },
@@ -55,7 +58,22 @@ const markets = [
   { name: "Request Short Selling Permission", icon: Shield, category: "Trading" },
 ];
 
+const ALL_TAB = "All";
+
+const categories = [ALL_TAB, ...Array.from(new Set(markets.map((m) => m.category))).sort()];
+
 const TradingMarkets = () => {
+  const [activeCategory, setActiveCategory] = useState(ALL_TAB);
+  const [search, setSearch] = useState("");
+
+  const filtered = useMemo(() => {
+    return markets.filter((m) => {
+      const matchesCategory = activeCategory === ALL_TAB || m.category === activeCategory;
+      const matchesSearch = !search || m.name.toLowerCase().includes(search.toLowerCase()) || m.category.toLowerCase().includes(search.toLowerCase());
+      return matchesCategory && matchesSearch;
+    });
+  }, [activeCategory, search]);
+
   return (
     <section className="py-20 bg-muted/30">
       <div className="container px-4">
@@ -63,7 +81,7 @@ const TradingMarkets = () => {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-12"
+          className="text-center mb-8"
         >
           <Badge variant="outline" className="mb-4 border-primary/50 text-primary">
             All Trading Finance Markets
@@ -77,8 +95,43 @@ const TradingMarkets = () => {
           </p>
         </motion.div>
 
+        {/* Search Bar */}
+        <div className="max-w-md mx-auto mb-6">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <Input
+              placeholder="Search markets..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="pl-10 bg-card/70 border-border/50"
+            />
+          </div>
+        </div>
+
+        {/* Category Tabs */}
+        <div className="mb-8 overflow-x-auto">
+          <Tabs value={activeCategory} onValueChange={setActiveCategory}>
+            <TabsList className="flex flex-wrap h-auto gap-1 bg-transparent justify-center">
+              {categories.map((cat) => (
+                <TabsTrigger
+                  key={cat}
+                  value={cat}
+                  className="text-xs data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                >
+                  {cat}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+          </Tabs>
+        </div>
+
+        {/* Results count */}
+        <p className="text-sm text-muted-foreground text-center mb-6">
+          Showing {filtered.length} of {markets.length} markets
+        </p>
+
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3">
-          {markets.map((market, index) => (
+          {filtered.map((market, index) => (
             <motion.div
               key={market.name}
               initial={{ opacity: 0, scale: 0.9 }}
@@ -101,6 +154,12 @@ const TradingMarkets = () => {
             </motion.div>
           ))}
         </div>
+
+        {filtered.length === 0 && (
+          <div className="text-center py-12 text-muted-foreground">
+            No markets found matching your search.
+          </div>
+        )}
       </div>
     </section>
   );
