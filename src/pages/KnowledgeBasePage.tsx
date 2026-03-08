@@ -5,7 +5,7 @@ import ScrollAnimationWrapper from "@/components/ScrollAnimationWrapper";
 import { 
   BookOpen, Search, Filter, Database, Shield, Globe, 
   Cpu, Wallet, Users, Scale, Heart, Zap, Building,
-  BookText, Sparkles, ChevronRight
+  BookText, Sparkles, ChevronRight, Info
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
