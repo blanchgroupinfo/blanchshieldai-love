@@ -246,7 +246,7 @@ const ShieldAIDrive = () => {
     fetchFiles();
   };
 
-  // When moveFile dialog opens, fetch sibling folders
+  const totalSize = files.reduce((sum, f) => sum + (f.metadata?.size || 0), 0);
   useEffect(() => {
     if (moveFile && user) {
       const listPath = [user.id, ...currentPath].join("/");
