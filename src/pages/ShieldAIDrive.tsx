@@ -894,6 +894,93 @@ const ShieldAIDrive = () => {
               </div>
             </DialogContent>
           </Dialog>
+
+          {/* Rename Dialog */}
+          <Dialog open={!!renameTarget} onOpenChange={(open) => !open && setRenameTarget(null)}>
+            <DialogContent className="max-w-sm">
+              <DialogHeader>
+                <DialogTitle className="flex items-center gap-2">
+                  <Pencil className="h-4 w-4 text-primary" /> Rename {renameTarget?.type === "folder" ? "Folder" : "File"}
+                </DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4">
+                <Input
+                  placeholder="New name..."
+                  value={renameValue}
+                  onChange={(e) => setRenameValue(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && handleRename()}
+                  autoFocus
+                />
+                <div className="flex justify-end gap-2">
+                  <Button variant="outline" size="sm" onClick={() => setRenameTarget(null)}>Cancel</Button>
+                  <Button variant="shield" size="sm" onClick={handleRename} disabled={!renameValue.trim()}>Rename</Button>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
+
+          {/* Share File Dialog */}
+          <Dialog open={!!shareFile} onOpenChange={(open) => { if (!open) { setShareFile(null); setShareLink(""); } }}>
+            <DialogContent className="max-w-md">
+              <DialogHeader>
+                <DialogTitle className="flex items-center gap-2 text-sm">
+                  <Share2 className="h-4 w-4 text-primary" /> Share "{shareFile?.name.replace(/^\d+_/, "")}"
+                </DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4">
+                {!shareLink ? (
+                  <>
+                    <div>
+                      <p className="text-xs text-muted-foreground mb-2">Access type</p>
+                      <div className="flex gap-2">
+                        <Button
+                          variant={shareAccessType === "view" ? "shield" : "outline"}
+                          size="sm"
+                          className="text-xs"
+                          onClick={() => setShareAccessType("view")}
+                        >
+                          <Eye className="h-3 w-3 mr-1" /> View Only
+                        </Button>
+                        <Button
+                          variant={shareAccessType === "download" ? "shield" : "outline"}
+                          size="sm"
+                          className="text-xs"
+                          onClick={() => setShareAccessType("download")}
+                        >
+                          <Download className="h-3 w-3 mr-1" /> Download
+                        </Button>
+                      </div>
+                    </div>
+                    <Button
+                      variant="shield"
+                      size="sm"
+                      className="w-full gap-1.5"
+                      onClick={handleCreateShareLink}
+                      disabled={sharingLoading}
+                    >
+                      {sharingLoading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Link className="h-3.5 w-3.5" />}
+                      Generate Share Link
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <div className="flex items-center gap-2">
+                      <Input value={shareLink} readOnly className="text-xs h-8" />
+                      <Button variant="outline" size="sm" className="shrink-0 h-8 w-8 p-0" onClick={handleCopyShareLink}>
+                        {shareCopied ? <Check className="h-3.5 w-3.5 text-green-500" /> : <Copy className="h-3.5 w-3.5" />}
+                      </Button>
+                    </div>
+                    <p className="text-[10px] text-muted-foreground">
+                      Access: {shareAccessType === "view" ? "View only" : "Download enabled"} • Anyone with this link can access the file
+                    </p>
+                    <Button variant="outline" size="sm" className="w-full text-destructive text-xs" onClick={handleRevokeShare}>
+                      Revoke Share Link
+                    </Button>
+                  </>
+                )}
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
       <Footer />
