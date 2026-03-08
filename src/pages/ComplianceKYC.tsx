@@ -1,6 +1,6 @@
 import NavigationHeader from "@/components/NavigationHeader";
 import Footer from "@/components/Footer";
-import FloatingChat from "@/components/FloatingChat";
+
 import { motion } from "framer-motion";
 import { Shield, FileCheck, UserCheck, Globe, Lock, Scale, CheckCircle, AlertTriangle, FileSearch } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -49,7 +49,7 @@ const kycTiers = [{
 const ComplianceKYC = () => {
   return <div className="min-h-screen bg-background pt-20">
       <NavigationHeader />
-      <FloatingChat />
+      
       
       {/* Hero Section */}
       <section className="relative py-24 overflow-hidden">

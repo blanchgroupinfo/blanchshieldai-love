@@ -23,7 +23,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import NavigationHeader from "@/components/NavigationHeader";
 import Footer from "@/components/Footer";
-import FloatingChat from "@/components/FloatingChat";
+
 import type { User } from "@supabase/supabase-js";
 
 interface QuickAction {
@@ -467,7 +467,7 @@ const CommandCenterPage = () => {
       </main>
 
       <Footer />
-      <FloatingChat />
+      
     </div>
   );
 };

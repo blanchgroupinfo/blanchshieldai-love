@@ -1,6 +1,6 @@
 import NavigationHeader from "@/components/NavigationHeader";
 import Footer from "@/components/Footer";
-import FloatingChat from "@/components/FloatingChat";
+
 import { motion } from "framer-motion";
 import { Brain, Cpu, Sparkles, Zap, Shield, Globe, MessageSquare, Code, Database, Lock, Bot, Layers } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -34,7 +34,7 @@ const capabilities = ["Natural Language Understanding", "Code Generation & Analy
 const ShieldLLM = () => {
   return <div className="min-h-screen bg-background pt-20">
       <NavigationHeader />
-      <FloatingChat />
+      
       
       {/* Hero Section */}
       <section className="relative py-24 overflow-hidden">

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import NavigationHeader from "@/components/NavigationHeader";
 import Footer from "@/components/Footer";
-import FloatingChat from "@/components/FloatingChat";
+
 import { motion } from "framer-motion";
 import { Rocket, Target, Lightbulb, Users, TrendingUp, Shield, CheckCircle, ArrowRight, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -59,7 +59,7 @@ const HeedVentures = () => {
   };
   return <div className="min-h-screen bg-background pt-20">
       <NavigationHeader />
-      <FloatingChat />
+      
       
       {/* Hero Section */}
       <section className="relative py-24 overflow-hidden">

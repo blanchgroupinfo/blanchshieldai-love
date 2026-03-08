@@ -1,6 +1,6 @@
 import NavigationHeader from "@/components/NavigationHeader";
 import Footer from "@/components/Footer";
-import FloatingChat from "@/components/FloatingChat";
+
 import { motion } from "framer-motion";
 import { Utensils, Leaf, Zap, Shield, Globe, Heart, Droplets, Sun, Recycle, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -33,7 +33,7 @@ const capabilities = ["Fresh fruits and vegetables", "Grains and cereals", "Plan
 const FoodReplicator = () => {
   return <div className="min-h-screen bg-background pt-20">
       <NavigationHeader />
-      <FloatingChat />
+      
       
       {/* Hero Section */}
       <section className="relative py-24 overflow-hidden">

@@ -18,14 +18,14 @@ import MissionSection from "@/components/MissionSection";
 import WatchmanHomeSection from "@/components/WatchmanHomeSection";
 import Footer from "@/components/Footer";
 import SectionNavigation from "@/components/SectionNavigation";
-import FloatingChat from "@/components/FloatingChat";
+
 
 const Index = () => {
   return (
     <div className="min-h-screen bg-background pt-14">
       <NavigationHeader />
       <SectionNavigation />
-      <FloatingChat />
+      
       <div id="hero">
         <HeroSection />
       </div>

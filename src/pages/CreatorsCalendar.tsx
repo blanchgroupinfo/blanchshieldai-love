@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { Calendar, Sun, Moon, Star, Book, Clock, ChevronLeft, ChevronRight, Sparkles, Sunrise, AlertCircle, Printer, MapPin, Plus, Bell, Search, Navigation, X, Sunset, Edit, Trash2, Download } from "lucide-react";
 import NavigationHeader from "@/components/NavigationHeader";
 import Footer from "@/components/Footer";
-import FloatingChat from "@/components/FloatingChat";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -280,7 +280,7 @@ const CreatorsCalendar = () => {
   const yearStartInfo = getYearStartDate(currentYear);
   return <div className="min-h-screen bg-background">
       <NavigationHeader />
-      <FloatingChat />
+      
       
       {/* Print styles */}
       <style>{`

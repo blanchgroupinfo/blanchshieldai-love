@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { Globe, ArrowLeftRight, Shield, Clock, Banknote, Building2, TrendingUp, Lock, ArrowRight } from "lucide-react";
 import NavigationHeader from "@/components/NavigationHeader";
 import Footer from "@/components/Footer";
-import FloatingChat from "@/components/FloatingChat";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 const CrossBorderSettlements = () => {
@@ -55,7 +55,7 @@ const CrossBorderSettlements = () => {
   }];
   return <div className="min-h-screen bg-background">
       <NavigationHeader />
-      <FloatingChat />
+      
       
       {/* Hero Section */}
       <section className="relative pt-32 pb-20 overflow-hidden">

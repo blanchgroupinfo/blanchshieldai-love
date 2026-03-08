@@ -16,7 +16,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import NavigationHeader from "@/components/NavigationHeader";
 import Footer from "@/components/Footer";
-import FloatingChat from "@/components/FloatingChat";
+
 
 const AIGateway = () => {
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
@@ -689,7 +689,7 @@ console.log(response.choices[0].message.content);`}
       </section>
 
       <Footer />
-      <FloatingChat />
+      
     </div>
   );
 };

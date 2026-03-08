@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Book, ScrollText, Scale, Shield, Heart, Users, Coins, Home, Search, ChevronRight } from "lucide-react";
 import NavigationHeader from "@/components/NavigationHeader";
 import Footer from "@/components/Footer";
-import FloatingChat from "@/components/FloatingChat";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -173,7 +173,7 @@ const LawsCommandments = () => {
   const filteredLaws = lawsContent[selectedCategory]?.filter(law => law.title.toLowerCase().includes(searchTerm.toLowerCase()) || law.scripture.toLowerCase().includes(searchTerm.toLowerCase())) || [];
   return <div className="min-h-screen bg-background">
       <NavigationHeader />
-      <FloatingChat />
+      
       
       {/* Hero Section */}
       <section className="relative pt-32 pb-12 overflow-hidden">

@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { Globe, Boxes, Users, Headphones, Building2, Gamepad2, ShoppingBag, Sparkles, ArrowRight } from "lucide-react";
 import NavigationHeader from "@/components/NavigationHeader";
 import Footer from "@/components/Footer";
-import FloatingChat from "@/components/FloatingChat";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -52,7 +52,7 @@ const Metaverse = () => {
   return (
     <div className="min-h-screen bg-background">
       <NavigationHeader />
-      <FloatingChat />
+      
       
       {/* Hero Section */}
       <section className="relative pt-32 pb-20 overflow-hidden">
