@@ -1,6 +1,6 @@
 import { 
   Globe, Cpu, ShoppingBag, Zap, Brain, CheckCircle2,
-  Scale, Heart, Building2, Landmark, Rocket, BookOpen, Shield, Users, Network, GraduationCap
+  Scale, Heart, Building2, Landmark, Rocket, BookOpen, Shield, Users, Network, GraduationCap, Megaphone
 } from "lucide-react";
 
 const capabilities = [
@@ -43,6 +43,11 @@ const capabilities = [
     icon: Brain, title: "Intelligence & Media",
     items: ["S.H.I.E.L.D. AI LLM & All AI Agents & LLMs", "AI Models & Modules", "Media & Entertainment", "Global Marketing"],
     scripture: "John 4:24 — Most High AHAYAH is a Spirit: and they that worship him must worship him in spirit and in truth."
+  },
+  {
+    icon: Megaphone, title: "Marketing & Advertising",
+    items: ["Digital & Traditional Marketing", "Brand Strategy & Development", "Social Media & Content Creation", "Global Advertising Campaigns"],
+    scripture: "Proverbs 22:29 — Seest thou a man diligent in his business? he shall stand before kings."
   },
   {
     icon: Scale, title: "Legal & Governance",
