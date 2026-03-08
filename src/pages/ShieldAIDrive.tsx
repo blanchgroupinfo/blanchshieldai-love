@@ -420,7 +420,7 @@ const ShieldAIDrive = () => {
                       variant="shield"
                       size="sm"
                       className="gap-1.5"
-                      onClick={() => toast({ title: "Upgrade Storage", description: "Premium storage plans coming soon. Stay tuned!" })}
+                      onClick={() => setShowUpgradeModal(true)}
                     >
                       <ArrowUpCircle className="h-3.5 w-3.5" /> Upgrade Storage
                     </Button>
