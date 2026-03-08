@@ -111,16 +111,22 @@ const ShieldAIDrive = () => {
   const fetchFiles = useCallback(async () => {
     if (!user) return;
     setLoading(true);
+    const listPath = [user.id, ...currentPath].join("/");
     const { data, error } = await supabase.storage
       .from("shield-drive")
-      .list(user.id, { limit: 100, sortBy: { column: "created_at", order: "desc" } });
+      .list(listPath, { limit: 100, sortBy: { column: "created_at", order: "desc" } });
     if (error) {
       toast({ title: "Error loading files", description: error.message, variant: "destructive" });
     } else {
-      setFiles((data as StorageFile[]) || []);
+      const items = (data || []) as (StorageFile & { id: string | null })[];
+      // Folders show up as items with id=null and no metadata
+      const folderNames = items.filter(f => f.id === null && f.name !== ".emptyFolderPlaceholder").map(f => f.name);
+      const fileItems = items.filter(f => f.id !== null && f.name !== ".emptyFolderPlaceholder") as StorageFile[];
+      setFolders(folderNames);
+      setFiles(fileItems);
     }
     setLoading(false);
-  }, [user, toast]);
+  }, [user, toast, currentPath]);
 
   useEffect(() => {
     if (user) fetchFiles();
