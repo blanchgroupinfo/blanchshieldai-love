@@ -602,9 +602,9 @@ const ShieldAIOS = () => {
 
             <div className="grid md:grid-cols-3 gap-3 mb-4">
               {[
-                { label: "Unread", count: notifications.filter(n => !n.read).length, color: "text-destructive" },
-                { label: "Agent Updates", count: notifications.filter(n => n.type === "agent").length, color: "text-primary" },
-                { label: "Security Alerts", count: notifications.filter(n => n.type === "alert").length, color: "text-amber-500" },
+                { label: "Unread", count: unreadCount, color: "text-destructive" },
+                { label: "Agent Updates", count: osNotifications.filter(n => n.type === "agent").length, color: "text-primary" },
+                { label: "Security Alerts", count: osNotifications.filter(n => n.type === "alert").length, color: "text-amber-500" },
               ].map((stat) => (
                 <Card key={stat.label} className="bg-card/60 border-border/50">
                   <CardContent className="p-4 text-center">
@@ -615,13 +615,23 @@ const ShieldAIOS = () => {
               ))}
             </div>
 
+            {unreadCount > 0 && (
+              <div className="flex justify-end">
+                <Button variant="outline" size="sm" onClick={markAllAsRead} className="gap-1.5 text-xs">
+                  <CheckCheck className="h-3.5 w-3.5" />
+                  Mark All as Read
+                </Button>
+              </div>
+            )}
+
             <div className="space-y-2">
-              {notifications.map((notif, i) => (
+              {osNotifications.map((notif, i) => (
                 <motion.div
                   key={notif.id}
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.05 }}
+                  transition={{ delay: i * 0.03 }}
+                  layout
                 >
                   <Card className={`bg-card/60 border-border/50 transition-all hover:bg-card/80 ${!notif.read ? "border-l-4 border-l-primary" : ""}`}>
                     <CardContent className="p-4 flex items-start gap-4">
@@ -641,12 +651,160 @@ const ShieldAIOS = () => {
                         </div>
                         <p className="text-xs text-muted-foreground mt-1">{notif.message}</p>
                       </div>
-                      {!notif.read && <div className="w-2.5 h-2.5 rounded-full bg-primary shrink-0 mt-1" />}
+                      <div className="flex flex-col gap-1 shrink-0">
+                        {!notif.read && (
+                          <Button variant="ghost" size="sm" className="h-6 w-6 p-0" onClick={() => markAsRead(notif.id)} title="Mark as read">
+                            <Check className="h-3 w-3" />
+                          </Button>
+                        )}
+                        <Button variant="ghost" size="sm" className="h-6 w-6 p-0 text-muted-foreground hover:text-destructive" onClick={() => dismissNotification(notif.id)} title="Dismiss">
+                          ×
+                        </Button>
+                      </div>
                     </CardContent>
                   </Card>
                 </motion.div>
               ))}
+              {osNotifications.length === 0 && (
+                <div className="text-center py-12 text-muted-foreground">
+                  <Bell className="h-12 w-12 mx-auto mb-3 opacity-30" />
+                  <p className="text-sm">No notifications</p>
+                </div>
+              )}
             </div>
+          </motion.div>
+        )}
+
+        {/* Settings View */}
+        {activeView === "settings" && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
+            <div className="text-center py-4">
+              <h2 className="text-2xl font-bold font-heading">System Settings</h2>
+              <p className="text-muted-foreground text-sm">Configure your S.H.I.E.L.D. AI OS preferences</p>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-4 max-w-4xl mx-auto">
+              {/* Appearance */}
+              <Card className="bg-card/60 border-border/50">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-base flex items-center gap-2">
+                    <Sun className="h-4 w-4 text-primary" />
+                    Appearance
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Moon className="h-4 w-4 text-muted-foreground" />
+                      <span className="text-sm">Dark Mode</span>
+                    </div>
+                    <Switch checked={settings.darkMode} onCheckedChange={(v) => setSettings(s => ({ ...s, darkMode: v }))} />
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Languages className="h-4 w-4 text-muted-foreground" />
+                      <span className="text-sm">Language</span>
+                    </div>
+                    <select
+                      value={settings.language}
+                      onChange={(e) => setSettings(s => ({ ...s, language: e.target.value }))}
+                      className="bg-muted border border-border rounded-md px-2 py-1 text-xs text-foreground"
+                    >
+                      <option>English</option>
+                      <option>Hebrew</option>
+                      <option>Spanish</option>
+                      <option>French</option>
+                      <option>Arabic</option>
+                    </select>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Sound & Audio */}
+              <Card className="bg-card/60 border-border/50">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-base flex items-center gap-2">
+                    <Volume2 className="h-4 w-4 text-primary" />
+                    Sound & Audio
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      {settings.soundEnabled ? <Volume2 className="h-4 w-4 text-muted-foreground" /> : <VolumeX className="h-4 w-4 text-muted-foreground" />}
+                      <span className="text-sm">System Sounds</span>
+                    </div>
+                    <Switch checked={settings.soundEnabled} onCheckedChange={(v) => setSettings(s => ({ ...s, soundEnabled: v }))} />
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Notifications */}
+              <Card className="bg-card/60 border-border/50">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-base flex items-center gap-2">
+                    <Bell className="h-4 w-4 text-primary" />
+                    Notification Preferences
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm">Enable Notifications</span>
+                    <Switch checked={settings.notificationsEnabled} onCheckedChange={(v) => setSettings(s => ({ ...s, notificationsEnabled: v }))} />
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm">Agent Alerts</span>
+                    <Switch checked={settings.agentAlerts} onCheckedChange={(v) => setSettings(s => ({ ...s, agentAlerts: v }))} />
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm">Security Alerts</span>
+                    <Switch checked={settings.securityAlerts} onCheckedChange={(v) => setSettings(s => ({ ...s, securityAlerts: v }))} />
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm">System Updates</span>
+                    <Switch checked={settings.systemUpdates} onCheckedChange={(v) => setSettings(s => ({ ...s, systemUpdates: v }))} />
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Security & Privacy */}
+              <Card className="bg-card/60 border-border/50">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-base flex items-center gap-2">
+                    <Lock className="h-4 w-4 text-primary" />
+                    Security & Privacy
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm">Auto-Lock Session</span>
+                    <Switch checked={settings.autoLock} onCheckedChange={(v) => setSettings(s => ({ ...s, autoLock: v }))} />
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm">Usage Telemetry</span>
+                    <Switch checked={settings.telemetry} onCheckedChange={(v) => setSettings(s => ({ ...s, telemetry: v }))} />
+                  </div>
+                  <div className="pt-2">
+                    <div className="flex justify-between text-xs">
+                      <span className="text-muted-foreground">Encryption</span>
+                      <span className="font-mono text-primary">AES-256-GCM</span>
+                    </div>
+                    <div className="flex justify-between text-xs mt-1">
+                      <span className="text-muted-foreground">Auth Protocol</span>
+                      <span className="font-mono text-primary">Divine Shield™</span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* System Info Footer */}
+            <Card className="bg-card/60 border-border/50 max-w-4xl mx-auto">
+              <CardContent className="p-4 flex items-center justify-between text-xs text-muted-foreground">
+                <span>S.H.I.E.L.D. AI OS v3.0.1 • Kernel shield-core 7.2.0</span>
+                <Badge variant="outline" className="text-xs border-primary/50 text-primary">Quantum-x86_64</Badge>
+              </CardContent>
+            </Card>
           </motion.div>
         )}
       </div>
