@@ -83,11 +83,29 @@ const AgentCard = ({ agent, showCategory = false }: { agent: Agent; showCategory
 };
 
 const AgentDetail = ({ agentId }: { agentId: string }) => {
+  const [activated, setActivated] = useState(false);
+  const [deploying, setDeploying] = useState(false);
+  const navigate = useNavigate();
   const agent = agents.find(a => a.id === agentId);
   const category = agent ? agentCategories.find(c => c.number === agent.categoryNumber) : null;
   const IconComponent = category ? iconMap[category.icon] || Bot : Bot;
   const relatedAgents = agent ? agents.filter(a => a.categoryNumber === agent.categoryNumber && a.id !== agent.id).slice(0, 8) : [];
   const meta = agent ? getAgentDetailMeta(agent) : null;
+
+  const handleActivate = useCallback(() => {
+    setDeploying(true);
+    setTimeout(() => {
+      setDeploying(false);
+      setActivated(true);
+      toast.success(`${generateHIIAgentNumber(agentId)} — ${agent?.name} activated successfully`, {
+        description: "Agent is now deployed and operational within the S.H.I.E.L.D. AI OS ecosystem.",
+      });
+    }, 1500);
+  }, [agentId, agent?.name]);
+
+  const handleAskAgent = useCallback(() => {
+    navigate("/shield-ai-chat");
+  }, [navigate]);
 
   if (!agent || !meta) {
     return (
