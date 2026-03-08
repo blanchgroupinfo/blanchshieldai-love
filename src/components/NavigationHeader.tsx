@@ -93,7 +93,7 @@ const NavigationHeader = () => {
           <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
             <img alt="S.H.I.E.L.D. AI" className="w-8 h-8 rounded-lg object-contain" src="/lovable-uploads/07dc7f9b-5404-4ddb-8c5c-d24b1b61d6dd.png" />
             <div className="hidden sm:block">
-              <span className="font-display font-bold text-sm gradient-text">S.H.I.E.L.D.</span>
+              <span className="font-display font-bold text-sm gradient-text">Blanch S.H.I.E.L.D.</span>
               <span className="font-display font-bold text-sm text-primary ml-1">AI </span>
             </div>
           </Link>
