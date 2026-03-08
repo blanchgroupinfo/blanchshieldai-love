@@ -39,8 +39,22 @@ const transactionFramework = [
 
 import type { CommerceModel } from "@/data/commerceModels";
 
-const X2XAccordion = ({ model }: { model: CommerceModel }) => {
+const X2XAccordion = ({ model, searchQuery }: { model: CommerceModel; searchQuery: string }) => {
   const [open, setOpen] = useState(false);
+
+  const filteredConnections = searchQuery
+    ? model.connections.filter(
+        (c) =>
+          c.code.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          c.label.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : model.connections;
+
+  // Auto-open if search matches connections but not the parent
+  const hasMatchingConnections = searchQuery && filteredConnections.length > 0;
+  const isOpen = open || !!hasMatchingConnections;
+
+  if (searchQuery && filteredConnections.length === 0) return null;
   return (
     <div className="glass-card rounded-xl overflow-hidden">
       <button
