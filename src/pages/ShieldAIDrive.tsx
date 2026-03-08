@@ -430,8 +430,15 @@ const ShieldAIDrive = () => {
                 <Card className="bg-card/60 border-border/50">
                   <CardContent className="p-8">
                     <div
-                      className="border-2 border-dashed border-border/60 hover:border-primary/40 rounded-xl p-12 text-center cursor-pointer transition-colors"
+                      className={`border-2 border-dashed rounded-xl p-12 text-center cursor-pointer transition-all ${
+                        dragging
+                          ? "border-primary bg-primary/5 scale-[1.01]"
+                          : "border-border/60 hover:border-primary/40"
+                      }`}
                       onClick={() => fileInputRef.current?.click()}
+                      onDrop={handleDrop}
+                      onDragOver={handleDragOver}
+                      onDragLeave={handleDragLeave}
                     >
                       {uploading ? (
                         <>
@@ -439,10 +446,16 @@ const ShieldAIDrive = () => {
                           <h3 className="text-lg font-semibold mb-2">Uploading...</h3>
                           <p className="text-sm text-muted-foreground">Your files are being encrypted and uploaded securely.</p>
                         </>
+                      ) : dragging ? (
+                        <>
+                          <Upload className="h-16 w-16 mx-auto mb-4 text-primary animate-bounce" />
+                          <h3 className="text-lg font-semibold mb-2 text-primary">Drop files here</h3>
+                          <p className="text-sm text-muted-foreground">Release to begin secure upload</p>
+                        </>
                       ) : (
                         <>
                           <Upload className="h-16 w-16 mx-auto mb-4 text-muted-foreground/40" />
-                          <h3 className="text-lg font-semibold mb-2">Drop files or click to upload</h3>
+                          <h3 className="text-lg font-semibold mb-2">Drag & drop files or click to upload</h3>
                           <p className="text-sm text-muted-foreground mb-4">Upload any file type — documents, images, videos, archives, AI models</p>
                           <Button variant="shield" size="sm" className="gap-1.5">
                             <Upload className="h-3.5 w-3.5" /> Select Files
