@@ -348,7 +348,7 @@ const CommandCenterPage = () => {
               S.H.I.E.L.D. AI Command Center
             </h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              S.H.I.E.L.D. AI OS & S.H.I.E.L.D. AI OS Cloud — Access all platform features, tools, and services
+              S.H.I.E.L.D. AI OS & S.H.I.E.L.D. AI OS Cloud — Access all platform features, tools, and services from one unified command center 
             </p>
           </motion.div>
 
