@@ -670,6 +670,105 @@ const Admin = () => {
               </div>
             </TabsContent>
 
+            <TabsContent value="enrollments">
+              <Card className="bg-card/50 border-border/30">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <ClipboardCheck className="w-5 h-5 text-emerald-400" />
+                    Trading Program Enrollments
+                  </CardTitle>
+                  <CardDescription>
+                    View, approve, and manage enrollment submissions ({enrollmentList.length} total)
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Name</TableHead>
+                        <TableHead>Program</TableHead>
+                        <TableHead>Deposit</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead>Date</TableHead>
+                        <TableHead className="text-right">Actions</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {enrollmentList.length === 0 ? (
+                        <TableRow>
+                          <TableCell colSpan={6} className="text-center text-muted-foreground py-8">
+                            No enrollment submissions yet
+                          </TableCell>
+                        </TableRow>
+                      ) : (
+                        enrollmentList.map((enrollment) => (
+                          <TableRow key={enrollment.id}>
+                            <TableCell>
+                              <div>
+                                <p className="font-medium">{enrollment.full_name}</p>
+                                <p className="text-xs text-muted-foreground">{enrollment.email}</p>
+                              </div>
+                            </TableCell>
+                            <TableCell>
+                              <div>
+                                <p className="text-sm">{enrollment.program_name}</p>
+                                <p className="text-xs text-muted-foreground">{enrollment.program_duration}</p>
+                              </div>
+                            </TableCell>
+                            <TableCell>${enrollment.deposit_amount}</TableCell>
+                            <TableCell>
+                              <Badge className={
+                                enrollment.status === 'approved'
+                                  ? "bg-green-500/20 text-green-400 border-green-500/30"
+                                  : enrollment.status === 'rejected'
+                                    ? "bg-red-500/20 text-red-400 border-red-500/30"
+                                    : "bg-amber-500/20 text-amber-400 border-amber-500/30"
+                              }>
+                                {enrollment.status.charAt(0).toUpperCase() + enrollment.status.slice(1)}
+                              </Badge>
+                            </TableCell>
+                            <TableCell>{new Date(enrollment.created_at).toLocaleDateString()}</TableCell>
+                            <TableCell className="text-right">
+                              <div className="flex justify-end gap-1">
+                                {enrollment.status !== 'approved' && (
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => updateEnrollmentStatus(enrollment.id, 'approved')}
+                                    className="text-xs text-green-400"
+                                  >
+                                    Approve
+                                  </Button>
+                                )}
+                                {enrollment.status !== 'rejected' && (
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => updateEnrollmentStatus(enrollment.id, 'rejected')}
+                                    className="text-xs text-red-400"
+                                  >
+                                    Reject
+                                  </Button>
+                                )}
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  onClick={() => deleteEnrollment(enrollment.id)}
+                                  className="text-destructive/70 hover:text-destructive"
+                                >
+                                  <Trash2 className="w-4 h-4" />
+                                </Button>
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        ))
+                      )}
+                    </TableBody>
+                  </Table>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
             <TabsContent value="subscribers">
               <Card className="bg-card/50 border-border/30">
                 <CardHeader>
