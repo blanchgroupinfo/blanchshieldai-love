@@ -438,6 +438,56 @@ const ShieldAIOS = () => {
             </Card>
           </motion.div>
         )}
+
+        {/* Terminal View */}
+        {activeView === "terminal" && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4">
+            <div className="text-center py-4">
+              <h2 className="text-2xl font-bold font-heading">Terminal</h2>
+              <p className="text-muted-foreground text-sm">S.H.I.E.L.D. AI OS command-line interface</p>
+            </div>
+
+            <Card className="bg-[hsl(222_47%_5%)] border-border/50 overflow-hidden">
+              <CardContent className="p-0">
+                <div className="flex items-center gap-2 px-4 py-2 bg-card/30 border-b border-border/30">
+                  <div className="flex gap-1.5">
+                    <div className="w-3 h-3 rounded-full bg-red-500/80" />
+                    <div className="w-3 h-3 rounded-full bg-amber-500/80" />
+                    <div className="w-3 h-3 rounded-full bg-green-500/80" />
+                  </div>
+                  <span className="text-xs font-mono text-muted-foreground ml-2">shield@os:~</span>
+                </div>
+
+                <div className="h-[500px] overflow-y-auto p-4 font-mono text-sm space-y-1">
+                  {terminalHistory.map((entry, i) => (
+                    <div key={i} className={entry.type === "input" ? "text-primary" : "text-muted-foreground whitespace-pre-wrap"}>
+                      {entry.text}
+                    </div>
+                  ))}
+                  <div ref={terminalEndRef} />
+
+                  <div className="flex items-center gap-1 mt-2">
+                    <span className="text-primary">shield@os:~$</span>
+                    <input
+                      type="text"
+                      value={terminalInput}
+                      onChange={(e) => setTerminalInput(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          executeCommand(terminalInput);
+                          setTerminalInput("");
+                        }
+                      }}
+                      className="flex-1 bg-transparent border-none outline-none text-foreground font-mono text-sm caret-primary"
+                      autoFocus
+                      spellCheck={false}
+                    />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        )}
       </div>
 
       <Footer />
