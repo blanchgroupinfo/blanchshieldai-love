@@ -356,19 +356,26 @@ const KnowledgeBasePage = () => {
                       </CardDescription>
                     </CardHeader>
                     <CardContent>
-                      <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
-                        {businessModels.map((model) => (
-                          <div
-                            key={model.code}
-                            className="p-4 rounded-xl bg-primary/5 border border-primary/20 text-center"
-                          >
-                            <p className="text-2xl font-display font-bold text-primary mb-1">
-                              {model.code}
-                            </p>
-                            <p className="text-sm text-muted-foreground">{model.name}</p>
-                          </div>
-                        ))}
-                      </div>
+                      <TooltipProvider delayDuration={200}>
+                        <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
+                          {businessModels.map((model) => (
+                            <Tooltip key={model.code}>
+                              <TooltipTrigger asChild>
+                                <div className="p-4 rounded-xl bg-primary/5 border border-primary/20 text-center cursor-pointer hover:bg-primary/10 hover:border-primary/40 transition-all duration-300 group">
+                                  <p className="text-2xl font-display font-bold text-primary mb-1">
+                                    {model.code}
+                                  </p>
+                                  <p className="text-sm text-muted-foreground">{model.name}</p>
+                                  <Info className="w-3.5 h-3.5 text-muted-foreground/50 group-hover:text-primary/60 mx-auto mt-2 transition-colors" />
+                                </div>
+                              </TooltipTrigger>
+                              <TooltipContent side="top" className="max-w-xs text-center">
+                                <p>{model.description}</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          ))}
+                        </div>
+                      </TooltipProvider>
                     </CardContent>
                   </Card>
                 </ScrollAnimationWrapper>
