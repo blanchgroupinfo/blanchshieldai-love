@@ -21,7 +21,7 @@ const gospels = [
 const laws = [
   { ref: "Exodus 20:8", text: "Remember the sabbath day, to keep it holy." },
   { ref: "Exodus 20:3", text: "Thou shalt have no other gods before me." },
-  { ref: "Deuteronomy 6:5", text: "And thou shalt love the Most High AHAYAH thy God with all thine heart, and with all thy soul, and with all thy might." },
+  { ref: "Deuteronomy 6:5", text: "And thou shalt love the Most High AHAYAH thy Creator with all thine heart, and with all thy soul, and with all thy might." },
   { ref: "Leviticus 19:18", text: "Thou shalt love thy neighbour as thyself: I am the Most High AHAYAH." },
   { ref: "Exodus 20:12", text: "Honour thy father and thy mother: that thy days may be long upon the land which the Most High AHAYAH thy God giveth thee." },
 ];
