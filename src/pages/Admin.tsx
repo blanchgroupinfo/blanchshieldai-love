@@ -31,11 +31,15 @@ import {
   History,
   UserCog,
   Crown,
+  UserPlus,
+  Send,
 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 import {
   Table,
@@ -120,6 +124,9 @@ const Admin = () => {
   const [userProfiles, setUserProfiles] = useState<UserProfile[]>([]);
   const [userRoles, setUserRoles] = useState<UserRole[]>([]);
   const [selectedMessage, setSelectedMessage] = useState<ContactMessage | null>(null);
+  const [inviteEmail, setInviteEmail] = useState("");
+  const [inviteRole, setInviteRole] = useState<'user' | 'moderator' | 'admin'>("user");
+  const [inviteLoading, setInviteLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -787,7 +794,7 @@ const Admin = () => {
                     User Role Management
                   </CardTitle>
                   <CardDescription>
-                    Manage user permissions and assign roles
+                    Manage user permissions, assign roles, and invite new users
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -797,6 +804,64 @@ const Admin = () => {
                       <p className="text-muted-foreground">Admin access required to manage user roles</p>
                     </div>
                   ) : (
+                    <div className="space-y-6">
+                      {/* Invite User Section */}
+                      <div className="p-4 rounded-xl border border-border/50 bg-card/30">
+                        <div className="flex items-center gap-2 mb-3">
+                          <UserPlus className="w-5 h-5 text-primary" />
+                          <h3 className="font-semibold text-sm">Invite User</h3>
+                        </div>
+                        <div className="flex flex-col sm:flex-row gap-3">
+                          <Input
+                            type="email"
+                            placeholder="Enter email address..."
+                            value={inviteEmail}
+                            onChange={(e) => setInviteEmail(e.target.value)}
+                            className="flex-1"
+                          />
+                          <Select value={inviteRole} onValueChange={(v) => setInviteRole(v as 'user' | 'moderator' | 'admin')}>
+                            <SelectTrigger className="w-[140px]">
+                              <SelectValue placeholder="Role" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="user">User</SelectItem>
+                              <SelectItem value="moderator">Moderator</SelectItem>
+                              <SelectItem value="admin">Admin</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <Button
+                            variant="shield"
+                            disabled={!inviteEmail.trim() || inviteLoading}
+                            onClick={async () => {
+                              if (!inviteEmail.trim() || !inviteEmail.includes("@")) {
+                                toast.error("Please enter a valid email address");
+                                return;
+                              }
+                              setInviteLoading(true);
+                              try {
+                                const { data, error } = await supabase.functions.invoke("invite-user", {
+                                  body: { email: inviteEmail.trim(), role: inviteRole },
+                                });
+                                if (error) throw error;
+                                toast.success(`Invitation sent to ${inviteEmail}`);
+                                setInviteEmail("");
+                                setInviteRole("user");
+                              } catch (error: any) {
+                                console.error("Invite error:", error);
+                                toast.error(error.message || "Failed to send invitation");
+                              } finally {
+                                setInviteLoading(false);
+                              }
+                            }}
+                          >
+                            <Send className="w-4 h-4 mr-2" />
+                            {inviteLoading ? "Sending..." : "Invite"}
+                          </Button>
+                        </div>
+                        <p className="text-xs text-muted-foreground mt-2">
+                          Send an invitation email with a signup link and pre-assigned role.
+                        </p>
+                      </div>
                     <Table>
                       <TableHeader>
                         <TableRow>
@@ -875,6 +940,7 @@ const Admin = () => {
                         )}
                       </TableBody>
                     </Table>
+                    </div>
                   )}
                 </CardContent>
               </Card>
