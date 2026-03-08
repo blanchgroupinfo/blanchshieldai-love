@@ -56,6 +56,7 @@ import UniversalFileSystem from "./pages/UniversalFileSystem";
 import DeployedAgents from "./pages/DeployedAgents";
 import ShieldAIOS from "./pages/ShieldAIOS";
 import ShieldAIDrive from "./pages/ShieldAIDrive";
+import SharedFileViewer from "./pages/SharedFileViewer";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
