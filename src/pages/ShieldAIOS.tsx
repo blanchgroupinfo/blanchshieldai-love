@@ -515,6 +515,63 @@ const ShieldAIOS = () => {
             </Card>
           </motion.div>
         )}
+        {/* Notifications View */}
+        {activeView === "notifications" && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
+            <div className="text-center py-4">
+              <h2 className="text-2xl font-bold font-heading">Notification Center</h2>
+              <p className="text-muted-foreground text-sm">System alerts, agent updates & activity log</p>
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-3 mb-4">
+              {[
+                { label: "Unread", count: notifications.filter(n => !n.read).length, color: "text-destructive" },
+                { label: "Agent Updates", count: notifications.filter(n => n.type === "agent").length, color: "text-primary" },
+                { label: "Security Alerts", count: notifications.filter(n => n.type === "alert").length, color: "text-amber-500" },
+              ].map((stat) => (
+                <Card key={stat.label} className="bg-card/60 border-border/50">
+                  <CardContent className="p-4 text-center">
+                    <div className={`text-3xl font-bold font-heading ${stat.color}`}>{stat.count}</div>
+                    <p className="text-xs text-muted-foreground mt-1">{stat.label}</p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+
+            <div className="space-y-2">
+              {notifications.map((notif, i) => (
+                <motion.div
+                  key={notif.id}
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.05 }}
+                >
+                  <Card className={`bg-card/60 border-border/50 transition-all hover:bg-card/80 ${!notif.read ? "border-l-4 border-l-primary" : ""}`}>
+                    <CardContent className="p-4 flex items-start gap-4">
+                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
+                        notif.type === "alert" ? "bg-amber-500/10 text-amber-500" :
+                        notif.type === "agent" ? "bg-primary/10 text-primary" :
+                        "bg-muted text-muted-foreground"
+                      }`}>
+                        {notif.type === "alert" ? <Shield className="h-5 w-5" /> :
+                         notif.type === "agent" ? <Users className="h-5 w-5" /> :
+                         <Settings className="h-5 w-5" />}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between gap-2">
+                          <h4 className={`text-sm font-semibold ${!notif.read ? "text-foreground" : "text-muted-foreground"}`}>{notif.title}</h4>
+                          <span className="text-[10px] text-muted-foreground shrink-0">{notif.time}</span>
+                        </div>
+                        <p className="text-xs text-muted-foreground mt-1">{notif.message}</p>
+                      </div>
+                      {!notif.read && <div className="w-2.5 h-2.5 rounded-full bg-primary shrink-0 mt-1" />}
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        )}
       </div>
 
       <Footer />
