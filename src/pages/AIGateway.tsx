@@ -231,16 +231,16 @@ const AIGateway = () => {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button variant="shield" size="lg" className="gap-2">
+              <Button variant="shield" size="lg" className="gap-2" onClick={() => navigate("/auth")}>
                 <Key className="w-5 h-5" />
                 Get API Key
                 <ArrowRight className="w-4 h-4" />
               </Button>
-              <Button variant="outline" size="lg" className="gap-2">
+              <Button variant="outline" size="lg" className="gap-2" onClick={() => navigate("/api")}>
                 <Code2 className="w-5 h-5" />
                 S.H.I.E.L.D. AI Docs
               </Button>
-              <Button variant="divine" size="lg" className="gap-2">
+              <Button variant="divine" size="lg" className="gap-2" onClick={() => scrollToSection("evaluation-platform")}>
                 <Eye className="w-5 h-5" />
                 Evaluation Platform
               </Button>
