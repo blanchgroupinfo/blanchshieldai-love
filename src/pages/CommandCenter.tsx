@@ -68,6 +68,7 @@ const CommandCenterPage = () => {
     { id: "shield-avatar", name: "S.H.I.E.L.D. AI Avatar", description: "Digital Avatar System", icon: UserIcon, color: "text-purple-400", gradient: "from-purple-500/20 to-pink-500/20", link: "/command-center", category: "ai" },
     { id: "shield-quantum", name: "S.H.I.E.L.D. AI Quantum Research Lab", description: "Quantum Computing", icon: Sparkles, color: "text-purple-400", gradient: "from-purple-500/20 to-pink-500/20", link: "/command-center", category: "ai" },
     { id: "blanch-bitro", name: "Blanch B.I.T.R.O Project", description: "Institute Technology Research Organization", icon: Brain, color: "text-purple-400", gradient: "from-purple-500/20 to-pink-500/20", link: "/command-center", category: "ai" },
+    { id: "shield-deployed-agents", name: "S.H.I.E.L.D. AI Deployed Agents", description: "Monitor Activated H.I.I. AI Agents", icon: Activity, color: "text-emerald-400", gradient: "from-emerald-500/20 to-green-500/20", link: "/deployed-agents", category: "ai" },
 
     // ==================== ANALYTICS ====================
     { id: "shield-analytics", name: "S.H.I.E.L.D. AI Analytics", description: "Data Insights", icon: LineChart, color: "text-cyan-400", gradient: "from-cyan-500/20 to-blue-500/20", link: "/command-center", category: "analytics" },
