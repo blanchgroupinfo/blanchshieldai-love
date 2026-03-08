@@ -39,6 +39,19 @@ import WebAppBuilding from "./pages/WebAppBuilding";
 import AutoCAD from "./pages/AutoCAD";
 import USCPB from "./pages/USCPB";
 import AIGateway from "./pages/AIGateway";
+import BlanchAutomotive from "./pages/BlanchAutomotive";
+import BlanchDrive from "./pages/BlanchDrive";
+import BlanchEnergy from "./pages/BlanchEnergy";
+import BlanchGroup from "./pages/BlanchGroup";
+import BlanchOS from "./pages/BlanchOS";
+import BlanchNetwork from "./pages/BlanchNetwork";
+import BlanchInfinityDLT from "./pages/BlanchInfinityDLT";
+import ShieldAIChat from "./pages/ShieldAIChat";
+import ShieldAICloud from "./pages/ShieldAICloud";
+import ShieldAISettings from "./pages/ShieldAISettings";
+import ShieldAIProfile from "./pages/ShieldAIProfile";
+import ShieldAIAbout from "./pages/ShieldAIAbout";
+import UniversalFileSystem from "./pages/UniversalFileSystem";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -89,6 +102,20 @@ const App = () => (
           <Route path="/autocad" element={<AutoCAD />} />
           <Route path="/uscpb" element={<USCPB />} />
           <Route path="/ai-gateway" element={<AIGateway />} />
+          {/* New Pages */}
+          <Route path="/blanch-automotive" element={<BlanchAutomotive />} />
+          <Route path="/blanch-drive" element={<BlanchDrive />} />
+          <Route path="/blanch-energy" element={<BlanchEnergy />} />
+          <Route path="/blanch-group" element={<BlanchGroup />} />
+          <Route path="/blanch-os" element={<BlanchOS />} />
+          <Route path="/blanch-network" element={<BlanchNetwork />} />
+          <Route path="/blanch-infinity-dlt" element={<BlanchInfinityDLT />} />
+          <Route path="/shield-ai-chat" element={<ShieldAIChat />} />
+          <Route path="/shield-ai-cloud" element={<ShieldAICloud />} />
+          <Route path="/shield-ai-settings" element={<ShieldAISettings />} />
+          <Route path="/shield-ai-profile" element={<ShieldAIProfile />} />
+          <Route path="/shield-ai-about" element={<ShieldAIAbout />} />
+          <Route path="/universal-file-system" element={<UniversalFileSystem />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
