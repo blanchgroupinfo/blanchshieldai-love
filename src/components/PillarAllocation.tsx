@@ -1,18 +1,18 @@
 import { Lock } from "lucide-react";
 
 const pillars = [
-  { num: 1, name: "Core Intelligence", range: "H.I.I. AI001–AI074", capacity: 74 },
-  { num: 2, name: "Sovereign Identity, Culture & Representation", range: "H.I.I. AI075–AI148", capacity: 74 },
-  { num: 3, name: "Automation & Operations", range: "H.I.I. AI149–AI222", capacity: 74 },
-  { num: 4, name: "Business, Banking, Finance & Economics", range: "H.I.I. AI223–AI296", capacity: 74 },
-  { num: 5, name: "Creative, Media & Entertainment", range: "H.I.I. AI297–AI370", capacity: 74 },
-  { num: 6, name: "Governance, Sovereign & Law", range: "H.I.I. AI371–AI444", capacity: 74 },
-  { num: 7, name: "Human Development", range: "H.I.I. AI445–AI518", capacity: 74 },
-  { num: 8, name: "Health & Wellness", range: "H.I.I. AI519–AI592", capacity: 74 },
-  { num: 9, name: "Infrastructure, Security & Technology", range: "H.I.I. AI593–AI666", capacity: 74 },
-  { num: 10, name: "Environment & Earth Systems", range: "H.I.I. AI667–AI740", capacity: 74 },
-  { num: 11, name: "Science & Exploration", range: "H.I.I. AI741–AI814", capacity: 74 },
-  { num: 12, name: "Spiritual, Sovereign Intelligence & Ethical Systems", range: "H.I.I. AI815–AI888", capacity: 74 },
+  { num: 1, name: "Core Intelligence", range: "H.I.I. AI001–H.I.I. AI074", capacity: 74 },
+  { num: 2, name: "Sovereign Identity, Culture & Representation", range: "H.I.I. AI075–H.I.I. AI148", capacity: 74 },
+  { num: 3, name: "Automation & Operations", range: "H.I.I. AI149–H.I.I. AI222", capacity: 74 },
+  { num: 4, name: "Business, Banking, Finance & Economics", range: "H.I.I. AI223–H.I.I. AI296", capacity: 74 },
+  { num: 5, name: "Creative, Media & Entertainment", range: "H.I.I. AI297–H.I.I. AI370", capacity: 74 },
+  { num: 6, name: "Governance, Sovereign & Law", range: "H.I.I. AI371–H.I.I. AI444", capacity: 74 },
+  { num: 7, name: "Human Development", range: "H.I.I. AI445–H.I.I. AI518", capacity: 74 },
+  { num: 8, name: "Health & Wellness", range: "H.I.I. AI519–H.I.I. AI592", capacity: 74 },
+  { num: 9, name: "Infrastructure, Security & Technology", range: "H.I.I. AI593–H.I.I. AI666", capacity: 74 },
+  { num: 10, name: "Environment & Earth Systems", range: "H.I.I. AI667–H.I.I. AI740", capacity: 74 },
+  { num: 11, name: "Science & Exploration", range: "H.I.I. AI741–H.I.I. AI814", capacity: 74 },
+  { num: 12, name: "Spiritual, Sovereign Intelligence & Ethical Systems", range: "H.I.I. AI815–H.I.I. AI888", capacity: 74 },
 ];
 
 const PillarAllocation = () => {
