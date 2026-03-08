@@ -171,6 +171,8 @@ const AgentDetail = ({ agentId }: { agentId: string }) => {
                   <MessageSquare className="w-4 h-4" /> Ask This Agent
                 </Button>
               </div>
+            </div>
+          </div>
         </div>
       </ScrollAnimationWrapper>
 
