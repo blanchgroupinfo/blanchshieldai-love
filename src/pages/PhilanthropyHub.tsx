@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { Heart, Globe, Users, HandHeart, Building2, Sparkles, DollarSign, ArrowRight, Shield } from "lucide-react";
 import NavigationHeader from "@/components/NavigationHeader";
 import Footer from "@/components/Footer";
-import FloatingChat from "@/components/FloatingChat";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
