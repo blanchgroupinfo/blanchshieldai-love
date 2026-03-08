@@ -413,6 +413,14 @@ const ShieldAIDrive = () => {
                         <Upload className="h-3.5 w-3.5" /> Upload Files
                       </Button>
                     )}
+                    <Button
+                      variant="shield"
+                      size="sm"
+                      className="gap-1.5"
+                      onClick={() => toast({ title: "Upgrade Storage", description: "Premium storage plans coming soon. Stay tuned!" })}
+                    >
+                      <ArrowUpCircle className="h-3.5 w-3.5" /> Upgrade Storage
+                    </Button>
                   </div>
                 </div>
                 <Progress value={files.length > 0 ? Math.min((totalSize / (1024 * 1024 * 1024)) * 10, 100) : 0} className="h-3 mb-2" />
