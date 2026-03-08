@@ -149,11 +149,28 @@ const AgentDetail = ({ agentId }: { agentId: string }) => {
                 {agent.name}
               </h1>
               <p className="text-sm text-primary/70 font-mono mb-3">{meta.pillar}</p>
-              <p className="text-muted-foreground font-body leading-relaxed">
+              <p className="text-muted-foreground font-body leading-relaxed mb-4">
                 {meta.description}
               </p>
-            </div>
-          </div>
+              <div className="flex flex-wrap gap-3">
+                <Button
+                  variant="shield"
+                  onClick={handleActivate}
+                  disabled={activated || deploying}
+                  className="gap-2"
+                >
+                  {deploying ? (
+                    <><RefreshCw className="w-4 h-4 animate-spin" /> Deploying...</>
+                  ) : activated ? (
+                    <><CheckCircle2 className="w-4 h-4" /> Agent Activated</>
+                  ) : (
+                    <><Zap className="w-4 h-4" /> Activate Agent</>
+                  )}
+                </Button>
+                <Button variant="outline" onClick={handleAskAgent} className="gap-2">
+                  <MessageSquare className="w-4 h-4" /> Ask This Agent
+                </Button>
+              </div>
         </div>
       </ScrollAnimationWrapper>
 
