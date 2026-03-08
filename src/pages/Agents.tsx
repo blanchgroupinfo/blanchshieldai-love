@@ -4,6 +4,7 @@ import NavigationHeader from "@/components/NavigationHeader";
 import Footer from "@/components/Footer";
 import ScrollAnimationWrapper from "@/components/ScrollAnimationWrapper";
 import { agents, agentCategories, Agent, generateHIIAgentNumber } from "@/data/agents";
+import { getAgentDetailMeta } from "@/data/agentDetails";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
