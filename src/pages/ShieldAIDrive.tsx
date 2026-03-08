@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import StorageUpgradeModal from "@/components/StorageUpgradeModal";
 import type { User } from "@supabase/supabase-js";
 
 const features = [
@@ -93,6 +94,7 @@ const ShieldAIDrive = () => {
   const [shareLink, setShareLink] = useState("");
   const [shareCopied, setShareCopied] = useState(false);
   const [sharingLoading, setSharingLoading] = useState(false);
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -313,7 +315,7 @@ const ShieldAIDrive = () => {
     if (error) {
       toast({ title: "Failed to create share link", description: error.message, variant: "destructive" });
     } else {
-      const link = `${window.location.origin}/shield-ai-drive?share=${data.share_token}`;
+      const link = `${window.location.origin}/shared?token=${data.share_token}`;
       setShareLink(link);
       toast({ title: "Share link created!" });
     }
@@ -418,7 +420,7 @@ const ShieldAIDrive = () => {
                       variant="shield"
                       size="sm"
                       className="gap-1.5"
-                      onClick={() => toast({ title: "Upgrade Storage", description: "Premium storage plans coming soon. Stay tuned!" })}
+                      onClick={() => setShowUpgradeModal(true)}
                     >
                       <ArrowUpCircle className="h-3.5 w-3.5" /> Upgrade Storage
                     </Button>
@@ -992,6 +994,7 @@ const ShieldAIDrive = () => {
           </Dialog>
         </div>
       </div>
+      <StorageUpgradeModal open={showUpgradeModal} onOpenChange={setShowUpgradeModal} />
       <Footer />
     </div>
   );

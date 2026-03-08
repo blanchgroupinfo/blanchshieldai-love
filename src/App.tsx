@@ -56,6 +56,7 @@ import UniversalFileSystem from "./pages/UniversalFileSystem";
 import DeployedAgents from "./pages/DeployedAgents";
 import ShieldAIOS from "./pages/ShieldAIOS";
 import ShieldAIDrive from "./pages/ShieldAIDrive";
+import SharedFileViewer from "./pages/SharedFileViewer";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -123,6 +124,7 @@ const App = () => (
           <Route path="/deployed-agents" element={<DeployedAgents />} />
           <Route path="/shield-ai-os" element={<ShieldAIOS />} />
           <Route path="/shield-ai-drive" element={<ShieldAIDrive />} />
+          <Route path="/shared" element={<SharedFileViewer />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
