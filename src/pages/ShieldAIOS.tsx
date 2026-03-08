@@ -49,15 +49,33 @@ const systemStats = [
   { label: "Network", value: 89, icon: Wifi, suffix: "Mbps" },
 ];
 
-const notifications = [
-  { id: 1, type: "alert" as const, title: "Security Scan Complete", message: "All 888 agents passed integrity check. No threats detected.", time: "2 min ago", read: false },
-  { id: 2, type: "agent" as const, title: "Agent AI-042 Deployed", message: "Commerce Guardian agent activated and operational.", time: "5 min ago", read: false },
-  { id: 3, type: "system" as const, title: "System Update Available", message: "S.H.I.E.L.D. AI OS v3.0.2 patch ready for installation.", time: "12 min ago", read: false },
-  { id: 4, type: "alert" as const, title: "Firewall Block", message: "Blocked 47 unauthorized access attempts from external IPs.", time: "18 min ago", read: true },
-  { id: 5, type: "agent" as const, title: "Agent AI-777 Task Complete", message: "Sovereign Compliance audit finished — 100% pass rate.", time: "25 min ago", read: true },
-  { id: 6, type: "system" as const, title: "Backup Completed", message: "Full system backup to encrypted vault successful (128 TB).", time: "1 hr ago", read: true },
-  { id: 7, type: "agent" as const, title: "Agent AI-001 Status Change", message: "Master Orchestrator switched from idle to active mode.", time: "1.5 hr ago", read: true },
-  { id: 8, type: "alert" as const, title: "Network Latency Spike", message: "Brief latency spike detected on node-7. Auto-resolved.", time: "2 hr ago", read: true },
+interface Notification {
+  id: number;
+  type: "alert" | "agent" | "system";
+  title: string;
+  message: string;
+  time: string;
+  read: boolean;
+}
+
+const initialNotifications: Notification[] = [
+  { id: 1, type: "alert", title: "Security Scan Complete", message: "All 888 agents passed integrity check. No threats detected.", time: "2 min ago", read: false },
+  { id: 2, type: "agent", title: "Agent AI-042 Deployed", message: "Commerce Guardian agent activated and operational.", time: "5 min ago", read: false },
+  { id: 3, type: "system", title: "System Update Available", message: "S.H.I.E.L.D. AI OS v3.0.2 patch ready for installation.", time: "12 min ago", read: false },
+  { id: 4, type: "alert", title: "Firewall Block", message: "Blocked 47 unauthorized access attempts from external IPs.", time: "18 min ago", read: true },
+  { id: 5, type: "agent", title: "Agent AI-777 Task Complete", message: "Sovereign Compliance audit finished — 100% pass rate.", time: "25 min ago", read: true },
+  { id: 6, type: "system", title: "Backup Completed", message: "Full system backup to encrypted vault successful (128 TB).", time: "1 hr ago", read: true },
+  { id: 7, type: "agent", title: "Agent AI-001 Status Change", message: "Master Orchestrator switched from idle to active mode.", time: "1.5 hr ago", read: true },
+  { id: 8, type: "alert", title: "Network Latency Spike", message: "Brief latency spike detected on node-7. Auto-resolved.", time: "2 hr ago", read: true },
+];
+
+const incomingNotifications: Omit<Notification, "id" | "read" | "time">[] = [
+  { type: "agent", title: "Agent AI-333 Restarted", message: "Financial Oracle agent restarted after scheduled maintenance." },
+  { type: "alert", title: "Intrusion Attempt Blocked", message: "Quantum firewall neutralized brute-force attack from 3 IPs." },
+  { type: "system", title: "Memory Optimization", message: "Auto-defrag completed. Freed 12 TB of quantum memory." },
+  { type: "agent", title: "Agent AI-144 Milestone", message: "Treaty Compliance agent processed 10,000th document." },
+  { type: "alert", title: "SSL Certificates Renewed", message: "All 888 agent endpoints renewed with quantum-resistant certs." },
+  { type: "system", title: "Cloud Sync Complete", message: "All sovereign data synced to distributed vault nodes." },
 ];
 
 const ShieldAIOS = () => {
