@@ -254,6 +254,89 @@ const ShieldAIDrive = () => {
   };
 
   const totalSize = files.reduce((sum, f) => sum + (f.metadata?.size || 0), 0);
+
+  const handleRename = async () => {
+    if (!user || !renameTarget || !renameValue.trim()) return;
+    if (renameTarget.type === "file") {
+      const oldPath = getStoragePath(renameTarget.name);
+      // Preserve timestamp prefix, replace display name
+      const timestamp = renameTarget.name.match(/^(\d+_)/)?.[1] || "";
+      const newFileName = timestamp + renameValue.trim();
+      const newPath = getStoragePath(newFileName);
+      
+      const { data, error: dlError } = await supabase.storage.from("shield-drive").download(oldPath);
+      if (dlError) { toast({ title: "Rename failed", description: dlError.message, variant: "destructive" }); return; }
+      const { error: upError } = await supabase.storage.from("shield-drive").upload(newPath, data);
+      if (upError) { toast({ title: "Rename failed", description: upError.message, variant: "destructive" }); return; }
+      await supabase.storage.from("shield-drive").remove([oldPath]);
+      toast({ title: `Renamed to "${renameValue.trim()}"` });
+    } else {
+      // Rename folder: create new folder placeholder, move all contents, delete old
+      const oldBase = `${getStoragePath()}/${renameTarget.name}`;
+      const newBase = `${getStoragePath()}/${renameValue.trim()}`;
+      
+      // Create new folder
+      await supabase.storage.from("shield-drive").upload(`${newBase}/.emptyFolderPlaceholder`, new Blob([""]), { contentType: "text/plain" });
+      
+      // List and move contents
+      const { data: contents } = await supabase.storage.from("shield-drive").list(oldBase, { limit: 100 });
+      if (contents) {
+        for (const item of contents) {
+          if (item.name === ".emptyFolderPlaceholder") continue;
+          const { data: fileData } = await supabase.storage.from("shield-drive").download(`${oldBase}/${item.name}`);
+          if (fileData) {
+            await supabase.storage.from("shield-drive").upload(`${newBase}/${item.name}`, fileData);
+            await supabase.storage.from("shield-drive").remove([`${oldBase}/${item.name}`]);
+          }
+        }
+      }
+      // Remove old placeholder
+      await supabase.storage.from("shield-drive").remove([`${oldBase}/.emptyFolderPlaceholder`]);
+      toast({ title: `Folder renamed to "${renameValue.trim()}"` });
+    }
+    setRenameTarget(null);
+    setRenameValue("");
+    fetchFiles();
+  };
+
+  const handleCreateShareLink = async () => {
+    if (!user || !shareFile) return;
+    setSharingLoading(true);
+    const filePath = getStoragePath(shareFile.name);
+    
+    const { data, error } = await supabase
+      .from("shared_files")
+      .insert({ owner_id: user.id, file_path: filePath, access_type: shareAccessType })
+      .select()
+      .single();
+    
+    if (error) {
+      toast({ title: "Failed to create share link", description: error.message, variant: "destructive" });
+    } else {
+      const link = `${window.location.origin}/shield-ai-drive?share=${data.share_token}`;
+      setShareLink(link);
+      toast({ title: "Share link created!" });
+    }
+    setSharingLoading(false);
+  };
+
+  const handleCopyShareLink = () => {
+    navigator.clipboard.writeText(shareLink);
+    setShareCopied(true);
+    setTimeout(() => setShareCopied(false), 2000);
+  };
+
+  const handleRevokeShare = async () => {
+    if (!shareFile || !user) return;
+    const filePath = getStoragePath(shareFile.name);
+    await supabase
+      .from("shared_files")
+      .update({ is_active: false })
+      .eq("owner_id", user.id)
+      .eq("file_path", filePath);
+    toast({ title: "Share link revoked" });
+    setShareLink("");
+  };
   useEffect(() => {
     if (moveFile && user) {
       const listPath = [user.id, ...currentPath].join("/");
