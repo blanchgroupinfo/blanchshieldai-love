@@ -54,7 +54,7 @@ const TradingHero = () => {
             {[
               { label: "Markets", value: "30+", icon: Globe },
               { label: "Trade Programs", value: "20+", icon: TrendingUp },
-              { label: "Daily Volume", value: "$50B+", icon: BarChart3 },
+              { label: "Daily Volume", value: "$50T+", icon: BarChart3 },
               { label: "Active Traders", value: "100K+", icon: Wallet },
             ].map((stat, index) => (
               <motion.div
