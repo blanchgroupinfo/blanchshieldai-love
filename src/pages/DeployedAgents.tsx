@@ -11,8 +11,15 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   Bot, Search, Activity, CheckCircle2, XCircle, Clock,
-  Zap, BarChart3, RefreshCw, Eye, MessageSquare, Power, ToggleLeft
+  Zap, BarChart3, RefreshCw, Eye, MessageSquare, Power, ToggleLeft, Layers
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -54,8 +61,8 @@ export const removeDeployedAgent = (agentId: string): DeployedAgent[] => {
   return current;
 };
 
-// All 888 agents AI001-AI888
-const allAgentIds = agents.filter(a => !a.isCategory).map(a => a.id);
+// All 888 agents AI001-AI888 (including category headers)
+const allAgentIds = agents.map(a => a.id);
 
 const statusConfig = {
   active: { color: "text-emerald-400", bg: "bg-emerald-500/20", border: "border-emerald-500/30", icon: CheckCircle2, label: "Active" },
@@ -69,6 +76,7 @@ const DeployedAgentsDashboard = () => {
   const [deployed, setDeployed] = useState<DeployedAgent[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStatus, setFilterStatus] = useState<string>("all");
+  const [filterCategory, setFilterCategory] = useState<string>("all");
   const [visibleCount, setVisibleCount] = useState(ITEMS_PER_PAGE);
   const navigate = useNavigate();
 
@@ -101,9 +109,12 @@ const DeployedAgentsDashboard = () => {
         (filterStatus === "on" && item.isOn) ||
         (filterStatus === "off" && !item.isOn) ||
         (item.deployed && item.deployed.status === filterStatus);
-      return matchesSearch && matchesStatus;
+      const matchesCategory =
+        filterCategory === "all" ||
+        item.agent.categoryNumber === Number(filterCategory);
+      return matchesSearch && matchesStatus && matchesCategory;
     });
-  }, [enrichedAgents, searchQuery, filterStatus]);
+  }, [enrichedAgents, searchQuery, filterStatus, filterCategory]);
 
   const visible = filtered.slice(0, visibleCount);
 
@@ -166,6 +177,13 @@ const DeployedAgentsDashboard = () => {
     toast.success("Agent statuses refreshed");
   };
 
+  const resetFilters = () => {
+    setSearchQuery("");
+    setFilterStatus("all");
+    setFilterCategory("all");
+    setVisibleCount(ITEMS_PER_PAGE);
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <NavigationHeader />
@@ -187,7 +205,7 @@ const DeployedAgentsDashboard = () => {
               Deployed Agents Dashboard
             </h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Manage all 887 H.I.I. AI Agents (AI002–AI888) with on/off deployment controls
+              Manage all 888 H.I.I. AI Agents (AI001–AI888) with on/off deployment controls
             </p>
           </motion.div>
 
@@ -251,6 +269,37 @@ const DeployedAgentsDashboard = () => {
               </div>
             </div>
 
+            {/* Category Filter */}
+            <div className="flex flex-col sm:flex-row gap-4 items-center">
+              <div className="flex items-center gap-2 w-full sm:w-auto">
+                <Layers className="w-4 h-4 text-primary shrink-0" />
+                <Select value={filterCategory} onValueChange={(v) => { setFilterCategory(v); setVisibleCount(ITEMS_PER_PAGE); }}>
+                  <SelectTrigger className="w-full sm:w-[320px] bg-card/50 border-border/50">
+                    <SelectValue placeholder="Filter by category pillar..." />
+                  </SelectTrigger>
+                  <SelectContent className="max-h-[300px]">
+                    <SelectItem value="all">All Categories ({agentCategories.length} Pillars)</SelectItem>
+                    {agentCategories.map(cat => {
+                      const count = agents.filter(a => a.categoryNumber === cat.number).length;
+                      return (
+                        <SelectItem key={cat.number} value={String(cat.number)}>
+                          {cat.number}. {cat.name} ({count})
+                        </SelectItem>
+                      );
+                    })}
+                  </SelectContent>
+                </Select>
+              </div>
+              {(filterCategory !== "all" || filterStatus !== "all" || searchQuery) && (
+                <Button variant="ghost" size="sm" onClick={resetFilters} className="text-muted-foreground">
+                  Clear filters
+                </Button>
+              )}
+              <span className="text-xs text-muted-foreground ml-auto">
+                Showing {visible.length} of {filtered.length} agents
+              </span>
+            </div>
+
             {/* Select All Toggle */}
             <Card className="bg-card/50 border-border/50">
               <CardContent className="p-4 flex items-center justify-between">
@@ -259,7 +308,7 @@ const DeployedAgentsDashboard = () => {
                   <div>
                     <p className="font-semibold text-foreground text-sm">Select All Agents</p>
                     <p className="text-xs text-muted-foreground">
-                      {allOn ? "All 887 agents are deployed" : `${deployed.length} / ${allAgentIds.length} agents deployed`}
+                      {allOn ? "All 888 agents are deployed" : `${deployed.length} / ${allAgentIds.length} agents deployed`}
                     </p>
                   </div>
                 </div>
@@ -302,6 +351,11 @@ const DeployedAgentsDashboard = () => {
                           <div className="min-w-0">
                             <div className="flex items-center gap-2 flex-wrap">
                               <span className="text-xs font-mono text-primary/70">{agentNum}</span>
+                              {item.agent.isCategory && (
+                                <Badge className="bg-primary/20 text-primary border-primary/30 text-[10px] px-1.5 py-0">
+                                  Category Lead
+                                </Badge>
+                              )}
                               {sc && (
                                 <Badge className={`${sc.bg} ${sc.color} ${sc.border} text-[10px] px-1.5 py-0`}>
                                   <sc.icon className="w-2.5 h-2.5 mr-0.5" />
