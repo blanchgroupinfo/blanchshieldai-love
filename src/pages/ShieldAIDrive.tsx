@@ -2,7 +2,7 @@ import NavigationHeader from "@/components/NavigationHeader";
 import Footer from "@/components/Footer";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { HardDrive, Upload, Download, FolderOpen, Cloud, Lock, Share2, Database, Shield, Zap, Search, FileText, Image, Video, Music, Archive, Trash2, Star, Clock, Users, File, Loader2, Eye, X, LayoutGrid } from "lucide-react";
+import { HardDrive, Upload, Download, FolderOpen, Cloud, Lock, Share2, Database, Shield, Zap, Search, FileText, Image, Video, Music, Archive, Trash2, Star, Clock, Users, File, Loader2, Eye, X, LayoutGrid, FolderPlus, ChevronRight, Home, ArrowRight } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -75,18 +75,30 @@ const ShieldAIDrive = () => {
   const [activeTab, setActiveTab] = useState<"overview" | "files" | "gallery" | "upload">("overview");
   const [user, setUser] = useState<User | null>(null);
   const [files, setFiles] = useState<StorageFile[]>([]);
+  const [folders, setFolders] = useState<string[]>([]);
+  const [currentPath, setCurrentPath] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [previewFile, setPreviewFile] = useState<StorageFile | null>(null);
   const [dragging, setDragging] = useState(false);
+  const [showNewFolderDialog, setShowNewFolderDialog] = useState(false);
+  const [newFolderName, setNewFolderName] = useState("");
+  const [moveFile, setMoveFile] = useState<StorageFile | null>(null);
+  const [moveFolders, setMoveFolders] = useState<string[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
   const navigate = useNavigate();
 
+  const getStoragePath = (fileName?: string) => {
+    if (!user) return "";
+    const base = [user.id, ...currentPath].join("/");
+    return fileName ? `${base}/${fileName}` : base;
+  };
+
   const getPublicUrl = (fileName: string) => {
     if (!user) return "";
-    const { data } = supabase.storage.from("shield-drive").getPublicUrl(`${user.id}/${fileName}`);
+    const { data } = supabase.storage.from("shield-drive").getPublicUrl(getStoragePath(fileName));
     return data.publicUrl;
   };
 
@@ -99,16 +111,22 @@ const ShieldAIDrive = () => {
   const fetchFiles = useCallback(async () => {
     if (!user) return;
     setLoading(true);
+    const listPath = [user.id, ...currentPath].join("/");
     const { data, error } = await supabase.storage
       .from("shield-drive")
-      .list(user.id, { limit: 100, sortBy: { column: "created_at", order: "desc" } });
+      .list(listPath, { limit: 100, sortBy: { column: "created_at", order: "desc" } });
     if (error) {
       toast({ title: "Error loading files", description: error.message, variant: "destructive" });
     } else {
-      setFiles((data as StorageFile[]) || []);
+      const items = (data || []) as (StorageFile & { id: string | null })[];
+      // Folders show up as items with id=null and no metadata
+      const folderNames = items.filter(f => f.id === null && f.name !== ".emptyFolderPlaceholder").map(f => f.name);
+      const fileItems = items.filter(f => f.id !== null && f.name !== ".emptyFolderPlaceholder") as StorageFile[];
+      setFolders(folderNames);
+      setFiles(fileItems);
     }
     setLoading(false);
-  }, [user, toast]);
+  }, [user, toast, currentPath]);
 
   useEffect(() => {
     if (user) fetchFiles();
@@ -120,7 +138,7 @@ const ShieldAIDrive = () => {
     const uploadedCount = { success: 0, fail: 0 };
 
     for (const file of Array.from(fileList)) {
-      const filePath = `${user.id}/${Date.now()}_${file.name}`;
+      const filePath = `${getStoragePath()}/${Date.now()}_${file.name}`;
       const { error } = await supabase.storage.from("shield-drive").upload(filePath, file);
       if (error) uploadedCount.fail++;
       else uploadedCount.success++;
@@ -153,7 +171,7 @@ const ShieldAIDrive = () => {
     if (!user) return;
     const { data, error } = await supabase.storage
       .from("shield-drive")
-      .download(`${user.id}/${fileName}`);
+      .download(getStoragePath(fileName));
     if (error) {
       toast({ title: "Download failed", description: error.message, variant: "destructive" });
       return;
@@ -170,7 +188,7 @@ const ShieldAIDrive = () => {
     if (!user) return;
     const { error } = await supabase.storage
       .from("shield-drive")
-      .remove([`${user.id}/${fileName}`]);
+      .remove([getStoragePath(fileName)]);
     if (error) {
       toast({ title: "Delete failed", description: error.message, variant: "destructive" });
     } else {
@@ -179,7 +197,65 @@ const ShieldAIDrive = () => {
     }
   };
 
+  const handleCreateFolder = async () => {
+    if (!user || !newFolderName.trim()) return;
+    const folderPath = `${getStoragePath()}/${newFolderName.trim()}/.emptyFolderPlaceholder`;
+    const { error } = await supabase.storage
+      .from("shield-drive")
+      .upload(folderPath, new Blob([""]), { contentType: "text/plain" });
+    if (error) {
+      toast({ title: "Failed to create folder", description: error.message, variant: "destructive" });
+    } else {
+      toast({ title: `Folder "${newFolderName.trim()}" created` });
+      setNewFolderName("");
+      setShowNewFolderDialog(false);
+      fetchFiles();
+    }
+  };
+
+  const navigateToFolder = (folderName: string) => {
+    setCurrentPath(prev => [...prev, folderName]);
+    setSearchQuery("");
+  };
+
+  const navigateToBreadcrumb = (index: number) => {
+    setCurrentPath(prev => prev.slice(0, index));
+    setSearchQuery("");
+  };
+
+  const handleMoveFile = async (targetFolder: string) => {
+    if (!user || !moveFile) return;
+    const sourcePath = getStoragePath(moveFile.name);
+    const targetPath = targetFolder === "__root__"
+      ? `${user.id}/${moveFile.name}`
+      : `${getStoragePath()}/${targetFolder}/${moveFile.name}`;
+
+    const { data, error: dlError } = await supabase.storage.from("shield-drive").download(sourcePath);
+    if (dlError) {
+      toast({ title: "Move failed", description: dlError.message, variant: "destructive" });
+      return;
+    }
+    const { error: upError } = await supabase.storage.from("shield-drive").upload(targetPath, data);
+    if (upError) {
+      toast({ title: "Move failed", description: upError.message, variant: "destructive" });
+      return;
+    }
+    await supabase.storage.from("shield-drive").remove([sourcePath]);
+    toast({ title: `File moved to ${targetFolder === "__root__" ? "root" : targetFolder}` });
+    setMoveFile(null);
+    fetchFiles();
+  };
+
   const totalSize = files.reduce((sum, f) => sum + (f.metadata?.size || 0), 0);
+  useEffect(() => {
+    if (moveFile && user) {
+      const listPath = [user.id, ...currentPath].join("/");
+      supabase.storage.from("shield-drive").list(listPath, { limit: 100 }).then(({ data }) => {
+        const folderNames = (data || []).filter((f: any) => f.id === null && f.name !== ".emptyFolderPlaceholder").map((f: any) => f.name);
+        setMoveFolders(folderNames);
+      });
+    }
+  }, [moveFile, user, currentPath]);
   const filteredFiles = files.filter((f) =>
     f.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -328,22 +404,50 @@ const ShieldAIDrive = () => {
           {activeTab === "files" && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
               <Card className="bg-card/60 border-border/50">
-                <CardHeader className="pb-3">
+                <CardHeader className="pb-3 space-y-3">
                   <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                     <CardTitle className="text-base flex items-center gap-2">
                       <FolderOpen className="h-4 w-4 text-primary" />
-                      All Files ({files.length})
+                      All Files ({files.length + folders.length})
                     </CardTitle>
-                    <div className="relative w-full sm:w-64">
-                      <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
-                      <Input
-                        placeholder="Search files..."
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className="pl-8 h-8 text-xs"
-                      />
+                    <div className="flex items-center gap-2">
+                      {user && (
+                        <Button variant="outline" size="sm" className="gap-1.5 h-8 text-xs" onClick={() => setShowNewFolderDialog(true)}>
+                          <FolderPlus className="h-3.5 w-3.5" /> New Folder
+                        </Button>
+                      )}
+                      <div className="relative w-full sm:w-48">
+                        <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
+                        <Input
+                          placeholder="Search..."
+                          value={searchQuery}
+                          onChange={(e) => setSearchQuery(e.target.value)}
+                          className="pl-8 h-8 text-xs"
+                        />
+                      </div>
                     </div>
                   </div>
+                  {/* Breadcrumb */}
+                  {currentPath.length > 0 && (
+                    <div className="flex items-center gap-1 text-xs flex-wrap">
+                      <Button variant="ghost" size="sm" className="h-6 px-2 text-xs gap-1" onClick={() => navigateToBreadcrumb(0)}>
+                        <Home className="h-3 w-3" /> Root
+                      </Button>
+                      {currentPath.map((seg, i) => (
+                        <span key={i} className="flex items-center gap-1">
+                          <ChevronRight className="h-3 w-3 text-muted-foreground" />
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-6 px-2 text-xs"
+                            onClick={() => navigateToBreadcrumb(i + 1)}
+                          >
+                            {seg}
+                          </Button>
+                        </span>
+                      ))}
+                    </div>
+                  )}
                 </CardHeader>
                 <CardContent>
                   {!user ? (
@@ -359,7 +463,7 @@ const ShieldAIDrive = () => {
                       <Loader2 className="h-8 w-8 mx-auto mb-3 animate-spin text-primary" />
                       <p className="text-sm text-muted-foreground">Loading files...</p>
                     </div>
-                  ) : filteredFiles.length === 0 ? (
+                  ) : filteredFiles.length === 0 && folders.length === 0 ? (
                     <div className="text-center py-12">
                       <FolderOpen className="h-12 w-12 mx-auto mb-3 text-muted-foreground/30" />
                       <p className="text-sm text-muted-foreground">
@@ -368,6 +472,27 @@ const ShieldAIDrive = () => {
                     </div>
                   ) : (
                     <div className="space-y-1">
+                      {/* Folders */}
+                      {folders.filter(f => f.toLowerCase().includes(searchQuery.toLowerCase())).map((folder, i) => (
+                        <motion.div
+                          key={`folder-${folder}`}
+                          initial={{ opacity: 0, x: -10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: i * 0.03 }}
+                          className="flex items-center justify-between px-3 py-3 rounded-lg hover:bg-muted/20 cursor-pointer transition-colors group"
+                          onClick={() => navigateToFolder(folder)}
+                        >
+                          <div className="flex items-center gap-3">
+                            <FolderOpen className="h-5 w-5 text-primary shrink-0" />
+                            <div>
+                              <p className="text-sm font-medium group-hover:text-primary transition-colors">{folder}</p>
+                              <p className="text-xs text-muted-foreground">Folder</p>
+                            </div>
+                          </div>
+                          <ChevronRight className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+                        </motion.div>
+                      ))}
+                      {/* Files */}
                       {filteredFiles.map((file, i) => {
                         const FileIcon = getFileIcon(file.name);
                         const displayName = file.name.replace(/^\d+_/, "");
@@ -404,6 +529,11 @@ const ShieldAIDrive = () => {
                               {previewable && (
                                 <Button variant="ghost" size="sm" className="h-7 w-7 p-0 opacity-0 group-hover:opacity-100 transition-opacity" onClick={(e) => { e.stopPropagation(); setPreviewFile(file); }}>
                                   <Eye className="h-3.5 w-3.5" />
+                                </Button>
+                              )}
+                              {folders.length > 0 && (
+                                <Button variant="ghost" size="sm" className="h-7 w-7 p-0 opacity-0 group-hover:opacity-100 transition-opacity" onClick={(e) => { e.stopPropagation(); setMoveFile(file); }} title="Move to folder">
+                                  <ArrowRight className="h-3.5 w-3.5" />
                                 </Button>
                               )}
                               <Button variant="ghost" size="sm" className="h-7 w-7 p-0 opacity-0 group-hover:opacity-100 transition-opacity" onClick={(e) => { e.stopPropagation(); handleDownload(file.name); }}>
@@ -600,6 +730,67 @@ const ShieldAIDrive = () => {
                   </div>
                 </div>
               )}
+            </DialogContent>
+          </Dialog>
+
+          {/* New Folder Dialog */}
+          <Dialog open={showNewFolderDialog} onOpenChange={setShowNewFolderDialog}>
+            <DialogContent className="max-w-sm">
+              <DialogHeader>
+                <DialogTitle className="flex items-center gap-2">
+                  <FolderPlus className="h-4 w-4 text-primary" /> Create New Folder
+                </DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4">
+                <Input
+                  placeholder="Folder name..."
+                  value={newFolderName}
+                  onChange={(e) => setNewFolderName(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && handleCreateFolder()}
+                  autoFocus
+                />
+                <div className="flex justify-end gap-2">
+                  <Button variant="outline" size="sm" onClick={() => { setShowNewFolderDialog(false); setNewFolderName(""); }}>Cancel</Button>
+                  <Button variant="shield" size="sm" onClick={handleCreateFolder} disabled={!newFolderName.trim()}>Create</Button>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
+
+          {/* Move File Dialog */}
+          <Dialog open={!!moveFile} onOpenChange={(open) => !open && setMoveFile(null)}>
+            <DialogContent className="max-w-sm">
+              <DialogHeader>
+                <DialogTitle className="flex items-center gap-2 text-sm">
+                  <ArrowRight className="h-4 w-4 text-primary" /> Move "{moveFile?.name.replace(/^\d+_/, "")}"
+                </DialogTitle>
+              </DialogHeader>
+              <div className="space-y-1">
+                {currentPath.length > 0 && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="w-full justify-start gap-2 text-xs"
+                    onClick={() => handleMoveFile("__root__")}
+                  >
+                    <Home className="h-3.5 w-3.5" /> Root folder
+                  </Button>
+                )}
+                {moveFolders.map((folder) => (
+                  <Button
+                    key={folder}
+                    variant="ghost"
+                    size="sm"
+                    className="w-full justify-start gap-2 text-xs"
+                    onClick={() => handleMoveFile(folder)}
+                  >
+                    <FolderOpen className="h-3.5 w-3.5 text-primary" /> {folder}
+                  </Button>
+                ))}
+                {moveFolders.length === 0 && currentPath.length === 0 && (
+                  <p className="text-xs text-muted-foreground text-center py-4">No folders available. Create a folder first.</p>
+                )}
+              </div>
             </DialogContent>
           </Dialog>
         </div>
