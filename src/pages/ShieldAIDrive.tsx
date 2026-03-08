@@ -1,7 +1,8 @@
 import NavigationHeader from "@/components/NavigationHeader";
 import Footer from "@/components/Footer";
 import { motion } from "framer-motion";
-import { HardDrive, Upload, Download, FolderOpen, Cloud, Lock, Share2, Database, Shield, Zap, Search, FileText, Image, Video, Music, Archive, Trash2, Star, Clock, Users, File, Loader2 } from "lucide-react";
+import { HardDrive, Upload, Download, FolderOpen, Cloud, Lock, Share2, Database, Shield, Zap, Search, FileText, Image, Video, Music, Archive, Trash2, Star, Clock, Users, File, Loader2, Eye, X } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -38,6 +39,17 @@ const formatFileSize = (bytes: number) => {
   return (bytes / (1024 * 1024 * 1024)).toFixed(1) + " GB";
 };
 
+const isImageFile = (name: string) => {
+  const ext = name.split(".").pop()?.toLowerCase() || "";
+  return ["jpg", "jpeg", "png", "gif", "webp", "svg"].includes(ext);
+};
+
+const isPdfFile = (name: string) => {
+  return name.split(".").pop()?.toLowerCase() === "pdf";
+};
+
+const isPreviewable = (name: string) => isImageFile(name) || isPdfFile(name);
+
 const getFileIcon = (name: string) => {
   const ext = name.split(".").pop()?.toLowerCase() || "";
   if (["jpg", "jpeg", "png", "gif", "webp", "svg"].includes(ext)) return Image;
@@ -65,8 +77,15 @@ const ShieldAIDrive = () => {
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [previewFile, setPreviewFile] = useState<StorageFile | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
+
+  const getPublicUrl = (fileName: string) => {
+    if (!user) return "";
+    const { data } = supabase.storage.from("shield-drive").getPublicUrl(`${user.id}/${fileName}`);
+    return data.publicUrl;
+  };
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => setUser(session?.user ?? null));
@@ -335,6 +354,8 @@ const ShieldAIDrive = () => {
                       {filteredFiles.map((file, i) => {
                         const FileIcon = getFileIcon(file.name);
                         const displayName = file.name.replace(/^\d+_/, "");
+                        const previewable = isPreviewable(file.name);
+                        const isImage = isImageFile(file.name);
                         return (
                           <motion.div
                             key={file.id || file.name}
@@ -342,9 +363,19 @@ const ShieldAIDrive = () => {
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: i * 0.03 }}
                             className="flex items-center justify-between px-3 py-3 rounded-lg hover:bg-muted/20 cursor-pointer transition-colors group"
+                            onClick={() => previewable ? setPreviewFile(file) : undefined}
                           >
                             <div className="flex items-center gap-3 min-w-0">
-                              <FileIcon className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors shrink-0" />
+                              {isImage ? (
+                                <img
+                                  src={getPublicUrl(file.name)}
+                                  alt={displayName}
+                                  className="h-10 w-10 rounded object-cover border border-border/50 shrink-0"
+                                  loading="lazy"
+                                />
+                              ) : (
+                                <FileIcon className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors shrink-0" />
+                              )}
                               <div className="min-w-0">
                                 <p className="text-sm font-medium group-hover:text-primary transition-colors truncate">{displayName}</p>
                                 <p className="text-xs text-muted-foreground">
@@ -353,10 +384,15 @@ const ShieldAIDrive = () => {
                               </div>
                             </div>
                             <div className="flex items-center gap-1 shrink-0">
-                              <Button variant="ghost" size="sm" className="h-7 w-7 p-0 opacity-0 group-hover:opacity-100 transition-opacity" onClick={() => handleDownload(file.name)}>
+                              {previewable && (
+                                <Button variant="ghost" size="sm" className="h-7 w-7 p-0 opacity-0 group-hover:opacity-100 transition-opacity" onClick={(e) => { e.stopPropagation(); setPreviewFile(file); }}>
+                                  <Eye className="h-3.5 w-3.5" />
+                                </Button>
+                              )}
+                              <Button variant="ghost" size="sm" className="h-7 w-7 p-0 opacity-0 group-hover:opacity-100 transition-opacity" onClick={(e) => { e.stopPropagation(); handleDownload(file.name); }}>
                                 <Download className="h-3.5 w-3.5" />
                               </Button>
-                              <Button variant="ghost" size="sm" className="h-7 w-7 p-0 opacity-0 group-hover:opacity-100 transition-opacity text-destructive" onClick={() => handleDelete(file.name)}>
+                              <Button variant="ghost" size="sm" className="h-7 w-7 p-0 opacity-0 group-hover:opacity-100 transition-opacity text-destructive" onClick={(e) => { e.stopPropagation(); handleDelete(file.name); }}>
                                 <Trash2 className="h-3.5 w-3.5" />
                               </Button>
                             </div>
@@ -422,6 +458,40 @@ const ShieldAIDrive = () => {
             <p className="text-lg font-semibold text-primary mb-2">Managed by the Blanch Group</p>
             <p className="text-muted-foreground">Stabilizing economies and restoring humanity under the Laws & Commandments of the Most High AHAYAH.</p>
           </div>
+
+          {/* File Preview Dialog */}
+          <Dialog open={!!previewFile} onOpenChange={(open) => !open && setPreviewFile(null)}>
+            <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden">
+              <DialogHeader>
+                <DialogTitle className="flex items-center gap-2 text-sm truncate">
+                  {previewFile && isImageFile(previewFile.name) ? <Image className="h-4 w-4 text-primary" /> : <FileText className="h-4 w-4 text-primary" />}
+                  {previewFile?.name.replace(/^\d+_/, "")}
+                </DialogTitle>
+              </DialogHeader>
+              {previewFile && (
+                <div className="flex flex-col items-center overflow-auto max-h-[70vh]">
+                  {isImageFile(previewFile.name) ? (
+                    <img
+                      src={getPublicUrl(previewFile.name)}
+                      alt={previewFile.name.replace(/^\d+_/, "")}
+                      className="max-w-full max-h-[65vh] object-contain rounded-lg"
+                    />
+                  ) : isPdfFile(previewFile.name) ? (
+                    <iframe
+                      src={getPublicUrl(previewFile.name)}
+                      title={previewFile.name.replace(/^\d+_/, "")}
+                      className="w-full h-[65vh] rounded-lg border border-border/50"
+                    />
+                  ) : null}
+                  <div className="flex gap-2 mt-4">
+                    <Button variant="outline" size="sm" className="gap-1.5" onClick={() => handleDownload(previewFile.name)}>
+                      <Download className="h-3.5 w-3.5" /> Download
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
       <Footer />
