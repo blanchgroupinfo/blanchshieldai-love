@@ -942,6 +942,7 @@ const Admin = () => {
                     </Table>
                     </div>
                   )}
+                </CardContent>
               </Card>
             </TabsContent>
 
