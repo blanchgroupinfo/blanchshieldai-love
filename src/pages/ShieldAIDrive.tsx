@@ -458,6 +458,40 @@ const ShieldAIDrive = () => {
             <p className="text-lg font-semibold text-primary mb-2">Managed by the Blanch Group</p>
             <p className="text-muted-foreground">Stabilizing economies and restoring humanity under the Laws & Commandments of the Most High AHAYAH.</p>
           </div>
+
+          {/* File Preview Dialog */}
+          <Dialog open={!!previewFile} onOpenChange={(open) => !open && setPreviewFile(null)}>
+            <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden">
+              <DialogHeader>
+                <DialogTitle className="flex items-center gap-2 text-sm truncate">
+                  {previewFile && isImageFile(previewFile.name) ? <Image className="h-4 w-4 text-primary" /> : <FileText className="h-4 w-4 text-primary" />}
+                  {previewFile?.name.replace(/^\d+_/, "")}
+                </DialogTitle>
+              </DialogHeader>
+              {previewFile && (
+                <div className="flex flex-col items-center overflow-auto max-h-[70vh]">
+                  {isImageFile(previewFile.name) ? (
+                    <img
+                      src={getPublicUrl(previewFile.name)}
+                      alt={previewFile.name.replace(/^\d+_/, "")}
+                      className="max-w-full max-h-[65vh] object-contain rounded-lg"
+                    />
+                  ) : isPdfFile(previewFile.name) ? (
+                    <iframe
+                      src={getPublicUrl(previewFile.name)}
+                      title={previewFile.name.replace(/^\d+_/, "")}
+                      className="w-full h-[65vh] rounded-lg border border-border/50"
+                    />
+                  ) : null}
+                  <div className="flex gap-2 mt-4">
+                    <Button variant="outline" size="sm" className="gap-1.5" onClick={() => handleDownload(previewFile.name)}>
+                      <Download className="h-3.5 w-3.5" /> Download
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
       <Footer />
