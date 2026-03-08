@@ -205,12 +205,17 @@ const Admin = () => {
         .from("chat_conversations")
         .select("*", { count: "exact", head: true });
 
+      const { count: enrollmentCount } = await supabase
+        .from("enrollment_submissions")
+        .select("*", { count: "exact", head: true });
+
       setStats({
-        totalAgents: 402,
+        totalAgents: PLATFORM.totalAgents,
         activeUsers: userCount || 0,
         newsletterSubs: newsletterCount || 0,
         contactMessages: contactCount || 0,
         chatConversations: chatCount || 0,
+        enrollments: enrollmentCount || 0,
       });
     } catch (error) {
       console.error("Error fetching stats:", error);
