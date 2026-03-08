@@ -143,6 +143,7 @@ const Admin = () => {
   const [userProfiles, setUserProfiles] = useState<UserProfile[]>([]);
   const [userRoles, setUserRoles] = useState<UserRole[]>([]);
   const [selectedMessage, setSelectedMessage] = useState<ContactMessage | null>(null);
+  const [enrollmentList, setEnrollmentList] = useState<EnrollmentSubmission[]>([]);
   const [inviteEmail, setInviteEmail] = useState("");
   const [inviteRole, setInviteRole] = useState<'user' | 'moderator' | 'admin'>("user");
   const [inviteLoading, setInviteLoading] = useState(false);
