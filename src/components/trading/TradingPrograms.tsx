@@ -20,6 +20,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 interface ProgramItem {
   name: string;
@@ -103,7 +104,7 @@ const EnrollmentForm = ({ program, onBack }: { program: ProgramItem; onBack: () 
   });
   const [submitting, setSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!formData.fullName.trim() || formData.fullName.length > 100) {
@@ -128,13 +129,29 @@ const EnrollmentForm = ({ program, onBack }: { program: ProgramItem; onBack: () 
     }
 
     setSubmitting(true);
-    setTimeout(() => {
+    try {
+      const { error } = await supabase.from("enrollment_submissions").insert({
+        full_name: formData.fullName.trim(),
+        email: formData.email.trim(),
+        phone: formData.phone.trim(),
+        program_name: program.name,
+        program_duration: program.duration,
+        deposit_amount: formData.depositAmount,
+        compounding: formData.compounding,
+      });
+
+      if (error) throw error;
+
       toast.success(`Enrollment request submitted for ${program.name}!`, {
         description: "Our team will review your application and contact you within 24 hours.",
       });
-      setSubmitting(false);
       onBack();
-    }, 1500);
+    } catch (err) {
+      console.error("Enrollment submission error:", err);
+      toast.error("Failed to submit enrollment. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
