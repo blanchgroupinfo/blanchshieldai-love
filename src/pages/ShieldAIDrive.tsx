@@ -78,6 +78,7 @@ const ShieldAIDrive = () => {
   const [uploading, setUploading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [previewFile, setPreviewFile] = useState<StorageFile | null>(null);
+  const [dragging, setDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
@@ -111,19 +112,16 @@ const ShieldAIDrive = () => {
     if (user) fetchFiles();
   }, [user, fetchFiles]);
 
-  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!user || !e.target.files?.length) return;
+  const uploadFiles = async (fileList: FileList | File[]) => {
+    if (!user || !fileList.length) return;
     setUploading(true);
     const uploadedCount = { success: 0, fail: 0 };
 
-    for (const file of Array.from(e.target.files)) {
+    for (const file of Array.from(fileList)) {
       const filePath = `${user.id}/${Date.now()}_${file.name}`;
       const { error } = await supabase.storage.from("shield-drive").upload(filePath, file);
-      if (error) {
-        uploadedCount.fail++;
-      } else {
-        uploadedCount.success++;
-      }
+      if (error) uploadedCount.fail++;
+      else uploadedCount.success++;
     }
 
     toast({
@@ -135,6 +133,19 @@ const ShieldAIDrive = () => {
     fetchFiles();
     setActiveTab("files");
   };
+
+  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) uploadFiles(e.target.files);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setDragging(false);
+    if (e.dataTransfer.files) uploadFiles(e.dataTransfer.files);
+  };
+
+  const handleDragOver = (e: React.DragEvent) => { e.preventDefault(); setDragging(true); };
+  const handleDragLeave = (e: React.DragEvent) => { e.preventDefault(); setDragging(false); };
 
   const handleDownload = async (fileName: string) => {
     if (!user) return;
@@ -419,8 +430,15 @@ const ShieldAIDrive = () => {
                 <Card className="bg-card/60 border-border/50">
                   <CardContent className="p-8">
                     <div
-                      className="border-2 border-dashed border-border/60 hover:border-primary/40 rounded-xl p-12 text-center cursor-pointer transition-colors"
+                      className={`border-2 border-dashed rounded-xl p-12 text-center cursor-pointer transition-all ${
+                        dragging
+                          ? "border-primary bg-primary/5 scale-[1.01]"
+                          : "border-border/60 hover:border-primary/40"
+                      }`}
                       onClick={() => fileInputRef.current?.click()}
+                      onDrop={handleDrop}
+                      onDragOver={handleDragOver}
+                      onDragLeave={handleDragLeave}
                     >
                       {uploading ? (
                         <>
@@ -428,10 +446,16 @@ const ShieldAIDrive = () => {
                           <h3 className="text-lg font-semibold mb-2">Uploading...</h3>
                           <p className="text-sm text-muted-foreground">Your files are being encrypted and uploaded securely.</p>
                         </>
+                      ) : dragging ? (
+                        <>
+                          <Upload className="h-16 w-16 mx-auto mb-4 text-primary animate-bounce" />
+                          <h3 className="text-lg font-semibold mb-2 text-primary">Drop files here</h3>
+                          <p className="text-sm text-muted-foreground">Release to begin secure upload</p>
+                        </>
                       ) : (
                         <>
                           <Upload className="h-16 w-16 mx-auto mb-4 text-muted-foreground/40" />
-                          <h3 className="text-lg font-semibold mb-2">Drop files or click to upload</h3>
+                          <h3 className="text-lg font-semibold mb-2">Drag & drop files or click to upload</h3>
                           <p className="text-sm text-muted-foreground mb-4">Upload any file type — documents, images, videos, archives, AI models</p>
                           <Button variant="shield" size="sm" className="gap-1.5">
                             <Upload className="h-3.5 w-3.5" /> Select Files
