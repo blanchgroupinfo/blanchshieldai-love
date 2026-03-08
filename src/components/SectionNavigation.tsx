@@ -79,7 +79,7 @@ const SectionNavigation = () => {
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: -20 }}
-          className="fixed left-4 top-[20%] -translate-y-1/2 z-40 hidden lg:flex flex-col gap-1"
+          className="fixed left-4 top-[15%] -translate-y-1/2 z-40 hidden lg:flex flex-col gap-1"
         >
           <motion.button
             onClick={scrollToTop}
