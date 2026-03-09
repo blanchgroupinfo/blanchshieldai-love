@@ -1388,8 +1388,9 @@ const CreatorsCalendar = () => {
               </Card>
             </TabsContent>
 
-            {/* Scriptures Tab */}
+            {/* Creators Calendar Scriptures Tab */}
             <TabsContent value="scriptures">
+              <h2 className="text-2xl font-bold text-amber-400 mb-6 text-center">Creators Calendar Scriptures</h2>
               <div className="grid md:grid-cols-2 gap-6">
                 <Card className="bg-card/50 border-border/50">
                   <CardHeader>
