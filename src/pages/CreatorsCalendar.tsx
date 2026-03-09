@@ -539,11 +539,14 @@ const CreatorsCalendar = () => {
       <section className="py-8 bg-card/30" ref={printRef}>
         <div className="container mx-auto px-4">
           <Tabs defaultValue="monthly" className="max-w-7xl mx-auto">
-            <TabsList className="grid grid-cols-2 md:grid-cols-6 mb-8 no-print">
+            <TabsList className="flex flex-wrap gap-1 h-auto mb-8 no-print">
               <TabsTrigger value="monthly">Monthly</TabsTrigger>
               <TabsTrigger value="yearly">Yearly</TabsTrigger>
-              <TabsTrigger value="feasts">Holy Days</TabsTrigger>
+              <TabsTrigger value="feasts">Holy Days & Feasts</TabsTrigger>
+              <TabsTrigger value="sacrifices">Daily Sacrifices & Burnt Offerings</TabsTrigger>
               <TabsTrigger value="sabbath">Sabbath</TabsTrigger>
+              <TabsTrigger value="prayer">Prayer Request</TabsTrigger>
+              <TabsTrigger value="baptism">Baptism</TabsTrigger>
               <TabsTrigger value="scriptures">Scriptures</TabsTrigger>
               <TabsTrigger value="reminders">Reminders</TabsTrigger>
             </TabsList>
