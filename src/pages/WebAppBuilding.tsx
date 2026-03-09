@@ -4,7 +4,10 @@ import {
   Code2, Smartphone, Globe, Server, Database, Zap, Shield, Cpu,
   Layers, GitBranch, Terminal, Cloud, Box, Layout, Palette, 
   MonitorSmartphone, Rocket, CheckCircle, ArrowRight, Play,
-  Monitor, Apple, Laptop, TabletSmartphone, Orbit, Boxes, Sparkles, Crown
+  Monitor, Apple, Laptop, TabletSmartphone, Orbit, Boxes, Sparkles, Crown,
+  Tv, Watch, Car, Gamepad2, Headphones, Glasses, Radio, Satellite,
+  Store, Building2, Heart, GraduationCap, ShoppingCart, Briefcase,
+  MessageSquare, Video, Music, Camera, Wallet, BarChart3
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -14,6 +17,7 @@ import Footer from "@/components/Footer";
 
 const WebAppBuilding = () => {
   const [selectedPlatform, setSelectedPlatform] = useState("web");
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   const platforms = [
     { id: "web", name: "Web Applications", icon: Globe, description: "Responsive web apps" },
@@ -23,18 +27,38 @@ const WebAppBuilding = () => {
   ];
 
   const supportedPlatforms = [
-    { name: "S.H.I.E.L.D. AI OS", icon: Shield, color: "from-violet-500 to-purple-600" },
-    { name: "Blanch OS", icon: Cpu, color: "from-blue-500 to-cyan-500" },
-    { name: "macOS", icon: Apple, color: "from-gray-400 to-gray-600" },
-    { name: "Windows", icon: Monitor, color: "from-blue-400 to-blue-600" },
-    { name: "Linux", icon: Terminal, color: "from-orange-500 to-yellow-500" },
-    { name: "iOS", icon: TabletSmartphone, color: "from-pink-500 to-rose-500" },
-    { name: "Android", icon: Smartphone, color: "from-green-500 to-emerald-500" },
-    { name: "Hologram", icon: Sparkles, color: "from-cyan-400 to-blue-500" },
-    { name: "Metaverse", icon: Orbit, color: "from-purple-500 to-pink-500" },
-    { name: "Universal", icon: Boxes, color: "from-amber-500 to-orange-500" },
+    { name: "S.H.I.E.L.D. AI OS", icon: Shield, color: "from-violet-500 to-purple-600", category: "Primary" },
+    { name: "Blanch OS", icon: Cpu, color: "from-blue-500 to-cyan-500", category: "Primary" },
+    { name: "macOS", icon: Apple, color: "from-gray-400 to-gray-600", category: "Desktop" },
+    { name: "Windows", icon: Monitor, color: "from-blue-400 to-blue-600", category: "Desktop" },
+    { name: "Linux", icon: Terminal, color: "from-orange-500 to-yellow-500", category: "Desktop" },
+    { name: "iOS", icon: TabletSmartphone, color: "from-pink-500 to-rose-500", category: "Mobile" },
+    { name: "Android", icon: Smartphone, color: "from-green-500 to-emerald-500", category: "Mobile" },
+    { name: "Smart TV", icon: Tv, color: "from-red-500 to-rose-600", category: "IoT" },
+    { name: "Wearables", icon: Watch, color: "from-teal-500 to-cyan-500", category: "IoT" },
+    { name: "Automotive", icon: Car, color: "from-slate-500 to-zinc-600", category: "IoT" },
+    { name: "Gaming", icon: Gamepad2, color: "from-indigo-500 to-violet-500", category: "Entertainment" },
+    { name: "Audio", icon: Headphones, color: "from-fuchsia-500 to-pink-500", category: "Entertainment" },
+    { name: "AR/VR", icon: Glasses, color: "from-sky-500 to-blue-600", category: "Immersive" },
+    { name: "Hologram", icon: Sparkles, color: "from-cyan-400 to-blue-500", category: "Immersive" },
+    { name: "Metaverse", icon: Orbit, color: "from-purple-500 to-pink-500", category: "Immersive" },
+    { name: "IoT Devices", icon: Radio, color: "from-lime-500 to-green-500", category: "IoT" },
+    { name: "Satellite", icon: Satellite, color: "from-blue-600 to-indigo-600", category: "Advanced" },
+    { name: "Universal", icon: Boxes, color: "from-amber-500 to-orange-500", category: "Primary" },
   ];
 
+  const appCategories = [
+    { name: "E-Commerce", icon: ShoppingCart, description: "Online stores & marketplaces", color: "from-green-500 to-emerald-600" },
+    { name: "Enterprise", icon: Building2, description: "Business & corporate solutions", color: "from-blue-500 to-indigo-600" },
+    { name: "Healthcare", icon: Heart, description: "Medical & wellness apps", color: "from-red-500 to-rose-600" },
+    { name: "Education", icon: GraduationCap, description: "Learning & training platforms", color: "from-purple-500 to-violet-600" },
+    { name: "Finance", icon: Wallet, description: "Banking & fintech solutions", color: "from-amber-500 to-yellow-600" },
+    { name: "Social", icon: MessageSquare, description: "Communication & networking", color: "from-pink-500 to-rose-500" },
+    { name: "Media", icon: Video, description: "Streaming & content platforms", color: "from-orange-500 to-red-500" },
+    { name: "Analytics", icon: BarChart3, description: "Data & business intelligence", color: "from-cyan-500 to-blue-500" },
+  ];
+
+  const platformCategories = ["All", "Primary", "Desktop", "Mobile", "IoT", "Entertainment", "Immersive", "Advanced"];
   const features = [
     {
       icon: Code2,
