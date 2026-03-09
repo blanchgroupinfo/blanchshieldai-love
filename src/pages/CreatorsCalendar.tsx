@@ -343,18 +343,18 @@ const CreatorsCalendar = () => {
             {/* Creator Date Today */}
             {todayCreatorDate && (
               <div className="max-w-3xl mx-auto mb-4">
-                <h3 className="text-center text-sm font-bold text-green-400 mb-2">Creator Date Today</h3>
+                <h3 className="text-center text-sm font-bold text-green-400 mb-2">Creator Restoration Restoration Restoration Restoration Restoration Restoration Date Today</h3>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
                   <div className="p-3 rounded-lg bg-green-500/10 border border-green-500/20 text-center">
-                    <p className="text-[10px] text-green-300 mb-1">Year & Day</p>
+                    <p className="text-[10px] text-green-300 mb-1">Creators Restoration Year & Day</p>
                     <p className="font-bold text-sm">Year {todayCreatorDate.creatorYearNum}, Day {todayCreatorDate.absoluteDay}</p>
                   </div>
                   <div className="p-3 rounded-lg bg-green-500/10 border border-green-500/20 text-center">
-                    <p className="text-[10px] text-green-300 mb-1">Month & Day</p>
+                    <p className="text-[10px] text-green-300 mb-1">Creators Restoration Month & Day</p>
                     <p className="font-bold text-sm">{getOrdinal(todayCreatorDate.month)} Month, Day {todayCreatorDate.day}</p>
                   </div>
                   <div className="p-3 rounded-lg bg-green-500/10 border border-green-500/20 text-center">
-                    <p className="text-[10px] text-green-300 mb-1">Weekday</p>
+                    <p className="text-[10px] text-green-300 mb-1">Creators Restoration Weekday</p>
                     <p className="font-bold text-xs">Day {getHebrewDayName(todayCreatorDate.month, todayCreatorDate.day).day} - {getHebrewDayName(todayCreatorDate.month, todayCreatorDate.day).hebrew}</p>
                   </div>
                   <div className="p-3 rounded-lg bg-green-500/10 border border-green-500/20 text-center">
@@ -539,11 +539,14 @@ const CreatorsCalendar = () => {
       <section className="py-8 bg-card/30" ref={printRef}>
         <div className="container mx-auto px-4">
           <Tabs defaultValue="monthly" className="max-w-7xl mx-auto">
-            <TabsList className="grid grid-cols-2 md:grid-cols-6 mb-8 no-print">
+            <TabsList className="flex flex-wrap gap-1 h-auto mb-8 no-print">
               <TabsTrigger value="monthly">Monthly</TabsTrigger>
               <TabsTrigger value="yearly">Yearly</TabsTrigger>
-              <TabsTrigger value="feasts">Holy Days</TabsTrigger>
+              <TabsTrigger value="feasts">Holy Days & Feasts</TabsTrigger>
+              <TabsTrigger value="sacrifices">Daily Sacrifices & Burnt Offerings</TabsTrigger>
               <TabsTrigger value="sabbath">Sabbath</TabsTrigger>
+              <TabsTrigger value="prayer">Prayer Request</TabsTrigger>
+              <TabsTrigger value="baptism">Baptism</TabsTrigger>
               <TabsTrigger value="scriptures">Scriptures</TabsTrigger>
               <TabsTrigger value="reminders">Reminders</TabsTrigger>
             </TabsList>
@@ -553,8 +556,8 @@ const CreatorsCalendar = () => {
               <Card className="bg-card/50 border-border/50">
                 <CardHeader>
                   {/* Year Start Info */}
-                  <div className="text-center mb-4 p-3 rounded-lg bg-amber-500/5 border border-amber-500/20">
-                    <p className="text-sm text-muted-foreground">
+                  <div className="text-center mb-4 p-3 rounded-lg bg-amber-500/5 border bos Restorationrder-amber-500/20">
+                    <p className="text-sm text-muted-fos Restorationreground">
                       <strong className="text-amber-400">Creator Year {currentYear - 2012}</strong> begins on{' '}
                       <strong>{gregorianMonthNames[yearStartInfo.month - 1]} {yearStartInfo.day}, {yearStartInfo.gregorianYear}</strong> (Gregorian) at Dawn
                     </p>
@@ -772,7 +775,7 @@ const CreatorsCalendar = () => {
                 <CardHeader>
                   <div className="flex items-center justify-between">
                     <CardTitle className="flex items-center gap-3">
-                      <Calendar className="w-6 h-6 text-amber-400" />
+           s Restoration           <Calendar className="w-6 h-6 text-amber-400" />
                       Creator Year {currentYear - 2012} - Complete Overview
                     </CardTitle>
                     <div className="flex items-center gap-2 no-print">
@@ -1058,10 +1061,245 @@ const CreatorsCalendar = () => {
                     </div>
                   </CardContent>
                 </Card>
+
+                {/* Scriptures by Month */}
+                <Card className="bg-card/50 border-border/50 mt-6">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-3 text-amber-400">
+                      <Book className="w-6 h-6" />
+                      Scriptures by Month
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {[
+                        { month: '1st Month', scriptures: ['Genesis 1, Genesis 2', 'Exodus 12, Exodus 13', 'Exodus 23:14, Exodus 20:8-10', 'Numbers 28:16-17, 33:1-3', 'Leviticus 23:1-16', '1 Corinthians 16:1-2', 'Acts 20:6-7', '1 Corinthians 5:7', 'Matthew 5:17'] },
+                        { month: '2nd Month', scriptures: ['Numbers 9:11', '1 Kings 6:1, 6:3', '1 Chronicles 30:13-15', 'Leviticus 23:10-11'] },
+                        { month: '3rd Month', scriptures: ['Esther 8:9', 'Exodus 19:1', 'Leviticus 23:15-16, 21', 'Numbers 28:26', 'Deuteronomy 16:9-16', 'Acts 2', 'Acts 20:16', 'Jubilees 6'] },
+                        { month: '4th Month', scriptures: ['Ezekiel 1:1', 'Zechariah 8:19', 'Leviticus 23:32'] },
+                        { month: '5th Month', scriptures: ['2 Kings 25:8', 'Zechariah 8:19', 'Leviticus 23:32'] },
+                        { month: '6th Month', scriptures: ['Nehemiah 6:15', 'Ezekiel 8:1', 'Haggai 1:1', 'Luke 1:26'] },
+                        { month: '7th Month', scriptures: ['Exodus 23:14-7', 'Exodus 34:22', '1 Kings 8:1-2', 'Leviticus 16:29-34', 'Leviticus 23:23-44', 'Numbers 29:1, 29:7, 29:12, 29:35', 'Deuteronomy 16:13-16', 'Psalm 81:3-4', 'Nehemiah 8:14', 'Zechariah 8:19'] },
+                        { month: '8th Month', scriptures: ['1 Kings 6:38', '1 Kings 12:32-33', 'Zechariah 1:1'] },
+                        { month: '9th Month', scriptures: ['Zechariah 7:1', '2 Chronicles 7:9', 'Nehemiah 1:1', 'Haggai 2:18', 'John 10:22', '1 Maccabees 4:52-59'] },
+                        { month: '10th Month', scriptures: ['Esther 2:16', 'Jeremiah 39:1', 'Zechariah 8:19', 'Leviticus 23:32'] },
+                        { month: '11th Month', scriptures: ['Deuteronomy 1:3', 'Zechariah 1:7'] },
+                        { month: '12th Month', scriptures: ['Esther 8:12, 3:13, 9:1, 9:21', '1 Maccabees 7:43'] },
+                      ].map((item, index) => (
+                        <div key={index} className="p-4 rounded-lg bg-amber-500/5 border border-amber-500/20">
+                          <h4 className="font-bold text-amber-400 mb-2">{item.month}</h4>
+                          <ul className="space-y-1">
+                            {item.scriptures.map((s, i) => (
+                              <li key={i} className="text-sm text-muted-foreground">• {s}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
               </div>
             </TabsContent>
 
-            {/* Sabbath Tab */}
+            {/* Daily Sacrifices & Burnt Offerings Tab */}
+            <TabsContent value="sacrifices">
+              <Card className="bg-card/50 border-border/50">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-3 text-orange-400">
+                    <Sunrise className="w-6 h-6" />
+                    Daily Sacrifices & Burnt Offerings
+                  </CardTitle>
+                  <CardDescription>
+                    The appointed offerings and sacrifices as commanded by the Most High
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {[
+                      { title: 'Daily Morning Burnt Offerings', description: 'Sunrise - Beginning of the Day', icon: '🌅', color: 'orange' },
+                      { title: 'Evening Burnt Offerings', description: 'Sunset - End of the Day', icon: '🌇', color: 'purple' },
+                      { title: 'Feast Offerings', description: 'Offerings during appointed feasts and holy days', icon: '🕊️', color: 'green' },
+                      { title: 'Shabbat Offerings', description: 'Special offerings on the Seventh Day Sabbath', icon: '✡️', color: 'amber' },
+                      { title: 'New Month Offerings', description: 'Offerings at the beginning of each new month', icon: '🌙', color: 'blue' },
+                      { title: 'Free Will & Peace Offerings', description: 'Voluntary offerings of thanksgiving and peace', icon: '🙏', color: 'green' },
+                      { title: 'Sin Offerings', description: 'Offerings for atonement of known sins', icon: '🔥', color: 'red' },
+                      { title: 'Unintentional Sin Offerings', description: 'Offerings for sins committed unknowingly', icon: '⚖️', color: 'yellow' },
+                      { title: 'High Priest Offerings', description: 'Special offerings made by the High Priest', icon: '👑', color: 'amber' },
+                      { title: 'Tabernacle Offerings', description: 'Offerings associated with the Tabernacle service', icon: '⛺', color: 'blue' },
+                      { title: 'Temple Offerings', description: 'Offerings associated with the Temple service', icon: '🏛️', color: 'cyan' },
+                    ].map((offering, index) => (
+                      <motion.div key={index} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.05 }}
+                        className={`p-4 rounded-lg bg-${offering.color}-500/5 border border-${offering.color}-500/20`}>
+                        <div className="text-2xl mb-2">{offering.icon}</div>
+                        <h4 className="font-medium text-foreground mb-1">{offering.title}</h4>
+                        <p className="text-sm text-muted-foreground">{offering.description}</p>
+                      </motion.div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* Prayer Request Tab */}
+            <TabsContent value="prayer">
+              <Card className="bg-card/50 border-border/50">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-3 text-primary">
+                    <Star className="w-6 h-6" />
+                    Prayer Request
+                  </CardTitle>
+                  <CardDescription>
+                    Submit your prayer requests to be lifted up before the Most High
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {!user ? (
+                    <div className="text-center py-8">
+                      <Star className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+                      <p className="text-muted-foreground mb-4">Sign in to submit prayer requests</p>
+                      <Button asChild>
+                        <a href="/auth">Sign In</a>
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="max-w-2xl mx-auto space-y-4">
+                      <div>
+                        <Label>Your Name</Label>
+                        <Input placeholder="Enter your name..." className="mt-1" />
+                      </div>
+                      <div>
+                        <Label>Prayer Request</Label>
+                        <Textarea placeholder="Write your prayer request here..." className="mt-1 min-h-[150px]" />
+                      </div>
+                      <div>
+                        <Label>Request Type</Label>
+                        <Select defaultValue="healing">
+                          <SelectTrigger className="mt-1">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="healing">Healing</SelectItem>
+                            <SelectItem value="guidance">Guidance</SelectItem>
+                            <SelectItem value="protection">Protection</SelectItem>
+                            <SelectItem value="provision">Provision</SelectItem>
+                            <SelectItem value="thanksgiving">Thanksgiving</SelectItem>
+                            <SelectItem value="other">Other</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <Button className="w-full">Submit Prayer Request</Button>
+                      <p className="text-xs text-center text-muted-foreground">
+                        "The effectual fervent prayer of a righteous man availeth much." — James 5:16
+                      </p>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* Baptism Tab */}
+            <TabsContent value="baptism">
+              <div className="space-y-6">
+                <Card className="bg-card/50 border-border/50">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-3 text-blue-400">
+                      <Sparkles className="w-6 h-6" />
+                      Baptism
+                    </CardTitle>
+                    <CardDescription>
+                      Understanding baptism, registering, and completing your baptism journey
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                    {/* What is Baptism */}
+                    <div className="p-6 rounded-xl bg-blue-500/5 border border-blue-500/20">
+                      <h3 className="text-lg font-bold text-blue-400 mb-4">What is Baptism?</h3>
+                      <div className="space-y-3">
+                        <div className="p-3 rounded bg-background/50">
+                          <p className="italic text-sm">"Then Peter said unto them, Repent, and be baptized every one of you in the name of YASHAYA HA'MASHIACH for the remission of sins, and ye shall receive the gift of the Holy Ghost."</p>
+                          <p className="text-xs text-blue-400 mt-1">Acts 2:38</p>
+                        </div>
+                        <div className="p-3 rounded bg-background/50">
+                          <p className="italic text-sm">"Therefore we are buried with him by baptism into death: that like as Christ was raised up from the dead by the glory of the Father, even so we also should walk in newness of life."</p>
+                          <p className="text-xs text-blue-400 mt-1">Romans 6:4</p>
+                        </div>
+                        <div className="p-3 rounded bg-background/50">
+                          <p className="italic text-sm">"He that believeth and is baptized shall be saved; but he that believeth not shall be damned."</p>
+                          <p className="text-xs text-blue-400 mt-1">Mark 16:16</p>
+                        </div>
+                        <div className="p-3 rounded bg-background/50">
+                          <p className="italic text-sm">"Go ye therefore, and teach all nations, baptizing them in the name of the Father, and of the Son, and of the Holy Ghost."</p>
+                          <p className="text-xs text-blue-400 mt-1">Matthew 28:19</p>
+                        </div>
+                        <div className="p-3 rounded bg-background/50">
+                          <p className="italic text-sm">"Know ye not, that so many of us as were baptized into YASHAYA HA'MASHIACH were baptized into his death?"</p>
+                          <p className="text-xs text-blue-400 mt-1">Romans 6:3</p>
+                        </div>
+                        <div className="p-3 rounded bg-background/50">
+                          <p className="italic text-sm">"The like figure whereunto even baptism doth also now save us (not the putting away of the filth of the flesh, but the answer of a good conscience toward God,) by the resurrection of YASHAYA HA'MASHIACH."</p>
+                          <p className="text-xs text-blue-400 mt-1">1 Peter 3:21</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Baptism Actions */}
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <div className="p-6 rounded-xl bg-primary/5 border border-primary/20 text-center">
+                        <Sparkles className="w-10 h-10 text-primary mx-auto mb-3" />
+                        <h4 className="font-bold text-lg mb-2">I Want to Get Baptized</h4>
+                        <p className="text-sm text-muted-foreground mb-4">Begin your journey of faith through baptism in the name of YASHAYA HA'MASHIACH</p>
+                        <Button className="w-full" size="lg">I Want to Get Baptized</Button>
+                      </div>
+                      <div className="p-6 rounded-xl bg-green-500/5 border border-green-500/20 text-center">
+                        <Book className="w-10 h-10 text-green-400 mx-auto mb-3" />
+                        <h4 className="font-bold text-lg mb-2">Register a Completed Baptism</h4>
+                        <p className="text-sm text-muted-foreground mb-4">Record your completed baptism in the registry for the congregation</p>
+                        <Button variant="outline" className="w-full" size="lg">Register a Complete Baptism</Button>
+                      </div>
+                    </div>
+
+                    {/* Baptism Registry */}
+                    <div className="p-6 rounded-xl bg-card/50 border border-border/30">
+                      <h3 className="text-lg font-bold text-foreground mb-4">Baptism - Register & Registry</h3>
+                      <p className="text-sm text-muted-foreground mb-4">
+                        The baptism registry keeps a sacred record of all who have been baptized in the name of YASHAYA HA'MASHIACH. 
+                        This serves as a testimony and witness for the congregation.
+                      </p>
+                      {!user ? (
+                        <div className="text-center py-4">
+                          <p className="text-muted-foreground mb-4">Sign in to access the baptism registry</p>
+                          <Button asChild>
+                            <a href="/auth">Sign In</a>
+                          </Button>
+                        </div>
+                      ) : (
+                        <div className="space-y-4">
+                          <div className="grid md:grid-cols-2 gap-4">
+                            <div>
+                              <Label>Full Name</Label>
+                              <Input placeholder="Enter full name..." className="mt-1" />
+                            </div>
+                            <div>
+                              <Label>Date of Baptism</Label>
+                              <Input type="date" className="mt-1" />
+                            </div>
+                            <div>
+                              <Label>Location of Baptism</Label>
+                              <Input placeholder="Where were you baptized?" className="mt-1" />
+                            </div>
+                            <div>
+                              <Label>Officiant</Label>
+                              <Input placeholder="Who performed the baptism?" className="mt-1" />
+                            </div>
+                          </div>
+                          <Button className="w-full">Register Baptism</Button>
+                        </div>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </TabsContent>
             <TabsContent value="sabbath">
               <Card className="bg-card/50 border-border/50">
                 <CardHeader>
@@ -1150,8 +1388,9 @@ const CreatorsCalendar = () => {
               </Card>
             </TabsContent>
 
-            {/* Scriptures Tab */}
+            {/* Creators Calendar Scriptures Tab */}
             <TabsContent value="scriptures">
+              <h2 className="text-2xl font-bold text-amber-400 mb-6 text-center">Creators Calendar Scriptures</h2>
               <div className="grid md:grid-cols-2 gap-6">
                 <Card className="bg-card/50 border-border/50">
                   <CardHeader>
