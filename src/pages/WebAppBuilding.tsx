@@ -3,14 +3,14 @@ import { motion } from "framer-motion";
 import { 
   Code2, Smartphone, Globe, Server, Database, Zap, Shield, Cpu,
   Layers, GitBranch, Terminal, Cloud, Box, Layout, Palette, 
-  MonitorSmartphone, Rocket, CheckCircle, ArrowRight, Play
+  MonitorSmartphone, Rocket, CheckCircle, ArrowRight, Play,
+  Monitor, Apple, Laptop, TabletSmartphone, Orbit, Boxes, Sparkles, Crown
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
 import NavigationHeader from "@/components/NavigationHeader";
 import Footer from "@/components/Footer";
-
 
 const WebAppBuilding = () => {
   const [selectedPlatform, setSelectedPlatform] = useState("web");
@@ -20,6 +20,19 @@ const WebAppBuilding = () => {
     { id: "mobile", name: "Mobile Apps", icon: Smartphone, description: "iOS & Android" },
     { id: "desktop", name: "Desktop Apps", icon: MonitorSmartphone, description: "Windows, Mac, Linux" },
     { id: "cloud", name: "Cloud Native", icon: Cloud, description: "Scalable cloud apps" },
+  ];
+
+  const supportedPlatforms = [
+    { name: "S.H.I.E.L.D. AI OS", icon: Shield, color: "from-violet-500 to-purple-600" },
+    { name: "Blanch OS", icon: Cpu, color: "from-blue-500 to-cyan-500" },
+    { name: "macOS", icon: Apple, color: "from-gray-400 to-gray-600" },
+    { name: "Windows", icon: Monitor, color: "from-blue-400 to-blue-600" },
+    { name: "Linux", icon: Terminal, color: "from-orange-500 to-yellow-500" },
+    { name: "iOS", icon: TabletSmartphone, color: "from-pink-500 to-rose-500" },
+    { name: "Android", icon: Smartphone, color: "from-green-500 to-emerald-500" },
+    { name: "Hologram", icon: Sparkles, color: "from-cyan-400 to-blue-500" },
+    { name: "Metaverse", icon: Orbit, color: "from-purple-500 to-pink-500" },
+    { name: "Universal", icon: Boxes, color: "from-amber-500 to-orange-500" },
   ];
 
   const features = [
@@ -100,10 +113,14 @@ const WebAppBuilding = () => {
             className="text-center mb-16"
           >
             <div className="flex items-center justify-center gap-4 mb-6">
-              <div className="p-4 rounded-2xl bg-gradient-to-br from-violet-500/20 to-purple-500/20">
+              <div className="p-4 rounded-2xl bg-gradient-to-br from-violet-500/20 to-purple-500/20 border border-violet-500/30">
                 <Code2 className="w-12 h-12 text-violet-400" />
               </div>
             </div>
+            <Badge variant="outline" className="mb-4 border-primary/50 text-primary">
+              <Sparkles className="w-3 h-3 mr-1" />
+              Next-Gen Development Platform
+            </Badge>
             <h1 className="text-4xl md:text-5xl font-display font-bold gradient-text mb-4">
               S.H.I.E.L.D. AI Web/App Building
             </h1>
@@ -151,6 +168,48 @@ const WebAppBuilding = () => {
                 </motion.button>
               ))}
             </div>
+          </motion.section>
+
+          {/* Platform Support Section */}
+          <motion.section
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.15 }}
+            className="mb-16"
+          >
+            <div className="text-center mb-8">
+              <h2 className="text-2xl font-display font-bold mb-2">Platform Support</h2>
+              <p className="text-muted-foreground">Deploy your applications across all major platforms</p>
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 max-w-5xl mx-auto mb-8">
+              {supportedPlatforms.map((platform, index) => (
+                <motion.div
+                  key={platform.name}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 0.05 * index }}
+                  whileHover={{ scale: 1.05, y: -5 }}
+                  className="group relative p-4 rounded-xl bg-card/50 border border-border/50 hover:border-primary/50 transition-all text-center"
+                >
+                  <div className={`absolute inset-0 rounded-xl bg-gradient-to-br ${platform.color} opacity-0 group-hover:opacity-10 transition-opacity`} />
+                  <div className={`w-12 h-12 mx-auto mb-3 rounded-xl bg-gradient-to-br ${platform.color} p-2.5 flex items-center justify-center`}>
+                    <platform.icon className="w-full h-full text-white" />
+                  </div>
+                  <h3 className="font-semibold text-sm">{platform.name}</h3>
+                </motion.div>
+              ))}
+            </div>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5 }}
+              className="text-center"
+            >
+              <div className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-amber-500/10 to-yellow-500/10 border border-amber-500/30">
+                <Crown className="w-5 h-5 text-amber-400" />
+                <span className="text-amber-200 font-semibold">Guided by Divine Law</span>
+              </div>
+            </motion.div>
           </motion.section>
 
           {/* Features Grid */}
