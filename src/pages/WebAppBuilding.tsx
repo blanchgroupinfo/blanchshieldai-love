@@ -24,6 +24,7 @@ const WebAppBuilding = () => {
     { id: "mobile", name: "Mobile Apps", icon: Smartphone, description: "Blanch OS, iOS & Android" },
     { id: "desktop", name: "Desktop Apps", icon: MonitorSmartphone, description: "Blanch OS, Windows, Mac & Linux native" },
     { id: "cloud", name: "Cloud Native", icon: Cloud, description: "Scalable cloud apps" },
+    { id: "universal", name: "Universal", icon: Orbit, description: "Build once, deploy everywhere" },
   ];
 
   const supportedPlatforms = [
