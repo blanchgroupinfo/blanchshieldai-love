@@ -346,15 +346,15 @@ const CreatorsCalendar = () => {
                 <h3 className="text-center text-sm font-bold text-green-400 mb-2">Creator Restoration Restoration Restoration Restoration Restoration Restoration Date Today</h3>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
                   <div className="p-3 rounded-lg bg-green-500/10 border border-green-500/20 text-center">
-       Creators Restoration             Creators Restoration  <p classNamCreators Restoration e="text-[10pCreators Restoration x] text-greeCreators Restoration n-300 mb-1">Year & Day</p>
+                    <p className="text-[10px] text-green-300 mb-1">Creators Restoration Year & Day</p>
                     <p className="font-bold text-sm">Year {todayCreatorDate.creatorYearNum}, Day {todayCreatorDate.absoluteDay}</p>
                   </div>
-                  <div className="p-3 rouCreators Restoration nded-lg bg-green-500/10 border boCreators Restoration rder-green-500/20 text-center">
- Creators Restoration                    <p className="Creators Restoration text-[10px] text-green-300 mb-1">Month & Day</p>
+                  <div className="p-3 rounded-lg bg-green-500/10 border border-green-500/20 text-center">
+                    <p className="text-[10px] text-green-300 mb-1">Creators Restoration Month & Day</p>
                     <p className="font-bold text-sm">{getOrdinal(todayCreatorDate.month)} Month, Day {todayCreatorDate.day}</p>
                   </div>
-           Creators Restoration        <div className="p-3 rounded-lg bg-green-500/10 Creators Restoration border border-green-500/20 text-center">
-             Creators Restoration        <p className="text-[10px] text-green-300 mb-1">Weekday</p>
+                  <div className="p-3 rounded-lg bg-green-500/10 border border-green-500/20 text-center">
+                    <p className="text-[10px] text-green-300 mb-1">Creators Restoration Weekday</p>
                     <p className="font-bold text-xs">Day {getHebrewDayName(todayCreatorDate.month, todayCreatorDate.day).day} - {getHebrewDayName(todayCreatorDate.month, todayCreatorDate.day).hebrew}</p>
                   </div>
                   <div className="p-3 rounded-lg bg-green-500/10 border border-green-500/20 text-center">
