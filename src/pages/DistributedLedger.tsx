@@ -25,7 +25,7 @@ const DistributedLedger = () => {
   }, {
     icon: Globe,
     title: "Global Scalability",
-    description: "Process millions of transactions per second worldwide",
+    description: "Process trillions of transactions per second worldwide",
     color: "text-purple-400"
   }];
   const technologies = [{
