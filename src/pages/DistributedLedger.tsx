@@ -149,14 +149,18 @@ const DistributedLedger = () => {
             </p>
           </motion.div>
 
-          <Tabs defaultValue="dag" className="max-w-4xl mx-auto">
-            <TabsList className="grid grid-cols-3 mb-8">
-              <TabsTrigger value="dag">DAG</TabsTrigger>
+          <Tabs defaultValue="blanch-infinity" className="max-w-4xl mx-auto">
+            <TabsList className="flex flex-wrap gap-2 mb-8 h-auto">
+              <TabsTrigger value="blanch-infinity">Blanch Infinity DLT</TabsTrigger>
+              <TabsTrigger value="blanch-network">Blanch Network</TabsTrigger>
+              <TabsTrigger value="blanch-group">Blanch Group</TabsTrigger>
+              <TabsTrigger value="shield-dag">S.H.I.E.L.D. AI DAG</TabsTrigger>
+              <TabsTrigger value="iota">IOTA</TabsTrigger>
               <TabsTrigger value="hashgraph">Hashgraph</TabsTrigger>
               <TabsTrigger value="blockchain">Blockchain</TabsTrigger>
             </TabsList>
 
-            {technologies.map((tech, index) => <TabsContent key={tech.name} value={["dag", "hashgraph", "blockchain"][index]}>
+            {technologies.map((tech, index) => <TabsContent key={tech.name} value={["blanch-infinity", "blanch-network", "blanch-group", "shield-dag", "iota", "hashgraph", "blockchain"][index]}>
                 <Card className="bg-card/50 border-border/50">
                   <CardHeader>
                     <CardTitle className="flex items-center gap-3">
