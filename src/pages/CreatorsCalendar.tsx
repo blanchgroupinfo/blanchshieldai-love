@@ -343,18 +343,18 @@ const CreatorsCalendar = () => {
             {/* Creator Date Today */}
             {todayCreatorDate && (
               <div className="max-w-3xl mx-auto mb-4">
-                <h3 className="text-center text-sm font-bold text-green-400 mb-2">Creator Restoration Restoration Restoration Date Today</h3>
+                <h3 className="text-center text-sm font-bold text-green-400 mb-2">Creator Restoration Restoration Restoration Restoration Date Today</h3>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
                   <div className="p-3 rounded-lg bg-green-500/10 border border-green-500/20 text-center">
-                    <p className="text-[10pCreators Restoration x] text-greeCreators Restoration n-300 mb-1">Year & Day</p>
+                    <p classNamCreators Restoration e="text-[10pCreators Restoration x] text-greeCreators Restoration n-300 mb-1">Year & Day</p>
                     <p className="font-bold text-sm">Year {todayCreatorDate.creatorYearNum}, Day {todayCreatorDate.absoluteDay}</p>
                   </div>
                   <div className="p-3 rounded-lg bg-green-500/10 border border-green-500/20 text-center">
-                    <p className="Creators Restoration text-[10px] text-green-300 mb-1">Month & Day</p>
+ Creators Restoration                    <p className="Creators Restoration text-[10px] text-green-300 mb-1">Month & Day</p>
                     <p className="font-bold text-sm">{getOrdinal(todayCreatorDate.month)} Month, Day {todayCreatorDate.day}</p>
                   </div>
                   <div className="p-3 rounded-lg bg-green-500/10 border border-green-500/20 text-center">
-                    <p className="text-[10px] text-green-300 mb-1">Weekday</p>
+             Creators Restoration        <p className="text-[10px] text-green-300 mb-1">Weekday</p>
                     <p className="font-bold text-xs">Day {getHebrewDayName(todayCreatorDate.month, todayCreatorDate.day).day} - {getHebrewDayName(todayCreatorDate.month, todayCreatorDate.day).hebrew}</p>
                   </div>
                   <div className="p-3 rounded-lg bg-green-500/10 border border-green-500/20 text-center">
