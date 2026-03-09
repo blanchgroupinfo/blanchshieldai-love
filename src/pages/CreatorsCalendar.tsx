@@ -25,7 +25,7 @@ const CreatorsCalendar = () => {
   // Initialize to today's date in the creator calendar
   const today = new Date();
   const todayInCreator = getCreatorDateForGregorian(today);
-  const initialMonth = todayInCreator ? (todayInCreator.month - 1) : 0;
+  const initialMonth = todayInCreator ? todayInCreator.month - 1 : 0;
   const initialYear = todayInCreator ? todayInCreator.creatorYear : 2026;
 
   const [currentMonth, setCurrentMonth] = useState(initialMonth);
@@ -76,9 +76,9 @@ const CreatorsCalendar = () => {
 
   // Helper constants
   const gregorianMonthNames = [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'
-  ];
+  'January', 'February', 'March', 'April', 'May', 'June',
+  'July', 'August', 'September', 'October', 'November', 'December'];
+
 
   // Helper function to convert month number to ordinal
   const getOrdinal = (num: number): string => {
@@ -100,7 +100,7 @@ const CreatorsCalendar = () => {
   const weeks = useMemo(() => {
     const result: number[][] = [];
     let week: number[] = [];
-    
+
     // Find what day-of-week the 1st of this month falls on
     const firstDayAbsolute = (() => {
       let total = 0;
@@ -110,12 +110,12 @@ const CreatorsCalendar = () => {
       return total + 1;
     })();
     const startDayOfWeek = (firstDayAbsolute - 1) % 7; // 0-6
-    
+
     // Pad the beginning
     for (let p = 0; p < startDayOfWeek; p++) {
       week.push(0);
     }
-    
+
     for (let day = 1; day <= monthData.days; day++) {
       week.push(day);
       if (week.length === 7) {
@@ -132,17 +132,17 @@ const CreatorsCalendar = () => {
 
   // Get feasts for current month
   const monthFeasts = useMemo(() => {
-    return feasts.filter(f => f.month === monthData.monthNumber);
+    return feasts.filter((f) => f.month === monthData.monthNumber);
   }, [monthData]);
 
   // Get scriptures by category
   const scriptureCategories = useMemo(() => {
     return {
-      calendar: calendarScriptures.filter(s => s.category === 'calendar'),
-      light: calendarScriptures.filter(s => s.category === 'light'),
-      commandments: calendarScriptures.filter(s => s.category === 'commandments'),
-      truth: calendarScriptures.filter(s => s.category === 'truth'),
-      sabbath: calendarScriptures.filter(s => s.category === 'sabbath')
+      calendar: calendarScriptures.filter((s) => s.category === 'calendar'),
+      light: calendarScriptures.filter((s) => s.category === 'light'),
+      commandments: calendarScriptures.filter((s) => s.category === 'commandments'),
+      truth: calendarScriptures.filter((s) => s.category === 'truth'),
+      sabbath: calendarScriptures.filter((s) => s.category === 'sabbath')
     };
   }, []);
   const getFeastBadgeColor = (type: Feast['type']) => {
@@ -175,32 +175,32 @@ const CreatorsCalendar = () => {
   // ICS Calendar Export
   const handleExportICS = () => {
     let ics = 'BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Creator Calendar//EN\r\nCALSCALE:GREGORIAN\r\nX-WR-CALNAME:Creator Calendar ' + currentYear + '\r\n';
-    
+
     const formatICSDate = (d: Date) => {
-      return `${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}`;
+      return `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}`;
     };
-    
+
     // Add holy days and feasts
-    feasts.filter(f => f.type !== 'new-month').forEach(feast => {
+    feasts.filter((f) => f.type !== 'new-month').forEach((feast) => {
       const startDate = getGregorianDate(currentYear, feast.month, feast.day);
       const endDate = getGregorianDate(currentYear, feast.month, feast.endDay);
       endDate.setDate(endDate.getDate() + 1);
       const desc = feast.description.replace(/,/g, '\\,').replace(/\n/g, '\\n');
       ics += `BEGIN:VEVENT\r\nDTSTART;VALUE=DATE:${formatICSDate(startDate)}\r\nDTEND;VALUE=DATE:${formatICSDate(endDate)}\r\nSUMMARY:${feast.name}\r\nDESCRIPTION:${desc} - Month ${feast.month}\\, Day ${feast.day}${feast.endDay !== feast.day ? '-' + feast.endDay : ''}\r\nEND:VEVENT\r\n`;
     });
-    
+
     // Add sabbaths
-    calendarMonths.forEach(month => {
-      getSabbathDays(month.monthNumber).forEach(day => {
+    calendarMonths.forEach((month) => {
+      getSabbathDays(month.monthNumber).forEach((day) => {
         const sabbathDate = getGregorianDate(currentYear, month.monthNumber, day);
         const endDate = new Date(sabbathDate);
         endDate.setDate(endDate.getDate() + 1);
         ics += `BEGIN:VEVENT\r\nDTSTART;VALUE=DATE:${formatICSDate(sabbathDate)}\r\nDTEND;VALUE=DATE:${formatICSDate(endDate)}\r\nSUMMARY:SHABBAT - Month ${month.monthNumber}\\, Day ${day}\r\nDESCRIPTION:Weekly Sabbath\r\nEND:VEVENT\r\n`;
       });
     });
-    
+
     ics += 'END:VCALENDAR';
-    
+
     const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -210,7 +210,7 @@ const CreatorsCalendar = () => {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
-    
+
     toast({
       title: "Calendar Exported",
       description: `Creator Calendar ${currentYear} downloaded as ICS file. Import into any calendar app.`
@@ -321,9 +321,9 @@ const CreatorsCalendar = () => {
             </h1>
             
             <p className="text-muted-foreground mb-4 max-w-2xl mx-auto">
-              The sacred calendar established by the Most High, marking His holy days, 
-              sabbaths, feasts, and appointed times for His people.
-            </p>
+              The sacred calendar established by the Most High AHAYAH, marking His holy days, sabbaths, feasts, and appointed times for His people.
+            
+          </p>
 
             {/* Dawn Notice & Current Time */}
             <div className="flex flex-wrap items-center justify-center gap-4 mb-4">
@@ -341,8 +341,8 @@ const CreatorsCalendar = () => {
             </div>
 
             {/* Creator Date Today */}
-            {todayCreatorDate && (
-              <div className="max-w-3xl mx-auto mb-4">
+            {todayCreatorDate &&
+          <div className="max-w-3xl mx-auto mb-4">
                 <h3 className="text-center text-sm font-bold text-green-400 mb-2">Creator Restoration Restoration Restoration Restoration Restoration Restoration Date Today</h3>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
                   <div className="p-3 rounded-lg bg-green-500/10 border border-green-500/20 text-center">
@@ -363,7 +363,7 @@ const CreatorsCalendar = () => {
                   </div>
                 </div>
               </div>
-            )}
+          }
 
             {/* Sun Times Display */}
             {sunTimes && <motion.div initial={{
@@ -431,7 +431,7 @@ const CreatorsCalendar = () => {
 
             {/* Location Search */}
             <div className="flex items-center gap-2">
-              <Input placeholder="Search location..." value={locationSearch} onChange={e => setLocationSearch(e.target.value)} className="w-40 md:w-48 h-9" onKeyDown={e => e.key === 'Enter' && handleLocationSearch()} />
+              <Input placeholder="Search location..." value={locationSearch} onChange={(e) => setLocationSearch(e.target.value)} className="w-40 md:w-48 h-9" onKeyDown={(e) => e.key === 'Enter' && handleLocationSearch()} />
               <Button variant="outline" size="sm" onClick={handleLocationSearch}>
                 <Search className="w-4 h-4" />
               </Button>
@@ -455,14 +455,14 @@ const CreatorsCalendar = () => {
                 <div className="grid grid-cols-2 gap-4 py-4">
                   <div>
                     <Label>Latitude (-90 to 90)</Label>
-                    <Input type="number" placeholder="e.g., 40.7128" value={coordInput.lat} onChange={e => setCoordInput(prev => ({
+                    <Input type="number" placeholder="e.g., 40.7128" value={coordInput.lat} onChange={(e) => setCoordInput((prev) => ({
                     ...prev,
                     lat: e.target.value
                   }))} />
                   </div>
                   <div>
                     <Label>Longitude (-180 to 180)</Label>
-                    <Input type="number" placeholder="e.g., -74.0060" value={coordInput.lon} onChange={e => setCoordInput(prev => ({
+                    <Input type="number" placeholder="e.g., -74.0060" value={coordInput.lon} onChange={(e) => setCoordInput((prev) => ({
                     ...prev,
                     lon: e.target.value
                   }))} />
@@ -569,11 +569,11 @@ const CreatorsCalendar = () => {
                   {/* Year & Month Navigation */}
                   <div className="flex flex-col md:flex-row items-center justify-between gap-4">
                     <div className="flex items-center gap-2">
-                      <Button variant="outline" size="sm" onClick={() => setCurrentYear(prev => prev - 1)}>
+                      <Button variant="outline" size="sm" onClick={() => setCurrentYear((prev) => prev - 1)}>
                         <ChevronLeft className="w-4 h-4" />
                       </Button>
                       <span className="min-w-[80px] text-center font-bold text-xl">{currentYear}</span>
-                      <Button variant="outline" size="sm" onClick={() => setCurrentYear(prev => prev + 1)}>
+                      <Button variant="outline" size="sm" onClick={() => setCurrentYear((prev) => prev + 1)}>
                         <ChevronRight className="w-4 h-4" />
                       </Button>
                     </div>
@@ -585,11 +585,11 @@ const CreatorsCalendar = () => {
                     </CardTitle>
                     
                     <div className="flex items-center gap-2">
-                      <Button variant="outline" size="sm" onClick={() => setCurrentMonth(prev => prev > 0 ? prev - 1 : 11)}>
+                      <Button variant="outline" size="sm" onClick={() => setCurrentMonth((prev) => prev > 0 ? prev - 1 : 11)}>
                         <ChevronLeft className="w-4 h-4" />
                       </Button>
                       <span className="min-w-[60px] text-center font-medium">Month {monthData.monthNumber}</span>
-                      <Button variant="outline" size="sm" onClick={() => setCurrentMonth(prev => prev < 11 ? prev + 1 : 0)}>
+                      <Button variant="outline" size="sm" onClick={() => setCurrentMonth((prev) => prev < 11 ? prev + 1 : 0)}>
                         <ChevronRight className="w-4 h-4" />
                       </Button>
                     </div>
@@ -735,7 +735,7 @@ const CreatorsCalendar = () => {
                         </div>)}
 
                       {/* User Events */}
-                      {getEventsForDay(monthData.monthNumber, selectedDay).map(event => <div key={event.id} className="mt-2 p-3 rounded bg-primary/5 border border-primary/20">
+                      {getEventsForDay(monthData.monthNumber, selectedDay).map((event) => <div key={event.id} className="mt-2 p-3 rounded bg-primary/5 border border-primary/20">
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
                               <Edit className="w-4 h-4 text-primary" />
@@ -762,7 +762,7 @@ const CreatorsCalendar = () => {
                     </h4>
                     <ul className="text-sm text-muted-foreground space-y-1">
                       <li>• Numbers 10:10, Exodus 40 - New Month (Hadash), Beginning Month (Rash Hadash)</li>
-                      {monthFeasts.filter(f => f.type !== 'new-month').map((feast, i) => <li key={i}>• {feast.name} ({feast.hebrewName}) - Day {feast.day}{feast.endDay !== feast.day ? `-${feast.endDay}` : ''}</li>)}
+                      {monthFeasts.filter((f) => f.type !== 'new-month').map((feast, i) => <li key={i}>• {feast.name} ({feast.hebrewName}) - Day {feast.day}{feast.endDay !== feast.day ? `-${feast.endDay}` : ''}</li>)}
                     </ul>
                   </div>
                 </CardContent>
@@ -779,11 +779,11 @@ const CreatorsCalendar = () => {
                       Creator Year {currentYear - 2012} - Complete Overview
                     </CardTitle>
                     <div className="flex items-center gap-2 no-print">
-                      <Button variant="outline" size="sm" onClick={() => setCurrentYear(prev => prev - 1)}>
+                      <Button variant="outline" size="sm" onClick={() => setCurrentYear((prev) => prev - 1)}>
                         <ChevronLeft className="w-4 h-4" />
                       </Button>
                       <span className="min-w-[80px] text-center font-bold text-xl">{currentYear}</span>
-                      <Button variant="outline" size="sm" onClick={() => setCurrentYear(prev => prev + 1)}>
+                      <Button variant="outline" size="sm" onClick={() => setCurrentYear((prev) => prev + 1)}>
                         <ChevronRight className="w-4 h-4" />
                       </Button>
                     </div>
@@ -799,63 +799,63 @@ const CreatorsCalendar = () => {
                     
                     {/* Season data */}
                     {[
-                      { name: 'FIRST SEASON (SPRING)', color: 'blue', monthRange: [0, 1, 2], days: 91 },
-                      { name: 'SECOND SEASON (SUMMER)', color: 'yellow', monthRange: [3, 4, 5], days: 91 },
-                      { name: 'THIRD SEASON (FALL)', color: 'orange', monthRange: [6, 7, 8], days: 91 },
-                      { name: 'FOURTH SEASON (WINTER)', color: 'cyan', monthRange: [9, 10, 11], days: 91 }
-                    ].map((season, seasonIndex) => (
-                      <div key={seasonIndex} className="mb-8">
+                  { name: 'FIRST SEASON (SPRING)', color: 'blue', monthRange: [0, 1, 2], days: 91 },
+                  { name: 'SECOND SEASON (SUMMER)', color: 'yellow', monthRange: [3, 4, 5], days: 91 },
+                  { name: 'THIRD SEASON (FALL)', color: 'orange', monthRange: [6, 7, 8], days: 91 },
+                  { name: 'FOURTH SEASON (WINTER)', color: 'cyan', monthRange: [9, 10, 11], days: 91 }].
+                  map((season, seasonIndex) =>
+                  <div key={seasonIndex} className="mb-8">
                         <div className="flex items-center gap-2 mb-4 p-3 rounded-lg bg-card/50 border border-border/30">
                           <div className={`w-4 h-4 rounded-full bg-${season.color}-500/30`} />
                           <h4 className={`font-bold text-lg text-${season.color}-400`}>{season.name} ({season.days} Days)</h4>
                         </div>
                         <div className="grid md:grid-cols-3 gap-6">
                           {season.monthRange.map((monthIndex) => {
-                            const month = calendarMonths[monthIndex];
-                            const monthHolyDays = feasts.filter(f => f.month === month.monthNumber);
-                            const miniWeeks: number[][] = [];
-                            let miniWeek: number[] = [];
-                            
-                            for (let d = 1; d <= month.days; d++) {
-                              const absDay = (() => {
-                                let total = 0;
-                                for (let m = 1; m < month.monthNumber; m++) {
-                                  total += calendarMonths[m - 1].days;
-                                }
-                                return total + d;
-                              })();
-                              const dayOfWeek = ((absDay - 1) % 7);
-                              if (d === 1 && dayOfWeek > 0) {
-                                for (let p = 0; p < dayOfWeek; p++) {
-                                  miniWeek.push(0);
-                                }
-                              }
-                              miniWeek.push(d);
-                              if (miniWeek.length === 7) {
-                                miniWeeks.push(miniWeek);
-                                miniWeek = [];
-                              }
+                        const month = calendarMonths[monthIndex];
+                        const monthHolyDays = feasts.filter((f) => f.month === month.monthNumber);
+                        const miniWeeks: number[][] = [];
+                        let miniWeek: number[] = [];
+
+                        for (let d = 1; d <= month.days; d++) {
+                          const absDay = (() => {
+                            let total = 0;
+                            for (let m = 1; m < month.monthNumber; m++) {
+                              total += calendarMonths[m - 1].days;
                             }
-                            if (miniWeek.length > 0) {
-                              while (miniWeek.length < 7) miniWeek.push(0);
-                              miniWeeks.push(miniWeek);
+                            return total + d;
+                          })();
+                          const dayOfWeek = (absDay - 1) % 7;
+                          if (d === 1 && dayOfWeek > 0) {
+                            for (let p = 0; p < dayOfWeek; p++) {
+                              miniWeek.push(0);
                             }
-                            
-                            return <motion.div key={month.monthNumber} initial={{
-                              opacity: 0,
-                              scale: 0.9
-                            }} animate={{
-                              opacity: 1,
-                              scale: 1
-                            }} transition={{
-                              delay: monthIndex * 0.05
-                            }} className={`p-3 rounded-lg border cursor-pointer transition-all hover:scale-[1.02]
+                          }
+                          miniWeek.push(d);
+                          if (miniWeek.length === 7) {
+                            miniWeeks.push(miniWeek);
+                            miniWeek = [];
+                          }
+                        }
+                        if (miniWeek.length > 0) {
+                          while (miniWeek.length < 7) miniWeek.push(0);
+                          miniWeeks.push(miniWeek);
+                        }
+
+                        return <motion.div key={month.monthNumber} initial={{
+                          opacity: 0,
+                          scale: 0.9
+                        }} animate={{
+                          opacity: 1,
+                          scale: 1
+                        }} transition={{
+                          delay: monthIndex * 0.05
+                        }} className={`p-3 rounded-lg border cursor-pointer transition-all hover:scale-[1.02]
                                   ${currentMonth === monthIndex ? 'bg-primary/10 border-primary/50' : 'bg-card/50 border-border/30 hover:border-primary/30'}`} onClick={() => {
-                              setCurrentMonth(monthIndex);
-                              const tabList = document.querySelector('[role="tablist"]');
-                              const monthlyTab = tabList?.querySelector('[value="monthly"]');
-                              if (monthlyTab) (monthlyTab as HTMLElement).click();
-                            }}>
+                          setCurrentMonth(monthIndex);
+                          const tabList = document.querySelector('[role="tablist"]');
+                          const monthlyTab = tabList?.querySelector('[value="monthly"]');
+                          if (monthlyTab) (monthlyTab as HTMLElement).click();
+                        }}>
                               <div className="text-center mb-2">
                                 <h4 className="font-bold text-amber-400">Month {month.monthNumber}</h4>
                                 <p className="text-[10px] text-muted-foreground">{month.days} days • {month.gregorianMonths}</p>
@@ -872,44 +872,44 @@ const CreatorsCalendar = () => {
                                 <tbody>
                                   {miniWeeks.map((week, wi) => <tr key={wi}>
                                     {week.map((day, di) => {
-                                      if (day === 0) return <td key={di} />;
-                                      const hasFeast = monthHolyDays.some(f => day >= f.day && day <= f.endDay && f.type !== 'new-month');
-                                      const daySabbath = isSabbath(month.monthNumber, day);
-                                      const isTodayMini = todayCreatorDate && todayCreatorDate.creatorYear === currentYear && todayCreatorDate.month === month.monthNumber && todayCreatorDate.day === day;
-                                      return <td key={di} className={`text-center py-0.5 rounded-sm
+                                  if (day === 0) return <td key={di} />;
+                                  const hasFeast = monthHolyDays.some((f) => day >= f.day && day <= f.endDay && f.type !== 'new-month');
+                                  const daySabbath = isSabbath(month.monthNumber, day);
+                                  const isTodayMini = todayCreatorDate && todayCreatorDate.creatorYear === currentYear && todayCreatorDate.month === month.monthNumber && todayCreatorDate.day === day;
+                                  return <td key={di} className={`text-center py-0.5 rounded-sm
                                         ${daySabbath ? 'bg-amber-500/20 text-amber-400 font-bold' : ''}
                                         ${hasFeast ? 'bg-primary/20 text-primary font-bold' : ''}
                                         ${isTodayMini ? 'ring-1 ring-green-500 bg-green-500/20 text-green-400 font-bold' : ''}
                                       `}>
                                         {day}
                                       </td>;
-                                    })}
+                                })}
                                   </tr>)}
                                 </tbody>
                               </table>
 
                               <div className="mt-2 space-y-0.5">
-                                {monthHolyDays.filter(f => f.type !== 'new-month').slice(0, 3).map((feast, i) => <Badge key={i} variant="outline" className={`text-[8px] block truncate ${getFeastBadgeColor(feast.type)}`}>
+                                {monthHolyDays.filter((f) => f.type !== 'new-month').slice(0, 3).map((feast, i) => <Badge key={i} variant="outline" className={`text-[8px] block truncate ${getFeastBadgeColor(feast.type)}`}>
                                   Day {feast.day}: {feast.name}
                                 </Badge>)}
-                                {monthHolyDays.filter(f => f.type !== 'new-month').length > 3 && <span className="text-[8px] text-muted-foreground">
-                                  +{monthHolyDays.filter(f => f.type !== 'new-month').length - 3} more
+                                {monthHolyDays.filter((f) => f.type !== 'new-month').length > 3 && <span className="text-[8px] text-muted-foreground">
+                                  +{monthHolyDays.filter((f) => f.type !== 'new-month').length - 3} more
                                 </span>}
                               </div>
                             </motion.div>;
-                          })}
+                      })}
                         </div>
                       </div>
-                    ))}
+                  )}
                   </div>
 
                   {/* Annual Holy Days List */}
                   <div>
                     <h3 className="text-lg font-bold text-amber-400 mb-4">Annual Holy Days</h3>
                     <div className="grid md:grid-cols-2 gap-3">
-                      {feasts.filter(f => f.type !== 'new-month' || f.id === 'new-year').map((feast) => {
-                        const gregDate = getGregorianDate(currentYear, feast.month, feast.day);
-                        return <div key={feast.id} className="p-3 rounded-lg bg-card/50 border border-border/30">
+                      {feasts.filter((f) => f.type !== 'new-month' || f.id === 'new-year').map((feast) => {
+                      const gregDate = getGregorianDate(currentYear, feast.month, feast.day);
+                      return <div key={feast.id} className="p-3 rounded-lg bg-card/50 border border-border/30">
                           <div className="flex items-center justify-between mb-1">
                             <Badge variant="outline" className={`text-[10px] ${getFeastBadgeColor(feast.type)}`}>
                               {feast.month}{feast.month === 1 ? 'st' : feast.month === 2 ? 'nd' : feast.month === 3 ? 'rd' : 'th'} Month, Day {feast.day}
@@ -919,7 +919,7 @@ const CreatorsCalendar = () => {
                           <h4 className="font-medium">{feast.name}</h4>
                           <p className="text-xs text-muted-foreground mt-1">{feast.description}</p>
                         </div>;
-                      })}
+                    })}
                     </div>
                   </div>
 
@@ -929,25 +929,25 @@ const CreatorsCalendar = () => {
                     <p className="text-sm text-muted-foreground mb-4">52 Sabbaths Total</p>
                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
                       {calendarMonths.map((month) => {
-                        const sabbaths = getSabbathDays(month.monthNumber);
-                        return <div key={month.monthNumber} className="p-3 rounded-lg bg-amber-500/5 border border-amber-500/20">
+                      const sabbaths = getSabbathDays(month.monthNumber);
+                      return <div key={month.monthNumber} className="p-3 rounded-lg bg-amber-500/5 border border-amber-500/20">
                           <h4 className="font-medium text-amber-400 mb-2">
                             {month.monthNumber}{month.monthNumber === 1 ? 'st' : month.monthNumber === 2 ? 'nd' : month.monthNumber === 3 ? 'rd' : 'th'} Month
                           </h4>
                           <div className="flex flex-wrap gap-1">
-                            {sabbaths.map(d => <Badge key={d} variant="outline" className="bg-amber-500/20 text-amber-300 border-amber-500/30 text-xs">
+                            {sabbaths.map((d) => <Badge key={d} variant="outline" className="bg-amber-500/20 text-amber-300 border-amber-500/30 text-xs">
                               Day {d}
                             </Badge>)}
                           </div>
                         </div>;
-                      })}
+                    })}
                     </div>
                   </div>
 
                   {/* Summary Stats */}
                   <div className="grid grid-cols-3 gap-4 text-center">
                     <div className="p-4 rounded-lg bg-primary/5 border border-primary/20">
-                      <span className="text-2xl font-bold text-primary">{feasts.filter(f => f.type !== 'new-month').length}</span>
+                      <span className="text-2xl font-bold text-primary">{feasts.filter((f) => f.type !== 'new-month').length}</span>
                       <p className="text-xs text-muted-foreground mt-1">Annual Holy Days</p>
                     </div>
                     <div className="p-4 rounded-lg bg-amber-500/5 border border-amber-500/20">
@@ -975,7 +975,7 @@ const CreatorsCalendar = () => {
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-3">
-                    {feasts.filter(f => f.month <= 3 && f.type !== 'new-month').map((feast, index) => <motion.div key={feast.id} initial={{
+                    {feasts.filter((f) => f.month <= 3 && f.type !== 'new-month').map((feast, index) => <motion.div key={feast.id} initial={{
                     opacity: 0,
                     x: -20
                   }} animate={{
@@ -1009,7 +1009,7 @@ const CreatorsCalendar = () => {
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-3">
-                    {feasts.filter(f => f.month === 7 && f.type !== 'new-month').map((feast, index) => <motion.div key={feast.id} initial={{
+                    {feasts.filter((f) => f.month === 7 && f.type !== 'new-month').map((feast, index) => <motion.div key={feast.id} initial={{
                     opacity: 0,
                     x: 20
                   }} animate={{
@@ -1045,7 +1045,7 @@ const CreatorsCalendar = () => {
                   </CardHeader>
                   <CardContent>
                     <div className="grid md:grid-cols-4 gap-3">
-                      {feasts.filter(f => f.type === 'fast').map((feast, index) => <motion.div key={feast.id} initial={{
+                      {feasts.filter((f) => f.type === 'fast').map((feast, index) => <motion.div key={feast.id} initial={{
                       opacity: 0,
                       y: 20
                     }} animate={{
@@ -1073,28 +1073,28 @@ const CreatorsCalendar = () => {
                   <CardContent>
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
                       {[
-                        { month: '1st Month', scriptures: ['Genesis 1, Genesis 2', 'Exodus 12, Exodus 13', 'Exodus 23:14, Exodus 20:8-10', 'Numbers 28:16-17, 33:1-3', 'Leviticus 23:1-16', '1 Corinthians 16:1-2', 'Acts 20:6-7', '1 Corinthians 5:7', 'Matthew 5:17'] },
-                        { month: '2nd Month', scriptures: ['Numbers 9:11', '1 Kings 6:1, 6:3', '1 Chronicles 30:13-15', 'Leviticus 23:10-11'] },
-                        { month: '3rd Month', scriptures: ['Esther 8:9', 'Exodus 19:1', 'Leviticus 23:15-16, 21', 'Numbers 28:26', 'Deuteronomy 16:9-16', 'Acts 2', 'Acts 20:16', 'Jubilees 6'] },
-                        { month: '4th Month', scriptures: ['Ezekiel 1:1', 'Zechariah 8:19', 'Leviticus 23:32'] },
-                        { month: '5th Month', scriptures: ['2 Kings 25:8', 'Zechariah 8:19', 'Leviticus 23:32'] },
-                        { month: '6th Month', scriptures: ['Nehemiah 6:15', 'Ezekiel 8:1', 'Haggai 1:1', 'Luke 1:26'] },
-                        { month: '7th Month', scriptures: ['Exodus 23:14-7', 'Exodus 34:22', '1 Kings 8:1-2', 'Leviticus 16:29-34', 'Leviticus 23:23-44', 'Numbers 29:1, 29:7, 29:12, 29:35', 'Deuteronomy 16:13-16', 'Psalm 81:3-4', 'Nehemiah 8:14', 'Zechariah 8:19'] },
-                        { month: '8th Month', scriptures: ['1 Kings 6:38', '1 Kings 12:32-33', 'Zechariah 1:1'] },
-                        { month: '9th Month', scriptures: ['Zechariah 7:1', '2 Chronicles 7:9', 'Nehemiah 1:1', 'Haggai 2:18', 'John 10:22', '1 Maccabees 4:52-59'] },
-                        { month: '10th Month', scriptures: ['Esther 2:16', 'Jeremiah 39:1', 'Zechariah 8:19', 'Leviticus 23:32'] },
-                        { month: '11th Month', scriptures: ['Deuteronomy 1:3', 'Zechariah 1:7'] },
-                        { month: '12th Month', scriptures: ['Esther 8:12, 3:13, 9:1, 9:21', '1 Maccabees 7:43'] },
-                      ].map((item, index) => (
-                        <div key={index} className="p-4 rounded-lg bg-amber-500/5 border border-amber-500/20">
+                    { month: '1st Month', scriptures: ['Genesis 1, Genesis 2', 'Exodus 12, Exodus 13', 'Exodus 23:14, Exodus 20:8-10', 'Numbers 28:16-17, 33:1-3', 'Leviticus 23:1-16', '1 Corinthians 16:1-2', 'Acts 20:6-7', '1 Corinthians 5:7', 'Matthew 5:17'] },
+                    { month: '2nd Month', scriptures: ['Numbers 9:11', '1 Kings 6:1, 6:3', '1 Chronicles 30:13-15', 'Leviticus 23:10-11'] },
+                    { month: '3rd Month', scriptures: ['Esther 8:9', 'Exodus 19:1', 'Leviticus 23:15-16, 21', 'Numbers 28:26', 'Deuteronomy 16:9-16', 'Acts 2', 'Acts 20:16', 'Jubilees 6'] },
+                    { month: '4th Month', scriptures: ['Ezekiel 1:1', 'Zechariah 8:19', 'Leviticus 23:32'] },
+                    { month: '5th Month', scriptures: ['2 Kings 25:8', 'Zechariah 8:19', 'Leviticus 23:32'] },
+                    { month: '6th Month', scriptures: ['Nehemiah 6:15', 'Ezekiel 8:1', 'Haggai 1:1', 'Luke 1:26'] },
+                    { month: '7th Month', scriptures: ['Exodus 23:14-7', 'Exodus 34:22', '1 Kings 8:1-2', 'Leviticus 16:29-34', 'Leviticus 23:23-44', 'Numbers 29:1, 29:7, 29:12, 29:35', 'Deuteronomy 16:13-16', 'Psalm 81:3-4', 'Nehemiah 8:14', 'Zechariah 8:19'] },
+                    { month: '8th Month', scriptures: ['1 Kings 6:38', '1 Kings 12:32-33', 'Zechariah 1:1'] },
+                    { month: '9th Month', scriptures: ['Zechariah 7:1', '2 Chronicles 7:9', 'Nehemiah 1:1', 'Haggai 2:18', 'John 10:22', '1 Maccabees 4:52-59'] },
+                    { month: '10th Month', scriptures: ['Esther 2:16', 'Jeremiah 39:1', 'Zechariah 8:19', 'Leviticus 23:32'] },
+                    { month: '11th Month', scriptures: ['Deuteronomy 1:3', 'Zechariah 1:7'] },
+                    { month: '12th Month', scriptures: ['Esther 8:12, 3:13, 9:1, 9:21', '1 Maccabees 7:43'] }].
+                    map((item, index) =>
+                    <div key={index} className="p-4 rounded-lg bg-amber-500/5 border border-amber-500/20">
                           <h4 className="font-bold text-amber-400 mb-2">{item.month}</h4>
                           <ul className="space-y-1">
-                            {item.scriptures.map((s, i) => (
-                              <li key={i} className="text-sm text-muted-foreground">• {s}</li>
-                            ))}
+                            {item.scriptures.map((s, i) =>
+                        <li key={i} className="text-sm text-muted-foreground">• {s}</li>
+                        )}
                           </ul>
                         </div>
-                      ))}
+                    )}
                     </div>
                   </CardContent>
                 </Card>
@@ -1116,25 +1116,25 @@ const CreatorsCalendar = () => {
                 <CardContent>
                   <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {[
-                      { title: 'Daily Morning Burnt Offerings', description: 'Sunrise - Beginning of the Day', icon: '🌅', color: 'orange' },
-                      { title: 'Evening Burnt Offerings', description: 'Sunset - End of the Day', icon: '🌇', color: 'purple' },
-                      { title: 'Feast Offerings', description: 'Offerings during appointed feasts and holy days', icon: '🕊️', color: 'green' },
-                      { title: 'Shabbat Offerings', description: 'Special offerings on the Seventh Day Sabbath', icon: '✡️', color: 'amber' },
-                      { title: 'New Month Offerings', description: 'Offerings at the beginning of each new month', icon: '🌙', color: 'blue' },
-                      { title: 'Free Will & Peace Offerings', description: 'Voluntary offerings of thanksgiving and peace', icon: '🙏', color: 'green' },
-                      { title: 'Sin Offerings', description: 'Offerings for atonement of known sins', icon: '🔥', color: 'red' },
-                      { title: 'Unintentional Sin Offerings', description: 'Offerings for sins committed unknowingly', icon: '⚖️', color: 'yellow' },
-                      { title: 'High Priest Offerings', description: 'Special offerings made by the High Priest', icon: '👑', color: 'amber' },
-                      { title: 'Tabernacle Offerings', description: 'Offerings associated with the Tabernacle service', icon: '⛺', color: 'blue' },
-                      { title: 'Temple Offerings', description: 'Offerings associated with the Temple service', icon: '🏛️', color: 'cyan' },
-                    ].map((offering, index) => (
-                      <motion.div key={index} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.05 }}
-                        className={`p-4 rounded-lg bg-${offering.color}-500/5 border border-${offering.color}-500/20`}>
+                  { title: 'Daily Morning Burnt Offerings', description: 'Sunrise - Beginning of the Day', icon: '🌅', color: 'orange' },
+                  { title: 'Evening Burnt Offerings', description: 'Sunset - End of the Day', icon: '🌇', color: 'purple' },
+                  { title: 'Feast Offerings', description: 'Offerings during appointed feasts and holy days', icon: '🕊️', color: 'green' },
+                  { title: 'Shabbat Offerings', description: 'Special offerings on the Seventh Day Sabbath', icon: '✡️', color: 'amber' },
+                  { title: 'New Month Offerings', description: 'Offerings at the beginning of each new month', icon: '🌙', color: 'blue' },
+                  { title: 'Free Will & Peace Offerings', description: 'Voluntary offerings of thanksgiving and peace', icon: '🙏', color: 'green' },
+                  { title: 'Sin Offerings', description: 'Offerings for atonement of known sins', icon: '🔥', color: 'red' },
+                  { title: 'Unintentional Sin Offerings', description: 'Offerings for sins committed unknowingly', icon: '⚖️', color: 'yellow' },
+                  { title: 'High Priest Offerings', description: 'Special offerings made by the High Priest', icon: '👑', color: 'amber' },
+                  { title: 'Tabernacle Offerings', description: 'Offerings associated with the Tabernacle service', icon: '⛺', color: 'blue' },
+                  { title: 'Temple Offerings', description: 'Offerings associated with the Temple service', icon: '🏛️', color: 'cyan' }].
+                  map((offering, index) =>
+                  <motion.div key={index} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.05 }}
+                  className={`p-4 rounded-lg bg-${offering.color}-500/5 border border-${offering.color}-500/20`}>
                         <div className="text-2xl mb-2">{offering.icon}</div>
                         <h4 className="font-medium text-foreground mb-1">{offering.title}</h4>
                         <p className="text-sm text-muted-foreground">{offering.description}</p>
                       </motion.div>
-                    ))}
+                  )}
                   </div>
                 </CardContent>
               </Card>
@@ -1153,16 +1153,16 @@ const CreatorsCalendar = () => {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  {!user ? (
-                    <div className="text-center py-8">
+                  {!user ?
+                <div className="text-center py-8">
                       <Star className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
                       <p className="text-muted-foreground mb-4">Sign in to submit prayer requests</p>
                       <Button asChild>
                         <a href="/auth">Sign In</a>
                       </Button>
-                    </div>
-                  ) : (
-                    <div className="max-w-2xl mx-auto space-y-4">
+                    </div> :
+
+                <div className="max-w-2xl mx-auto space-y-4">
                       <div>
                         <Label>Your Name</Label>
                         <Input placeholder="Enter your name..." className="mt-1" />
@@ -1192,7 +1192,7 @@ const CreatorsCalendar = () => {
                         "The effectual fervent prayer of a righteous man availeth much." — James 5:16
                       </p>
                     </div>
-                  )}
+                }
                 </CardContent>
               </Card>
             </TabsContent>
@@ -1265,15 +1265,15 @@ const CreatorsCalendar = () => {
                         The baptism registry keeps a sacred record of all who have been baptized in the name of YASHAYA HA'MASHIACH. 
                         This serves as a testimony and witness for the congregation.
                       </p>
-                      {!user ? (
-                        <div className="text-center py-4">
+                      {!user ?
+                    <div className="text-center py-4">
                           <p className="text-muted-foreground mb-4">Sign in to access the baptism registry</p>
                           <Button asChild>
                             <a href="/auth">Sign In</a>
                           </Button>
-                        </div>
-                      ) : (
-                        <div className="space-y-4">
+                        </div> :
+
+                    <div className="space-y-4">
                           <div className="grid md:grid-cols-2 gap-4">
                             <div>
                               <Label>Full Name</Label>
@@ -1294,7 +1294,7 @@ const CreatorsCalendar = () => {
                           </div>
                           <Button className="w-full">Register Baptism</Button>
                         </div>
-                      )}
+                    }
                     </div>
                   </CardContent>
                 </Card>
@@ -1471,7 +1471,7 @@ const CreatorsCalendar = () => {
                         <a href="/auth">Sign In</a>
                       </Button>
                     </div> : <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                      {feasts.filter(f => f.type !== 'new-month').map(feast => {
+                      {feasts.filter((f) => f.type !== 'new-month').map((feast) => {
                     const reminder = getReminderForHolyDay(feast.name);
                     return <div key={feast.id} className={`p-4 rounded-lg border transition-all ${reminder?.reminder_enabled ? 'bg-primary/10 border-primary/30' : 'bg-card/50 border-border/30'}`}>
                             <div className="flex items-center justify-between mb-2">
@@ -1484,7 +1484,7 @@ const CreatorsCalendar = () => {
                               Month {feast.month}, Day {feast.day}
                             </p>
                             <div className="flex items-center justify-between">
-                              <Select value={reminder?.remind_days_before?.toString() || '1'} onValueChange={value => setReminder(feast.name, parseInt(value), true)}>
+                              <Select value={reminder?.remind_days_before?.toString() || '1'} onValueChange={(value) => setReminder(feast.name, parseInt(value), true)}>
                                 <SelectTrigger className="w-24 h-8 text-xs">
                                   <SelectValue />
                                 </SelectTrigger>
@@ -1495,7 +1495,7 @@ const CreatorsCalendar = () => {
                                   <SelectItem value="14">14 days</SelectItem>
                                 </SelectContent>
                               </Select>
-                              <Switch checked={reminder?.reminder_enabled || false} onCheckedChange={checked => setReminder(feast.name, reminder?.remind_days_before || 1, checked)} />
+                              <Switch checked={reminder?.reminder_enabled || false} onCheckedChange={(checked) => setReminder(feast.name, reminder?.remind_days_before || 1, checked)} />
                             </div>
                           </div>;
                   })}
@@ -1519,21 +1519,21 @@ const CreatorsCalendar = () => {
           <div className="space-y-4 py-4">
             <div>
               <Label>Event Title</Label>
-              <Input placeholder="Event title..." value={newEvent.title} onChange={e => setNewEvent(prev => ({
+              <Input placeholder="Event title..." value={newEvent.title} onChange={(e) => setNewEvent((prev) => ({
               ...prev,
               title: e.target.value
             }))} />
             </div>
             <div>
               <Label>Description (optional)</Label>
-              <Textarea placeholder="Event description..." value={newEvent.description} onChange={e => setNewEvent(prev => ({
+              <Textarea placeholder="Event description..." value={newEvent.description} onChange={(e) => setNewEvent((prev) => ({
               ...prev,
               description: e.target.value
             }))} />
             </div>
             <div>
               <Label>Event Type</Label>
-              <Select value={newEvent.event_type} onValueChange={value => setNewEvent(prev => ({
+              <Select value={newEvent.event_type} onValueChange={(value) => setNewEvent((prev) => ({
               ...prev,
               event_type: value
             }))}>
@@ -1571,7 +1571,7 @@ const CreatorsCalendar = () => {
               How many days before would you like to be reminded?
             </p>
             <div className="grid grid-cols-4 gap-2">
-              {[1, 3, 7, 14].map(days => <Button key={days} variant="outline" onClick={() => handleSetReminder(days)}>
+              {[1, 3, 7, 14].map((days) => <Button key={days} variant="outline" onClick={() => handleSetReminder(days)}>
                   {days} day{days > 1 ? 's' : ''}
                 </Button>)}
             </div>
