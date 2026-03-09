@@ -21,7 +21,7 @@ const WebAppBuilding = () => {
 
   const platforms = [
     { id: "web", name: "Web Applications", icon: Globe, description: "Responsive web apps" },
-    { id: "mobile", name: "Mobile Apps", icon: Smartphone, description: "iOS & Android" },
+    { id: "mobile", name: "Mobile Apps", icon: Smartphone, description: "Blanch OS, iOS & Android" },
     { id: "desktop", name: "Desktop Apps", icon: MonitorSmartphone, description: "Blanch OS, Windows, Mac & Linux native" },
     { id: "cloud", name: "Cloud Native", icon: Cloud, description: "Scalable cloud apps" },
   ];
