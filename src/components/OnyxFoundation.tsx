@@ -24,7 +24,7 @@ const OnyxFoundation = () => {
 
         <div className="text-center mb-8">
           <p className="text-xs font-display uppercase tracking-[0.15em] text-primary/80">
-            Blanch · Onyx · Sardonyx · Shoham · Royal House of Judah (Yadah) · Royal House of Levite (Lawaya) Priesthood
+            Blanch · Onyx · Sardonyx  · Shaham ·· Shoham · Royal House of Judah (Yadah) · Royal House of Levite (Lawaya) Priesthood
           </p>
         </div>
 
