@@ -203,15 +203,33 @@ const WebAppBuilding = () => {
           >
             <div className="text-center mb-8">
               <h2 className="text-2xl font-display font-bold mb-2">Platform Support</h2>
-              <p className="text-muted-foreground">Deploy your applications across all major platforms</p>
+              <p className="text-muted-foreground mb-6">Deploy your applications across 18+ platforms</p>
+              
+              {/* Category Filter */}
+              <div className="flex flex-wrap gap-2 justify-center">
+                {platformCategories.map((category) => (
+                  <Button
+                    key={category}
+                    variant={selectedCategory === category || (category === "All" && !selectedCategory) ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setSelectedCategory(category === "All" ? null : category)}
+                    className="text-xs"
+                  >
+                    {category}
+                  </Button>
+                ))}
+              </div>
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 max-w-5xl mx-auto mb-8">
-              {supportedPlatforms.map((platform, index) => (
+            
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4 max-w-6xl mx-auto mb-8">
+              {supportedPlatforms
+                .filter(p => !selectedCategory || p.category === selectedCategory)
+                .map((platform, index) => (
                 <motion.div
                   key={platform.name}
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.05 * index }}
+                  transition={{ delay: 0.03 * index }}
                   whileHover={{ scale: 1.05, y: -5 }}
                   className="group relative p-4 rounded-xl bg-card/50 border border-border/50 hover:border-primary/50 transition-all text-center"
                 >
@@ -220,6 +238,7 @@ const WebAppBuilding = () => {
                     <platform.icon className="w-full h-full text-white" />
                   </div>
                   <h3 className="font-semibold text-sm">{platform.name}</h3>
+                  <Badge variant="outline" className="mt-2 text-xs opacity-70">{platform.category}</Badge>
                 </motion.div>
               ))}
             </div>
@@ -234,6 +253,38 @@ const WebAppBuilding = () => {
                 <span className="text-amber-200 font-semibold">Guided by Divine Law</span>
               </div>
             </motion.div>
+          </motion.section>
+
+          {/* App Categories Section */}
+          <motion.section
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.18 }}
+            className="mb-16"
+          >
+            <div className="text-center mb-8">
+              <h2 className="text-2xl font-display font-bold mb-2">Build Any Application</h2>
+              <p className="text-muted-foreground">Specialized templates and tools for every industry</p>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-5xl mx-auto">
+              {appCategories.map((category, index) => (
+                <motion.div
+                  key={category.name}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.05 * index }}
+                  whileHover={{ scale: 1.03 }}
+                  className="group relative p-6 rounded-xl bg-card/50 border border-border/50 hover:border-primary/50 transition-all cursor-pointer"
+                >
+                  <div className={`absolute inset-0 rounded-xl bg-gradient-to-br ${category.color} opacity-0 group-hover:opacity-5 transition-opacity`} />
+                  <div className={`w-14 h-14 mb-4 rounded-xl bg-gradient-to-br ${category.color} p-3 flex items-center justify-center`}>
+                    <category.icon className="w-full h-full text-white" />
+                  </div>
+                  <h3 className="font-semibold mb-1">{category.name}</h3>
+                  <p className="text-sm text-muted-foreground">{category.description}</p>
+                </motion.div>
+              ))}
+            </div>
           </motion.section>
 
           {/* Features Grid */}
