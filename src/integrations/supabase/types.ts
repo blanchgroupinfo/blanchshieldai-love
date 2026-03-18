@@ -14,6 +14,42 @@ export type Database = {
   }
   public: {
     Tables: {
+      baptism_registrations: {
+        Row: {
+          created_at: string
+          date_of_baptism: string | null
+          full_name: string
+          hebrew_name: string | null
+          id: string
+          location_of_baptism: string | null
+          officiant: string | null
+          registration_type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          date_of_baptism?: string | null
+          full_name: string
+          hebrew_name?: string | null
+          id?: string
+          location_of_baptism?: string | null
+          officiant?: string | null
+          registration_type?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          date_of_baptism?: string | null
+          full_name?: string
+          hebrew_name?: string | null
+          id?: string
+          location_of_baptism?: string | null
+          officiant?: string | null
+          registration_type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       calendar_events: {
         Row: {
           calendar_day: number
@@ -259,6 +295,36 @@ export type Database = {
           id?: string
           is_active?: boolean
           subscribed_at?: string
+        }
+        Relationships: []
+      }
+      prayer_requests: {
+        Row: {
+          created_at: string
+          full_name: string
+          hebrew_name: string | null
+          id: string
+          prayer_message: string
+          request_type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          full_name: string
+          hebrew_name?: string | null
+          id?: string
+          prayer_message: string
+          request_type?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          full_name?: string
+          hebrew_name?: string | null
+          id?: string
+          prayer_message?: string
+          request_type?: string
+          user_id?: string
         }
         Relationships: []
       }
