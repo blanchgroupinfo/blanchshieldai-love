@@ -36,6 +36,8 @@ import {
   Send,
   FileText,
   ClipboardCheck,
+  Heart,
+  Droplets,
 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -124,6 +126,28 @@ interface EnrollmentSubmission {
   updated_at: string;
 }
 
+interface PrayerRequest {
+  id: string;
+  user_id: string;
+  full_name: string;
+  hebrew_name: string | null;
+  prayer_message: string;
+  request_type: string;
+  created_at: string;
+}
+
+interface BaptismRegistration {
+  id: string;
+  user_id: string;
+  full_name: string;
+  hebrew_name: string | null;
+  registration_type: string;
+  date_of_baptism: string | null;
+  location_of_baptism: string | null;
+  officiant: string | null;
+  created_at: string;
+}
+
 const Admin = () => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
@@ -135,6 +159,8 @@ const Admin = () => {
     contactMessages: 0,
     chatConversations: 0,
     enrollments: 0,
+    prayerRequests: 0,
+    baptismRegistrations: 0,
   });
   const [newsletterList, setNewsletterList] = useState<NewsletterSub[]>([]);
   const [contactList, setContactList] = useState<ContactMessage[]>([]);
@@ -143,6 +169,8 @@ const Admin = () => {
   const [userRoles, setUserRoles] = useState<UserRole[]>([]);
   const [selectedMessage, setSelectedMessage] = useState<ContactMessage | null>(null);
   const [enrollmentList, setEnrollmentList] = useState<EnrollmentSubmission[]>([]);
+  const [prayerList, setPrayerList] = useState<PrayerRequest[]>([]);
+  const [baptismList, setBaptismList] = useState<BaptismRegistration[]>([]);
   const [inviteEmail, setInviteEmail] = useState("");
   const [inviteRole, setInviteRole] = useState<'user' | 'moderator' | 'admin'>("user");
   const [inviteLoading, setInviteLoading] = useState(false);
@@ -183,6 +211,8 @@ const Admin = () => {
       fetchUserProfiles(),
       fetchUserRoles(),
       fetchEnrollments(),
+      fetchPrayerRequests(),
+      fetchBaptismRegistrations(),
     ]);
   };
 
@@ -208,6 +238,14 @@ const Admin = () => {
         .from("enrollment_submissions")
         .select("*", { count: "exact", head: true });
 
+      const { count: prayerCount } = await supabase
+        .from("prayer_requests")
+        .select("*", { count: "exact", head: true });
+
+      const { count: baptismCount } = await supabase
+        .from("baptism_registrations")
+        .select("*", { count: "exact", head: true });
+
       setStats({
         totalAgents: PLATFORM.totalAgents,
         activeUsers: userCount || 0,
@@ -215,6 +253,8 @@ const Admin = () => {
         contactMessages: contactCount || 0,
         chatConversations: chatCount || 0,
         enrollments: enrollmentCount || 0,
+        prayerRequests: prayerCount || 0,
+        baptismRegistrations: baptismCount || 0,
       });
     } catch (error) {
       console.error("Error fetching stats:", error);
@@ -285,6 +325,22 @@ const Admin = () => {
     if (!error && data) {
       setEnrollmentList(data as EnrollmentSubmission[]);
     }
+  };
+
+  const fetchPrayerRequests = async () => {
+    const { data, error } = await supabase
+      .from("prayer_requests")
+      .select("*")
+      .order("created_at", { ascending: false });
+    if (!error && data) setPrayerList(data as PrayerRequest[]);
+  };
+
+  const fetchBaptismRegistrations = async () => {
+    const { data, error } = await supabase
+      .from("baptism_registrations")
+      .select("*")
+      .order("created_at", { ascending: false });
+    if (!error && data) setBaptismList(data as BaptismRegistration[]);
   };
 
   const updateEnrollmentStatus = async (id: string, status: string) => {
@@ -624,6 +680,8 @@ const Admin = () => {
             <TabsList className="bg-card/50 border border-border/30 flex-wrap h-auto gap-1 p-1">
               <TabsTrigger value="overview">Overview</TabsTrigger>
               <TabsTrigger value="enrollments">Enrollments</TabsTrigger>
+              <TabsTrigger value="prayers">Prayer Requests</TabsTrigger>
+              <TabsTrigger value="baptisms">Baptism Registry</TabsTrigger>
               <TabsTrigger value="subscribers">Subscribers</TabsTrigger>
               <TabsTrigger value="messages">Messages</TabsTrigger>
               <TabsTrigger value="chats">Chat History</TabsTrigger>
@@ -1105,6 +1163,114 @@ const Admin = () => {
                     </Table>
                     </div>
                   )}
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="prayers">
+              <Card className="bg-card/50 border-border/30">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Heart className="w-5 h-5 text-rose-400" />
+                    Prayer Requests
+                  </CardTitle>
+                  <CardDescription>
+                    View all submitted prayer requests ({prayerList.length} total)
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Name</TableHead>
+                        <TableHead>Hebrew Name</TableHead>
+                        <TableHead>Type</TableHead>
+                        <TableHead>Message</TableHead>
+                        <TableHead>Date</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {prayerList.length === 0 ? (
+                        <TableRow>
+                          <TableCell colSpan={5} className="text-center text-muted-foreground py-8">
+                            No prayer requests yet
+                          </TableCell>
+                        </TableRow>
+                      ) : (
+                        prayerList.map((prayer) => (
+                          <TableRow key={prayer.id}>
+                            <TableCell className="font-medium">{prayer.full_name}</TableCell>
+                            <TableCell>{prayer.hebrew_name || "—"}</TableCell>
+                            <TableCell>
+                              <Badge className="bg-rose-500/20 text-rose-400 border-rose-500/30">
+                                {prayer.request_type.charAt(0).toUpperCase() + prayer.request_type.slice(1)}
+                              </Badge>
+                            </TableCell>
+                            <TableCell className="max-w-[300px] truncate">{prayer.prayer_message}</TableCell>
+                            <TableCell>{new Date(prayer.created_at).toLocaleDateString()}</TableCell>
+                          </TableRow>
+                        ))
+                      )}
+                    </TableBody>
+                  </Table>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="baptisms">
+              <Card className="bg-card/50 border-border/30">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Droplets className="w-5 h-5 text-blue-400" />
+                    Baptism Registrations
+                  </CardTitle>
+                  <CardDescription>
+                    View all baptism registrations ({baptismList.length} total)
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Name</TableHead>
+                        <TableHead>Hebrew Name</TableHead>
+                        <TableHead>Type</TableHead>
+                        <TableHead>Date of Baptism</TableHead>
+                        <TableHead>Location</TableHead>
+                        <TableHead>Officiant</TableHead>
+                        <TableHead>Submitted</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {baptismList.length === 0 ? (
+                        <TableRow>
+                          <TableCell colSpan={7} className="text-center text-muted-foreground py-8">
+                            No baptism registrations yet
+                          </TableCell>
+                        </TableRow>
+                      ) : (
+                        baptismList.map((baptism) => (
+                          <TableRow key={baptism.id}>
+                            <TableCell className="font-medium">{baptism.full_name}</TableCell>
+                            <TableCell>{baptism.hebrew_name || "—"}</TableCell>
+                            <TableCell>
+                              <Badge className={
+                                baptism.registration_type === 'want_baptism'
+                                  ? "bg-amber-500/20 text-amber-400 border-amber-500/30"
+                                  : "bg-green-500/20 text-green-400 border-green-500/30"
+                              }>
+                                {baptism.registration_type === 'want_baptism' ? 'Wants Baptism' : 'Completed'}
+                              </Badge>
+                            </TableCell>
+                            <TableCell>{baptism.date_of_baptism ? new Date(baptism.date_of_baptism).toLocaleDateString() : "—"}</TableCell>
+                            <TableCell>{baptism.location_of_baptism || "—"}</TableCell>
+                            <TableCell>{baptism.officiant || "—"}</TableCell>
+                            <TableCell>{new Date(baptism.created_at).toLocaleDateString()}</TableCell>
+                          </TableRow>
+                        ))
+                      )}
+                    </TableBody>
+                  </Table>
                 </CardContent>
               </Card>
             </TabsContent>
