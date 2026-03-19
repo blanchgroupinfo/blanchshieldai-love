@@ -211,6 +211,8 @@ const Admin = () => {
       fetchUserProfiles(),
       fetchUserRoles(),
       fetchEnrollments(),
+      fetchPrayerRequests(),
+      fetchBaptismRegistrations(),
     ]);
   };
 
