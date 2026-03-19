@@ -1194,6 +1194,19 @@ const Admin = () => {
                                     >
                                       User
                                     </Button>
+                                    {currentRole !== 'user' && (
+                                      <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        onClick={() => {
+                                          const roleEntry = userRoles.find(r => r.user_id === profile.user_id);
+                                          if (roleEntry) deleteUserRole(roleEntry.id, profile.user_id);
+                                        }}
+                                        className="text-destructive hover:text-destructive"
+                                      >
+                                        <Trash2 className="w-4 h-4" />
+                                      </Button>
+                                    )}
                                   </div>
                                 </TableCell>
                               </TableRow>
