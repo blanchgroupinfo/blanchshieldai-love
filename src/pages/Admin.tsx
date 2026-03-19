@@ -238,6 +238,14 @@ const Admin = () => {
         .from("enrollment_submissions")
         .select("*", { count: "exact", head: true });
 
+      const { count: prayerCount } = await supabase
+        .from("prayer_requests")
+        .select("*", { count: "exact", head: true });
+
+      const { count: baptismCount } = await supabase
+        .from("baptism_registrations")
+        .select("*", { count: "exact", head: true });
+
       setStats({
         totalAgents: PLATFORM.totalAgents,
         activeUsers: userCount || 0,
@@ -245,6 +253,8 @@ const Admin = () => {
         contactMessages: contactCount || 0,
         chatConversations: chatCount || 0,
         enrollments: enrollmentCount || 0,
+        prayerRequests: prayerCount || 0,
+        baptismRegistrations: baptismCount || 0,
       });
     } catch (error) {
       console.error("Error fetching stats:", error);
