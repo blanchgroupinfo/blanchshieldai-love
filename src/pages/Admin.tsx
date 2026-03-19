@@ -664,6 +664,8 @@ const Admin = () => {
             <TabsList className="bg-card/50 border border-border/30 flex-wrap h-auto gap-1 p-1">
               <TabsTrigger value="overview">Overview</TabsTrigger>
               <TabsTrigger value="enrollments">Enrollments</TabsTrigger>
+              <TabsTrigger value="prayers">Prayer Requests</TabsTrigger>
+              <TabsTrigger value="baptisms">Baptism Registry</TabsTrigger>
               <TabsTrigger value="subscribers">Subscribers</TabsTrigger>
               <TabsTrigger value="messages">Messages</TabsTrigger>
               <TabsTrigger value="chats">Chat History</TabsTrigger>
