@@ -1334,7 +1334,7 @@ const Admin = () => {
                             </TableCell>
                           </TableRow>
                         ))
-                      )
+                       )}
                     </TableBody>
                   </Table>
                 </CardContent>
