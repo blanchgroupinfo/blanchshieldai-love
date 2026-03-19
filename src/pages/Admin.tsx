@@ -1286,12 +1286,13 @@ const Admin = () => {
                         <TableHead>Location</TableHead>
                         <TableHead>Officiant</TableHead>
                         <TableHead>Submitted</TableHead>
+                        <TableHead className="text-right">Actions</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
                       {baptismList.length === 0 ? (
                         <TableRow>
-                          <TableCell colSpan={7} className="text-center text-muted-foreground py-8">
+                          <TableCell colSpan={8} className="text-center text-muted-foreground py-8">
                             No baptism registrations yet
                           </TableCell>
                         </TableRow>
@@ -1313,9 +1314,14 @@ const Admin = () => {
                             <TableCell>{baptism.location_of_baptism || "—"}</TableCell>
                             <TableCell>{baptism.officiant || "—"}</TableCell>
                             <TableCell>{new Date(baptism.created_at).toLocaleDateString()}</TableCell>
+                            <TableCell className="text-right">
+                              <Button variant="ghost" size="sm" onClick={() => deleteBaptismRegistration(baptism.id)} className="text-destructive hover:text-destructive">
+                                <Trash2 className="w-4 h-4" />
+                              </Button>
+                            </TableCell>
                           </TableRow>
                         ))
-                      )}
+                      )
                     </TableBody>
                   </Table>
                 </CardContent>
