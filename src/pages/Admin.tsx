@@ -169,6 +169,8 @@ const Admin = () => {
   const [userRoles, setUserRoles] = useState<UserRole[]>([]);
   const [selectedMessage, setSelectedMessage] = useState<ContactMessage | null>(null);
   const [enrollmentList, setEnrollmentList] = useState<EnrollmentSubmission[]>([]);
+  const [prayerList, setPrayerList] = useState<PrayerRequest[]>([]);
+  const [baptismList, setBaptismList] = useState<BaptismRegistration[]>([]);
   const [inviteEmail, setInviteEmail] = useState("");
   const [inviteRole, setInviteRole] = useState<'user' | 'moderator' | 'admin'>("user");
   const [inviteLoading, setInviteLoading] = useState(false);
