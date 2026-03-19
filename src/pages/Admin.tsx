@@ -465,6 +465,47 @@ const Admin = () => {
     }
   };
 
+  const deletePrayerRequest = async (id: string) => {
+    const { error } = await supabase
+      .from("prayer_requests")
+      .delete()
+      .eq("id", id);
+    if (!error) {
+      setPrayerList(prev => prev.filter(p => p.id !== id));
+      toast.success("Prayer request deleted");
+      fetchStats();
+    } else {
+      toast.error("Failed to delete prayer request");
+    }
+  };
+
+  const deleteBaptismRegistration = async (id: string) => {
+    const { error } = await supabase
+      .from("baptism_registrations")
+      .delete()
+      .eq("id", id);
+    if (!error) {
+      setBaptismList(prev => prev.filter(b => b.id !== id));
+      toast.success("Baptism registration deleted");
+      fetchStats();
+    } else {
+      toast.error("Failed to delete baptism registration");
+    }
+  };
+
+  const deleteUserRole = async (id: string, userId: string) => {
+    const { error } = await supabase
+      .from("user_roles")
+      .delete()
+      .eq("id", id);
+    if (!error) {
+      setUserRoles(prev => prev.filter(r => r.id !== id));
+      toast.success("User role removed");
+    } else {
+      toast.error("Failed to delete user role");
+    }
+  };
+
   const systemModules: SystemModule[] = [
     {
       id: "agents",
@@ -1153,6 +1194,19 @@ const Admin = () => {
                                     >
                                       User
                                     </Button>
+                                    {currentRole !== 'user' && (
+                                      <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        onClick={() => {
+                                          const roleEntry = userRoles.find(r => r.user_id === profile.user_id);
+                                          if (roleEntry) deleteUserRole(roleEntry.id, profile.user_id);
+                                        }}
+                                        className="text-destructive hover:text-destructive"
+                                      >
+                                        <Trash2 className="w-4 h-4" />
+                                      </Button>
+                                    )}
                                   </div>
                                 </TableCell>
                               </TableRow>
@@ -1187,12 +1241,13 @@ const Admin = () => {
                         <TableHead>Type</TableHead>
                         <TableHead>Message</TableHead>
                         <TableHead>Date</TableHead>
+                        <TableHead className="text-right">Actions</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
                       {prayerList.length === 0 ? (
                         <TableRow>
-                          <TableCell colSpan={5} className="text-center text-muted-foreground py-8">
+                          <TableCell colSpan={6} className="text-center text-muted-foreground py-8">
                             No prayer requests yet
                           </TableCell>
                         </TableRow>
@@ -1208,9 +1263,14 @@ const Admin = () => {
                             </TableCell>
                             <TableCell className="max-w-[300px] truncate">{prayer.prayer_message}</TableCell>
                             <TableCell>{new Date(prayer.created_at).toLocaleDateString()}</TableCell>
+                            <TableCell className="text-right">
+                              <Button variant="ghost" size="sm" onClick={() => deletePrayerRequest(prayer.id)} className="text-destructive hover:text-destructive">
+                                <Trash2 className="w-4 h-4" />
+                              </Button>
+                            </TableCell>
                           </TableRow>
                         ))
-                      )}
+                       )}
                     </TableBody>
                   </Table>
                 </CardContent>
@@ -1239,12 +1299,13 @@ const Admin = () => {
                         <TableHead>Location</TableHead>
                         <TableHead>Officiant</TableHead>
                         <TableHead>Submitted</TableHead>
+                        <TableHead className="text-right">Actions</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
                       {baptismList.length === 0 ? (
                         <TableRow>
-                          <TableCell colSpan={7} className="text-center text-muted-foreground py-8">
+                          <TableCell colSpan={8} className="text-center text-muted-foreground py-8">
                             No baptism registrations yet
                           </TableCell>
                         </TableRow>
@@ -1266,9 +1327,14 @@ const Admin = () => {
                             <TableCell>{baptism.location_of_baptism || "—"}</TableCell>
                             <TableCell>{baptism.officiant || "—"}</TableCell>
                             <TableCell>{new Date(baptism.created_at).toLocaleDateString()}</TableCell>
+                            <TableCell className="text-right">
+                              <Button variant="ghost" size="sm" onClick={() => deleteBaptismRegistration(baptism.id)} className="text-destructive hover:text-destructive">
+                                <Trash2 className="w-4 h-4" />
+                              </Button>
+                            </TableCell>
                           </TableRow>
                         ))
-                      )}
+                       )}
                     </TableBody>
                   </Table>
                 </CardContent>
