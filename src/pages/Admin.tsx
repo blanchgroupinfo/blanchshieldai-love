@@ -465,6 +465,47 @@ const Admin = () => {
     }
   };
 
+  const deletePrayerRequest = async (id: string) => {
+    const { error } = await supabase
+      .from("prayer_requests")
+      .delete()
+      .eq("id", id);
+    if (!error) {
+      setPrayerList(prev => prev.filter(p => p.id !== id));
+      toast.success("Prayer request deleted");
+      fetchStats();
+    } else {
+      toast.error("Failed to delete prayer request");
+    }
+  };
+
+  const deleteBaptismRegistration = async (id: string) => {
+    const { error } = await supabase
+      .from("baptism_registrations")
+      .delete()
+      .eq("id", id);
+    if (!error) {
+      setBaptismList(prev => prev.filter(b => b.id !== id));
+      toast.success("Baptism registration deleted");
+      fetchStats();
+    } else {
+      toast.error("Failed to delete baptism registration");
+    }
+  };
+
+  const deleteUserRole = async (id: string, userId: string) => {
+    const { error } = await supabase
+      .from("user_roles")
+      .delete()
+      .eq("id", id);
+    if (!error) {
+      setUserRoles(prev => prev.filter(r => r.id !== id));
+      toast.success("User role removed");
+    } else {
+      toast.error("Failed to delete user role");
+    }
+  };
+
   const systemModules: SystemModule[] = [
     {
       id: "agents",
