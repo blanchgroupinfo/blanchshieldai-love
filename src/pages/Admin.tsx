@@ -159,6 +159,8 @@ const Admin = () => {
     contactMessages: 0,
     chatConversations: 0,
     enrollments: 0,
+    prayerRequests: 0,
+    baptismRegistrations: 0,
   });
   const [newsletterList, setNewsletterList] = useState<NewsletterSub[]>([]);
   const [contactList, setContactList] = useState<ContactMessage[]>([]);
