@@ -327,6 +327,22 @@ const Admin = () => {
     }
   };
 
+  const fetchPrayerRequests = async () => {
+    const { data, error } = await supabase
+      .from("prayer_requests")
+      .select("*")
+      .order("created_at", { ascending: false });
+    if (!error && data) setPrayerList(data as PrayerRequest[]);
+  };
+
+  const fetchBaptismRegistrations = async () => {
+    const { data, error } = await supabase
+      .from("baptism_registrations")
+      .select("*")
+      .order("created_at", { ascending: false });
+    if (!error && data) setBaptismList(data as BaptismRegistration[]);
+  };
+
   const updateEnrollmentStatus = async (id: string, status: string) => {
     const { error } = await supabase
       .from("enrollment_submissions")
