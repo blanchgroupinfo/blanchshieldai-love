@@ -1151,6 +1151,114 @@ const Admin = () => {
               </Card>
             </TabsContent>
 
+            <TabsContent value="prayers">
+              <Card className="bg-card/50 border-border/30">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Heart className="w-5 h-5 text-rose-400" />
+                    Prayer Requests
+                  </CardTitle>
+                  <CardDescription>
+                    View all submitted prayer requests ({prayerList.length} total)
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Name</TableHead>
+                        <TableHead>Hebrew Name</TableHead>
+                        <TableHead>Type</TableHead>
+                        <TableHead>Message</TableHead>
+                        <TableHead>Date</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {prayerList.length === 0 ? (
+                        <TableRow>
+                          <TableCell colSpan={5} className="text-center text-muted-foreground py-8">
+                            No prayer requests yet
+                          </TableCell>
+                        </TableRow>
+                      ) : (
+                        prayerList.map((prayer) => (
+                          <TableRow key={prayer.id}>
+                            <TableCell className="font-medium">{prayer.full_name}</TableCell>
+                            <TableCell>{prayer.hebrew_name || "—"}</TableCell>
+                            <TableCell>
+                              <Badge className="bg-rose-500/20 text-rose-400 border-rose-500/30">
+                                {prayer.request_type.charAt(0).toUpperCase() + prayer.request_type.slice(1)}
+                              </Badge>
+                            </TableCell>
+                            <TableCell className="max-w-[300px] truncate">{prayer.prayer_message}</TableCell>
+                            <TableCell>{new Date(prayer.created_at).toLocaleDateString()}</TableCell>
+                          </TableRow>
+                        ))
+                      )}
+                    </TableBody>
+                  </Table>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="baptisms">
+              <Card className="bg-card/50 border-border/30">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Droplets className="w-5 h-5 text-blue-400" />
+                    Baptism Registrations
+                  </CardTitle>
+                  <CardDescription>
+                    View all baptism registrations ({baptismList.length} total)
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Name</TableHead>
+                        <TableHead>Hebrew Name</TableHead>
+                        <TableHead>Type</TableHead>
+                        <TableHead>Date of Baptism</TableHead>
+                        <TableHead>Location</TableHead>
+                        <TableHead>Officiant</TableHead>
+                        <TableHead>Submitted</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {baptismList.length === 0 ? (
+                        <TableRow>
+                          <TableCell colSpan={7} className="text-center text-muted-foreground py-8">
+                            No baptism registrations yet
+                          </TableCell>
+                        </TableRow>
+                      ) : (
+                        baptismList.map((baptism) => (
+                          <TableRow key={baptism.id}>
+                            <TableCell className="font-medium">{baptism.full_name}</TableCell>
+                            <TableCell>{baptism.hebrew_name || "—"}</TableCell>
+                            <TableCell>
+                              <Badge className={
+                                baptism.registration_type === 'want_baptism'
+                                  ? "bg-amber-500/20 text-amber-400 border-amber-500/30"
+                                  : "bg-green-500/20 text-green-400 border-green-500/30"
+                              }>
+                                {baptism.registration_type === 'want_baptism' ? 'Wants Baptism' : 'Completed'}
+                              </Badge>
+                            </TableCell>
+                            <TableCell>{baptism.date_of_baptism ? new Date(baptism.date_of_baptism).toLocaleDateString() : "—"}</TableCell>
+                            <TableCell>{baptism.location_of_baptism || "—"}</TableCell>
+                            <TableCell>{baptism.officiant || "—"}</TableCell>
+                            <TableCell>{new Date(baptism.created_at).toLocaleDateString()}</TableCell>
+                          </TableRow>
+                        ))
+                      )}
+                    </TableBody>
+                  </Table>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
             <TabsContent value="modules">
               <Card className="bg-card/50 border-border/30">
                 <CardHeader>
