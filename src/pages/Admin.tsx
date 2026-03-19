@@ -1228,12 +1228,13 @@ const Admin = () => {
                         <TableHead>Type</TableHead>
                         <TableHead>Message</TableHead>
                         <TableHead>Date</TableHead>
+                        <TableHead className="text-right">Actions</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
                       {prayerList.length === 0 ? (
                         <TableRow>
-                          <TableCell colSpan={5} className="text-center text-muted-foreground py-8">
+                          <TableCell colSpan={6} className="text-center text-muted-foreground py-8">
                             No prayer requests yet
                           </TableCell>
                         </TableRow>
@@ -1249,9 +1250,14 @@ const Admin = () => {
                             </TableCell>
                             <TableCell className="max-w-[300px] truncate">{prayer.prayer_message}</TableCell>
                             <TableCell>{new Date(prayer.created_at).toLocaleDateString()}</TableCell>
+                            <TableCell className="text-right">
+                              <Button variant="ghost" size="sm" onClick={() => deletePrayerRequest(prayer.id)} className="text-destructive hover:text-destructive">
+                                <Trash2 className="w-4 h-4" />
+                              </Button>
+                            </TableCell>
                           </TableRow>
                         ))
-                      )}
+                      )
                     </TableBody>
                   </Table>
                 </CardContent>
