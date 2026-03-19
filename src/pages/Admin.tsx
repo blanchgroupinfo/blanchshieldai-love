@@ -126,6 +126,28 @@ interface EnrollmentSubmission {
   updated_at: string;
 }
 
+interface PrayerRequest {
+  id: string;
+  user_id: string;
+  full_name: string;
+  hebrew_name: string | null;
+  prayer_message: string;
+  request_type: string;
+  created_at: string;
+}
+
+interface BaptismRegistration {
+  id: string;
+  user_id: string;
+  full_name: string;
+  hebrew_name: string | null;
+  registration_type: string;
+  date_of_baptism: string | null;
+  location_of_baptism: string | null;
+  officiant: string | null;
+  created_at: string;
+}
+
 const Admin = () => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
