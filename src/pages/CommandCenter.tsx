@@ -204,7 +204,9 @@ const CommandCenterPage = () => {
 
   // ==================== MEDIA ====================
   { id: "blanch-media", name: "Blanch Media & Entertainment", description: "Media Production", icon: Film, color: "text-red-400", gradient: "from-red-500/20 to-pink-500/20", link: "/command-center", category: "media" },
-  { id: "shield-creative-media", name: "S.H.I.E.L.D. AI Creative Media", description: "AI Powered Content Creation", icon: Palette, color: "text-pink-400", gradient: "from-pink-500/20 to-purple-500/20", link: "/command-center", category: "media" },
+  { id: "shield-creative-media", name: "S.H.I.E.L.D. AI Creative Media", description: "Autonomous Content Generation & Immersive Media", icon: Palette, color: "text-pink-400", gradient: "from-pink-500/20 to-purple-500/20", link: "/creative-media", category: "media" },
+  { id: "shield-creative-engine", name: "S.H.I.E.L.D. AI Creative Engine & Portal", description: "Neural Forge Media Engine", icon: Sparkles, color: "text-violet-400", gradient: "from-violet-500/20 to-purple-500/20", link: "/creative-media", category: "media" },
+  { id: "shield-neuro-forge", name: "Neuro Forge Creative Engine", description: "Neural Media Synthesis", icon: Brain, color: "text-purple-400", gradient: "from-purple-500/20 to-pink-500/20", link: "/creative-media", category: "media" },
   { id: "shield-studios", name: "S.H.I.E.L.D. AI Studios", description: "Media, DAW, Video & Publishing", icon: Film, color: "text-red-400", gradient: "from-red-500/20 to-pink-500/20", link: "/command-center", category: "media" },
   { id: "shield-magazine", name: "S.H.I.E.L.D. AI Magazine", description: "Digital Magazine", icon: Newspaper, color: "text-red-400", gradient: "from-red-500/20 to-pink-500/20", link: "/command-center", category: "media" },
   { id: "blanch-content-mgr", name: "Blanch Content Manager", description: "Content Management System", icon: FileText, color: "text-blue-400", gradient: "from-blue-500/20 to-indigo-500/20", link: "/command-center", category: "media" },
