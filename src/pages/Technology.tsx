@@ -11,7 +11,7 @@ const Technology = () => {
     {
       icon: Brain,
       title: "Multi-Agent AI Systems",
-      description: "402+ specialized AI agents working in harmony through advanced coordination protocols.",
+      description: "888+ specialized AI agents working in harmony through advanced coordination protocols.",
       features: ["Swarm Intelligence", "Agent-to-Agent Communication", "Distributed Task Allocation"],
     },
     {
