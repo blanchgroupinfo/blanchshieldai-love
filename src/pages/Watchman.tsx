@@ -156,7 +156,7 @@ const Watchman = () => {
                 System Active
               </Badge>
               <Badge className="bg-primary/20 text-primary border-primary/30 px-4 py-2">
-                402+ H.I.I. AI Agents
+                888+ H.I.I. AI Agents
               </Badge>
               <Badge className="bg-secondary/20 text-secondary border-secondary/30 px-4 py-2">
                 33 Categories
