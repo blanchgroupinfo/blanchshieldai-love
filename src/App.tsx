@@ -130,6 +130,7 @@ const App = () => (
           <Route path="/shared" element={<SharedFileViewer />} />
           <Route path="/universal-commerce" element={<UniversalCommerceModels />} />
           <Route path="/platform-features" element={<PlatformFeatures />} />
+          <Route path="/creative-media" element={<CreativeMedia />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

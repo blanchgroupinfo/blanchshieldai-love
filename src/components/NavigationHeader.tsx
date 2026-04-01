@@ -29,6 +29,7 @@ const navItems = [
 { label: "Sovereign Court", href: "/sovereign-court", icon: Scale, isPage: true },
 { label: "S.H.I.E.L.D. AI OS", href: "/shield-ai-os", icon: Monitor, isPage: true },
 { label: "S.H.I.E.L.D. AI Drive", href: "/shield-ai-drive", icon: HardDrive, isPage: true },
+{ label: "Creative Media", href: "/creative-media", icon: Film, isPage: true },
 { label: "API", href: "/api", icon: Code, isPage: true },
 { label: "Contact", href: "/contact", icon: Mail, isPage: true }];
 
