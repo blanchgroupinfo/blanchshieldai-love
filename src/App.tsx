@@ -59,6 +59,7 @@ import ShieldAIDrive from "./pages/ShieldAIDrive";
 import SharedFileViewer from "./pages/SharedFileViewer";
 import UniversalCommerceModels from "./pages/UniversalCommerceModels";
 import PlatformFeatures from "./pages/PlatformFeatures";
+import CreativeMedia from "./pages/CreativeMedia";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -129,6 +130,7 @@ const App = () => (
           <Route path="/shared" element={<SharedFileViewer />} />
           <Route path="/universal-commerce" element={<UniversalCommerceModels />} />
           <Route path="/platform-features" element={<PlatformFeatures />} />
+          <Route path="/creative-media" element={<CreativeMedia />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

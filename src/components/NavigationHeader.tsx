@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { Shield, Menu, MessageSquare, Users, BookOpen, Scale, Home, Info, Cpu, Mail, Code, LogIn, LogOut, User, LayoutDashboard, Settings, TrendingUp, Calendar, ScrollText, Globe, Heart, Eye, Zap, Building2, ShoppingBag, Monitor, HardDrive } from "lucide-react";
+import { Shield, Menu, MessageSquare, Users, BookOpen, Scale, Home, Info, Cpu, Mail, Code, LogIn, LogOut, User, LayoutDashboard, Settings, TrendingUp, Calendar, ScrollText, Globe, Heart, Eye, Zap, Building2, ShoppingBag, Monitor, HardDrive, Film } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -29,6 +29,7 @@ const navItems = [
 { label: "Sovereign Court", href: "/sovereign-court", icon: Scale, isPage: true },
 { label: "S.H.I.E.L.D. AI OS", href: "/shield-ai-os", icon: Monitor, isPage: true },
 { label: "S.H.I.E.L.D. AI Drive", href: "/shield-ai-drive", icon: HardDrive, isPage: true },
+{ label: "Creative Media", href: "/creative-media", icon: Film, isPage: true },
 { label: "API", href: "/api", icon: Code, isPage: true },
 { label: "Contact", href: "/contact", icon: Mail, isPage: true }];
 
