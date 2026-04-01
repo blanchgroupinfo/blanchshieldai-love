@@ -21,7 +21,7 @@ const platformFeatures = [
     title: "AI-Agents System",
     category: "Technology",
     icon: Cpu,
-    description: "402+ Universal Unified AI Agents with H.I.I. AI numbering system. Includes Custom, Clone, Twin, Trustee, Affiliate, and Payment agents across 33 categories.",
+    description: "888+ Universal Unified AI Agents with H.I.I. AI numbering system. Includes Custom, Clone, Twin, Trustee, Affiliate, and Payment agents across 81 categories.",
     details: [
       "Custom AI Agent creation and deployment",
       "AI Clone and Twin technology",

@@ -84,6 +84,7 @@ const CommandCenter = () => {
     { id: "hosting", name: "Hosting", description: "Web Hosting", icon: Server, color: "text-green-400", gradient: "from-green-500/20 to-emerald-500/20", link: "/technology" },
     { id: "domains", name: "Domains", description: "Domain Management", icon: Globe, color: "text-purple-400", gradient: "from-purple-500/20 to-pink-500/20", link: "/technology" },
     { id: "studios", name: "S.H.I.E.L.D. Studios", description: "Media Production", icon: Video, color: "text-red-400", gradient: "from-red-500/20 to-pink-500/20", link: "/technology" },
+    { id: "creative-media", name: "S.H.I.E.L.D. AI Creative Media", description: "Autonomous Content Generation", icon: Sparkles, color: "text-pink-400", gradient: "from-pink-500/20 to-purple-500/20", link: "/creative-media" },
     { id: "conference", name: "Virtual Conference", description: "Video Meetings", icon: Headphones, color: "text-blue-400", gradient: "from-blue-500/20 to-indigo-500/20", link: "/technology" },
     { id: "concierge", name: "Concierge", description: "Personal Assistant", icon: UserCheck, color: "text-amber-400", gradient: "from-amber-500/20 to-yellow-500/20", link: "/dashboard" },
     { id: "projects", name: "Projects", description: "Create & Manage", icon: Layers, color: "text-violet-400", gradient: "from-violet-500/20 to-purple-500/20", link: "/admin" },

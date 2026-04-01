@@ -156,7 +156,7 @@ const Watchman = () => {
                 System Active
               </Badge>
               <Badge className="bg-primary/20 text-primary border-primary/30 px-4 py-2">
-                402+ H.I.I. AI Agents
+                888+ H.I.I. AI Agents
               </Badge>
               <Badge className="bg-secondary/20 text-secondary border-secondary/30 px-4 py-2">
                 33 Categories
@@ -412,7 +412,7 @@ const Watchman = () => {
                 </div>
                 <h3 className="font-display font-semibold text-foreground mb-2">H.I.I. AI Agents</h3>
                 <p className="text-sm text-muted-foreground">
-                  Connected to 402+ H.I.I. AI agents for distributed monitoring and response across 33 categories
+                  Connected to 888+ H.I.I. AI agents for distributed monitoring and response across 81 categories
                 </p>
                 <Link to="/agents" className="text-primary text-sm hover:underline mt-2 inline-block">
                   View All Agents →

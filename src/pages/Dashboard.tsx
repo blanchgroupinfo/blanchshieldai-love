@@ -299,7 +299,7 @@ const Dashboard = () => {
                       <Bot className="w-6 h-6 text-primary" />
                       <div className="text-left">
                         <p className="font-semibold">Agent Registry</p>
-                        <p className="text-xs text-muted-foreground">Browse 402+ AI Agents</p>
+                        <p className="text-xs text-muted-foreground">Browse 888+ AI Agents</p>
                       </div>
                     </Button>
                     
