@@ -76,7 +76,7 @@ const CreativeMedia = () => {
               <span className="text-primary">Creative Media</span>
             </h1>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-10">
-              A comprehensive creative media production ecosystem — from film and music to graphic design and AI-powered content generation. Create, Convert, Edit, Animate, Produce, Publish, Share, Swap, and Distribute world-class media.
+              Autonomous Content Generation & Immersive Media Engineering. A comprehensive creative media production ecosystem — from images, engineering, film and music to graphic designm social media and digital media publishing and AI-powered content generation. Create, Convert, Edit, Animate, Produce, Publish, Share, Swap, and Distribute world-class media.
             </p>
 
             {/* Stats */}
