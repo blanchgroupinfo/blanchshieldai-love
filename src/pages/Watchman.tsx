@@ -412,7 +412,7 @@ const Watchman = () => {
                 </div>
                 <h3 className="font-display font-semibold text-foreground mb-2">H.I.I. AI Agents</h3>
                 <p className="text-sm text-muted-foreground">
-                  Connected to 402+ H.I.I. AI agents for distributed monitoring and response across 33 categories
+                  Connected to 888+ H.I.I. AI agents for distributed monitoring and response across 81 categories
                 </p>
                 <Link to="/agents" className="text-primary text-sm hover:underline mt-2 inline-block">
                   View All Agents →

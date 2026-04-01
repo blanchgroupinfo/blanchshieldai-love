@@ -50,7 +50,7 @@ const Technology = () => {
     { label: "Processing Power", value: "Petascale", icon: Cpu },
     { label: "Response Time", value: "<100ms", icon: Zap },
     { label: "Uptime", value: "99.99%", icon: Server },
-    { label: "AI Agents", value: "402+", icon: Brain },
+    { label: "AI Agents", value: "888+", icon: Brain },
     { label: "Languages", value: "100+", icon: Globe },
     { label: "Integrations", value: "1000+", icon: Layers },
   ];
