@@ -49,7 +49,7 @@ const advancedFeatures = [
 
 const capabilities = [
   { value: "50+", label: "Creative Tools" },
-  { value: "AI", label: "Powered Engine" },
+  { value: "S.H.I.E.L.D. AI", label: "Powered Engine" },
   { value: "4K/8K", label: "Resolution Support" },
   { value: "Real-time", label: "Collaboration" },
 ];
