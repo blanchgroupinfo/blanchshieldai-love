@@ -134,6 +134,9 @@ const App = () => (
           <Route path="/universal-commerce" element={<UniversalCommerceModels />} />
           <Route path="/platform-features" element={<PlatformFeatures />} />
           <Route path="/creative-media" element={<CreativeMedia />} />
+          <Route path="/creative-engine" element={<CreativeEngine />} />
+          <Route path="/creative-portal" element={<CreativePortal />} />
+          <Route path="/publishing-dashboard" element={<PublishingDashboard />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
