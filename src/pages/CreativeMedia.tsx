@@ -17,256 +17,383 @@ import {
   Play, Upload, Share2, Download, Monitor, Gamepad2, Newspaper,
   Store, Code2, Users, Star, Box, Target, Crown, Smartphone,
   FileText, Megaphone, HardDrive, ExternalLink, CheckCircle2,
-  Terminal, Activity, Server, ArrowRight, ImagePlus, BookMarked
+  Terminal, Activity, Server, ArrowRight, ImagePlus, BookMarked,
+  Mountain, Droplets, Wind, Sun, Moon, Heart, CloudLightning,
+  Compass, Flame, HandMetal, Gem, Wheat, TreePine, Bird, Leaf,
+  CircleDot, GraduationCap, Church, Anchor, Car, Factory, Cpu
 } from "lucide-react";
 
-// Tab definitions
+// Massively expanded tab categories
 const tabCategories = [
-  { value: "autocad", label: "AutoCAD", icon: PenTool },
-  { value: "avatar", label: "AI Avatar", icon: Users },
-  { value: "books", label: "Books", icon: BookOpen },
-  { value: "image", label: "Image", icon: Image },
-  { value: "hologram", label: "Hologram & Metaverse", icon: Box },
-  { value: "gaming", label: "Gaming", icon: Gamepad2 },
-  { value: "magazines", label: "Magazines", icon: Newspaper },
-  { value: "publishing", label: "Publishing", icon: FileText },
-  { value: "distribution", label: "Distribution", icon: Share2 },
-  { value: "video", label: "Video & Film", icon: Film },
-  { value: "music", label: "Music & Audio", icon: Music },
-  { value: "design", label: "Graphic Design", icon: Palette },
+  { value: "10-heavens", label: "10 Heavens", icon: Sun },
+  { value: "12-tribes", label: "12 Tribe of Israel (Yasharahala)", icon: Star },
+  { value: "7-candlestick", label: "7 Candlestick Menorah", icon: Flame },
+  { value: "aboriginal", label: "Aboriginal Black Hebrew Israelites", icon: Users },
+  { value: "abrahamic", label: "Abrahamic Covenant", icon: BookOpen },
   { value: "advanced", label: "Advanced & AI", icon: Zap },
+  { value: "aerospace", label: "Aerospace", icon: Rocket },
+  { value: "ahayah", label: "AHAYAH & YASHAYA", icon: Crown },
+  { value: "scriptures", label: "AHAYAH & YASHAYA Qadash Scriptures", icon: BookMarked },
+  { value: "ai-agents", label: "AI Agents", icon: Cpu },
+  { value: "avatar", label: "AI Avatar", icon: Users },
+  { value: "androids", label: "Androids - Non Biological", icon: Cpu },
+  { value: "angels", label: "Angels and they are Black", icon: Star },
+  { value: "animals", label: "Animals & Pets", icon: Bird },
+  { value: "ark", label: "Ark of The Covenant", icon: Box },
+  { value: "autocad", label: "AutoCAD", icon: PenTool },
+  { value: "automotive", label: "Automotive", icon: Car },
+  { value: "banking", label: "Banking", icon: Layers },
+  { value: "baptism", label: "Baptism", icon: Droplets },
+  { value: "beverages", label: "Beverages", icon: Droplets },
+  { value: "bible-gospel", label: "Bible Gospel of Day", icon: BookOpen },
+  { value: "bible-law", label: "Bible Law of the Day", icon: BookOpen },
+  { value: "bible-verse", label: "Bible Verse of the Day", icon: BookOpen },
+  { value: "landmarks", label: "Biblical Landmarks", icon: Mountain },
+  { value: "blanch-foundation", label: "Blanch - Onyx/Shaham/Shoham/Sardonyx Foundation Stone", icon: Gem },
+  { value: "blanch-os", label: "Blanch OS", icon: Monitor },
+  { value: "blogs", label: "Blogs", icon: FileText },
+  { value: "books", label: "Books", icon: BookOpen },
+  { value: "bread", label: "Bread", icon: Wheat },
+  { value: "bread-heaven", label: "Bread from Heaven", icon: Wheat },
+  { value: "child-light", label: "Child of Light", icon: Sun },
+  { value: "cinematic", label: "Cinematic", icon: Film },
+  { value: "cleansing", label: "Cleansing", icon: Droplets },
+  { value: "correction", label: "Correction to Righteousness", icon: Target },
+  { value: "covenant", label: "Covenant", icon: BookOpen },
+  { value: "creation", label: "Creation", icon: Sparkles },
+  { value: "creators-calendar", label: "Creators Calendar", icon: Sun },
+  { value: "crystalization", label: "Crystalization", icon: Gem },
+  { value: "daily-offerings", label: "Daily Burnt Offerings", icon: Flame },
+  { value: "deserts", label: "Deserts", icon: Mountain },
+  { value: "digital", label: "Digital", icon: Monitor },
+  { value: "dlt", label: "Distributed Ledger Technologies", icon: Layers },
+  { value: "distribution", label: "Distribution", icon: Share2 },
+  { value: "earth", label: "Earth & Environment", icon: Globe },
+  { value: "ecosystem", label: "Ecosystem", icon: TreePine },
+  { value: "end-time", label: "End Time Prophecies", icon: CloudLightning },
+  { value: "energy", label: "Energy", icon: Zap },
+  { value: "engineering", label: "Engineering", icon: PenTool },
+  { value: "events", label: "Events", icon: Star },
+  { value: "feasts", label: "Feasts", icon: Wheat },
+  { value: "finance", label: "Finance", icon: Layers },
+  { value: "food", label: "Food", icon: Wheat },
+  { value: "fringes", label: "Fringes Tassels & Ribbon of Blue Border", icon: Palette },
+  { value: "futuristic", label: "Futuristic", icon: Rocket },
+  { value: "gaming", label: "Gaming", icon: Gamepad2 },
+  { value: "gentiles", label: "Gentiles", icon: Users },
+  { value: "design", label: "Graphic Design", icon: Palette },
+  { value: "greenland", label: "Greenland", icon: Globe },
+  { value: "health", label: "Health", icon: Heart },
+  { value: "heaven", label: "Heaven", icon: Sun },
+  { value: "heritage", label: "Heritage", icon: Crown },
+  { value: "high-priest", label: "High Priest", icon: Crown },
+  { value: "hologram", label: "Hologram & Metaverse", icon: Box },
+  { value: "holy", label: "Holy (Qadash)", icon: Star },
+  { value: "holy-days", label: "Holy Days", icon: Sun },
+  { value: "holy-land", label: "Holy Land", icon: Globe },
+  { value: "horeb", label: "Horeb Mount Horeb (Harab)", icon: Mountain },
+  { value: "house-prayer", label: "House Prayer of All People", icon: Heart },
+  { value: "image", label: "Image", icon: Image },
+  { value: "industries", label: "Industries", icon: Factory },
+  { value: "judgments", label: "Judgments", icon: Eye },
+  { value: "jerusalem", label: "Kingdom of Jerusalem (Yarawashalam)", icon: Crown },
+  { value: "yasharahala", label: "Kingdom of Yasharahala", icon: Crown },
+  { value: "laws", label: "Laws & Commandments", icon: BookOpen },
+  { value: "light", label: "Light", icon: Sun },
+  { value: "live-conference", label: "Live Conference", icon: Video },
+  { value: "live-streaming", label: "Live Streaming", icon: Radio },
+  { value: "magazines", label: "Magazines", icon: Newspaper },
+  { value: "manna", label: "Manna", icon: Wheat },
+  { value: "manufacturing", label: "Manufacturing", icon: Factory },
   { value: "marketing", label: "Marketing", icon: Megaphone },
-  { value: "os", label: "Operating System", icon: Monitor },
   { value: "marketplaces", label: "Marketplaces", icon: Store },
-  { value: "social", label: "Social Media", icon: Globe },
-  { value: "software", label: "Software", icon: Code2 },
+  { value: "most-high", label: "Most High AHAYAH", icon: Crown },
+  { value: "mountains", label: "Mountains", icon: Mountain },
+  { value: "music", label: "Music & Audio", icon: Music },
+  { value: "nazarites", label: "Nazarites", icon: Users },
+  { value: "networks", label: "Networks", icon: Globe },
+  { value: "new-jerusalem", label: "New Jerusalem (Hadash Yarawashalam)", icon: Crown },
+  { value: "news", label: "News", icon: Newspaper },
+  { value: "ocean", label: "Ocean", icon: Droplets },
+  { value: "os", label: "Operating System", icon: Monitor },
+  { value: "operating-systems", label: "Operating Systems", icon: Monitor },
+  { value: "oracles", label: "Oracles", icon: Eye },
+  { value: "mechizedek", label: "Order of Mechizedek", icon: Crown },
+  { value: "peace", label: "Peace", icon: Heart },
+  { value: "petra", label: "Petra", icon: Mountain },
+  { value: "petra-hor", label: "Petra - Mount Hor (Har)", icon: Mountain },
+  { value: "prayer", label: "Prayer", icon: Heart },
+  { value: "prophecies", label: "Prophecies", icon: Eye },
+  { value: "publishing", label: "Publishing", icon: FileText },
+  { value: "purging", label: "Purging", icon: Flame },
+  { value: "purifying", label: "Purifying", icon: Droplets },
+  { value: "qadash-bible", label: "Qadash Bible", icon: BookOpen },
+  { value: "rebuking", label: "Rebuking", icon: Shield },
+  { value: "reminders", label: "Reminders", icon: Star },
+  { value: "rests", label: "Rests", icon: Moon },
+  { value: "rivers", label: "Rivers", icon: Droplets },
+  { value: "royal-priesthood", label: "Royal Priesthood", icon: Crown },
+  { value: "rushing-wind", label: "Rushing Wind", icon: Wind },
   { value: "shield-avatar", label: "S.H.I.E.L.D. AI Avatar", icon: Star },
+  { value: "shield-broadcast", label: "S.H.I.E.L.D. AI Broadcast", icon: Radio },
   { value: "shield-influencer", label: "S.H.I.E.L.D. AI Influencer", icon: Crown },
   { value: "shield-os", label: "S.H.I.E.L.D. AI OS", icon: Monitor },
-  { value: "blanch-os", label: "Blanch OS", icon: Monitor },
+  { value: "shield-podcasts", label: "S.H.I.E.L.D. AI Podcasts", icon: Podcast },
+  { value: "sabbaths", label: "Sabbaths", icon: Moon },
+  { value: "shepherd-staff", label: "Shepherd Staff", icon: Compass },
+  { value: "social", label: "Social Media", icon: Globe },
+  { value: "software", label: "Software", icon: Code2 },
+  { value: "son-most-high", label: "Son of the Most High AHAYAH", icon: Crown },
+  { value: "sons-prophets", label: "Sons of the Prophets", icon: Users },
+  { value: "space", label: "Space & Exploration", icon: Rocket },
+  { value: "sports", label: "Sports", icon: Target },
+  { value: "sweets", label: "Sweets", icon: Wheat },
+  { value: "tabernacle", label: "Tabernacle", icon: Box },
+  { value: "task", label: "Task", icon: CheckCircle2 },
+  { value: "technology", label: "Technology", icon: Cpu },
+  { value: "temple", label: "Temple of Jerusalem (Yarawashalam)", icon: Church },
+  { value: "throne", label: "Throne of Most High AHAYAH & YASHAYA", icon: Crown },
+  { value: "transportation", label: "Transportation", icon: Car },
+  { value: "truth", label: "Truth", icon: Eye },
+  { value: "universal", label: "Universal", icon: Globe },
+  { value: "unleavened", label: "Unleavened Bread", icon: Wheat },
+  { value: "video", label: "Video & Film", icon: Film },
+  { value: "virtual-studies", label: "Virtual Studies", icon: GraduationCap },
+  { value: "vlogs", label: "Vlogs", icon: Video },
+  { value: "watchman", label: "Watchman", icon: Eye },
+  { value: "water", label: "Water", icon: Droplets },
+  { value: "water-life", label: "Water of Life - Spiritual Drink", icon: Droplets },
   { value: "web-app", label: "Web/App", icon: Smartphone },
+  { value: "web-app-dev", label: "Web/App Development", icon: Code2 },
+  { value: "whirlwind", label: "Whirlwind", icon: Wind },
+  { value: "wilderness", label: "Wilderness", icon: TreePine },
+  { value: "wind", label: "Wind", icon: Wind },
+  { value: "word", label: "Word", icon: BookOpen },
+  { value: "yashaya", label: "YASHAYA true Black Messiah", icon: Crown },
 ];
 
-const tabContent: Record<string, { title: string; subtitle: string; items: { icon: any; title: string; description: string }[] }> = {
-  autocad: { title: "AutoCAD & CAD Design", subtitle: "Professional CAD design powered by S.H.I.E.L.D. AI.", items: [
-    { icon: PenTool, title: "2D/3D CAD Editor", description: "Full-featured CAD editing with parametric modeling and constraint-based design." },
-    { icon: Layers, title: "Blueprint Generator", description: "AI-assisted blueprint and floorplan generation from text prompts." },
-    { icon: Box, title: "3D Model Viewer", description: "Interactive 3D model visualization with real-time rendering." },
-    { icon: FileText, title: "DWG/DXF Support", description: "Native support for industry-standard CAD file formats." },
-    { icon: Wand2, title: "AI Design Assistant", description: "S.H.I.E.L.D. AI suggestions for structural integrity and optimization." },
-    { icon: Share2, title: "Collaborative CAD", description: "Real-time multi-user CAD editing and version control." },
-  ]},
-  avatar: { title: "AI Avatar Creation", subtitle: "Create photorealistic and stylized AI avatars.", items: [
-    { icon: Users, title: "Avatar Generator", description: "Create photorealistic AI avatars from text descriptions or photos." },
-    { icon: Video, title: "Animated Avatars", description: "Generate talking head videos with lip-sync from audio input." },
-    { icon: Palette, title: "Style Transfer", description: "Apply artistic styles—cartoon, anime, oil painting—to avatar designs." },
-    { icon: Mic, title: "Voice Cloning", description: "Clone voices for avatar speech synthesis with natural intonation." },
-    { icon: Globe, title: "Multi-language Support", description: "Avatars speak in 100+ languages with native pronunciation." },
-    { icon: Sparkles, title: "Real-time Avatar", description: "Live avatar puppeteering with facial tracking and expression mapping." },
-  ]},
-  books: { title: "Book Publishing & Creation", subtitle: "End-to-end book creation from manuscript to distribution.", items: [
-    { icon: BookOpen, title: "Manuscript Editor", description: "Rich text editor with AI-assisted writing, grammar, and style suggestions." },
-    { icon: Type, title: "Typography Engine", description: "Professional typesetting with automatic kerning, leading, and pagination." },
-    { icon: Image, title: "Cover Designer", description: "AI-generated book covers with customizable templates and styles." },
-    { icon: FileText, title: "eBook Converter", description: "Convert to EPUB, MOBI, PDF, and print-ready formats automatically." },
-    { icon: Globe, title: "ISBN & Distribution", description: "Automatic ISBN assignment and distribution to global bookstores." },
-    { icon: BookMarked, title: "Audiobook Studio", description: "AI narration and professional audiobook production tools." },
-  ]},
-  image: { title: "Image Creation & Editing", subtitle: "Professional image tools powered by S.H.I.E.L.D. AI.", items: [
-    { icon: ImagePlus, title: "AI Image Generator", description: "Generate stunning images from text prompts using advanced AI models." },
-    { icon: Brush, title: "Photo Editor", description: "Professional photo editing with AI retouching, filters, and enhancements." },
-    { icon: Layers, title: "Layer Compositor", description: "Multi-layer image composition with masks, blending, and effects." },
-    { icon: Aperture, title: "RAW Processor", description: "Process RAW camera files with professional color science." },
-    { icon: Wand2, title: "Background Removal", description: "One-click AI background removal and replacement." },
-    { icon: LayoutGrid, title: "Batch Processing", description: "Process thousands of images simultaneously with consistent results." },
-  ]},
-  hologram: { title: "Hologram & Metaverse", subtitle: "Immersive holographic and metaverse content creation.", items: [
-    { icon: Box, title: "Hologram Studio", description: "Create 3D holographic content for displays and AR/VR environments." },
-    { icon: Globe, title: "Metaverse Builder", description: "Build virtual worlds, spaces, and experiences for the Blanch Metaverse." },
-    { icon: Camera, title: "Volumetric Capture", description: "Capture real-world objects and people as 3D holographic assets." },
-    { icon: Sparkles, title: "AR Experiences", description: "Design augmented reality overlays and interactive experiences." },
-    { icon: Users, title: "Virtual Events", description: "Host holographic meetings, concerts, and presentations." },
-    { icon: Monitor, title: "Mixed Reality", description: "Blend physical and digital worlds with mixed reality content tools." },
-  ]},
-  gaming: { title: "Gaming Development", subtitle: "Game development and interactive entertainment tools.", items: [
-    { icon: Gamepad2, title: "Game Engine", description: "S.H.I.E.L.D. AI-powered game engine with visual scripting and physics." },
-    { icon: Box, title: "3D Asset Creator", description: "Generate game-ready 3D models, textures, and animations with AI." },
-    { icon: Code2, title: "Game Logic Builder", description: "Visual scripting and AI behavior trees for game mechanics." },
-    { icon: Music, title: "Game Audio", description: "Adaptive music and dynamic sound effects for interactive experiences." },
-    { icon: Globe, title: "Multiplayer Systems", description: "Built-in networking for multiplayer and online game services." },
-    { icon: Store, title: "Game Publishing", description: "Distribute games across platforms—PC, mobile, console, and web." },
-  ]},
-  magazines: { title: "Digital Magazine Creation", subtitle: "Interactive magazine design and publishing.", items: [
-    { icon: Newspaper, title: "Magazine Designer", description: "Drag-and-drop magazine layout with professional grid systems." },
-    { icon: Type, title: "Editorial Suite", description: "Advanced typography, column layouts, and pull-quote styling." },
-    { icon: Image, title: "Photo Spreads", description: "Full-bleed photo layouts with automatic sizing and cropping." },
-    { icon: Globe, title: "Digital Distribution", description: "Publish to S.H.I.E.L.D. AI Magazine platform and app stores." },
-    { icon: FileText, title: "Print Ready", description: "Export print-ready PDFs with bleed, crop marks, and color profiles." },
-    { icon: Sparkles, title: "Interactive Elements", description: "Add video, audio, animations, and interactive widgets to pages." },
-  ]},
-  publishing: { title: "Digital Publishing", subtitle: "Comprehensive publishing platform for all media types.", items: [
-    { icon: FileText, title: "Multi-format Publisher", description: "Publish books, magazines, newsletters, and whitepapers in any format." },
-    { icon: Globe, title: "Global Distribution", description: "Distribute content to global audiences through integrated channels." },
-    { icon: Target, title: "Audience Analytics", description: "Track readership, engagement, and distribution analytics." },
-    { icon: Crown, title: "DRM Protection", description: "Digital rights management to protect published content." },
-    { icon: Share2, title: "Syndication", description: "Automatic content syndication across platforms and networks." },
-    { icon: Megaphone, title: "Marketing Suite", description: "Built-in marketing tools for promoting published content." },
-  ]},
-  distribution: { title: "Content Distribution", subtitle: "Global content distribution across all platforms.", items: [
-    { icon: Globe, title: "CDN Network", description: "Global content delivery network for fast, reliable distribution." },
-    { icon: Share2, title: "Multi-platform Publish", description: "One-click publishing to S.H.I.E.L.D. AI Magazine, Blanch Network, and beyond." },
-    { icon: Store, title: "Marketplace Distribution", description: "Distribute to Virtual Marketplaces and all partner platforms." },
-    { icon: Smartphone, title: "Social Media Push", description: "Auto-publish to all social media platforms simultaneously." },
-    { icon: Target, title: "Targeted Distribution", description: "AI-driven audience targeting for content distribution." },
-    { icon: Activity, title: "Distribution Analytics", description: "Real-time tracking of content reach and engagement metrics." },
-  ]},
-  video: { title: "Video & Film Production", subtitle: "Professional video creation and distribution tools powered by S.H.I.E.L.D. AI.", items: [
-    { icon: Film, title: "Film Production Suite", description: "End-to-end film production with AI-assisted editing, color grading, and VFX compositing." },
-    { icon: Clapperboard, title: "Video Editing Studio", description: "Professional non-linear editing with multi-track timeline and real-time preview." },
-    { icon: FileVideo, title: "Motion Graphics Engine", description: "Stunning motion graphics, title sequences, and animated infographics." },
-    { icon: MonitorPlay, title: "Live Streaming Platform", description: "Broadcast live to multiple platforms with overlays and scene switching." },
-    { icon: Video, title: "Screen Recording & Capture", description: "High-fidelity screen and camera capture with annotation tools." },
-    { icon: Tv, title: "Media Distribution Network", description: "Distribute content across global CDN with adaptive bitrate streaming." },
-  ]},
-  music: { title: "Music & Audio Production", subtitle: "Complete audio production pipeline from recording to mastering.", items: [
-    { icon: Music, title: "Digital Audio Workstation", description: "Full-featured DAW with multi-track recording, MIDI, and plugin hosting." },
-    { icon: Headphones, title: "AI Music Composition", description: "Generate original compositions and soundscapes using AI creation tools." },
-    { icon: Mic, title: "Podcast Production Suite", description: "Record, edit, and publish podcasts with transcript generation." },
-    { icon: FileAudio, title: "Audio Mastering Engine", description: "Professional mastering with loudness normalization and format conversion." },
-    { icon: Radio, title: "Sound Design Lab", description: "Create sound effects, foley, and ambient audio with synthesis tools." },
-    { icon: Podcast, title: "Voice-Over Studio", description: "AI voice cloning, text-to-speech, and voice-over recording." },
-  ]},
-  design: { title: "Graphic Design & Branding", subtitle: "Design tools for creating visual identities and digital experiences.", items: [
-    { icon: Palette, title: "Brand Identity Studio", description: "Design comprehensive brand kits with logos, colors, and guidelines." },
-    { icon: PenTool, title: "Vector Graphics Editor", description: "Professional vector illustration with pen tools and shape builders." },
-    { icon: Image, title: "Photo Editing Suite", description: "Advanced photo manipulation with AI retouching and batch processing." },
-    { icon: Brush, title: "Digital Painting Canvas", description: "Natural media simulation with pressure-sensitive brushes and layers." },
-    { icon: Layers, title: "UI/UX Design Platform", description: "Design interfaces with component libraries and developer handoff." },
-    { icon: Type, title: "Typography Workshop", description: "Font management and custom typeface creation tools." },
-  ]},
-  advanced: { title: "Advanced & AI-Powered Tools", subtitle: "Next-generation creative tools leveraging AI and immersive technology.", items: [
-    { icon: Sparkles, title: "AI Content Generator", description: "Generate images, videos, and audio from text prompts." },
-    { icon: Wand2, title: "AR/VR Content Creator", description: "Build immersive AR and VR experiences with 3D asset tools." },
-    { icon: Camera, title: "3D Rendering Studio", description: "Photorealistic 3D rendering with ray tracing and materials." },
-    { icon: Aperture, title: "Photography Workflow", description: "RAW processing and AI-enhanced editing for professionals." },
-    { icon: Globe, title: "Content Localization", description: "Translate and adapt content for global audiences with AI." },
-    { icon: LayoutGrid, title: "Digital Asset Manager", description: "Organize and distribute creative assets with version control." },
-  ]},
-  marketing: { title: "Marketing & Advertising", subtitle: "Create compelling marketing content across all channels.", items: [
-    { icon: Megaphone, title: "Ad Creator", description: "Design display ads, social media ads, and video ads with AI templates." },
-    { icon: Target, title: "Campaign Designer", description: "Visual campaign builder with A/B testing and audience targeting." },
-    { icon: Newspaper, title: "Content Marketing", description: "Blog posts, articles, and thought leadership content generation." },
-    { icon: Globe, title: "Social Media Manager", description: "Schedule, publish, and analyze social media content." },
-    { icon: FileText, title: "Brand Kit Builder", description: "Create media kits, press releases, and brand guidelines." },
-    { icon: Activity, title: "Performance Analytics", description: "Track campaign performance with real-time analytics dashboards." },
-  ]},
-  os: { title: "Operating System Integration", subtitle: "Deep OS-level integration for creative workflows.", items: [
-    { icon: Monitor, title: "S.H.I.E.L.D. AI OS Integration", description: "Native OS-level creative tools and file system integration." },
-    { icon: HardDrive, title: "Asset Pipeline", description: "Automated asset pipeline from creation to deployment." },
-    { icon: Code2, title: "Plugin SDK", description: "Build custom plugins and extensions for the creative suite." },
-    { icon: Server, title: "Render Farm", description: "Distributed rendering across S.H.I.E.L.D. AI compute clusters." },
-    { icon: Zap, title: "GPU Acceleration", description: "Hardware-accelerated rendering and AI inference." },
-    { icon: Shield, title: "Sovereign Processing", description: "All processing happens on sovereign infrastructure." },
-  ]},
-  marketplaces: { title: "Creative Marketplaces", subtitle: "Buy, sell, and license creative assets.", items: [
-    { icon: Store, title: "Asset Marketplace", description: "Buy and sell templates, presets, plugins, and creative assets." },
-    { icon: Image, title: "Stock Media Library", description: "Access millions of royalty-free images, videos, and audio." },
-    { icon: Type, title: "Font Marketplace", description: "Browse and license professional typefaces and font families." },
-    { icon: Layers, title: "Template Store", description: "Pre-built templates for all creative projects and formats." },
-    { icon: Crown, title: "Premium Content", description: "Exclusive premium content from top creators and studios." },
-    { icon: Users, title: "Creator Community", description: "Connect with creators, share work, and collaborate." },
-  ]},
-  social: { title: "Social Media Content", subtitle: "Create optimized content for every social platform.", items: [
-    { icon: Smartphone, title: "Social Content Creator", description: "Templates sized for every platform—Instagram, TikTok, YouTube, X." },
-    { icon: Video, title: "Reels & Shorts", description: "Quick video creation for short-form social content." },
-    { icon: Image, title: "Story Designer", description: "Interactive story templates with stickers, polls, and animations." },
-    { icon: Sparkles, title: "AI Captions", description: "Auto-generate engaging captions and hashtags with AI." },
-    { icon: Activity, title: "Scheduling", description: "Schedule and auto-publish across all social platforms." },
-    { icon: Target, title: "Engagement Analytics", description: "Track likes, shares, comments, and audience growth." },
-  ]},
-  software: { title: "Software & Tools", subtitle: "Creative software development and tooling.", items: [
-    { icon: Code2, title: "Creative SDK", description: "Software development kit for building creative applications." },
-    { icon: Layers, title: "Plugin Architecture", description: "Extensible plugin system for adding custom creative tools." },
-    { icon: Server, title: "API Access", description: "RESTful APIs for integrating creative tools into workflows." },
-    { icon: Zap, title: "Automation Scripts", description: "Script-based automation for repetitive creative tasks." },
-    { icon: Globe, title: "Cloud Rendering", description: "Cloud-based rendering services for heavy compute tasks." },
-    { icon: Shield, title: "Enterprise License", description: "Enterprise licensing and deployment for organizations." },
-  ]},
-  "shield-avatar": { title: "S.H.I.E.L.D. AI Avatar", subtitle: "Sovereign digital avatar system powered by S.H.I.E.L.D. AI.", items: [
-    { icon: Star, title: "Sovereign Avatar", description: "Create your sovereign digital identity with AI-powered avatar generation." },
-    { icon: Video, title: "Avatar Video", description: "Generate professional talking-head videos with your AI avatar." },
-    { icon: Globe, title: "Multi-platform Presence", description: "Deploy your avatar across metaverse, social media, and web." },
-    { icon: Mic, title: "Voice Synthesis", description: "Natural voice cloning for avatar speech in any language." },
-    { icon: Sparkles, title: "Expression AI", description: "Real-time facial expression and emotion mapping." },
-    { icon: Shield, title: "Identity Verification", description: "Blockchain-verified avatar identity and provenance." },
-  ]},
-  "shield-influencer": { title: "S.H.I.E.L.D. AI Influencer", subtitle: "AI-powered influencer creation and management platform.", items: [
-    { icon: Crown, title: "Influencer Studio", description: "Create and manage AI influencer personas with unique personalities." },
-    { icon: Globe, title: "Content Automation", description: "Auto-generate posts, stories, and reels for influencer accounts." },
-    { icon: Target, title: "Audience Growth", description: "AI-driven audience targeting and growth strategies." },
-    { icon: Activity, title: "Engagement Engine", description: "Automated engagement and community management tools." },
-    { icon: Megaphone, title: "Brand Partnerships", description: "Connect with brands for sponsored content opportunities." },
-    { icon: FileText, title: "Analytics Dashboard", description: "Comprehensive influencer analytics and performance tracking." },
-  ]},
-  "shield-os": { title: "S.H.I.E.L.D. AI OS Creative Tools", subtitle: "Native creative tools integrated into S.H.I.E.L.D. AI OS.", items: [
-    { icon: Monitor, title: "Desktop Studio", description: "Full creative suite accessible from S.H.I.E.L.D. AI OS desktop." },
-    { icon: HardDrive, title: "S.H.I.E.L.D. AI Drive Integration", description: "Seamless file management with S.H.I.E.L.D. AI Drive." },
-    { icon: Zap, title: "Quick Actions", description: "OS-level creative shortcuts and automation actions." },
-    { icon: Sparkles, title: "AI Assistant", description: "Built-in creative AI assistant for suggestions and automation." },
-    { icon: Share2, title: "Share & Export", description: "One-click sharing and export from any OS application." },
-    { icon: Shield, title: "Sovereign Security", description: "All creative work protected by sovereign encryption." },
-  ]},
-  "blanch-os": { title: "Blanch OS Creative Suite", subtitle: "Enterprise creative tools on Blanch OS.", items: [
-    { icon: Monitor, title: "Blanch Studio", description: "Enterprise-grade creative studio on Blanch OS." },
-    { icon: Users, title: "Team Collaboration", description: "Real-time multi-user creative collaboration tools." },
-    { icon: HardDrive, title: "Blanch Drive Integration", description: "Enterprise storage integration with Blanch Drive." },
-    { icon: Shield, title: "Enterprise Security", description: "Enterprise-level DRM and content protection." },
-    { icon: Server, title: "On-premise Rendering", description: "On-premise render farm for enterprise deployments." },
-    { icon: Globe, title: "Global Distribution", description: "Enterprise content distribution network." },
-  ]},
-  "web-app": { title: "Web & App Development", subtitle: "Build creative web and mobile applications.", items: [
-    { icon: Code2, title: "Web Builder", description: "Visual web builder with creative templates and components." },
-    { icon: Smartphone, title: "Mobile App Builder", description: "Build creative mobile apps for iOS and Android." },
-    { icon: Layers, title: "Component Library", description: "Pre-built creative UI components and widgets." },
-    { icon: Globe, title: "PWA Support", description: "Build progressive web apps for creative tools." },
-    { icon: Zap, title: "Performance Optimized", description: "Built for performance with lazy loading and code splitting." },
-    { icon: Share2, title: "Deploy Anywhere", description: "Deploy to Blanch OS, S.H.I.E.L.D. AI OS, or any platform." },
-  ]},
+// Generate tab content dynamically - each tab gets a card with AI agent suggestion
+const getTabContent = (value: string, label: string) => {
+  const suggestions: Record<string, string> = {
+    "10-heavens": "S.H.I.E.L.D. AI can generate immersive visual representations of the 10 Heavens with scriptural accuracy and divine artistry.",
+    "12-tribes": "S.H.I.E.L.D. AI can create heritage emblems, banners, and educational media for each of the 12 Tribes of Israel.",
+    "7-candlestick": "S.H.I.E.L.D. AI can render detailed 3D models and artistic interpretations of the 7 Candlestick Menorah.",
+    "aboriginal": "S.H.I.E.L.D. AI can produce historical documentaries and visual heritage content for Aboriginal Black Hebrew Israelites.",
+    "abrahamic": "S.H.I.E.L.D. AI can illustrate the Abrahamic Covenant through cinematic animations and scriptural infographics.",
+    "advanced": "S.H.I.E.L.D. AI can develop cutting-edge AI-powered creative tools and next-generation content pipelines.",
+    "aerospace": "S.H.I.E.L.D. AI can design aerospace visualizations, satellite imagery, and space exploration media.",
+    "ahayah": "S.H.I.E.L.D. AI can create reverent media honoring AHAYAH & YASHAYA with scriptural truth and beauty.",
+    "scriptures": "S.H.I.E.L.D. AI can produce illuminated scripture manuscripts and audio narrations of Qadash Scriptures.",
+    "ai-agents": "S.H.I.E.L.D. AI can deploy 888+ specialized agents for autonomous content generation across all media types.",
+    "avatar": "S.H.I.E.L.D. AI can create photorealistic and stylized AI avatars with voice synthesis and animation.",
+    "androids": "S.H.I.E.L.D. AI can design and visualize non-biological android concepts with technical specifications.",
+    "angels": "S.H.I.E.L.D. AI can create artistic depictions of angels with scriptural accuracy and historical heritage.",
+    "animals": "S.H.I.E.L.D. AI can generate stunning wildlife photography, animations, and educational content.",
+    "ark": "S.H.I.E.L.D. AI can render detailed 3D reconstructions of the Ark of The Covenant with scriptural precision.",
+    "autocad": "S.H.I.E.L.D. AI can assist with professional CAD design, blueprint generation, and 3D modeling.",
+    "automotive": "S.H.I.E.L.D. AI can produce automotive design concepts, marketing visuals, and engineering schematics.",
+    "banking": "S.H.I.E.L.D. AI can create professional banking and financial services marketing materials.",
+    "baptism": "S.H.I.E.L.D. AI can produce educational and ceremonial media content related to Baptism.",
+    "beverages": "S.H.I.E.L.D. AI can design beverage branding, packaging, and marketing campaign visuals.",
+    "bible-gospel": "S.H.I.E.L.D. AI can generate daily gospel illustrations, animations, and shareable scripture cards.",
+    "bible-law": "S.H.I.E.L.D. AI can create visual law study guides and educational content for daily law study.",
+    "bible-verse": "S.H.I.E.L.D. AI can produce beautifully designed daily verse graphics for all platforms.",
+    "landmarks": "S.H.I.E.L.D. AI can create 3D reconstructions and virtual tours of Biblical landmarks.",
+    "blanch-foundation": "S.H.I.E.L.D. AI can design foundation branding and visual identity for the Onyx/Shaham stone heritage.",
+    "blanch-os": "S.H.I.E.L.D. AI can create UI/UX designs, wallpapers, and branded assets for Blanch OS.",
+    "blogs": "S.H.I.E.L.D. AI can write, illustrate, and publish blog posts with SEO optimization.",
+    "books": "S.H.I.E.L.D. AI can assist with end-to-end book creation from manuscript to cover design to distribution.",
+    "bread": "S.H.I.E.L.D. AI can create culinary content, recipe visuals, and bread-making tutorials.",
+    "bread-heaven": "S.H.I.E.L.D. AI can produce spiritual media about the Bread from Heaven with scriptural illustrations.",
+    "child-light": "S.H.I.E.L.D. AI can create inspiring media about Children of Light with divine artistry.",
+    "cinematic": "S.H.I.E.L.D. AI can produce Hollywood-grade cinematic content with AI direction and post-production.",
+    "cleansing": "S.H.I.E.L.D. AI can create educational and spiritual media about cleansing rituals and practices.",
+    "correction": "S.H.I.E.L.D. AI can produce teaching materials about correction and the path to righteousness.",
+    "covenant": "S.H.I.E.L.D. AI can illustrate covenant stories and teachings through immersive visual media.",
+    "creation": "S.H.I.E.L.D. AI can visualize the creation narrative with stunning cinematic sequences.",
+    "creators-calendar": "S.H.I.E.L.D. AI can create visual calendar assets, monthly illustrations, and feast day media.",
+    "crystalization": "S.H.I.E.L.D. AI can produce crystal and gemstone visualizations with scientific and spiritual significance.",
+    "daily-offerings": "S.H.I.E.L.D. AI can create visual guides and educational media about daily burnt offerings.",
+    "deserts": "S.H.I.E.L.D. AI can generate stunning desert landscape photography and virtual environments.",
+    "digital": "S.H.I.E.L.D. AI can create all forms of digital media content optimized for modern platforms.",
+    "dlt": "S.H.I.E.L.D. AI can produce visual explainers and marketing for Distributed Ledger Technologies.",
+    "distribution": "S.H.I.E.L.D. AI can manage global content distribution across all connected platforms.",
+    "earth": "S.H.I.E.L.D. AI can create environmental awareness media and nature documentaries.",
+    "ecosystem": "S.H.I.E.L.D. AI can visualize and document the complete S.H.I.E.L.D. AI ecosystem.",
+    "end-time": "S.H.I.E.L.D. AI can produce cinematic depictions of End Time Prophecies with scriptural accuracy.",
+    "energy": "S.H.I.E.L.D. AI can create energy sector visualizations, infographics, and marketing materials.",
+    "engineering": "S.H.I.E.L.D. AI can produce engineering schematics, technical illustrations, and design documents.",
+    "events": "S.H.I.E.L.D. AI can create event marketing materials, invitations, and live streaming setups.",
+    "feasts": "S.H.I.E.L.D. AI can produce feast day celebration media, recipes, and educational content.",
+    "finance": "S.H.I.E.L.D. AI can create financial dashboards, reports, and marketing materials.",
+    "food": "S.H.I.E.L.D. AI can generate food photography, recipe cards, and culinary marketing content.",
+    "fringes": "S.H.I.E.L.D. AI can create detailed illustrations and guides about fringes, tassels, and blue border ribbons.",
+    "futuristic": "S.H.I.E.L.D. AI can produce futuristic concept art, sci-fi environments, and technology visualizations.",
+    "gaming": "S.H.I.E.L.D. AI can develop game assets, environments, character models, and game UI designs.",
+    "gentiles": "S.H.I.E.L.D. AI can produce educational media about the Gentiles from a scriptural perspective.",
+    "design": "S.H.I.E.L.D. AI can create comprehensive brand identities, vector graphics, and professional designs.",
+    "greenland": "S.H.I.E.L.D. AI can produce geographical media, maps, and visual content about Greenland.",
+    "health": "S.H.I.E.L.D. AI can create health and wellness content, infographics, and educational materials.",
+    "heaven": "S.H.I.E.L.D. AI can visualize heavenly realms with divine artistry and scriptural accuracy.",
+    "heritage": "S.H.I.E.L.D. AI can create heritage preservation media, documentaries, and cultural content.",
+    "high-priest": "S.H.I.E.L.D. AI can produce detailed visual media about the High Priest garments and duties.",
+    "hologram": "S.H.I.E.L.D. AI can create holographic content and metaverse environments for immersive experiences.",
+    "holy": "S.H.I.E.L.D. AI can produce media that upholds holiness (Qadash) in all creative expressions.",
+    "holy-days": "S.H.I.E.L.D. AI can create celebration media, reminders, and educational content for Holy Days.",
+    "holy-land": "S.H.I.E.L.D. AI can produce virtual tours, 3D reconstructions, and documentaries of the Holy Land.",
+    "horeb": "S.H.I.E.L.D. AI can create visual media depicting Mount Horeb (Harab) with historical context.",
+    "house-prayer": "S.H.I.E.L.D. AI can create prayer house visuals, worship media, and community content.",
+    "image": "S.H.I.E.L.D. AI can generate, edit, and enhance images using advanced neural processing.",
+    "industries": "S.H.I.E.L.D. AI can create industry-specific marketing and operational media content.",
+    "judgments": "S.H.I.E.L.D. AI can produce educational media about divine judgments from scripture.",
+    "jerusalem": "S.H.I.E.L.D. AI can create virtual reconstructions and historical media of Jerusalem (Yarawashalam).",
+    "yasharahala": "S.H.I.E.L.D. AI can produce heritage media celebrating the Kingdom of Yasharahala.",
+    "laws": "S.H.I.E.L.D. AI can create visual law study guides, infographics, and educational content.",
+    "light": "S.H.I.E.L.D. AI can produce artistic and spiritual media celebrating the concept of Light.",
+    "live-conference": "S.H.I.E.L.D. AI can set up and produce live conference broadcasts with professional quality.",
+    "live-streaming": "S.H.I.E.L.D. AI can manage live streaming production with overlays and multi-platform delivery.",
+    "magazines": "S.H.I.E.L.D. AI can design and publish interactive digital magazines with rich media.",
+    "manna": "S.H.I.E.L.D. AI can create visual media about Manna with scriptural illustrations and teachings.",
+    "manufacturing": "S.H.I.E.L.D. AI can produce manufacturing documentation, 3D models, and process visualizations.",
+    "marketing": "S.H.I.E.L.D. AI can create comprehensive marketing campaigns across all media channels.",
+    "marketplaces": "S.H.I.E.L.D. AI can design marketplace listings, product visuals, and promotional content.",
+    "most-high": "S.H.I.E.L.D. AI can create reverent media honoring the Most High AHAYAH.",
+    "mountains": "S.H.I.E.L.D. AI can produce stunning mountain landscape visuals and geographical media.",
+    "music": "S.H.I.E.L.D. AI can compose, mix, master, and distribute music across all platforms.",
+    "nazarites": "S.H.I.E.L.D. AI can produce educational media about the Nazarite vow and lifestyle.",
+    "networks": "S.H.I.E.L.D. AI can create network infrastructure visualizations and connectivity media.",
+    "new-jerusalem": "S.H.I.E.L.D. AI can visualize the New Jerusalem (Hadash Yarawashalam) from scriptural descriptions.",
+    "news": "S.H.I.E.L.D. AI can produce news graphics, broadcast overlays, and news media content.",
+    "ocean": "S.H.I.E.L.D. AI can create ocean and marine life visuals, documentaries, and environmental media.",
+    "os": "S.H.I.E.L.D. AI can design OS-level creative tools, wallpapers, and system interface assets.",
+    "operating-systems": "S.H.I.E.L.D. AI can create cross-platform OS assets and system integration media.",
+    "oracles": "S.H.I.E.L.D. AI can produce oracle-themed visuals and prophetic educational content.",
+    "mechizedek": "S.H.I.E.L.D. AI can create media about the Order of Mechizedek with scriptural depth.",
+    "peace": "S.H.I.E.L.D. AI can produce peace-themed artistic content and meditative visuals.",
+    "petra": "S.H.I.E.L.D. AI can create virtual tours and 3D reconstructions of Petra.",
+    "petra-hor": "S.H.I.E.L.D. AI can visualize Petra and Mount Hor (Har) with geographical and scriptural context.",
+    "prayer": "S.H.I.E.L.D. AI can create prayer guides, worship backgrounds, and devotional media.",
+    "prophecies": "S.H.I.E.L.D. AI can illustrate biblical prophecies with cinematic accuracy and artistry.",
+    "publishing": "S.H.I.E.L.D. AI can manage end-to-end publishing workflows across all formats.",
+    "purging": "S.H.I.E.L.D. AI can create educational media about spiritual purging and refinement.",
+    "purifying": "S.H.I.E.L.D. AI can produce visual content about purification processes and rituals.",
+    "qadash-bible": "S.H.I.E.L.D. AI can create Qadash Bible study materials, illustrations, and audio narrations.",
+    "rebuking": "S.H.I.E.L.D. AI can produce educational content about righteous rebuking from scripture.",
+    "reminders": "S.H.I.E.L.D. AI can create visual reminder systems for holy days, prayers, and study schedules.",
+    "rests": "S.H.I.E.L.D. AI can produce peaceful rest-themed visuals and sabbath preparation media.",
+    "rivers": "S.H.I.E.L.D. AI can create stunning river landscape visuals and water-themed media.",
+    "royal-priesthood": "S.H.I.E.L.D. AI can produce heritage media honoring the Royal Priesthood.",
+    "rushing-wind": "S.H.I.E.L.D. AI can create dynamic wind and spirit-themed visual effects and media.",
+    "shield-avatar": "S.H.I.E.L.D. AI can create sovereign digital avatars with voice synthesis and animation.",
+    "shield-broadcast": "S.H.I.E.L.D. AI can produce broadcast-quality media for S.H.I.E.L.D. AI channels.",
+    "shield-influencer": "S.H.I.E.L.D. AI can create and manage AI influencer personas across platforms.",
+    "shield-os": "S.H.I.E.L.D. AI can design native creative tools for the S.H.I.E.L.D. AI OS.",
+    "shield-podcasts": "S.H.I.E.L.D. AI can produce, edit, and distribute professional podcast content.",
+    "sabbaths": "S.H.I.E.L.D. AI can create Sabbath preparation media, worship backgrounds, and reminders.",
+    "shepherd-staff": "S.H.I.E.L.D. AI can produce visual media depicting the Shepherd Staff with spiritual symbolism.",
+    "social": "S.H.I.E.L.D. AI can create optimized social media content for every platform.",
+    "software": "S.H.I.E.L.D. AI can develop creative software tools, plugins, and extensions.",
+    "son-most-high": "S.H.I.E.L.D. AI can create reverent media about the Son of the Most High AHAYAH.",
+    "sons-prophets": "S.H.I.E.L.D. AI can produce media about the Sons of the Prophets and their legacy.",
+    "space": "S.H.I.E.L.D. AI can create space exploration visuals, satellite imagery, and cosmic media.",
+    "sports": "S.H.I.E.L.D. AI can produce sports photography, highlight reels, and athletic brand content.",
+    "sweets": "S.H.I.E.L.D. AI can create confectionery visuals, branding, and marketing content.",
+    "tabernacle": "S.H.I.E.L.D. AI can produce 3D reconstructions and educational media about the Tabernacle.",
+    "task": "S.H.I.E.L.D. AI can create task management visuals, workflow diagrams, and productivity tools.",
+    "technology": "S.H.I.E.L.D. AI can produce technology marketing materials, product visuals, and demos.",
+    "temple": "S.H.I.E.L.D. AI can create 3D reconstructions of the Temple of Jerusalem (Yarawashalam).",
+    "throne": "S.H.I.E.L.D. AI can visualize the Throne of the Most High with divine artistry.",
+    "transportation": "S.H.I.E.L.D. AI can design transportation concepts and mobility marketing materials.",
+    "truth": "S.H.I.E.L.D. AI can produce truth-focused educational and documentary media content.",
+    "universal": "S.H.I.E.L.D. AI can create universal content accessible across all platforms and audiences.",
+    "unleavened": "S.H.I.E.L.D. AI can produce visual content about Unleavened Bread and its significance.",
+    "video": "S.H.I.E.L.D. AI can produce professional video content from trailers to full-length films.",
+    "virtual-studies": "S.H.I.E.L.D. AI can create virtual study environments and educational courseware.",
+    "vlogs": "S.H.I.E.L.D. AI can produce and edit vlog content with AI-powered post-production.",
+    "watchman": "S.H.I.E.L.D. AI can create Watchman-themed media for oversight and truth broadcasting.",
+    "water": "S.H.I.E.L.D. AI can produce water-themed visuals, environmental media, and documentaries.",
+    "water-life": "S.H.I.E.L.D. AI can create spiritual media about the Water of Life.",
+    "web-app": "S.H.I.E.L.D. AI can build creative web and mobile applications with modern frameworks.",
+    "web-app-dev": "S.H.I.E.L.D. AI can develop full-stack web and app solutions for creative projects.",
+    "whirlwind": "S.H.I.E.L.D. AI can create dramatic whirlwind visual effects and spiritual media.",
+    "wilderness": "S.H.I.E.L.D. AI can produce wilderness landscape photography and nature documentaries.",
+    "wind": "S.H.I.E.L.D. AI can create wind-themed visual effects and atmospheric media.",
+    "word": "S.H.I.E.L.D. AI can produce Word-focused content, scripture visuals, and study aids.",
+    "yashaya": "S.H.I.E.L.D. AI can create reverent media about YASHAYA the true Black Messiah.",
+  };
+
+  return {
+    title: label,
+    suggestion: suggestions[value] || `S.H.I.E.L.D. AI Agent & Assistant can create, produce, and distribute professional ${label} content across all platforms.`,
+  };
 };
 
-// File format categories
+// File format categories - massively expanded
 const formatCategories = [
-  { name: "All", formats: [] },
-  { name: "3D Model", formats: ["3DM", "3DS", "3MF", "Blender", "DAE", "FBX", "GLB", "IFC", "OBJ", "PLY", "SKP", "STEP", "STL", "STP", "STPZ", "USD", "USDZ", "VTK", "VTP", "WRL", "X", "X3D"] },
+  { name: "All", formats: [] as string[] },
+  { name: "3D Model", formats: ["3DM", "3DS", "3MF", "Blender", "DAE", "FBX", "GLB", "GLTF", "IFC", "OBJ", "PLY", "SKP", "STEP", "STL", "STP", "STPZ", "USD", "USDZ", "VTK", "VTP", "WRL", "X", "X3D"] },
   { name: "AI Avatar", formats: ["FBX", "GLB", "OBJ", "USD", "USDZ"] },
-  { name: "Audio", formats: ["AAC", "FLAC", "MP3", "WAV"] },
-  { name: "CAD", formats: ["DWG", "DXF", "STEP", "STP", "STPZ", "IFC", "SKP"] },
+  { name: "Audio", formats: ["AAC", "AIF", "AU3", "CAF", "FLAC", "LOGIC", "LOGICX", "MID", "MIDI", "MP3", "OGG", "SND", "SONG", "WAV"] },
+  { name: "Banking", formats: ["CSV", "PDF", "XLS", "XLSX", "XML"] },
+  { name: "CAD", formats: ["DWG", "DXF", "IFC", "SKP", "STEP", "STP", "STPZ"] },
   { name: "Document", formats: ["DOC", "DOCX", "DOTX", "PDF", "TXT", "XML"] },
-  { name: "Image", formats: ["AVIF", "BMP", "DDS", "DPX", "EXR", "Favicon.ico", "GIF", "Animated GIF", "HEIC", "HEIF", "ICO", "JFI", "JFIF", "JPEG", "JPG", "PCX", "PNG", "PSB", "PSD", "RAW", "TGA", "TIFF", "WEBP", "WPG", "XCF"] },
-  { name: "Final Draft Script", formats: ["FDX", "FDXT", "FDR", "Fountain"] },
-  { name: "Film", formats: ["AVI", "MOV", "MP4", "ProRes", "DPX", "EXR"] },
-  { name: "Gaming", formats: ["FBX", "GLB", "OBJ", "3DS", "Blender", "USD"] },
-  { name: "Music", formats: ["AAC", "FLAC", "MP3", "WAV", "MIDI"] },
-  { name: "Spreadsheet", formats: ["XLS", "XLSX", "XLTX"] },
+  { name: "Finance", formats: ["CSV", "PDF", "XLS", "XLSX", "XLTX", "XML"] },
+  { name: "Film", formats: ["AAF", "AVI", "DPX", "EXR", "MOV", "MP4", "OMF", "ProRes"] },
+  { name: "Gaming", formats: ["3DS", "AKP", "Blender", "FBX", "GLB", "OBJ", "USD", "XPJ"] },
+  { name: "Graphics Design", formats: ["AI", "BMP", "CCX", "CDR", "CDT", "CMX", "EMF", "PSD", "SVG", "WMF"] },
+  { name: "Image", formats: ["AVIF", "BMP", "DDS", "DPX", "EXR", "Favicon.ico", "GIF", "Animated GIF", "HEIC", "HEIF", "ICO", "JFI", "JFIF", "JPEG", "JPG", "PCX", "PGM", "PNG", "PSB", "PSD", "RAW", "TGA", "TIFF", "WEBP", "WPG", "XCF", "XPM"] },
+  { name: "Animated SVG", formats: ["SVG", "XAML"] },
+  { name: "Final Draft Script", formats: ["FDR", "FDX", "FDXT", "Fountain"] },
+  { name: "Music", formats: ["AAC", "AIF", "ALS", "CAF", "FLAC", "LOGIC", "LOGICX", "MID", "MIDI", "MP3", "MPC", "OGG", "SONG", "WAV"] },
+  { name: "Software", formats: ["APK", "APP", "DEB", "DLL", "DMG", "EXE", "MSI", "PKG", "RPM", "WASM"] },
+  { name: "Spreadsheet", formats: ["CSV", "XLS", "XLSX", "XLTX"] },
+  { name: "Technology", formats: ["JSON", "WASM", "XML", "YAML", "YML"] },
   { name: "Vector", formats: ["AI", "CCX", "CDR", "CDT", "CMX", "EMF", "PS", "SVG", "VDX", "VSD", "VSDM", "VSDX", "WMF", "XAML"] },
-  { name: "Video", formats: ["AVI", "MOV", "MP4", "ProRes", "SRT", "VTT"] },
-  { name: "Web", formats: ["SVG", "PNG", "WEBP", "GIF", "JPEG", "Favicon.ico", "XML"] },
+  { name: "Video", formats: ["AAF", "AVI", "MOV", "MP4", "OMF", "ProRes", "SRT", "VTT"] },
+  { name: "Web", formats: ["CSS", "Favicon.ico", "GIF", "HTML", "JPEG", "JS", "JSON", "PNG", "SVG", "WEBP", "XML"] },
 ];
 
 const allFormats = [
-  "AAC", "AI", "Animated GIF", "AVI", "AVIF", "BMP", "Blender", "CCX", "CDR", "CDT", "CMX",
-  "DAE", "DDS", "DOC", "DOCX", "DOTX", "DPX", "DWG", "EMF", "EXR", "FAX",
-  "FBX", "FDR", "FDX", "FDXT", "FLAC", "Favicon.ico", "Fountain", "GIF", "GLB", "GLTF",
-  "HEIC", "HEIF", "ICO", "IFC", "JFI", "JFIF", "JPEG", "JPG",
-  "MIDI", "MOV", "MP3", "MP4", "OBJ", "PCX", "PDF", "PLY", "PNG", "PS", "PSB", "PSD", "ProRes",
-  "RAW", "SKP", "SRT", "STEP", "STL", "STP", "STPZ", "SVG",
-  "TGA", "TIFF", "TXT", "USD", "USDZ", "VDX", "VSD", "VSDM", "VSDX", "VTK", "VTP", "VTT",
-  "WAV", "WEBP", "WMF", "WPG", "WRL", "X", "X3D", "XAML", "XCF", "XLS", "XLSX", "XLTX", "XML",
-  "3DM", "3DS", "3MF"
+  "3DM", "3DS", "3MF", "AAC", "AAF", "ADA", "ADB", "ADS", "AI", "AIF", "AKP", "ALS",
+  "Animated GIF", "APK", "APP", "AS", "ASM", "ASP", "ASPX", "AU3", "AVI", "AVIF", "AVS", "AVSI",
+  "BAS", "BASH", "BAT", "BB", "BC", "BI", "Blender", "BMP",
+  "C", "CAF", "CBL", "CC", "CCX", "CDB", "CDC", "CDD", "CDR", "CDT", "CFG", "CL", "CLN",
+  "CMAKE", "CMD", "CMX", "COB", "COFFEE", "CONF", "CONFIG", "COPY", "CPP", "CPY", "CS", "CSD",
+  "CSH", "CSS", "CSV", "CXX",
+  "D", "DAE", "DB", "DDS", "DEB", "DIFF", "DLL", "DMG", "DOC", "DOCX", "DOTX", "DPX", "DWG", "DXF",
+  "EM", "EMF", "ERL", "EXE", "EXR",
+  "F", "F23", "F2K", "F77", "F90", "F95", "Favicon.ico", "FAX", "FBX", "FDR", "FDX", "FDXT",
+  "FLAC", "FOR", "FORTH", "Fountain",
+  "GD", "GIF", "GITATTRIBUTES", "GITCONFIG", "GLB", "GLTF", "GO", "GUI",
+  "H", "HEIC", "HEIF", "HEX", "HH", "HPP", "HRL", "HS", "HTA", "HTM", "HTML", "HWS", "HXX",
+  "I", "ICO", "IFC", "IHS", "INF", "INI", "INO", "ISS", "ITCL",
+  "JAVA", "JFI", "JFIF", "JPEG", "JPG", "JS", "JSM", "JSON", "JSON5", "JSONC", "JSP", "JSX",
+  "KIX", "KML", "KOTLIN",
+  "LAS", "LEX", "LISP", "LITCOFFEE", "LOGIC", "LOGICX", "LSP", "LST", "LUA",
+  "M", "MAK", "MARKDOWN", "MD", "MIB", "MID", "MIDI", "MJS", "MK", "ML", "MLI", "MM", "MMS",
+  "MOT", "MOV", "MP3", "MP4", "MPC", "MSI", "MX", "MXML",
+  "NIM", "NSH", "NSI", "NT",
+  "OBJ", "OGG", "OMF", "ORC", "OSX",
+  "P6", "PACK", "PAS", "PATCH", "PB", "PCX", "PDF", "PGM", "PH", "PHP", "PHP3", "PHP4", "PHP5",
+  "PHPS", "PHPT", "PKG", "PL", "PLX", "PLY", "PM", "PM6", "PNG", "POD6", "PR", "PRO", "PROFILE",
+  "PROPERTIES", "ProRes", "PS", "PS1", "PSB", "PSD", "PSD1", "PSM1", "PTX", "PXI", "PY", "PYD",
+  "PYI", "PYW", "PYX",
+  "R", "R2", "R3", "RAKU", "RAKUDOC", "RAKUMOD", "RAKUTEST", "RAR", "RAW", "RB", "RBW", "RC",
+  "REB", "REG", "RPM", "RS",
+  "S", "SAS", "SCM", "SCO", "SH", "SHTM", "SHTML", "SKP", "SMD", "SML", "SND", "SONG", "SPF",
+  "SPLUS", "SQL", "SQLITE", "SRC", "SREC", "SRT", "SS", "ST", "STEP", "STL", "STP", "STPZ",
+  "STY", "SV", "SVG", "SVH", "SWIFT", "SXML",
+  "T", "T2T", "TAB", "TCL", "TEK", "TEX", "TGA", "THY", "TIFF", "TOML", "TS", "TSQL", "TSX", "TXT",
+  "URL", "USD", "USDZ",
+  "V", "VB", "VBA", "VBS", "VDX", "VH", "VHD", "VHDL", "VSD", "VSDM", "VSDX", "VTK", "VTP", "VTT",
+  "WASM", "WAV", "WEBP", "WER", "WMF", "WOL", "WPG", "WRL",
+  "X", "X3D", "XAML", "XCF", "XHT", "XHTML", "XLS", "XLSX", "XLTX", "XML", "XPJ", "XPM", "XSD",
+  "XSL", "XUL",
+  "YAML", "YML", "ZIP"
 ].sort();
 
 const actionCategories = [
-  "All", "Create", "Convert", "Edit", "Evolve", "Distribute", "Produce", "Publish", "Share", "Swap"
+  "All", "Create", "Convert", "Edit", "Evolve", "Distribute", "Produce", "Publish", "Share", "Save", "Swap"
 ];
 
 const capabilities = [
@@ -290,15 +417,42 @@ const terminalLogs = [
   "[OK] Sovereign Media Pipeline: ACTIVE.",
 ];
 
+const platformSupport = [
+  { name: "S.H.I.E.L.D. AI OS", category: "Primary", icon: Shield },
+  { name: "Blanch OS", category: "Primary", icon: Monitor },
+  { name: "macOS", category: "Desktop", icon: Monitor },
+  { name: "Windows", category: "Desktop", icon: Monitor },
+  { name: "Linux", category: "Desktop", icon: Monitor },
+  { name: "iOS", category: "Mobile", icon: Smartphone },
+  { name: "Android", category: "Mobile", icon: Smartphone },
+  { name: "Smart TV", category: "IoT", icon: Tv },
+  { name: "Wearables", category: "IoT", icon: Compass },
+  { name: "Automotive", category: "IoT", icon: Car },
+  { name: "Gaming", category: "Entertainment", icon: Gamepad2 },
+  { name: "Audio", category: "Entertainment", icon: Music },
+  { name: "AR/VR", category: "Immersive", icon: Box },
+  { name: "Hologram", category: "Immersive", icon: Sparkles },
+  { name: "Metaverse", category: "Immersive", icon: Globe },
+  { name: "IoT Devices", category: "IoT", icon: Cpu },
+  { name: "Satellite", category: "Advanced", icon: Rocket },
+  { name: "Universal", category: "Primary", icon: Globe },
+];
+
 const CreativeMedia = () => {
   const navigate = useNavigate();
   const [selectedFormatCategory, setSelectedFormatCategory] = useState("All");
   const [selectedActionCategory, setSelectedActionCategory] = useState("All");
+  const [selectedPlatformCategory, setSelectedPlatformCategory] = useState("All");
   const [portfolioSearch, setPortfolioSearch] = useState("");
 
   const displayedFormats = selectedFormatCategory === "All"
     ? allFormats
     : formatCategories.find(c => c.name === selectedFormatCategory)?.formats || [];
+
+  const platformCategories = ["All", "Primary", "Desktop", "Mobile", "IoT", "Entertainment", "Immersive", "Advanced"];
+  const displayedPlatforms = selectedPlatformCategory === "All"
+    ? platformSupport
+    : platformSupport.filter(p => p.category === selectedPlatformCategory);
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -307,12 +461,7 @@ const CreativeMedia = () => {
       <main className="pt-32 pb-20">
         {/* Hero Section */}
         <section className="container mx-auto px-4 mb-20">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-center max-w-4xl mx-auto"
-          >
+          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="text-center max-w-4xl mx-auto">
             <Badge className="bg-primary/10 text-primary border-primary/20 mb-6">
               <Sparkles className="w-3 h-3 mr-1" /> Creative Media Platform
             </Badge>
@@ -329,15 +478,15 @@ const CreativeMedia = () => {
 
             {/* Action Buttons */}
             <div className="flex flex-wrap justify-center gap-4 mb-10">
-              <Button variant="shield" size="lg" className="gap-2" onClick={() => navigate("/shield-ai-os")}>
+              <Button variant="shield" size="lg" className="gap-2" onClick={() => navigate("/creative-engine")}>
                 <Rocket className="w-5 h-5" /> Initiate S.H.I.E.L.D. AI Creative Media Engine
               </Button>
-              <Button variant="glow" size="lg" className="gap-2" onClick={() => navigate("/shield-ai-os")}>
+              <Button variant="glow" size="lg" className="gap-2" onClick={() => navigate("/creative-engine")}>
                 <Brain className="w-5 h-5" /> Initiate Neuro Forge Media Engine
               </Button>
             </div>
             <div className="flex flex-wrap justify-center gap-3 mb-10">
-              <Button variant="outline" className="gap-2" onClick={() => navigate("/shield-ai-os")}>
+              <Button variant="outline" className="gap-2" onClick={() => navigate("/creative-portal")}>
                 <Play className="w-4 h-4" /> Start Generating
               </Button>
               <Button variant="outline" className="gap-2">
@@ -348,13 +497,7 @@ const CreativeMedia = () => {
             {/* Stats */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {capabilities.map((stat, i) => (
-                <motion.div
-                  key={stat.label}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2 + i * 0.1 }}
-                  className="glass-card p-4 rounded-xl"
-                >
+                <motion.div key={stat.label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 + i * 0.1 }} className="glass-card p-4 rounded-xl">
                   <div className="text-2xl font-bold text-primary">{stat.value}</div>
                   <div className="text-xs text-muted-foreground">{stat.label}</div>
                 </motion.div>
@@ -411,7 +554,7 @@ const CreativeMedia = () => {
                       </div>
                     ))}
                   </div>
-                  <Button variant="shield" className="gap-2" onClick={() => navigate("/shield-ai-os")}>
+                  <Button variant="shield" className="gap-2" onClick={() => navigate("/creative-engine")}>
                     <Rocket className="w-4 h-4" /> Initialize Creative Engine
                   </Button>
                 </div>
@@ -419,7 +562,7 @@ const CreativeMedia = () => {
                   {[
                     { icon: Film, title: "Neural Video Synthesis", desc: "Generate high-fidelity cinematic sequences in all genres, from Final Draft scripts and prompts." },
                     { icon: Music, title: "Sovereign Audio Engine", desc: "Synthesize immersive soundscapes and multi-lingual voiceovers with divine resonance." },
-                    { icon: Box, title: "Immersive Visuals", desc: "Real-time generation of 3D environments and holographic assets for the Blanch Metaverse." },
+                    { icon: Globe, title: "Immersive Visuals", desc: "Real-time generation of 3D environments and holographic assets for the whole S.H.I.E.L.D. AI Ecosystem." },
                     { icon: Eye, title: "Ethical Content Audit", desc: "Real-time Watchman oversight ensuring all generated media aligns with divine truth." },
                   ].map((f) => (
                     <div key={f.title} className="flex items-start gap-3 p-3 rounded-lg bg-card/50">
@@ -438,8 +581,10 @@ const CreativeMedia = () => {
 
         {/* Limitless Possibilities */}
         <section className="container mx-auto px-4 mb-20">
-          <div className="text-center mb-8">
+          <div className="text-center mb-4">
             <h2 className="text-2xl font-display font-bold mb-2">Limitless Possibilities</h2>
+            <p className="text-lg text-primary font-semibold mb-2">Explore our comprehensive creative media production ecosystem</p>
+            <p className="text-sm text-muted-foreground mb-2">Create, Convert, Edit, Evolve, Distribute, Produce, Publish, Share, Save, Swap</p>
             <p className="text-sm text-muted-foreground max-w-2xl mx-auto">
               Break through creative blocks and scale your content production. Our AI understands context, style, and branding to deliver pixel-perfect assets in a fraction of the time.
             </p>
@@ -459,51 +604,41 @@ const CreativeMedia = () => {
           </div>
         </section>
 
-        {/* Tabbed Sections */}
+        {/* Tabbed Sections - Massively expanded */}
         <section className="container mx-auto px-4 mb-20">
           <Tabs defaultValue="video" className="w-full">
             <TabsList className="flex flex-wrap justify-center gap-1.5 bg-transparent mb-10 h-auto">
               {tabCategories.map((tab) => (
-                <TabsTrigger
-                  key={tab.value}
-                  value={tab.value}
-                  className="data-[state=active]:bg-primary/20 data-[state=active]:text-primary text-xs px-3 py-1.5"
-                >
+                <TabsTrigger key={tab.value} value={tab.value} className="data-[state=active]:bg-primary/20 data-[state=active]:text-primary text-xs px-3 py-1.5">
                   <tab.icon className="w-3 h-3 mr-1" /> {tab.label}
                 </TabsTrigger>
               ))}
             </TabsList>
 
-            {Object.entries(tabContent).map(([value, tab]) => (
-              <TabsContent key={value} value={value}>
-                <div className="text-center mb-10">
-                  <h2 className="text-2xl md:text-3xl font-display font-bold mb-2">{tab.title}</h2>
-                  <p className="text-muted-foreground">{tab.subtitle}</p>
-                </div>
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {tab.items.map((feature, i) => (
-                    <motion.div
-                      key={feature.title}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: i * 0.08 }}
-                    >
-                      <Card className="bg-card/50 border-border/50 hover:border-primary/30 transition-all h-full">
-                        <CardHeader className="flex flex-row items-center gap-3 pb-2">
-                          <div className="p-2 rounded-lg bg-primary/10">
-                            <feature.icon className="w-5 h-5 text-primary" />
-                          </div>
-                          <CardTitle className="text-base">{feature.title}</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                          <p className="text-sm text-muted-foreground">{feature.description}</p>
-                        </CardContent>
-                      </Card>
-                    </motion.div>
-                  ))}
-                </div>
-              </TabsContent>
-            ))}
+            {tabCategories.map((tab) => {
+              const content = getTabContent(tab.value, tab.label);
+              return (
+                <TabsContent key={tab.value} value={tab.value}>
+                  <div className="text-center mb-6">
+                    <h3 className="text-xl font-display font-bold">{content.title}</h3>
+                  </div>
+                  <Card className="bg-card/50 border-border/50 hover:border-primary/30 transition-all mb-6">
+                    <CardContent className="p-6 flex items-start gap-4">
+                      <div className="p-3 rounded-lg bg-primary/10 shrink-0">
+                        <Brain className="w-6 h-6 text-primary" />
+                      </div>
+                      <div>
+                        <h4 className="font-semibold mb-1">S.H.I.E.L.D. AI Agent & Assistant</h4>
+                        <p className="text-sm text-muted-foreground">{content.suggestion}</p>
+                        <Button variant="outline" size="sm" className="mt-3 gap-1 text-xs" onClick={() => navigate("/creative-engine")}>
+                          <Rocket className="w-3 h-3" /> Launch Creative Engine
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+              );
+            })}
           </Tabs>
         </section>
 
@@ -514,34 +649,28 @@ const CreativeMedia = () => {
             <p className="text-muted-foreground text-sm">Industry-standard format support across all media types</p>
           </div>
 
-          {/* Action Categories */}
-          <div className="flex flex-wrap justify-center gap-2 mb-4">
-            {actionCategories.map((cat) => (
-              <Button
-                key={cat}
-                variant={selectedActionCategory === cat ? "shield" : "outline"}
-                size="sm"
-                onClick={() => setSelectedActionCategory(cat)}
-                className="text-xs"
-              >
-                {cat}
-              </Button>
-            ))}
+          {/* Active Categories / Action buttons */}
+          <div className="mb-4">
+            <p className="text-xs text-muted-foreground text-center mb-2 font-semibold">Active Categories</p>
+            <div className="flex flex-wrap justify-center gap-2">
+              {actionCategories.map((cat) => (
+                <Button key={cat} variant={selectedActionCategory === cat ? "shield" : "outline"} size="sm" onClick={() => setSelectedActionCategory(cat)} className="text-xs">
+                  {cat}
+                </Button>
+              ))}
+            </div>
           </div>
 
-          {/* Format Categories */}
-          <div className="flex flex-wrap justify-center gap-2 mb-6">
-            {formatCategories.map((cat) => (
-              <Button
-                key={cat.name}
-                variant={selectedFormatCategory === cat.name ? "default" : "outline"}
-                size="sm"
-                onClick={() => setSelectedFormatCategory(cat.name)}
-                className="text-xs"
-              >
-                {cat.name}
-              </Button>
-            ))}
+          {/* Media Types / Format Categories */}
+          <div className="mb-6">
+            <p className="text-xs text-muted-foreground text-center mb-2 font-semibold">Media Types</p>
+            <div className="flex flex-wrap justify-center gap-2">
+              {formatCategories.map((cat) => (
+                <Button key={cat.name} variant={selectedFormatCategory === cat.name ? "default" : "outline"} size="sm" onClick={() => setSelectedFormatCategory(cat.name)} className="text-xs">
+                  {cat.name}
+                </Button>
+              ))}
+            </div>
           </div>
 
           <div className="flex flex-wrap justify-center gap-2">
@@ -553,20 +682,52 @@ const CreativeMedia = () => {
           </div>
         </section>
 
+        {/* Platform Support */}
+        <section className="container mx-auto px-4 mb-20">
+          <div className="text-center mb-8">
+            <h2 className="text-2xl font-display font-bold mb-2">Platform Support</h2>
+            <p className="text-muted-foreground text-sm">Deploy your applications across 18+ platforms</p>
+          </div>
+          <div className="flex flex-wrap justify-center gap-2 mb-6">
+            {platformCategories.map((cat) => (
+              <Button key={cat} variant={selectedPlatformCategory === cat ? "shield" : "outline"} size="sm" onClick={() => setSelectedPlatformCategory(cat)} className="text-xs">
+                {cat}
+              </Button>
+            ))}
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+            {displayedPlatforms.map((platform, i) => (
+              <motion.div key={platform.name} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.03 }}>
+                <Card className="bg-card/50 border-border/50 hover:border-primary/30 transition-all">
+                  <CardContent className="p-4 text-center">
+                    <platform.icon className="w-6 h-6 text-primary mx-auto mb-2" />
+                    <p className="text-xs font-medium">{platform.name}</p>
+                    <Badge variant="outline" className="text-[10px] mt-1 border-primary/20 text-primary">{platform.category}</Badge>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+        </section>
+
         {/* Active Media Streams - Terminal */}
         <section className="container mx-auto px-4 mb-20">
           <div className="text-center mb-8">
+            <Badge className="bg-primary/10 text-primary border-primary/20 mb-3">
+              <Terminal className="w-3 h-3 mr-1" /> SHIELD_AI_CREATIVE_ENGINE_v4.2.0
+            </Badge>
             <h2 className="text-2xl font-display font-bold mb-2">S.H.I.E.L.D. AI Creative Media</h2>
             <p className="text-muted-foreground text-sm">Additional Autonomous Content Generation & Immersive Media Engineering</p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6 mb-8">
+          <div className="grid md:grid-cols-3 gap-4 mb-8">
             {[
               { label: "Initialize Creative Engine", icon: Rocket },
               { label: "Rendering Engine", icon: Server },
               { label: "Neural Forge", icon: Brain },
               { label: "AI Director", icon: Eye },
-              { label: "Watchman Version", icon: Shield },
+              { label: "AI Producer", icon: Crown },
+              { label: "Watchman Version 4.2", icon: Shield },
             ].map((item) => (
               <div key={item.label} className="flex items-center gap-3 p-3 rounded-lg bg-card/50 border border-border/30">
                 <item.icon className="w-5 h-5 text-primary" />
@@ -586,13 +747,7 @@ const CreativeMedia = () => {
             <CardContent>
               <div className="bg-background/50 rounded-lg p-4 font-mono text-xs space-y-1">
                 {terminalLogs.map((log, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: i * 0.3 }}
-                    className="text-primary/80"
-                  >
+                  <motion.div key={i} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.3 }} className="text-primary/80">
                     {log}
                   </motion.div>
                 ))}
@@ -650,9 +805,9 @@ const CreativeMedia = () => {
               <Share2 className="w-10 h-10 text-primary mx-auto mb-4" />
               <h2 className="text-2xl font-display font-bold mb-4">Publish to the World</h2>
               <p className="text-muted-foreground max-w-2xl mx-auto mb-6 text-sm">
-                Distribute your creations across S.H.I.E.L.D. AI Magazine, Blanch Network, Virtual Marketplaces, All Social Media Platforms, Marketing firms, Publishing, Blanch OS, S.H.I.E.L.D. AI OS and all Web/App Development Projects — and beyond with one click.
+                Distribute your creations across S.H.I.E.L.D. AI Magazine, Blanch Network, Blanch Infinity DLT, Virtual Marketplaces, All Social Media Platforms, Marketing Agency & Firms, Publishing, Blanch OS, S.H.I.E.L.D. AI OS and all Web/App Development Projects, Inspire Student S.H.I.E.L.D. AI Education Resources, and Honor the Royal Priesthood — and beyond with one click.
               </p>
-              <Button variant="shield" className="gap-2" onClick={() => navigate("/command-center")}>
+              <Button variant="shield" className="gap-2" onClick={() => navigate("/publishing-dashboard")}>
                 <ArrowRight className="w-4 h-4" /> Open Publishing Dashboard
               </Button>
             </CardContent>
@@ -666,14 +821,9 @@ const CreativeMedia = () => {
             <p className="text-muted-foreground text-sm">Showcase your work and discover inspiring creations from the community</p>
           </div>
           <div className="max-w-md mx-auto mb-8">
-            <Input
-              placeholder="Search portfolios..."
-              value={portfolioSearch}
-              onChange={(e) => setPortfolioSearch(e.target.value)}
-              className="bg-card/50"
-            />
+            <Input placeholder="Search portfolios..." value={portfolioSearch} onChange={(e) => setPortfolioSearch(e.target.value)} className="bg-card/50" />
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
             {[
               { title: "Cinematic Trailer", type: "Video", color: "from-red-500/20 to-pink-500/20" },
               { title: "Brand Identity Kit", type: "Design", color: "from-blue-500/20 to-cyan-500/20" },
@@ -683,25 +833,25 @@ const CreativeMedia = () => {
               { title: "Magazine Layout", type: "Publishing", color: "from-indigo-500/20 to-violet-500/20" },
               { title: "Game Assets Pack", type: "Gaming", color: "from-cyan-500/20 to-teal-500/20" },
               { title: "Social Media Kit", type: "Marketing", color: "from-pink-500/20 to-rose-500/20" },
+              { title: "Scripture Visuals", type: "Heritage", color: "from-amber-500/20 to-yellow-500/20" },
             ].filter(p => !portfolioSearch || p.title.toLowerCase().includes(portfolioSearch.toLowerCase()) || p.type.toLowerCase().includes(portfolioSearch.toLowerCase()))
             .map((project, i) => (
-              <motion.div
-                key={project.title}
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: i * 0.05 }}
-                className="group cursor-pointer"
-              >
-                <div className={`aspect-square rounded-xl bg-gradient-to-br ${project.color} border border-border/30 flex flex-col items-center justify-center p-4 hover:border-primary/30 transition-all`}>
+              <motion.div key={project.title} initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * 0.05 }} className="group cursor-pointer">
+                <div className={`aspect-square rounded-xl bg-gradient-to-br ${project.color} border border-border/30 flex flex-col items-center justify-center p-4 hover:border-primary/30 transition-all relative`}>
                   <ImagePlus className="w-8 h-8 text-muted-foreground mb-2 group-hover:text-primary transition-colors" />
                   <p className="text-sm font-medium text-center">{project.title}</p>
                   <Badge variant="outline" className="mt-2 text-xs">{project.type}</Badge>
+                  <div className="absolute inset-0 rounded-xl bg-background/80 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <Button variant="shield" size="sm" className="gap-1">
+                      <ExternalLink className="w-3 h-3" /> Open Project
+                    </Button>
+                  </div>
                 </div>
               </motion.div>
             ))}
           </div>
           <div className="text-center mt-6">
-            <Button variant="outline" className="gap-2">
+            <Button variant="outline" className="gap-2" onClick={() => navigate("/creative-portal")}>
               <Upload className="w-4 h-4" /> Upload Your Work
             </Button>
           </div>
@@ -710,22 +860,13 @@ const CreativeMedia = () => {
         {/* Creative Engine Animation */}
         <section className="container mx-auto px-4 mb-20 text-center">
           <div className="glass-card p-8 rounded-2xl max-w-2xl mx-auto">
-            <motion.div
-              animate={{ rotate: 360 }}
-              transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-              className="w-16 h-16 mx-auto mb-4 rounded-full border-2 border-primary/30 flex items-center justify-center"
-            >
+            <motion.div animate={{ rotate: 360 }} transition={{ duration: 8, repeat: Infinity, ease: "linear" }} className="w-16 h-16 mx-auto mb-4 rounded-full border-2 border-primary/30 flex items-center justify-center">
               <Sparkles className="w-8 h-8 text-primary" />
             </motion.div>
             <h3 className="text-lg font-display font-bold mb-2">Creative Engine</h3>
             <p className="text-sm text-muted-foreground mb-4">Generating Masterpiece...</p>
             <div className="w-full bg-muted rounded-full h-2 mb-4">
-              <motion.div
-                className="bg-primary h-2 rounded-full"
-                initial={{ width: "0%" }}
-                animate={{ width: "100%" }}
-                transition={{ duration: 3, repeat: Infinity }}
-              />
+              <motion.div className="bg-primary h-2 rounded-full" initial={{ width: "0%" }} animate={{ width: "100%" }} transition={{ duration: 3, repeat: Infinity }} />
             </div>
           </div>
         </section>
