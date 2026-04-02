@@ -60,6 +60,9 @@ import SharedFileViewer from "./pages/SharedFileViewer";
 import UniversalCommerceModels from "./pages/UniversalCommerceModels";
 import PlatformFeatures from "./pages/PlatformFeatures";
 import CreativeMedia from "./pages/CreativeMedia";
+import CreativeEngine from "./pages/CreativeEngine";
+import CreativePortal from "./pages/CreativePortal";
+import PublishingDashboard from "./pages/PublishingDashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
