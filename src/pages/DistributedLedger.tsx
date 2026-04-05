@@ -10,7 +10,7 @@ const DistributedLedger = () => {
   const features = [{
     icon: Zap,
     title: "Zero Transaction Fees",
-    description: "No fees for transactions on the Blanch DLT network",
+    description: "No fees for transactions on the Blanch S.H.I.E.L.D. AI Network",
     color: "text-yellow-400"
   }, {
     icon: Network,
@@ -37,9 +37,13 @@ const DistributedLedger = () => {
     description: "High-performance network infrastructure for decentralized communication and data transfer",
     benefits: ["Global mesh connectivity", "Low-latency routing", "Resilient architecture"]
   }, {
-    name: "Blanch Group",
+    name: "Blanch Group DLT",
     description: "Enterprise-grade distributed ledger solutions for organizational governance and operations",
     benefits: ["Corporate governance", "Multi-entity coordination", "Compliance ready"]
+  }, {
+    name: "Blanch Hadash Dabash",
+    description: "Sacred distributed ledger infrastructure for covenant-based economic systems and restoration",
+    benefits: ["Covenant alignment", "Divine economics", "Restorative justice"]
   }, {
     name: "S.H.I.E.L.D. AI DAG",
     description: "Advanced DAG (Directed Acyclic Graph) transaction structure enabling parallel processing and instant confirmations",
@@ -153,14 +157,15 @@ const DistributedLedger = () => {
             <TabsList className="flex flex-wrap gap-2 mb-8 h-auto">
               <TabsTrigger value="blanch-infinity">Blanch Infinity DLT</TabsTrigger>
               <TabsTrigger value="blanch-network">Blanch Network</TabsTrigger>
-              <TabsTrigger value="blanch-group">Blanch Group</TabsTrigger>
+              <TabsTrigger value="blanch-group">Blanch Group DLT</TabsTrigger>
+              <TabsTrigger value="blanch-hadash">Blanch Hadash Dabash</TabsTrigger>
               <TabsTrigger value="shield-dag">S.H.I.E.L.D. AI DAG</TabsTrigger>
               <TabsTrigger value="iota">IOTA</TabsTrigger>
               <TabsTrigger value="hashgraph">Hashgraph</TabsTrigger>
               <TabsTrigger value="blockchain">Blockchain</TabsTrigger>
             </TabsList>
 
-            {technologies.map((tech, index) => <TabsContent key={tech.name} value={["blanch-infinity", "blanch-network", "blanch-group", "shield-dag", "iota", "hashgraph", "blockchain"][index]}>
+            {technologies.map((tech, index) => <TabsContent key={tech.name} value={["blanch-infinity", "blanch-network", "blanch-group", "blanch-hadash", "shield-dag", "iota", "hashgraph", "blockchain"][index]}>
                 <Card className="bg-card/50 border-border/50">
                   <CardHeader>
                     <CardTitle className="flex items-center gap-3">
