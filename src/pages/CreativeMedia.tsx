@@ -18,7 +18,7 @@ import {
   Store, Code2, Users, Star, Box, Target, Crown, Smartphone,
   FileText, Megaphone, HardDrive, ExternalLink, CheckCircle2,
   Activity, ArrowRight, ImagePlus, BookMarked,
-  Mountain, Droplets, Wind, Sun, Moon, Heart, CloudLightning,
+  Mountain, Droplets, Wind, Sun, Moon, Heart, CloudLightning, Cloud,
   Compass, Flame, Gem, Wheat, TreePine, Bird, Leaf,
   CircleDot, GraduationCap, Church, Anchor, Car, Factory, Cpu, Building2,
   LayoutDashboard
