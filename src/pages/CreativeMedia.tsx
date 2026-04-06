@@ -21,7 +21,7 @@ import {
   Mountain, Droplets, Wind, Sun, Moon, Heart, CloudLightning, Cloud,
   Compass, Flame, Gem, Wheat, TreePine, Bird, Leaf,
   CircleDot, GraduationCap, Church, Anchor, Car, Factory, Cpu, Building2,
-  LayoutDashboard
+  LayoutDashboard, Settings
 } from "lucide-react";
 
 // Massively expanded tab categories
@@ -574,10 +574,10 @@ const allFormats = [
 
 const ecosystemActionBadges = [
   "Create", "Convert", "Edit", "Evolve", "Distribute", "Produce", "Publish", "Share", "Save", "Swap",
-  "AI Automate", "AI Animate", "AI Build", "AI Create", "AI Convert", "AI Design", "Ai Develop", "Ai Direct",
-  "AI Distribute", "Ai Edit", "AI Evolve", "AI Generate", "AI Illustrate", "AI Market", "Ai Network",
-  "AI Upgrade", "AI Produce", "AI Promote", "Ai Publish", "AI Quality", "AI Realistic", "AI Scan",
-  "AI Share", "AI Save", "AI Scripture", "Ai Swap", "AI Visualize",
+  "AI Automate", "AI Animate", "AI Build", "AI Create", "AI Convert", "AI Design", "AI Develop", "AI Direct",
+  "AI Distribute", "Ai Edit", "AI Evolve", "AI Generate", "AI Illustrate", "AI Market", "AI Network",
+  "AI Upgrade", "AI Produce", "AI Promote", "AI Publish", "AI Quality", "AI Realistic", "AI Scan",
+  "AI Share", "AI Save", "AI Scripture", "AI Swap", "AI Visualize",
 ];
 
 const limitlessCapabilityChips = [
@@ -605,7 +605,7 @@ const neuroCreativeStudios: NeuroStudioItem[] = [
   { title: "Podcast", desc: "Record, edit, master, and publish shows with sovereign hosting options.", icon: Podcast },
   { title: "Photography", desc: "Professional photography workflows and AI-enhanced image capture", icon: Camera },
   { title: "Marketing & PR", desc: "Global marketing campaigns and public relations management", icon: Megaphone },
-  { title: "Web/App", desc: "Creative tooling for interfaces, PWAs, and cross-platform product media.", icon: Smartphone },
+  { title: "Web/App Dev", desc: "Creative tooling for interfaces, PWAs, and cross-platform product media.", icon: Smartphone },
   { title: "Operating Systems", desc: "Next-generation sovereign operating systems and interfaces", icon: Monitor },
   { title: "Graphics Design", desc: "Professional vector and raster graphics design with AI assistance", icon: Palette },
   { title: "S.H.I.E.L.D. AI OS", desc: "The ultimate AI-powered sovereign operating system", icon: Shield, path: "/shield-ai-os" },
@@ -623,7 +623,8 @@ const neuroCreativeStudios: NeuroStudioItem[] = [
   { title: "S.H.I.E.L.D. AI Cloud", desc: "High-performance AI cloud infrastructure", icon: Cloud, path: "/shield-ai-cloud" },
   { title: "S.H.I.E.L.D. AI Drive", desc: "Sovereign AI-powered cloud storage and management", icon: HardDrive, path: "/shield-ai-drive" },
   { title: "Blanch Network", desc: "Distribute and syndicate media across the Blanch Network ecosystem.", icon: Globe, path: "/blanch-network" },
-  { title: "Blanch Studios", desc: "Professional production studios for the Blanch Group ecosystem", icon: Sparkles },
+  { title: "S.H.I.E.L.D. AI AutoCAD", desc: "In the engineering field, AutoCAD serves as a critical bridge between conceptual design and physical production.", icon: Settings, path: "/autocad"},
+  { title: "Blanch Studios", desc: "Professional production studios for the Blanch Group ecosystem", icon: Sparkles, path: "/blanch-studios" },
   { title: "S.H.I.E.L.D. AI Creative Studios", desc: "The pinnacle of AI-powered creative production, Global Media and innovation", icon: Sparkles, path: "/creative-portal" },
 ];
 
@@ -713,32 +714,32 @@ const scripturePools: Record<string, string[]> = {
     "Psalms 45:1 — My heart is inditing a good matter: I speak of the things which I have made touching the king.",
   ],
   film: [
-    "Habakkuk 2:14 — For the earth shall be filled with the knowledge of the glory of the LORD, as the waters cover the sea.",
+    "Habakkuk 2:14 — For the earth shall be filled with the knowledge of the glory of the Most High AHAYAH, as the waters cover the sea.",
   ],
   audio: [
-    "Psalms 150:1 — Praise ye the LORD. Praise God in his sanctuary: praise him in the firmament of his power.",
-    "Psalms 96:1 — O sing unto the LORD a new song: sing unto the LORD, all the earth.",
+    "Psalms 150:1 — Praise ye the Most High AHAYAH. Praise Most High AHAYAH in his sanctuary: praise him in the firmament of his power.",
+    "Psalms 96:1 — O sing unto the Most High AHAYAH a new song: sing unto the Most High AHAYAH, all the earth.",
   ],
   music: [
     "Psalms 33:3 — Sing unto him a new song; play skilfully with a loud noise.",
   ],
   image: [
-    "Psalms 19:1 — The heavens declare the glory of God; and the firmament sheweth his handywork.",
+    "Psalms 19:1 — The heavens declare the glory of Most High AHAYAH; and the firmament sheweth his handywork.",
   ],
   gaming: [
-    "Proverbs 21:31 — The horse is prepared against the day of battle: but safety is of the LORD.",
+    "Proverbs 21:31 — The horse is prepared against the day of battle: but safety is of the Most High AHAYAH.",
   ],
   design: [
     "Exodus 35:32 — To devise cunning works, to work in gold, and in silver, and in brass.",
   ],
   publishing: [
-    "Psalms 68:11 — The Lord gave the word: great was the company of those that published it.",
+    "Psalms 68:11 — The Most High AHAYAH gave the word: great was the company of those that published it.",
   ],
   education: [
     "Proverbs 1:5 — A wise man will hear, and will increase learning; and a man of understanding shall attain unto wise counsels.",
   ],
   scripture: [
-    "2 Timothy 3:16 — All scripture is given by inspiration of God, and is profitable for doctrine, for reproof, for correction, for instruction in righteousness.",
+    "2 Timothy 3:16 — All scripture is given by inspiration of Most High AHAYAH, and is profitable for doctrine, for reproof, for correction, for instruction in righteousness.",
   ],
   default: [
     "Psalms 119:105 — Thy word is a lamp unto my feet, and a light unto my path.",
