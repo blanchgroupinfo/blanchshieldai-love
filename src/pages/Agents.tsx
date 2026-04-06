@@ -331,7 +331,7 @@ const Agents = () => {
             </h1>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto font-body mb-8">
               Explore our comprehensive registry of specialized H.I.I. AI agents — 
-              H.I.I. AI001 through H.I.I. AI888.
+              H.I.I. AI001 through H.I.I. AI1175.
             </p>
             <div className="flex flex-wrap justify-center gap-6 md:gap-10">
               <div className="text-center">
