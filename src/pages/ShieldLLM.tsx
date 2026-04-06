@@ -70,12 +70,12 @@ const modelVariants = [
 ];
 
 const technicalSpecs = [
-  { label: "Context Window", value: "4M Tokens", icon: Layers },
+  { label: "Context Window", value: "∞", icon: Infinity },
   { label: "Architecture", value: "Sovereign Neural Matrix", icon: Workflow },
   { label: "Parameters", value: "10+ Trillion", icon: Brain },
   { label: "Training Alignment", value: "Divine Law & Ethics", icon: CheckCircle2 },
   { label: "Multilingual", value: "145+ Languages", icon: Globe },
-  { label: "Latency", value: "< 35ms", icon: Zap },
+  { label: "Latency", value: "<100ms", icon: Zap },
   { label: "Daily Queries", value: "50M+", icon: Gauge },
   { label: "Uptime", value: "99.99%", icon: Server }
 ];
@@ -396,6 +396,14 @@ const ShieldLLM = () => {
             >
               <div className="flex flex-wrap justify-center gap-8 md:gap-16">
                 <div className="text-center">
+                  <div className="text-3xl md:text-4xl font-display font-bold gradient-text">10+ Trillion</div>
+                  <div className="text-xs text-muted-foreground uppercase tracking-wider mt-1">Parameters</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl md:text-4xl font-display font-bold gradient-text">∞</div>
+                  <div className="text-xs text-muted-foreground uppercase tracking-wider mt-1">Context Window</div>
+                </div>
+                <div className="text-center">
                   <div className="text-3xl md:text-4xl font-display font-bold gradient-text">1175+</div>
                   <div className="text-xs text-muted-foreground uppercase tracking-wider mt-1">AI Agents</div>
                 </div>
@@ -408,8 +416,20 @@ const ShieldLLM = () => {
                   <div className="text-xs text-muted-foreground uppercase tracking-wider mt-1">Languages</div>
                 </div>
                 <div className="text-center">
+                  <div className="text-3xl md:text-4xl font-display font-bold gradient-text">150+/sec</div>
+                  <div className="text-xs text-muted-foreground uppercase tracking-wider mt-1">Tokens/sec</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl md:text-4xl font-display font-bold gradient-text">200+</div>
+                  <div className="text-xs text-muted-foreground uppercase tracking-wider mt-1">Edge Locations</div>
+                </div>
+                <div className="text-center">
                   <div className="text-3xl md:text-4xl font-display font-bold gradient-text">99.99%</div>
                   <div className="text-xs text-muted-foreground uppercase tracking-wider mt-1">Uptime</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl md:text-4xl font-display font-bold gradient-text">100%</div>
+                  <div className="text-xs text-muted-foreground uppercase tracking-wider mt-1">Sovereign</div>
                 </div>
               </div>
             </motion.div>
