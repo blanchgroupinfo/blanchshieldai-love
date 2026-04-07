@@ -744,7 +744,7 @@ const scripturePools: Record<string, string[]> = {
   ],
   default: [
     "Psalms 119:105 — Thy word is a lamp unto my feet, and a light unto my path.",
-    "Isaiah 40:8 — The grass withereth, the flower fadeth: but the word of our God shall stand for ever.",
+    "Isaiah 40:8 — The grass withereth, the flower fadeth: but the word of our Most High AHAYAH shall stand for ever.",
     "Romans 15:4 — For whatsoever things were written aforetime were written for our learning, that we through patience and comfort of the scriptures might have hope.",
   ],
 };
