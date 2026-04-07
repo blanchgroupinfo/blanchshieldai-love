@@ -573,9 +573,9 @@ const allFormats = [
 ].sort();
 
 const ecosystemActionBadges = [
-  "Create", "Convert", "Edit", "Evolve", "Distribute", "Produce", "Publish", "Share", "Save", "Swap",
+  "Create", "Convert", "Design", "Distribute", "Edit", "Evolve", "Generate", "Produce", "Publish", "Share", "Save", "Swap",
   "AI Automate", "AI Animate", "AI Build", "AI Create", "AI Convert", "AI Design", "AI Develop", "AI Direct",
-  "AI Distribute", "Ai Edit", "AI Evolve", "AI Generate", "AI Illustrate", "AI Market", "AI Network",
+  "AI Distribute", "AI  Edit", "AI Evolve", "AI Generate", "AI Illustrate", "AI Market", "AI Network",
   "AI Upgrade", "AI Produce", "AI Promote", "AI Publish", "AI Quality", "AI Realistic", "AI Scan",
   "AI Share", "AI Save", "AI Scripture", "AI Swap", "AI Visualize",
 ];
@@ -624,6 +624,7 @@ const neuroCreativeStudios: NeuroStudioItem[] = [
   { title: "S.H.I.E.L.D. AI Drive", desc: "Sovereign AI-powered cloud storage and management", icon: HardDrive, path: "/shield-ai-drive" },
   { title: "Blanch Network", desc: "Distribute and syndicate media across the Blanch Network ecosystem.", icon: Globe, path: "/blanch-network" },
   { title: "S.H.I.E.L.D. AI AutoCAD", desc: "In the engineering field, AutoCAD serves as a critical bridge between conceptual design and physical production.", icon: Settings, path: "/autocad"},
+  { title: "Hologram", desc: "Advanced 3D holographic projection and immersive visual rendering technology for the Whole Ecosystem.", icon: Box, path: "/metaverse" },
   { title: "Blanch Studios", desc: "Professional production studios for the Blanch Group ecosystem", icon: Sparkles, path: "/blanch-studios" },
   { title: "S.H.I.E.L.D. AI Creative Studios", desc: "The pinnacle of AI-powered creative production, Global Media and innovation", icon: Sparkles, path: "/creative-portal" },
 ];
@@ -954,7 +955,7 @@ const CreativeMedia = () => {
         {/* Tabbed Sections — Universal Content Categories */}
         <section className="container mx-auto px-4 mb-20">
           <div className="text-center mb-10">
-            <h2 className="text-2xl font-display font-bold mb-4 italic text-primary underline">Explore our comprehensive creative media production ecosystem</h2>
+            <h2 className="text-2xl font-display font-bold mb-4">Explore our comprehensive creative media production ecosystem</h2>
             <div className="flex flex-wrap justify-center gap-2 mb-4 max-h-[280px] overflow-y-auto p-2 rounded-xl border border-border/40 bg-card/20">
               {ecosystemActionBadges.map((action) => (
                 <Badge key={action} variant="secondary" className="px-3 py-1 text-xs bg-primary/10 text-primary border-primary/20">
