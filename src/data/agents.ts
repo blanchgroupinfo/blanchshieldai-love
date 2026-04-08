@@ -128,7 +128,7 @@ export const agentCategories = [
 
 export const agents: Agent[] = [
   // 1. CORE AI & ARCHITECTURE (AI000-AI035) 
-  { id: "AI000", name: "S.H.I.E.L.D. AI Agent Sovereign Intelligence & Ethics Operating system Agents", category: "Core AI & Architecture", categoryNumber: 1, isCategory: true},
+  { id: "AI000", name: "S.H.I.E.L.D. AI Agent Core AI & Architecture", category: "Core AI & Architecture", categoryNumber: 1, isCategory: true},
   { id: "AI001", name: "S.H.I.E.L.D. AI Agent Architecture & Intelligence Agents", category: "Core AI & Architecture", categoryNumber: 1, isCategory: true },
   { id: "AI002", name: "S.H.I.E.L.D. AI Automation All Agents", category: "Core AI & Architecture", categoryNumber: 1 },
   { id: "AI003", name: "S.H.I.E.L.D. AI Foundational Intelligence Models Agent", category: "Core AI & Architecture", categoryNumber: 1 },
