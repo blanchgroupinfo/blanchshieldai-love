@@ -17,36 +17,72 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 const osSystems = ["S.H.I.E.L.D. AI OS", "Blanch OS", "macOS", "IOS", "Android", "Windows", "Linux", "Universal"];
 const fileSystems = ["NTFS", "APFS", "HFS+", "ext4", "FAT32", "exFAT", "Flatpak"];
 
-const allFormatsList = "3dm 3ds 3mf aac aaf ada adb ads ai aif akp als animated gif apk app as asm asp aspx au au3 avi avif avs avsi bas bash bat bb bc bi blend blender bmp c caf cbl cc ccx cdb cdc cdd cdr cdt cfg ckpt cl cln cmake cmd cmx cob coffee conf config copy cpp cpy cs csd csh css csv cxx d dae db dds deb diff dll dmg doc docx dotx dpx dwg dxf em emf erl exe exr f f23 f2k f77 f90 f95 favicon.ico fax fbx fdr fdx fdxt flac flp fst for forth fountain gd gguf gif gitattributes gitconfig glb gltf go gui h h5 hdf5 heic heif hex hh hpp hrl hs hta htm html hws hxx i ico ifc ihs inf ini ino iss iso itcl java jfi jfif jpeg jpg js jsm json json5 jsonc jsonl jsp jsx kix kml kotlin las lex lisp litcoffee logic logicx lsp lst lua m mak mar markdown md mib mid midi mjs mk ml mli mlmodel mlpackage mm mms mot mov mp3 mp4 mpc mpeg msi mx mxml nim nsh nsi nt npy npz obj ogg omf onnx orc osx p6 pack parquet pas patch pb pcx pdf pgm ph php php3 php4 php5 phps phpt pkl pkg pl plx ply pm pm6 png pod6 pr pro profile properties prores ps ps1 psb psd psd1 psm1 pt ptf pts pth ptx pxi py pyd pyi pyw pyx r r2 r3 raku rakudoc rakumod rakutest rar raw rb rbw rc reb reg rpm rs s safetensors sas scm sco sh shtm shtml skp smd sml snd song spf splus sql sqlite src srec srt ss st step stl stp stpz sty sv svg svh swift sxml t t2t tab tcl tek tex tga tfrecord tflite thy tiff toml ts tsql tsx txt url usd usdz v vb vba vbs vdx vh vhd vhdl vsd vsdm vsdx vtk vtp vtt wasm wav webp wer wmf wol wpg wrl x x3d xaml xcf xht xhtml xls xlsx xltx xml xpj xpm xsd xsl xul yaml yml zip";
+const allFormatsList = "3dm, 3ds, 3g2, 3gp, 3gpp, 3mf, 4dx, 5dx, 6dx, 7dx, 8dx, 9dx, 10dx, 11dx, 12dx, 7z, aac, aacp, aaf, abc, ac3, acd, ada, adb, ads, adx, ai, aif, aiff, akp, als, alp, amr, animx, animated gif, apk, app, appx, as, asm, asp, aspx, ass, au, au3, audioml, avc, avchd, avi, avif, avs, avsi, avatx, band, bas, bash, bat, bb, bc, bi, bin, binauralx, blend, blender, bmp, broadcastx, bwf, bz2, c, caf, cadx, cbl, cbr, cc, ccx, cda, cdb, cdc, cdd, cdr, cdt, cfg, ckpt, clap, cln, cmake, cmd, cmx, cnc, cob, coffee, component, conf, config, configx, copy, cpp, cpy, cpr, crmdata, cs, csd, csh, css, csv, cwp, cxx, d, dae, dat, datx, dbx, dds, deb, diff, dll, dmg, doc, docx, docx+, dpdoc, dpm, dv, dvcprohd, dpx, dwg, dxf, edi, edifact, edl, em, emf, engx, engine, env, eps, epub, erl, exe, exr, exs, f, f23, f2k, f77, f90, f95, fabx, favicon.ico, fax, fbx, feather, fcpxmld, fcpbundle, fdr, fdx, fdxt, fig, fits, flac, flp, for, forth, fountain, fst, fxb, fxp, fxt, gd, gguf, gif, gig, gitattributes, glb, gltf, go, gradle, gql, gsm, gz, gui, h, h.264, h5, hdf5, hdr, heic, heif, hevc, hex, holo, hologramx, hpp, hrl, hs, hta, htm, html, hudx, humanx, hws, hxx, i, ico, ifc, ihs, imgx, inf, ini, ino, iso, iss, itcl, itt, java, jfi, jfif, jpeg, jpg, jxl, joblib, js, jsm, json, json5, jsonc, jsonl, jsp, jsx, kix, kml, kontakt, kotlin, las, lex, lisp, litcoffee, logic, logicx, logx, loop, lsp, lst, lua, lv2, ltx, m, m4a, mak, mar, markdown, md, mediaplanx, metax, mib, mid, midi, mjs, mk, mkv, ml, mli, mlmodel, mlpackage, mm, mmp, mmpz, mms, modelx, mot, mov, motionx, mp3, mp4, m4v, mpc, mpeg, mts, m2ts, msi, mx, mxf, mxml, netx, neural, nim, nki, nkm, nks, nksf, nksn, nprj, npy, npz, nsh, nsi, nt, obj, odt, ods, ofx, ogg, omf, onnx, opus, orc, osx, p6, pack, pak, pcap, parquet, pas, pat, patch, pb, pcx, pdf, pgm, ph, php, php3, php4, php5, phps, phpt, pkl, pkg, pixelmapx, pl, plx, ply, pm, pm6, png, po, pod6, podcastx, pom, pr, pro, profile, properties, prores, proto, ps, ps1, psb, psd, psd1, psm1, pt, pt2, ptf, pts, pth, ptx, pxi, py, pyd, pyi, pyw, pyx, qif, qcp, quantumzip, r, r2, r3, r3d, raku, rakudoc, rakumod, rakutest, rap, rar, raw, rb, rbw, rc, reb, reg, rex, rex2, rpm, rpp, rs, rsn, rx2, s, safetensors, sas, scm, sco, scrollx, sf2, sfz, sh, shtm, shtml, simx, skp, smd, sml, snd, so, song, soundset, spf, spatiala, splus, sql, sqlite, src, srec, srt, ss, st, step, stl, stp, stpz, sty, sv, svg, svh, swift, sxml, systemx, t, t2t, tab, tar, tcl, tdd, tdm, tek, tex, textx, tga, tfrecord, tflite, thy, tiff, toml, trt, ts, tsql, tsx, txt, uasset, ultrax, umap, unity, unitypackage, url, usd, usda, usdc, usdz, v, vb, vba, vbs, vdx, vh, vhd, vhdl, volumetricx, vpk, vrm, vsd, vsdm, vsdx, vst, vst2, vst3, vstpreset, vtk, vtp, vtt, wad, wav, wavpack, wavx, webm, webp, webmanifest, webx, wer, wma, wmf, wol, wpg, wrl, worldx, x, x3d, x12, xaml, xcf, xdr, xht, xhtml, xls, xlsx, xltx, xml, xpj, xpm, xsd, xsl, xul, xz, yaml, yml, zip";
 
 const formatCategories = [
-  { name: "3D Model", icon: "🧊", formats: ["3dm", "3ds", "3mf", "blend", "dae", "fbx", "glb", "gltf", "ifc", "obj", "ply", "skp", "stl", "step", "stp", "stpz", "usd", "usdz", "vtk", "vtp", "wrl", "x3d"] },
-  { name: "AI", icon: "🤖", formats: ["json", "json5", "jsonc", "yaml", "yml"] },
-  { name: "AI Models", icon: "🧠", formats: ["ckpt", "gguf", "h5", "hdf5", "jsonl", "mar", "mlmodel", "mlpackage", "npy", "npz", "onnx", "parquet", "pb", "pkl", "pt", "pth", "safetensors", "tfrecord", "tflite"] },
-  { name: "Archive", icon: "📦", formats: ["iso", "rar", "zip"] },
-  { name: "Avatar", icon: "👤", formats: ["blend", "fbx", "glb", "gltf", "obj", "usd", "usdz"] },
-  { name: "Audio", icon: "🔊", formats: ["aac", "aif", "aiff", "au", "caf", "flac", "flp", "fst", "logic", "logicx", "mid", "midi", "mp3", "mpc", "ogg", "ptf", "pts", "ptx", "snd", "song", "pr", "wav"] },
-  { name: "Banking", icon: "🏦", formats: ["qif", "ofx", "csv", "xls", "xlsx"] },
-  { name: "CAD", icon: "🏗", formats: ["3dm", "dwg", "dxf", "ifc", "step", "stp", "stpz"] },
-  { name: "Document", icon: "📄", formats: ["doc", "docx", "dotx", "fdr", "fdx", "fdxt", "fountain", "litcoffee", "md", "pdf", "tex", "txt"] },
-  { name: "Finance", icon: "💰", formats: ["csv", "mx", "sql", "sqlite", "xls", "xlsx"] },
-  { name: "Film", icon: "🎬", formats: ["aaf", "edl", "omf", "mov", "mp4", "mpeg", "prores"] },
-  { name: "Gaming", icon: "🎮", formats: ["pak", "pack", "smd", "unity", "vpk", "wasm"] },
-  { name: "Graphics Design", icon: "🎨", formats: ["ai", "cdr", "cdt", "cmx", "psb", "psd", "xcf"] },
-  { name: "Hologram", icon: "🔮", formats: ["3dm", "fbx", "glb", "gltf", "obj", "usd", "usdz", "wrl", "x3d"] },
-  { name: "Image", icon: "🖼", formats: ["bmp", "dds", "dpx", "emf", "exr", "fax", "gif", "heic", "heif", "ico", "jfi", "jfif", "jpeg", "jpg", "pcx", "pgm", "png", "raw", "tga", "tiff", "webp", "wmf", "wpg", "xpm"] },
-  { name: "Metaverse", icon: "🌐", formats: ["blend", "fbx", "glb", "gltf", "obj", "usd", "usdz", "wasm"] },
-  { name: "Animated SVG", icon: "🌀", formats: ["animated gif", "gif", "svg", "webp"] },
-  { name: "Final Draft Script", icon: "🎭", formats: ["fdx", "fdxt", "fountain"] },
-  { name: "Music (DAW)", icon: "🎵", formats: ["aaf", "akp", "als", "caf", "flp", "fst", "fxt", "logic", "logicx", "mid", "midi", "mp3", "mpc", "song", "ptf", "pts", "ptx", "omf", "snd", "pgm", "xpm", "xpj", "wav"] },
-  { name: "Software", icon: "💻", formats: ["apk", "app", "deb", "dll", "dmg", "exe", "msi", "pkg", "rpm", "wer"] },
-  { name: "Spreadsheet", icon: "📊", formats: ["csv", "xls", "xlsx", "xltx", "tab"] },
-  { name: "Television", icon: "📺", formats: ["avi", "avif", "mov", "mp4", "mpeg", "mms", "wma"] },
-  { name: "SVG", icon: "🧬", formats: ["svg"] },
-  { name: "Technology", icon: "⚙️", formats: ["ada", "asm", "asp", "aspx", "bash", "bat", "c", "cbl", "cfg", "cmake", "cmd", "cob", "coffee", "conf", "config", "copy", "cpp", "cs", "d", "db", "diff", "erl", "f", "for", "forth", "gd", "gitattributes", "go", "h", "hpp", "hs", "html", "ini", "iso", "java", "js", "json", "jsp", "kotlin", "lex", "lisp", "lua", "m", "mak", "mm", "mxml", "nim", "pas", "patch", "php", "pl", "pm", "profile", "properties", "ps1", "py", "r", "rb", "reg", "rs", "s", "sas", "scm", "sco", "sh", "shtm", "shtml", "skp", "smd", "sml", "snd", "song", "spf", "splus", "sql", "sqlite", "src", "srec", "srt", "ss", "st", "step", "stl", "stp", "stpz", "sty", "sv", "svg", "svh", "swift", "sxml", "t", "t2t", "tab", "tcl", "tek", "tex", "tga", "thy", "tiff", "toml", "ts", "tsql", "tsx", "txt", "url", "usd", "usdz", "v", "vb", "vba", "vbs", "vdx", "vh", "vhd", "vhdl", "vsd", "vsdm", "vsdx", "vtk", "vtp", "vtt", "wasm", "wav", "webp", "wer", "wmf", "wol", "wpg", "wrl", "x", "x3d", "xaml", "xcf", "xht", "xhtml", "xls", "xlsx", "xltx", "xml", "xpj", "xpm", "xsd", "xsl", "xul", "yaml", "yml", "zip"] },
-  { name: "Vector", icon: "🧭", formats: ["ai", "cdr", "cmx", "svg", "emf", "wmf"] },
-  { name: "Video", icon: "🎥", formats: ["avi", "avif", "mov", "mp4", "mpeg", "mms", "wma"] },
-  { name: "Web", icon: "🌐", formats: ["asp", "aspx", "css", "htm", "html", "js", "jsx", "json", "php", "xml", "xhtml", "xht", "wasm"] },
+  { name: "3D Model", icon: "🧊", formats: ["3dm", "3ds", "3mf", "blend", "cadx", "cnc", "cob", "dae", "dwg", "dxf", "fbx", "fig", "glb", "gltf", "holo", "ifc", "mib", "modelx", "obj", "ply", "skp", "stl", "step", "stp", "stpz", "uasset", "umap", "usd", "usda", "usdz", "vrm", "vtk", "vtp", "wrl", "x3d"] },
+  { name: "4D Model", icon: "🌌", formats: ["4dx", "animx", "modelx", "motionx", "volumetricx"] },
+  { name: "5D Model", icon: "🌌", formats: ["5dx", "engx", "fabx", "simx"] },
+  { name: "6D Model", icon: "🌌", formats: ["6dx", "modelx", "neural", "systemx"] },
+  { name: "7D Model", icon: "🌌", formats: ["7dx", "engx", "netx"] },
+  { name: "8D Model", icon: "🌌", formats: ["8dx", "simx", "systemx", "volumetricx"] },
+  { name: "9D Model", icon: "🌌", formats: ["9dx", "engx", "simx", "worldx"] },
+  { name: "10D Model", icon: "🌌", formats: ["10dx", "cnc", "engx", "metax", "systemx"] },
+  { name: "11D Model", icon: "🌌", formats: ["11dx", "hdr", "proto", "volumetricx"] },
+  { name: "12D Model", icon: "🌌", formats: ["12dx", "engx", "systemx", "volumetricx"] },
+  { name: "AI", icon: "🤖", formats: ["avatx", "ckpt", "gguf", "h5", "humanx", "holo", "joblib", "json", "json5", "jsonc", "onnx", "safetensors", "yaml", "yml"] },
+  { name: "AI Avatar", icon: "🤖", formats: ["avatx", "avsi", "blend", "blender", "broadcastx", "ckpt", "crmdata", "fbx", "gguf", "glb", "gltf", "h5", "holo", "hologramx", "humanx", "imgx", "kontakt", "logx", "mediaplanx", "metax", "modelx", "mot", "motionx", "mp4", "pixelmapx", "png", "properties", "safetensors", "skp", "soundset", "volumetricx", "vpk", "vrm", "worldx"] },
+  { name: "AI Models", icon: "🧠", formats: ["audioml", "bin", "ckpt", "engine", "gguf", "h5", "hdf5", "holo", "humanx", "joblib", "jsonl", "mar", "mlmodel", "mlpackage", "neural", "npy", "npz", "onnx", "parquet", "pb", "pkl", "proto", "pt", "pth", "safetensors", "tfrecord", "tflite", "trt"] },
+  { name: "Animation", icon: "🌀", formats: ["abc", "animx", "bvh", "blend", "blender", "dae", "fbx", "gif", "gltf", "holo", "hologramx", "humanx", "modelx", "motionx", "mp4", "obj", "ply", "skp", "smd", "svg", "usd", "usda", "usdc", "usdz", "volumetricx", "vrm", "webp"] },
+  { name: "Archive", icon: "📦", formats: ["7z", "bz2", "cbr", "dbx", "gz", "iso", "jsonl", "quantumzip", "rar", "sql", "tar", "ultrax", "xml", "xz", "zip"] },
+  { name: "Audio & DAW", icon: "🔊", formats: ["aac", "aacp", "aaf", "ac3", "acd", "adx", "aif", "aiff", "akp", "alp", "als", "amr", "au", "audioml", "band", "bwf", "binauralx", "bwproject", "caf", "clap", "cda", "cwp", "exs", "flac", "flp", "fst", "fxb", "fxt", "gig", "kontakt", "logic", "logicx", "loop", "lv2", "m4a", "mid", "midi", "mp3", "mmp", "mmpz", "mpc", "nki", "nkm", "nks", "nksf", "nksn", "ogg", "omf", "opus", "pt", "pt2", "pr", "ptf", "pts", "ptx", "rex", "rex2", "rpp", "rsn", "rx2", "sf2", "sfz", "snd", "song", "soundset", "spatiala", "spf", "tracktionedit", "vst", "vst2", "vst3", "vstpreset", "wav", "wavpack", "wavx", "wma", "xpm", "xpj"] },
+  { name: "Banking", icon: "🏦", formats: ["csv", "doc", "docx", "ofx", "pdf", "qif", "xls", "xlsx"] },
+  { name: "Books", icon: "📚", formats: ["doc", "docx", "docx+", "epub", "litcoffee", "markdown", "md", "mobi", "pdf", "pod6", "scrollx", "txt"] },
+  { name: "Broadcast", icon: "📺", formats: ["3gp", "aaf", "animx", "ass", "avi", "avif", "avs", "broadcastx", "bwf", "dpx", "edl", "fbx", "fcpxmld", "fcpbundle", "fdr", "fdx", "fig", "fits", "flv", "fountain", "glb", "gltf", "hdr", "holo", "hologramx", "itt", "lrc", "mkv", "mms", "mxf", "mov", "motionx", "mts", "m2ts", "mp4", "m4v", "mpeg", "mxf", "ogg", "omf", "pr", "prores", "r3d", "rex", "rex2", "rx2", "srt", "txt", "volumetricx", "vtt", "webm", "wma", "wmf", "worldx"] },
+  { name: "CAD", icon: "🏗", formats: ["3dm", "3ds", "3mf", "abc", "blend", "cadx", "dae", "dwg", "dxf", "engx", "fabx", "fbx", "fig", "glb", "gltf", "ifc", "las", "obj", "step", "stl", "stp", "stpz", "vtk", "vtp"] },
+  { name: "Computing", icon: "💻", formats: ["ada", "adb", "ads", "apk", "app", "as", "asm", "bash", "bat", "bin", "c", "cbl", "cc", "ccx", "cfg", "cln", "cmake", "cmd", "coffee", "component", "conf", "config", "configx", "cpp", "cpy", "cs", "csd", "csh", "css", "csv", "cxx", "d", "datx", "dbx", "deb", "diff", "dll", "dmg", "env", "exe", "go", "gradle", "gql", "gz", "h", "hpp", "hs", "hta", "htm", "html", "ini", "inf", "ino", "iso", "iss", "java", "js", "jsm", "json", "json5", "jsonc", "jsonl", "jsp", "jsx", "kotlin", "lex", "lisp", "litcoffee", "logx", "lua", "lv2", "ltx", "m", "mak", "mar", "md", "mjs", "ml", "mli", "msi", "mx", "mxml", "nim", "nsh", "nsi", "nt", "osx", "pas", "patch", "php", "php3", "php4", "php5", "phps", "phpt", "pl", "plx", "pm", "pm6", "pom", "proto", "ps", "ps1", "psm1", "py", "pyd", "pyi", "pyw", "pyx", "rb", "rc", "reb", "reg", "rpm", "rs", "s", "sas", "scm", "sco", "sh", "shtm", "shtml", "sml", "so", "spf", "sql", "sqlite", "src", "srec", "ss", "st", "sty", "sv", "svh", "swift", "sxml", "systemx", "t", "t2t", "tab", "tar", "tcl", "tdm", "tex", "textx", "thy", "toml", "trt", "ts", "tsql", "tsx", "url", "v", "vb", "vba", "vbs", "vdx", "vh", "vhd", "vhdl", "vsd", "vsdm", "vsdx", "webmanifest", "webx", "wer", "wol", "x", "xaml", "xht", "xhtml", "xml", "xsd", "xsl", "xul", "yaml", "yml", "xz"] },
+  { name: "CRM & ERP", icon: "🧾", formats: ["crmdata", "csv", "datx", "erpdata", "feather", "fits", "gql", "gz", "h5", "hdf5", "joblib", "json", "json5", "jsonc", "jsonl", "mediaplanx", "metax", "ods", "parquet", "pb", "pkl", "proto", "sql", "sqlite", "tfrecord", "xls", "xlsx", "yaml", "yml"] },
+  { name: "Data", icon: "🧠", formats: ["7z", "bz2", "cbr", "crmdata", "csv", "datx", "dbx", "erpdata", "feather", "fits", "gql", "gz", "h5", "hdf5", "iso", "joblib", "json", "json5", "jsonc", "jsonl", "mediaplanx", "metax", "ods", "parquet", "pb", "pkl", "proto", "quantumzip", "sql", "sqlite", "tar", "tfrecord", "ultrax", "xls", "xlsx", "xml", "yaml", "yml", "xz", "zip"] },
+  { name: "Database", icon: "🗄", formats: ["accdb", "dbx", "mdb", "npy", "npz", "ods", "parquet", "sql", "sqlite", "xls", "xlsx"] },
+  { name: "Design", icon: "🎨", formats: ["ai", "avif", "bmp", "cdr", "cdt", "cmx", "dds", "dpx", "emf", "exr", "fax", "feather", "fig", "gif", "hdr", "heic", "heif", "ico", "jfi", "jfif", "jpeg", "jpg", "jxl", "pcx", "pdf", "pgm", "png", "psd", "raw", "tga", "tiff", "webp", "wmf", "wpg", "xcf", "xpm"] },
+  { name: "Distribution", icon: "📤", formats: ["adx", "apk", "app", "appx", "dmg", "exe", "iso", "msi", "pkg", "pod6", "rpm", "tar", "unitypackage", "zip", "7z", "bz2", "rar", "quantumzip", "webx"] },
+  { name: "Document", icon: "📄", formats: ["csv", "doc", "docx", "docx+", "epub", "fdr", "fdx", "fdxt", "fountain", "litcoffee", "markdown", "md", "pdf", "pod6", "ppt", "pptx", "rtf", "tex", "textx", "txt", "xls", "xlsx"] },
+  { name: "Engineering", icon: "🏗", formats: ["3dm", "3ds", "3mf", "abc", "blend", "cadx", "cnc", "dae", "dwg", "dxf", "engx", "fbx", "fig", "fits", "glb", "gltf", "holo", "hologramx", "ifc", "las", "modelx", "obj", "simx", "step", "stl", "stp", "stpz", "systemx", "volumetricx"] },
+  { name: "Finance", icon: "💰", formats: ["abc", "ac3", "csv", "datx", "doc", "docx", "engx", "fits", "mx", "ofx", "pdf", "qif", "sql", "sqlite", "ods", "parquet", "pb", "pkl", "ppt", "pptx", "proto", "quantumzip", "rtf", "txt", "xls", "xlsx"] },
+  { name: "Film & Video", icon: "🎬", formats: ["3gp", "aaf", "animx", "ass", "avi", "avc", "avif", "avs", "broadcastx", "dpx", "edl", "fbx", "fcpxmld", "fcpbundle", "fdr", "fdx", "fig", "fits", "flv", "fountain", "glb", "gltf", "hdr", "holo", "hologramx", "itt", "lrc", "mkv", "mms", "mxf", "mov", "motionx", "mts", "m2ts", "mp4", "m4v", "mpeg", "mxf", "ogg", "omf", "pr", "prores", "r3d", "rex", "rex2", "rx2", "srt", "txt", "volumetricx", "vtt", "webm", "wma", "wmf", "worldx"] },
+  { name: "Gaming", icon: "🎮", formats: ["3dm", "3ds", "3mf", "abc", "animx", "avatx", "blend", "blender", "bwproject", "cnc", "dae", "fbx", "glb", "gltf", "modelx", "motionx", "obj", "pak", "pack", "ply", "skp", "smd", "step", "stl", "uasset", "umap", "unity", "unitypackage", "usdz", "vpk", "vrm", "wasm", "worldx"] },
+  { name: "Graphics Design", icon: "🎨", formats: ["ai", "avif", "bmp", "cdr", "cdt", "cmx", "dds", "dpx", "emf", "exr", "fax", "feather", "fig", "gif", "hdr", "heic", "heif", "ico", "jfi", "jfif", "jpeg", "jpg", "jxl", "pcx", "pdf", "pgm", "png", "psd", "raw", "tga", "tiff", "webp", "wmf", "wpg", "xcf", "xpm"] },
+  { name: "Hologram", icon: "🔮", formats: ["3dm", "4dx", "5dx", "6dx", "7dx", "8dx", "9dx", "10dx", "11dx", "12dx", "fbx", "glb", "gltf", "holo", "hologramx", "lightfieldx", "hudx", "ledx", "volumetricx", "vrm", "worldx", "usd", "usda", "usdc", "usdz", "wrl", "x3d"] },
+  { name: "HUD Elements", icon: "🖥", formats: ["4dx", "5dx", "6dx", "7dx", "8dx", "9dx", "10dx", "11dx", "12dx", "animated gif", "bmp", "fig", "gif", "hudx", "ico", "imgx", "ledx", "pixelmapx", "png", "svg", "svh", "uiuxx", "webp", "xcf", "xpm"] },
+  { name: "Image", icon: "🖼", formats: ["ai", "avif", "bmp", "cdr", "cdt", "cmx", "dds", "dpx", "emf", "eps", "exr", "fax", "feather", "fig", "gif", "hdr", "heic", "heif", "icns", "ico", "jfi", "jfif", "jpeg", "jpg", "jxl", "otf", "pcx", "pdf", "pgm", "png", "psd", "raw", "svg", "tga", "tif", "tiff", "ttf", "webp", "wmf", "wpg", "xcf", "xpm"] },
+  { name: "Industrial", icon: "🏭", formats: ["3dm", "3ds", "3mf", "abc", "blend", "cadx", "cnc", "dae", "dwg", "dxf", "engx", "fabx", "fbx", "glb", "gltf", "holo", "hologramx", "ifc", "las", "modelx", "obj", "simx", "step", "stl", "stp", "stpz", "systemx", "volumetricx"] },
+  { name: "Information Technology", icon: "🖥", formats: ["apk", "ada", "app", "adb", "ads", "bash", "bat", "bin", "c", "cfg", "cln", "cmake", "cmd", "component", "conf", "config", "configx", "cpp", "cs", "css", "csv", "datx", "dbx", "dll", "dmg", "env", "exe", "gradle", "go", "gql", "gz", "h", "hpp", "hs", "html", "ini", "inf", "iso", "iss", "java", "js", "json", "json5", "jsonc", "jsonl", "jsp", "jsx", "kotlin", "logx", "lua", "lv2", "m", "mak", "mar", "md", "mjs", "ml", "mli", "msi", "mx", "mxml", "nim", "nsh", "nsi", "nt", "osx", "pas", "patch", "php", "php3", "php4", "php5", "phps", "phpt", "pl", "plx", "pm", "pm6", "pom", "proto", "ps", "ps1", "psm1", "py", "pyd", "pyi", "pyw", "pyx", "rb", "rc", "reb", "reg", "rpm", "rs", "s", "sas", "scm", "sco", "sh", "shtm", "shtml", "sml", "so", "spf", "sql", "sqlite", "src", "srec", "ss", "st", "sty", "sv", "svh", "swift", "sxml", "systemx", "sysx", "t", "t2t", "tab", "tar", "tcl", "tdm", "tex", "textx", "thy", "toml", "trt", "ts", "tsql", "tsx", "url", "v", "vb", "vba", "vbs", "vdx", "vh", "vhd", "vhdl", "vsd", "vsdm", "vsdx", "webmanifest", "webx", "wer", "wol", "x", "xaml", "xht", "xhtml", "xml", "xsd", "xsl", "xul", "yaml", "yml", "xz"] },
+  { name: "Interface", icon: "🖥", formats: ["animated gif", "bmp", "css", "fig", "gif", "hudx", "ico", "imgx", "js", "jsx", "pixelmapx", "png", "svg", "svh", "uiuxx", "webp", "xcf", "xpm", "html", "xml"] },
+  { name: "Final Draft Script", icon: "🎭", formats: ["fdr", "fdx", "fdxt", "fountain", "pod6", "textx"] },
+  { name: "LED", icon: "💡", formats: ["bmp", "fig", "gif", "hudx", "ico", "imgx", "ledx", "pixelmapx", "png", "svg", "svh", "tga", "tiff", "uiuxx", "webp", "xcf", "xpm"] },
+  { name: "Legal", icon: "⚖️", formats: ["doc", "docx", "docx+", "dpdoc", "epub", "fountain", "litcoffee", "markdown", "md", "odt", "ods", "pdf", "pod6", "rakudoc", "rtf", "textx", "txt", "xls", "xlsx", "xltx"] },
+  { name: "Management", icon: "🧠", formats: ["crmdata", "csv", "doc", "docx", "docx+", "erpdata", "markdown", "md", "mediaplanx", "metax", "profile", "properties", "sql", "sqlite", "xls", "xlsx", "ods"] },
+  { name: "Marketing & PR", icon: "📢", formats: ["ai", "adx", "animated gif", "avatx", "broadcastx", "campaignx", "eps", "feather", "fig", "gif", "ico", "imgx", "jpeg", "jpg", "mediaplanx", "metax", "pdf", "png", "profile", "properties", "svg", "svh", "tiff", "webp", "worldx"] },
+  { name: "Manufacturing", icon: "🏭", formats: ["3dm", "3ds", "3mf", "abc", "blend", "cadx", "cnc", "dae", "dwg", "dxf", "engx", "fabx", "glb", "gltf", "holo", "hologramx", "ifc", "las", "modelx", "obj", "simx", "step", "stl", "stp", "stpz", "systemx", "volumetricx"] },
+  { name: "Metaverse", icon: "🌐", formats: ["avatx", "blend", "blender", "ckpt", "fbx", "gguf", "glb", "gltf", "h5", "holo", "hologramx", "humanx", "joblib", "metax", "modelx", "motionx", "obj", "ply", "safetensors", "simx", "skp", "smd", "stl", "usd", "usda", "usdc", "usdz", "volumetricx", "vrm", "wasm", "worldx"] },
+  { name: "Music & Audio (DAW)", icon: "🎵", formats: ["aac", "aacp", "aaf", "ac3", "acd", "adx", "aif", "aiff", "akp", "alp", "als", "amr", "au", "audioml", "band", "bwf", "binauralx", "bwproject", "caf", "clap", "cda", "cwp", "exs", "flac", "flp", "fst", "fxb", "fxt", "gig", "kontakt", "logic", "logicx", "loop", "lv2", "m4a", "mid", "midi", "mp3", "mmp", "mmpz", "mpc", "nki", "nkm", "nks", "nksf", "nksn", "ogg", "omf", "opus", "pt", "pt2", "pr", "ptf", "pts", "ptx", "rex", "rex2", "rpp", "rsn", "rx2", "sf2", "sfz", "snd", "song", "soundset", "spatiala", "spf", "tracktionedit", "vst", "vst2", "vst3", "vstpreset", "wav", "wavpack", "wavx", "wma", "xpm", "xpj"] },
+  { name: "Network & Telecommunications", icon: "🌐", formats: ["3gp", "3g2", "3gpp", "amr", "apk", "app", "avro", "bin", "c", "cfg", "conf", "configx", "cpp", "csv", "datx", "exe", "edi", "edifact", "g729", "go", "gsm", "gql", "gz", "html", "ini", "inf", "iso", "java", "js", "json", "json5", "jsonc", "jsonl", "logx", "lua", "mmf", "netx", "opus", "p6", "parquet", "pat", "pcap", "php", "proto", "py", "qcp", "rap", "rb", "reg", "sh", "sql", "systemx", "tap", "toml", "trt", "ts", "url", "vox", "x12", "xdr", "xml", "xsd", "wav", "yaml", "yml"] },
+  { name: "Operating Systems", icon: "💻", formats: ["apk", "app", "appx", "bin", "c", "cpp", "cs", "css", "component", "configs", "deb", "dll", "dmg", "exe", "html", "kernel", "kernelx", "go", "iso", "java", "js", "json", "lua", "msi", "osx", "pkg", "php", "py", "rb", "rpm", "sh", "so", "systemx", "ts", "unitypackage", "vhd", "vhdl", "vdx", "webmanifest", "wer", "xul"] },
+  { name: "Plugins", icon: "🔌", formats: ["clap", "dll", "component", "dpm", "fxb", "fxp", "kontakt", "lv2", "pluginx", "pt", "pt2", "so", "vst", "vst2", "vst3", "vstpreset"] },
+  { name: "Podcast", icon: "🎙", formats: ["aac", "aacp", "ac3", "amr", "audioml", "mp3", "m4a", "ogg", "opus", "podcastx", "rss", "txt", "mp4", "xml", "wav", "wavpack", "wavx"] },
+  { name: "Publishing", icon: "📚", formats: ["7z", "ai", "aab", "aiff", "apk", "app", "csv", "doc", "docx", "dcp", "dds", "dmg", "eps", "epub", "exe", "feather", "fbx", "fig", "jpg", "gif", "glb", "gltf", "html", "ico", "indd", "ipa", "js", "jpeg", "jpg", "kpf", "lsx", "markdown", "md", "midi", "mp3", "msi", "obj", "ogg", "pak", "pkg", "pdf", "png", "ppt", "pptx", "prores", "psb", "psd", "rar", "svg", "svh", "tiff", "rtf", "tga", "txt", "uwp", "unitypackage", "wad", "wav", "webp", "xcf", "xlsx", "xpm", "zip"] },
+  { name: "Sacred Text", icon: "🕊", formats: ["doc", "docx", "epub", "pdf", "pod6", "scrollx", "txt", "xml", "yaml", "yml"] },
+  { name: "Software", icon: "💻", formats: ["apk", "app", "appx", "bin", "c", "cpp", "cs", "css", "component", "configs", "deb", "dll", "dmg", "exe", "html", "kernel", "kernelx", "go", "iso", "java", "js", "json", "lua", "msi", "osx", "pkg", "php", "py", "rb", "rpm", "sh", "so", "systemx", "ts", "unitypackage", "vhd", "vhdl", "vdx", "webmanifest", "wer", "xul"] },
+  { name: "Sovereign OS", icon: "🛡️", formats: ["bin", "configs", "deb", "dmg", "exe", "iso", "kernelx", "osx", "pkg", "rpm", "systemx", "vhd", "vhdl", "xul"] },
+  { name: "Servers", icon: "🖥", formats: ["cfg", "conf", "config", "configx", "datx", "deb", "dbx", "dll", "dmg", "env", "exe", "gql", "gz", "ini", "inf", "iso", "json", "json5", "jsonc", "jsonl", "logx", "netx", "php", "php3", "php4", "php5", "phps", "phpt", "proto", "rc", "reb", "reg", "rpm", "serverx", "sql", "sqlite", "systemx", "tar", "trt", "url", "xml", "yaml", "yml"] },
+  { name: "Spreadsheet", icon: "📊", formats: ["csv", "ods", "pdf", "tab", "xls", "xlsx", "xltx"] },
+  { name: "SVG", icon: "🌀", formats: ["animated gif", "gif", "svg", "svh", "webp", "xml", "xsl"] },
+  { name: "Technology", icon: "⚙️", formats: ["apk", "ada", "adb", "ads", "asm", "app", "asp", "aspx", "bash", "bat", "bin", "c", "cbl", "cfg", "cln", "cmake", "cmd", "cob", "component", "coffee", "conf", "config", "configx", "copy", "cpp", "cs", "csd", "csh", "css", "csv", "cue", "d", "datx", "db", "dbx", "diff", "dll", "dmg", "erl", "env", "exe", "f", "for", "forth", "gd", "gitattributes", "gql", "go", "gz", "h", "hpp", "hs", "html", "ini", "inf", "iso", "iss", "java", "js", "jsm", "json", "json5", "jsonc", "jsonl", "jsp", "jsx", "kotlin", "logx", "lex", "lisp", "lua", "lv2", "m", "mak", "mar", "md", "mli", "mjs", "ml", "msi", "mx", "mm", "mxml", "nim", "nsh", "nsi", "nt", "osx", "pas", "patch", "php", "php3", "php4", "php5", "phpt", "pl", "plx", "pm", "pm6", "pom", "profile", "properties", "proto", "ps", "ps1", "psm1", "py", "pyd", "pyi", "pyw", "pyx", "r", "rb", "rc", "reb", "reg", "rpm", "rs", "s", "sas", "scm", "sco", "sh", "shtm", "shtml", "skp", "smd", "sml", "snd", "so", "song", "spf", "splus", "sql", "sqlite", "src", "srec", "srt", "ss", "st", "step", "stl", "stp", "stpz", "sty", "sv", "svg", "svh", "swift", "sxml", "t", "t2t", "tab", "tar", "tcl", "tdm", "tek", "tex", "tga", "thy", "tiff", "toml", "ts", "tsql", "tsx", "txt", "url", "usd", "usdz", "v", "vb", "vba", "vbs", "vdx", "vh", "vhd", "vhdl", "vsd", "vsdm", "vsdx", "vtk", "vtp", "vtt", "wasm", "wav", "webp", "webmanifest", "wer", "wmf", "wol", "wpg", "wrl", "x", "x3d", "xaml", "xcf", "xht", "xhtml", "xls", "xlsx", "xltx", "xml", "xpj", "xpm", "xsd", "xsl", "xul", "yaml", "yml", "xz", "zip"] },
+  { name: "Television", icon: "📺", formats: ["3gp", "aaf", "animx", "ass", "avi", "avif", "avs", "broadcastx", "bwf", "dpx", "edl", "fbx", "fcpxmld", "fcpbundle", "fdr", "fdx", "fig", "fits", "flv", "fountain", "glb", "gltf", "hdr", "holo", "hologramx", "itt", "lrc", "mkv", "mms", "mxf", "mov", "motionx", "mts", "m2ts", "mp4", "m4v", "mpeg", "mxf", "ogg", "omf", "pr", "prores", "r3d", "rex", "rex2", "rx2", "srt", "txt", "volumetricx", "vtt", "webm", "wma", "wmf", "worldx"] },
+  { name: "Trading", icon: "📈", formats: ["abc", "csv", "datx", "json", "jsonl", "ods", "parquet", "pb", "pkl", "proto", "qif", "sql", "sqlite", "txt", "xls", "xlsx"] },
+  { name: "Vector", icon: "🧭", formats: ["ai", "cdr", "cdt", "cmx", "emf", "eps", "feather", "fig", "svg", "svh", "wmf", "xcf", "xpm"] },
+  { name: "Video & Film", icon: "🎥", formats: ["3gp", "aaf", "animx", "ass", "avi", "avc", "avif", "avs", "dpx", "edl", "fbx", "fcpxmld", "fcpbundle", "fdr", "fdx", "fig", "fits", "flv", "fountain", "glb", "gltf", "hdr", "holo", "hologramx", "itt", "lrc", "mkv", "mms", "mxf", "mov", "motionx", "mts", "m2ts", "mp4", "m4v", "mpeg", "mxf", "ogg", "omf", "pr", "prores", "r3d", "rex", "rex2", "rx2", "srt", "txt", "volumetricx", "vtt", "webm", "wma", "wmf", "worldx"] },
+  { name: "Web/App", icon: "🌐", formats: ["animated gif", "apk", "app", "appx", "asp", "aspx", "cpp", "css", "csv", "gif", "htm", "html", "ico", "imgx", "java", "jpeg", "jpg", "js", "jsm", "json", "json5", "jsonc", "jsonl", "jsp", "jsx", "php", "php3", "php4", "php5", "phps", "phpt", "png", "svg", "svh", "ts", "tsx", "wasm", "webm", "webp", "webmanifest", "xht", "xhtm", "xhtml", "xml"] },
 ];
 
 const syncServices = [
@@ -166,12 +202,73 @@ const UniversalFileSystem = () => {
             </section>
             <section>
               <h2 className="text-2xl font-bold mb-8">Supported File Formats & Standards</h2>
+              <p className="text-sm text-muted-foreground mb-6">Industry-standard format support across all media types</p>
               <Tabs defaultValue="all" className="w-full">
                 <TabsList className="flex flex-wrap justify-center gap-1 bg-transparent h-auto p-0 mb-6">
                   <TabsTrigger value="all" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-4 py-2">All</TabsTrigger>
+                  <TabsTrigger value="3dmodel" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-4 py-2">3D Model</TabsTrigger>
+                  <TabsTrigger value="4dmodel" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-4 py-2">4D Model</TabsTrigger>
+                  <TabsTrigger value="5dmodel" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-4 py-2">5D Model</TabsTrigger>
+                  <TabsTrigger value="6dmodel" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-4 py-2">6D Model</TabsTrigger>
+                  <TabsTrigger value="7dmodel" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-4 py-2">7D Model</TabsTrigger>
+                  <TabsTrigger value="8dmodel" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-4 py-2">8D Model</TabsTrigger>
+                  <TabsTrigger value="9dmodel" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-4 py-2">9D Model</TabsTrigger>
+                  <TabsTrigger value="10dmodel" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-4 py-2">10D Model</TabsTrigger>
+                  <TabsTrigger value="11dmodel" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-4 py-2">11D Model</TabsTrigger>
+                  <TabsTrigger value="12dmodel" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-4 py-2">12D Model</TabsTrigger>
+                  <TabsTrigger value="ai" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-4 py-2">AI</TabsTrigger>
+                  <TabsTrigger value="aiavatar" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-4 py-2">AI Avatar</TabsTrigger>
+                  <TabsTrigger value="aimodels" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-4 py-2">AI Models</TabsTrigger>
+                  <TabsTrigger value="animation" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-4 py-2">Animation</TabsTrigger>
+                  <TabsTrigger value="archive" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-4 py-2">Archive</TabsTrigger>
+                  <TabsTrigger value="audio" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-4 py-2">Audio & DAW</TabsTrigger>
+                  <TabsTrigger value="banking" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-4 py-2">Banking</TabsTrigger>
+                  <TabsTrigger value="books" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-4 py-2">Books</TabsTrigger>
+                  <TabsTrigger value="broadcast" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-4 py-2">Broadcast</TabsTrigger>
+                  <TabsTrigger value="cad" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-4 py-2">CAD</TabsTrigger>
+                  <TabsTrigger value="computing" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-4 py-2">Computing</TabsTrigger>
+                  <TabsTrigger value="crm" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-4 py-2">CRM & ERP</TabsTrigger>
+                  <TabsTrigger value="data" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-4 py-2">Data</TabsTrigger>
+                  <TabsTrigger value="database" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-4 py-2">Database</TabsTrigger>
+                  <TabsTrigger value="design" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-4 py-2">Design</TabsTrigger>
+                  <TabsTrigger value="distribution" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-4 py-2">Distribution</TabsTrigger>
+                  <TabsTrigger value="document" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-4 py-2">Document</TabsTrigger>
+                  <TabsTrigger value="engineering" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-4 py-2">Engineering</TabsTrigger>
+                  <TabsTrigger value="finance" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-4 py-2">Finance</TabsTrigger>
+                  <TabsTrigger value="film" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-4 py-2">Film & Video</TabsTrigger>
+                  <TabsTrigger value="gaming" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-4 py-2">Gaming</TabsTrigger>
+                  <TabsTrigger value="graphics" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-4 py-2">Graphics Design</TabsTrigger>
                   <TabsTrigger value="hologram" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-4 py-2">Hologram</TabsTrigger>
+                  <TabsTrigger value="hud" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-4 py-2">HUD Elements</TabsTrigger>
+                  <TabsTrigger value="image" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-4 py-2">Image</TabsTrigger>
+                  <TabsTrigger value="industrial" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-4 py-2">Industrial</TabsTrigger>
+                  <TabsTrigger value="it" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-4 py-2">Information Technology</TabsTrigger>
+                  <TabsTrigger value="interface" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-4 py-2">Interface</TabsTrigger>
+                  <TabsTrigger value="script" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-4 py-2">Final Draft Script</TabsTrigger>
+                  <TabsTrigger value="led" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-4 py-2">LED</TabsTrigger>
+                  <TabsTrigger value="legal" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-4 py-2">Legal</TabsTrigger>
+                  <TabsTrigger value="management" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-4 py-2">Management</TabsTrigger>
+                  <TabsTrigger value="marketing" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-4 py-2">Marketing & PR</TabsTrigger>
+                  <TabsTrigger value="manufacturing" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-4 py-2">Manufacturing</TabsTrigger>
                   <TabsTrigger value="metaverse" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-4 py-2">Metaverse</TabsTrigger>
+                  <TabsTrigger value="music" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-4 py-2">Music & Audio (DAW)</TabsTrigger>
+                  <TabsTrigger value="network" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-4 py-2">Network & Telecommunications</TabsTrigger>
+                  <TabsTrigger value="os" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-4 py-2">Operating Systems</TabsTrigger>
+                  <TabsTrigger value="plugins" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-4 py-2">Plugins</TabsTrigger>
+                  <TabsTrigger value="podcast" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-4 py-2">Podcast</TabsTrigger>
+                  <TabsTrigger value="publishing" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-4 py-2">Publishing</TabsTrigger>
+                  <TabsTrigger value="sacred" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-4 py-2">Sacred Text</TabsTrigger>
+                  <TabsTrigger value="software" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-4 py-2">Software</TabsTrigger>
+                  <TabsTrigger value="sovereign" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-4 py-2">Sovereign OS</TabsTrigger>
+                  <TabsTrigger value="servers" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-4 py-2">Servers</TabsTrigger>
+                  <TabsTrigger value="spreadsheet" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-4 py-2">Spreadsheet</TabsTrigger>
+                  <TabsTrigger value="svg" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-4 py-2">SVG</TabsTrigger>
+                  <TabsTrigger value="technology" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-4 py-2">Technology</TabsTrigger>
                   <TabsTrigger value="television" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-4 py-2">Television</TabsTrigger>
+                  <TabsTrigger value="trading" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-4 py-2">Trading</TabsTrigger>
+                  <TabsTrigger value="vector" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-4 py-2">Vector</TabsTrigger>
+                  <TabsTrigger value="video" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-4 py-2">Video & Film</TabsTrigger>
+                  <TabsTrigger value="web" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-4 py-2">Web/App</TabsTrigger>
                 </TabsList>
                 <TabsContent value="all">
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -192,57 +289,93 @@ const UniversalFileSystem = () => {
                     ))}
                   </div>
                 </TabsContent>
-                <TabsContent value="hologram">
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <Card className="bg-card/50 border-border/50 hover:border-primary/30 transition-all shadow-none">
-                      <CardHeader className="flex flex-row items-center gap-4 pb-2">
-                        <div className="text-2xl">🔮</div>
-                        <CardTitle className="text-base">Hologram</CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="flex flex-wrap gap-1">
-                          {formatCategories.find(c => c.name === "Hologram")?.formats.map((fmt) => (
-                            <Badge key={fmt} variant="secondary" className="text-[10px] px-1.5 py-0 bg-primary/5 text-primary/80 font-mono">{fmt}</Badge>
-                          ))}
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </div>
-                </TabsContent>
-                <TabsContent value="metaverse">
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <Card className="bg-card/50 border-border/50 hover:border-primary/30 transition-all shadow-none">
-                      <CardHeader className="flex flex-row items-center gap-4 pb-2">
-                        <div className="text-2xl">🌐</div>
-                        <CardTitle className="text-base">Metaverse</CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="flex flex-wrap gap-1">
-                          {formatCategories.find(c => c.name === "Metaverse")?.formats.map((fmt) => (
-                            <Badge key={fmt} variant="secondary" className="text-[10px] px-1.5 py-0 bg-primary/5 text-primary/80 font-mono">{fmt}</Badge>
-                          ))}
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </div>
-                </TabsContent>
-                <TabsContent value="television">
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <Card className="bg-card/50 border-border/50 hover:border-primary/30 transition-all shadow-none">
-                      <CardHeader className="flex flex-row items-center gap-4 pb-2">
-                        <div className="text-2xl">📺</div>
-                        <CardTitle className="text-base">Television</CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="flex flex-wrap gap-1">
-                          {formatCategories.find(c => c.name === "Television")?.formats.map((fmt) => (
-                            <Badge key={fmt} variant="secondary" className="text-[10px] px-1.5 py-0 bg-primary/5 text-primary/80 font-mono">{fmt}</Badge>
-                          ))}
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </div>
-                </TabsContent>
+                {[
+                  { value: "3dmodel", name: "3D Model" },
+                  { value: "4dmodel", name: "4D Model" },
+                  { value: "5dmodel", name: "5D Model" },
+                  { value: "6dmodel", name: "6D Model" },
+                  { value: "7dmodel", name: "7D Model" },
+                  { value: "8dmodel", name: "8D Model" },
+                  { value: "9dmodel", name: "9D Model" },
+                  { value: "10dmodel", name: "10D Model" },
+                  { value: "11dmodel", name: "11D Model" },
+                  { value: "12dmodel", name: "12D Model" },
+                  { value: "ai", name: "AI" },
+                  { value: "aiavatar", name: "AI Avatar" },
+                  { value: "aimodels", name: "AI Models" },
+                  { value: "animation", name: "Animation" },
+                  { value: "archive", name: "Archive" },
+                  { value: "audio", name: "Audio & DAW" },
+                  { value: "banking", name: "Banking" },
+                  { value: "books", name: "Books" },
+                  { value: "broadcast", name: "Broadcast" },
+                  { value: "cad", name: "CAD" },
+                  { value: "computing", name: "Computing" },
+                  { value: "crm", name: "CRM & ERP" },
+                  { value: "data", name: "Data" },
+                  { value: "database", name: "Database" },
+                  { value: "design", name: "Design" },
+                  { value: "distribution", name: "Distribution" },
+                  { value: "document", name: "Document" },
+                  { value: "engineering", name: "Engineering" },
+                  { value: "finance", name: "Finance" },
+                  { value: "film", name: "Film & Video" },
+                  { value: "gaming", name: "Gaming" },
+                  { value: "graphics", name: "Graphics Design" },
+                  { value: "hologram", name: "Hologram" },
+                  { value: "hud", name: "HUD Elements" },
+                  { value: "image", name: "Image" },
+                  { value: "industrial", name: "Industrial" },
+                  { value: "it", name: "Information Technology" },
+                  { value: "interface", name: "Interface" },
+                  { value: "script", name: "Final Draft Script" },
+                  { value: "led", name: "LED" },
+                  { value: "legal", name: "Legal" },
+                  { value: "management", name: "Management" },
+                  { value: "marketing", name: "Marketing & PR" },
+                  { value: "manufacturing", name: "Manufacturing" },
+                  { value: "metaverse", name: "Metaverse" },
+                  { value: "music", name: "Music & Audio (DAW)" },
+                  { value: "network", name: "Network & Telecommunications" },
+                  { value: "os", name: "Operating Systems" },
+                  { value: "plugins", name: "Plugins" },
+                  { value: "podcast", name: "Podcast" },
+                  { value: "publishing", name: "Publishing" },
+                  { value: "sacred", name: "Sacred Text" },
+                  { value: "software", name: "Software" },
+                  { value: "sovereign", name: "Sovereign OS" },
+                  { value: "servers", name: "Servers" },
+                  { value: "spreadsheet", name: "Spreadsheet" },
+                  { value: "svg", name: "SVG" },
+                  { value: "technology", name: "Technology" },
+                  { value: "television", name: "Television" },
+                  { value: "trading", name: "Trading" },
+                  { value: "vector", name: "Vector" },
+                  { value: "video", name: "Video & Film" },
+                  { value: "web", name: "Web/App" },
+                ].map((tab) => {
+                  const cat = formatCategories.find(c => c.name === tab.name);
+                  if (!cat) return null;
+                  return (
+                    <TabsContent key={tab.value} value={tab.value}>
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <Card className="bg-card/50 border-border/50 hover:border-primary/30 transition-all shadow-none">
+                          <CardHeader className="flex flex-row items-center gap-4 pb-2">
+                            <div className="text-2xl">{cat.icon}</div>
+                            <CardTitle className="text-base">{cat.name}</CardTitle>
+                          </CardHeader>
+                          <CardContent>
+                            <div className="flex flex-wrap gap-1">
+                              {cat.formats.map((fmt) => (
+                                <Badge key={fmt} variant="secondary" className="text-[10px] px-1.5 py-0 bg-primary/5 text-primary/80 font-mono">{fmt}</Badge>
+                              ))}
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </div>
+                    </TabsContent>
+                  );
+                })}
               </Tabs>
             </section>
           </div>
