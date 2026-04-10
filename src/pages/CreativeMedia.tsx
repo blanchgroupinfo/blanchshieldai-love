@@ -619,7 +619,7 @@ const ecosystemActionBadges = [
   "S.H.I.E.L.D. AI Update","S.H.I.E.L.D. AI Upgrade", "S.H.I.E.L.D. AI Upload", "S.H.I.E.L.D. AI Produce", "AI Promote", "S.H.I.E.L.D. AI Publish", "S.H.I.E.L.D. AI Quality", "S.H.I.E.L.D. AI Realistic", "S.H.I.E.L.D. AI Scan",
   "S.H.I.E.L.D. AI Share", "S.H.I.E.L.D. AI Save", "S.H.I.E.L.D. AI Scripture", "S.H.I.E.L.D. AI Storage", "S.H.I.E.L.D. AI Suggestions", "S.H.I.E.L.D. AI Swap", "S.H.I.E.L.D. AI Upload", "S.H.I.E.L.D. AI Universal", "S.H.I.E.L.D. AI Visualize", 
 ];
-];
+
 
 const limitlessCapabilityChips = [
   "AI-Assisted Copywriting", "Import & Save to Blanch Drive", "Import & Save to S.H.I.E.L.D. AI Drive",
