@@ -636,7 +636,7 @@ type NeuroStudioItem = {
 };
 
 const neuroCreativeStudios: NeuroStudioItem[] = [
-  { title: "AI Generative Art", desc: "Create stunning visuals, paintings, and digital artwork with advanced AI models", icon: Palette },
+  { title: "S.H.I.E.L.D. AI Generative Art", desc: "Create stunning visuals, paintings, and digital artwork with S.H.I.E.L.D. AI & Unified advanced AI models", icon: Palette },
   { title: "Video Production Studio", desc: "AI-enhanced video editing, rendering, and automated post-production workflows", icon: Clapperboard },
   { title: "Digital Audio Workstation", desc: "Compose, mix, and master audio tracks with S.H.I.E.L.D. AI sound engineering", icon: Headphones },
   { title: "Digital Magazine Publisher", desc: "Create interactive, beautifully designed digital magazines and publications", icon: Newspaper },
