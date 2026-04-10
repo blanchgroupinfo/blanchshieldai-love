@@ -614,11 +614,11 @@ const allFormats = [
 ]
 
 const ecosystemActionBadges = [
-  "Create", "Convert", "Design", "Distribute", "Edit", "Evolve", "Generate", "Produce", "Publish", "Share", "Save", "Swap",
-  "AI Automate", "AI Animate", "AI Build", "AI Create", "AI Convert", "AI Design", "AI Develop", "AI Direct",
-  "AI Distribute", "AI  Edit", "AI Evolve", "AI Generate", "AI Illustrate", "AI Market", "AI Network",
-  "AI Upgrade", "AI Produce", "AI Promote", "AI Publish", "AI Quality", "AI Realistic", "AI Scan",
-  "AI Share", "AI Save", "AI Scripture", "AI Swap", "AI Visualize",
+ "S.H.I.E.L.D. AI Automate", "S.H.I.E.L.D. AI Animate", "S.H.I.E.L.D. AI Agents", "S.H.I.E.L.D. AI Build", "S.H.I.E.L.D. AI Cloud", "S.H.I.E.L.D. AI Code Animate", "S.H.I.E.L.D. AI Convert", "S.H.I.E.L.D. AI Create Anything", "S.H.I.E.L.D. AI Deep Search", "S.H.I.E.L.D. AI Design",  "S.H.I.E.L.D. AI Drive", "S.H.I.E.L.D. AI Develop", "S.H.I.E.L.D. AI Engineer", "S.H.I.E.L.D. AI Direct",
+  "S.H.I.E.L.D. AI Distribute", "S.H.I.E.L.D. AI Edit", "S.H.I.E.L.D. AI Evolve", "S.H.I.E.L.D. AI Generate", "S.H.I.E.L.D. AI Illustrate", "S.H.I.E.L.D. AI Manage", "S.H.I.E.L.D. AI Market", "S.H.I.E.L.D. AI Network",
+  "S.H.I.E.L.D. AI Update","S.H.I.E.L.D. AI Upgrade", "S.H.I.E.L.D. AI Upload", "S.H.I.E.L.D. AI Produce", "AI Promote", "S.H.I.E.L.D. AI Publish", "S.H.I.E.L.D. AI Quality", "S.H.I.E.L.D. AI Realistic", "S.H.I.E.L.D. AI Scan",
+  "S.H.I.E.L.D. AI Share", "S.H.I.E.L.D. AI Save", "S.H.I.E.L.D. AI Scripture", "S.H.I.E.L.D. AI Storage", "S.H.I.E.L.D. AI Suggestions", "S.H.I.E.L.D. AI Swap", "S.H.I.E.L.D. AI Upload", "S.H.I.E.L.D. AI Universal", "S.H.I.E.L.D. AI Visualize", 
+];
 ];
 
 const limitlessCapabilityChips = [
