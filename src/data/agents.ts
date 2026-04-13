@@ -8,7 +8,7 @@ export interface Agent {
 }
 
 // H.I.I. AI = Hebrew Israelite Implementer Aboriginal Identity
-// Format: H.I.I. AIXXX where XXX is the sequential number (001-1175)
+// Format: H.I.I. AIXXX where XXX is the sequential number (000-1175 = 1176 agents)
 export const generateHIIAgentNumber = (id: string): string => {
   const num = id.replace("AI", "");
   return `H.I.I. AI${num.padStart(3, "0")}`;
@@ -128,7 +128,7 @@ export const agentCategories = [
 
 export const agents: Agent[] = [
   // 1. CORE AI & ARCHITECTURE (AI000-AI035) 
-  { id: "AI000", name: "H.I.I. AI000: Arch-Overseer of the Shaham Sovereign S.H.I.E.L.D. OS ", category: "Core AI & Architecture", categoryNumber: 1, isCategory: true},
+  { id: "AI000", name: "H.I.I. AI000: Arch-Overseer of the Blanch Sovereign OS & S.H.I.E.L.D. AI OS ", category: "Core AI & Architecture", categoryNumber: 1, isCategory: true},
   { id: "AI001", name: "S.H.I.E.L.D. AI Agent Architecture & Intelligence Agents", category: "Core AI & Architecture", categoryNumber: 1, isCategory: true },
   { id: "AI002", name: "S.H.I.E.L.D. AI Automation All Agents", category: "Core AI & Architecture", categoryNumber: 1 },
   { id: "AI003", name: "S.H.I.E.L.D. AI Foundational Intelligence Models Agent", category: "Core AI & Architecture", categoryNumber: 1 },
@@ -1514,7 +1514,7 @@ export const agents: Agent[] = [
   { id: "AI1175", name: "Kingdom Fulfillment Agent", category: "Eternal Kingdom Operations", categoryNumber: 105 },
 ];
 
-export const totalAgents = 1175;
+export const totalAgents = 1176;
 export const totalCategories = 105;
 export const totalPillars = 15;
 
