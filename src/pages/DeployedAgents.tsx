@@ -580,7 +580,6 @@ const DeployedAgentsDashboard = () => {
                                   ))}
                                 </div>
                               </div>
-                              </div>
                               <div className="text-center hidden lg:block">
                                 <p className="text-[10px] text-muted-foreground">Tasks</p>
                                 <p className="font-semibold text-foreground text-xs">{dep.tasksCompleted}</p>
