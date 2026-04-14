@@ -546,7 +546,7 @@ const DeployedAgentsDashboard = () => {
                                         htmlFor={`${item.id}-${type}`}
                                         className="text-[8px] cursor-pointer leading-none"
                                       >
-                                        {type.split(' ')[1]}
+                                        {type.split(' ')[2]}
                                       </Label>
                                     </div>
                                   ))}
