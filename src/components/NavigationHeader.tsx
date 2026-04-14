@@ -151,7 +151,7 @@ const NavigationHeader = () => {
                       ref={searchRef}
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      placeholder="Search S.H.I.E.L.D. AI Ecosystem..."
+                      placeholder="Search S.H.I.E.L.D. AI Ecosystem...Ask S.H.I.E.L.D. AI"
                       className="w-64 pl-9 pr-8 h-9 text-xs bg-card/50 border-border/50"
                       onKeyDown={(e) => { if (e.key === 'Escape') { setShowSearch(false); setSearchQuery(""); } }}
                     />
