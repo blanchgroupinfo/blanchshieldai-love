@@ -3,6 +3,7 @@ import HeroSection from "@/components/HeroSection";
 import ShieldFramework from "@/components/ShieldFramework";
 import DailySpiritualGuidance from "@/components/DailySpiritualGuidance";
 import AIChatInterface from "@/components/AIChatInterface";
+import SpiritualMissionSection from "@/components/SpiritualMissionSection";
 import ModulesSection from "@/components/ModulesSection";
 import CapabilitiesSection from "@/components/CapabilitiesSection";
 import AgentRegistry from "@/components/AgentRegistry";
@@ -37,6 +38,9 @@ const Index = () => {
       </div>
       <div id="chat">
         <AIChatInterface />
+      </div>
+      <div id="spiritual-mission">
+        <SpiritualMissionSection />
       </div>
       <div id="modules">
         <ModulesSection />
