@@ -537,11 +537,11 @@ const DeployedAgentsDashboard = () => {
                                 >
                                   {watchmanTypes.map((type) => (
                                     <div key={type} className="flex items-center justify-center gap-1">
-                                      <Radio
-                                        value={type}
-                                        id={`${item.id}-${type}`}
-                                        className="w-3 h-3"
-                                      />
+                                       <RadioGroupItem
+                                         value={type}
+                                         id={`${item.id}-${type}`}
+                                         className="w-3 h-3"
+                                       />
                                       <Label
                                         htmlFor={`${item.id}-${type}`}
                                         className="text-[8px] cursor-pointer leading-none"
