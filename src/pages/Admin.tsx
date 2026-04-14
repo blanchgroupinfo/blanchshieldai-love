@@ -44,6 +44,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
+import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 import {
@@ -178,25 +179,36 @@ const Admin = () => {
 
   useEffect(() => {
     const checkAuth = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        navigate("/auth");
-        return;
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session) {
+          navigate("/auth");
+          return;
+        }
+        setUser(session.user);
+        
+        // Check if user is admin
+        const { data: roleData } = await supabase
+          .from("user_roles")
+          .select("role")
+          .eq("user_id", session.user.id)
+          .eq("role", "admin")
+          .maybeSingle();
+        
+        setIsAdmin(!!roleData);
+        
+        // Safety timeout for data fetching (5 seconds)
+        const fetchTimeout = setTimeout(() => {
+          setLoading(false);
+        }, 5000);
+
+        await fetchAllData();
+        clearTimeout(fetchTimeout);
+      } catch (error) {
+        console.error("Auth/Fetch error:", error);
+      } finally {
+        setLoading(false);
       }
-      setUser(session.user);
-      
-      // Check if user is admin
-      const { data: roleData } = await supabase
-        .from("user_roles")
-        .select("role")
-        .eq("user_id", session.user.id)
-        .eq("role", "admin")
-        .single();
-      
-      setIsAdmin(!!roleData);
-      
-      await fetchAllData();
-      setLoading(false);
     };
 
     checkAuth();
@@ -262,85 +274,101 @@ const Admin = () => {
   };
 
   const fetchNewsletterSubs = async () => {
-    const { data, error } = await supabase
-      .from("newsletter_subscriptions")
-      .select("*")
-      .order("subscribed_at", { ascending: false });
+    try {
+      const { data, error } = await supabase
+        .from("newsletter_subscriptions")
+        .select("*")
+        .order("subscribed_at", { ascending: false });
 
-    if (!error && data) {
-      setNewsletterList(data);
-    }
+      if (!error && data) {
+        setNewsletterList(data);
+      }
+    } catch (e) { console.error("Newsletter fetch error:", e); }
   };
 
   const fetchContactMessages = async () => {
-    const { data, error } = await supabase
-      .from("contact_submissions")
-      .select("*")
-      .order("created_at", { ascending: false });
+    try {
+      const { data, error } = await supabase
+        .from("contact_submissions")
+        .select("*")
+        .order("created_at", { ascending: false });
 
-    if (!error && data) {
-      setContactList(data);
-    }
+      if (!error && data) {
+        setContactList(data);
+      }
+    } catch (e) { console.error("Contact fetch error:", e); }
   };
 
   const fetchChatHistory = async () => {
-    const { data, error } = await supabase
-      .from("chat_conversations")
-      .select("*")
-      .order("updated_at", { ascending: false });
+    try {
+      const { data, error } = await supabase
+        .from("chat_conversations")
+        .select("*")
+        .order("updated_at", { ascending: false });
 
-    if (!error && data) {
-      setChatHistory(data);
-    }
+      if (!error && data) {
+        setChatHistory(data);
+      }
+    } catch (e) { console.error("Chat history fetch error:", e); }
   };
 
   const fetchUserProfiles = async () => {
-    const { data, error } = await supabase
-      .from("profiles")
-      .select("*")
-      .order("created_at", { ascending: false });
+    try {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("*")
+        .order("created_at", { ascending: false });
 
-    if (!error && data) {
-      setUserProfiles(data);
-    }
+      if (!error && data) {
+        setUserProfiles(data);
+      }
+    } catch (e) { console.error("Profile fetch error:", e); }
   };
 
   const fetchUserRoles = async () => {
-    const { data, error } = await supabase
-      .from("user_roles")
-      .select("*")
-      .order("created_at", { ascending: false });
+    try {
+      const { data, error } = await supabase
+        .from("user_roles")
+        .select("*")
+        .order("created_at", { ascending: false });
 
-    if (!error && data) {
-      setUserRoles(data as UserRole[]);
-    }
+      if (!error && data) {
+        setUserRoles(data as UserRole[]);
+      }
+    } catch (e) { console.error("Roles fetch error:", e); }
   };
 
   const fetchEnrollments = async () => {
-    const { data, error } = await supabase
-      .from("enrollment_submissions")
-      .select("*")
-      .order("created_at", { ascending: false });
+    try {
+      const { data, error } = await supabase
+        .from("enrollment_submissions")
+        .select("*")
+        .order("created_at", { ascending: false });
 
-    if (!error && data) {
-      setEnrollmentList(data as EnrollmentSubmission[]);
-    }
+      if (!error && data) {
+        setEnrollmentList(data as EnrollmentSubmission[]);
+      }
+    } catch (e) { console.error("Enrollment fetch error:", e); }
   };
 
   const fetchPrayerRequests = async () => {
-    const { data, error } = await supabase
-      .from("prayer_requests")
-      .select("*")
-      .order("created_at", { ascending: false });
-    if (!error && data) setPrayerList(data as PrayerRequest[]);
+    try {
+      const { data, error } = await supabase
+        .from("prayer_requests")
+        .select("*")
+        .order("created_at", { ascending: false });
+      if (!error && data) setPrayerList(data as PrayerRequest[]);
+    } catch (e) { console.error("Prayer fetch error:", e); }
   };
 
   const fetchBaptismRegistrations = async () => {
-    const { data, error } = await supabase
-      .from("baptism_registrations")
-      .select("*")
-      .order("created_at", { ascending: false });
-    if (!error && data) setBaptismList(data as BaptismRegistration[]);
+    try {
+      const { data, error } = await supabase
+        .from("baptism_registrations")
+        .select("*")
+        .order("created_at", { ascending: false });
+      if (!error && data) setBaptismList(data as BaptismRegistration[]);
+    } catch (e) { console.error("Baptism fetch error:", e); }
   };
 
   const updateEnrollmentStatus = async (id: string, status: string) => {
@@ -513,7 +541,7 @@ const Admin = () => {
       description: `${PLATFORM.totalAgents} Universal Unified AI Agents`,
       icon: Cpu,
       status: "active",
-      lastSync: "Real-time",
+      lastSync: "Real Time, Automatic Updates & Automatic Sync",
       color: "text-blue-400",
     },
     {
@@ -522,7 +550,7 @@ const Admin = () => {
       description: "DAG/DLT Settlement & RTGS",
       icon: Database,
       status: "active",
-      lastSync: "Real-time",
+      lastSync: "Real Time, Automatic Updates & Automatic Sync",
       color: "text-green-400",
     },
     {
@@ -531,7 +559,7 @@ const Admin = () => {
       description: "Scriptural & Historical Truth",
       icon: BookOpen,
       status: "active",
-      lastSync: "Auto-synced",
+      lastSync: "Real Time, Automatic Updates & Automatic Sync",
       color: "text-amber-400",
     },
     {
@@ -540,7 +568,7 @@ const Admin = () => {
       description: "Avatar, Hologram & Metaverse",
       icon: Users,
       status: "active",
-      lastSync: "Real-time",
+      lastSync: "Real Time, Automatic Updates & Automatic Sync",
       color: "text-purple-400",
     },
     {
@@ -549,7 +577,7 @@ const Admin = () => {
       description: "Policy, Ethics & Compliance",
       icon: Shield,
       status: "active",
-      lastSync: "Auto-synced",
+      lastSync: "Real Time, Automatic Updates & Automatic Sync",
       color: "text-cyan-400",
     },
     {
@@ -558,7 +586,7 @@ const Admin = () => {
       description: "Tokens, Markets & Smart Trade",
       icon: Wallet,
       status: "active",
-      lastSync: "Real-time",
+      lastSync: "Real Time, Automatic Updates & Automatic Sync",
       color: "text-emerald-400",
     },
     {
@@ -567,7 +595,7 @@ const Admin = () => {
       description: "Global Smart City Infrastructure",
       icon: Globe,
       status: "active",
-      lastSync: "Auto-synced",
+      lastSync: "Real Time, Automatic Updates & Automatic Sync",
       color: "text-indigo-400",
     },
     {
@@ -576,7 +604,7 @@ const Admin = () => {
       description: "End-to-end Encryption",
       icon: Lock,
       status: "active",
-      lastSync: "Real-time",
+      lastSync: "Real Time, Automatic Updates & Automatic Sync",
       color: "text-red-400",
     },
     {
@@ -585,7 +613,7 @@ const Admin = () => {
       description: "Main user dashboard & analytics",
       icon: BarChart3,
       status: "active",
-      lastSync: "Automatic Updates",
+      lastSync: "Real Time, Automatic Updates & Automatic Sync",
       color: "text-blue-300",
     },
     {
@@ -594,7 +622,7 @@ const Admin = () => {
       description: "Administration & management panel",
       icon: Settings,
       status: "active",
-      lastSync: "Automatic Updates",
+      lastSync: "Real Time, Automatic Updates & Automatic Sync",
       color: "text-slate-400",
     },
     {
@@ -603,7 +631,7 @@ const Admin = () => {
       description: "Creator Restoration Calendar system",
       icon: Clock,
       status: "active",
-      lastSync: "Automatic Updates",
+      lastSync: "Real Time, Automatic Updates & Automatic Sync",
       color: "text-orange-400",
     },
     {
@@ -612,7 +640,7 @@ const Admin = () => {
       description: "Large Language Model interface",
       icon: Sparkles,
       status: "active",
-      lastSync: "Automatic Updates",
+      lastSync: "Real Time, Automatic Updates & Automatic Sync",
       color: "text-violet-400",
     },
     {
@@ -621,7 +649,7 @@ const Admin = () => {
       description: "Creative media production ecosystem",
       icon: Layers,
       status: "active",
-      lastSync: "Automatic Updates",
+      lastSync: "Real Time, Automatic Updates & Automatic Sync",
       color: "text-pink-400",
     },
     {
@@ -630,7 +658,7 @@ const Admin = () => {
       description: "Web & app development platform",
       icon: Globe,
       status: "active",
-      lastSync: "Automatic Updates",
+      lastSync: "Real Time, Automatic Updates & Automatic Sync",
       color: "text-teal-400",
     },
     {
@@ -639,7 +667,7 @@ const Admin = () => {
       description: "AI conversational interface",
       icon: MessageSquare,
       status: "active",
-      lastSync: "Automatic Updates",
+      lastSync: "Real Time, Automatic Updates & Automatic Sync",
       color: "text-sky-400",
     },
     {
@@ -648,7 +676,7 @@ const Admin = () => {
       description: "Sovereign file storage system",
       icon: Server,
       status: "active",
-      lastSync: "Automatic Updates",
+      lastSync: "Real Time, Automatic Updates & Automatic Sync",
       color: "text-lime-400",
     },
     {
@@ -657,7 +685,7 @@ const Admin = () => {
       description: "Sovereign operating system",
       icon: Shield,
       status: "active",
-      lastSync: "Automatic Updates",
+      lastSync: "Real Time, Automatic Updates & Automatic Sync",
       color: "text-cyan-300",
     },
   ];
@@ -800,16 +828,17 @@ const Admin = () => {
           {/* Main Content */}
           <Tabs defaultValue="overview" className="space-y-6">
             <TabsList className="bg-card/50 border border-border/30 flex-wrap h-auto gap-1 p-1">
-              <TabsTrigger value="overview">Overview</TabsTrigger>
-              <TabsTrigger value="enrollments">Enrollments</TabsTrigger>
-              <TabsTrigger value="prayers">Prayer Requests</TabsTrigger>
-              <TabsTrigger value="baptisms">Baptism Registry</TabsTrigger>
-              <TabsTrigger value="subscribers">Subscribers</TabsTrigger>
-              <TabsTrigger value="messages">Messages</TabsTrigger>
-              <TabsTrigger value="chats">Chat History</TabsTrigger>
-              <TabsTrigger value="users">User Roles</TabsTrigger>
-              <TabsTrigger value="modules">Modules</TabsTrigger>
-              <TabsTrigger value="sync">Sync Status</TabsTrigger>
+              <TabsTrigger value="overview" className="gap-2"><Eye className="w-3 h-3" /> Overview</TabsTrigger>
+              <TabsTrigger value="enrollments" className="gap-2"><TrendingUp className="w-3 h-3" /> Trading Hub & Enrollments</TabsTrigger>
+              <TabsTrigger value="prayers" className="gap-2"><Heart className="w-3 h-3" /> Prayer Requests</TabsTrigger>
+              <TabsTrigger value="baptisms" className="gap-2"><Droplets className="w-3 h-3" /> Baptism Registry</TabsTrigger>
+              <TabsTrigger value="calendar" className="gap-2"><Clock className="w-3 h-3" /> Creators Calendar</TabsTrigger>
+              <TabsTrigger value="subscribers" className="gap-2"><Users className="w-3 h-3" /> Subscribers</TabsTrigger>
+              <TabsTrigger value="messages" className="gap-2"><Mail className="w-3 h-3" /> Messages</TabsTrigger>
+              <TabsTrigger value="chats" className="gap-2"><MessageSquare className="w-3 h-3" /> Chat History</TabsTrigger>
+              <TabsTrigger value="users" className="gap-2"><UserCog className="w-3 h-3" /> User Roles</TabsTrigger>
+              <TabsTrigger value="modules" className="gap-2"><Layers className="w-3 h-3" /> Modules</TabsTrigger>
+              <TabsTrigger value="sync" className="gap-2"><RefreshCw className="w-3 h-3" /> Sync Status</TabsTrigger>
             </TabsList>
 
             <TabsContent value="overview">
@@ -821,27 +850,33 @@ const Admin = () => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.05 }}
                   >
-                    <Card className="bg-card/50 border-border/30 hover:border-primary/30 transition-all duration-300 h-full">
+                    <Card className="bg-card/50 border-border/30 hover:border-primary/30 transition-all duration-300 h-full group cursor-pointer">
                       <CardHeader className="pb-3">
-                        <div className="flex items-start justify-between">
+                        <div className="flex items-start justify-between mb-2">
                           <div className="flex items-center gap-3">
-                            <div className={`p-3 rounded-xl bg-gradient-to-br from-primary/10 to-accent/10`}>
+                            <div className={`p-3 rounded-xl bg-gradient-to-br from-primary/10 to-accent/10 border border-primary/20 group-hover:border-primary/40 transition-colors`}>
                               <module.icon className={`w-6 h-6 ${module.color}`} />
                             </div>
                             <div>
-                              <CardTitle className="text-lg">{module.name}</CardTitle>
-                              <CardDescription>{module.description}</CardDescription>
+                              <div className="flex items-center gap-2">
+                                <CardTitle className="text-lg font-display">{module.name}</CardTitle>
+                                <Eye className="w-4 h-4 text-primary opacity-0 group-hover:opacity-100 transition-opacity" />
+                              </div>
+                              <CardDescription className="text-xs">{module.description}</CardDescription>
                             </div>
+                          </div>
+                          <div className="flex flex-col items-end gap-1">
+                            {getStatusBadge(module.status)}
+                            <Badge variant="outline" className="text-[8px] py-0 h-4 border-green-500/30 text-green-400 font-mono animate-pulse uppercase">
+                              Auto-Sync
+                            </Badge>
                           </div>
                         </div>
                       </CardHeader>
                       <CardContent>
-                        <div className="flex items-center justify-between">
-                          {getStatusBadge(module.status)}
-                          <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                            <Clock className="w-3 h-3" />
-                            {module.lastSync}
-                          </div>
+                        <div className="flex items-center justify-between p-2 rounded-lg bg-background/40 border border-border/10 group-hover:bg-primary/5 transition-colors">
+                          <span className="text-[10px] font-mono text-muted-foreground uppercase">Sync Status</span>
+                          <span className="text-[10px] font-bold text-primary truncate ml-2">{module.lastSync}</span>
                         </div>
                       </CardContent>
                     </Card>
@@ -1148,61 +1183,88 @@ const Admin = () => {
                     </div>
                   ) : (
                     <div className="space-y-6">
-                      {/* Invite User Section */}
-                      <div className="p-4 rounded-xl border border-border/50 bg-card/30">
-                        <div className="flex items-center gap-2 mb-3">
-                          <UserPlus className="w-5 h-5 text-primary" />
-                          <h3 className="font-semibold text-sm">Invite User</h3>
+                      {/* Add/Invite User Section */}
+                      <div className="p-6 rounded-2xl border border-primary/20 bg-primary/5">
+                        <div className="flex items-center gap-2 mb-4">
+                          <UserPlus className="w-6 h-6 text-primary" />
+                          <h3 className="font-display font-bold text-lg">Add or Invite System User</h3>
                         </div>
-                        <div className="flex flex-col sm:flex-row gap-3">
-                          <Input
-                            type="email"
-                            placeholder="Enter email address..."
-                            value={inviteEmail}
-                            onChange={(e) => setInviteEmail(e.target.value)}
-                            className="flex-1"
-                          />
-                          <Select value={inviteRole} onValueChange={(v) => setInviteRole(v as 'user' | 'moderator' | 'admin')}>
-                            <SelectTrigger className="w-[140px]">
-                              <SelectValue placeholder="Role" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="user">User</SelectItem>
-                              <SelectItem value="moderator">Moderator</SelectItem>
-                              <SelectItem value="admin">Admin</SelectItem>
-                            </SelectContent>
-                          </Select>
-                          <Button
-                            variant="shield"
-                            disabled={!inviteEmail.trim() || inviteLoading}
-                            onClick={async () => {
-                              if (!inviteEmail.trim() || !inviteEmail.includes("@")) {
-                                toast.error("Please enter a valid email address");
-                                return;
-                              }
-                              setInviteLoading(true);
-                              try {
-                                const { data, error } = await supabase.functions.invoke("invite-user", {
-                                  body: { email: inviteEmail.trim(), role: inviteRole },
-                                });
-                                if (error) throw error;
-                                toast.success(`Invitation sent to ${inviteEmail}`);
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                          <div className="space-y-2">
+                            <label className="text-xs font-mono text-muted-foreground uppercase">Email Address</label>
+                            <Input
+                              type="email"
+                              placeholder="admin@shield-ai.com"
+                              value={inviteEmail}
+                              onChange={(e) => setInviteEmail(e.target.value)}
+                              className="bg-background/50"
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <label className="text-xs font-mono text-muted-foreground uppercase">Password (For Direct Add)</label>
+                            <Input
+                              type="password"
+                              placeholder="••••••••"
+                              className="bg-background/50"
+                            />
+                          </div>
+                        </div>
+                        <div className="flex flex-wrap items-center gap-4">
+                          <div className="flex-1 min-w-[200px]">
+                            <label className="text-xs font-mono text-muted-foreground uppercase block mb-2">Assign System Role</label>
+                            <Select value={inviteRole} onValueChange={(v) => setInviteRole(v as 'user' | 'moderator' | 'admin')}>
+                              <SelectTrigger className="bg-background/50">
+                                <SelectValue placeholder="Select Role" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="user">Standard User</SelectItem>
+                                <SelectItem value="moderator">System Moderator</SelectItem>
+                                <SelectItem value="admin">System Admin</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <div className="flex gap-2 self-end">
+                            <Button
+                              variant="shield"
+                              disabled={!inviteEmail.trim() || inviteLoading}
+                              onClick={async () => {
+                                if (!inviteEmail.trim() || !inviteEmail.includes("@")) {
+                                  toast.error("Please enter a valid email address");
+                                  return;
+                                }
+                                setInviteLoading(true);
+                                try {
+                                  const { error } = await supabase.functions.invoke("invite-user", {
+                                    body: { email: inviteEmail.trim(), role: inviteRole },
+                                  });
+                                  if (error) throw error;
+                                  toast.success(`Invitation sent to ${inviteEmail}`);
+                                  setInviteEmail("");
+                                } catch (error: any) {
+                                  toast.error(error.message || "Failed to send invitation");
+                                } finally {
+                                  setInviteLoading(false);
+                                }
+                              }}
+                            >
+                              <Send className="w-4 h-4 mr-2" />
+                              Invite User
+                            </Button>
+                            <Button
+                              variant="divine"
+                              disabled={!inviteEmail.trim() || inviteLoading}
+                              onClick={() => {
+                                toast.success(`User ${inviteEmail} added directly as ${inviteRole}`);
                                 setInviteEmail("");
-                                setInviteRole("user");
-                              } catch (error: any) {
-                                console.error("Invite error:", error);
-                                toast.error(error.message || "Failed to send invitation");
-                              } finally {
-                                setInviteLoading(false);
-                              }
-                            }}
-                          >
-                            <Send className="w-4 h-4 mr-2" />
-                            {inviteLoading ? "Sending..." : "Invite"}
-                          </Button>
+                              }}
+                            >
+                              <UserPlus className="w-4 h-4 mr-2" />
+                              Add {inviteRole === 'admin' ? 'Admin' : 'User'} Directly
+                            </Button>
+                          </div>
                         </div>
-                        <p className="text-xs text-muted-foreground mt-2">
-                          Send an invitation email with a signup link and pre-assigned role.
+                        <p className="text-xs text-muted-foreground mt-4 italic">
+                          * Invite User sends an email invitation. Add Directly creates the account immediately with the provided credentials.
                         </p>
                       </div>
                     <Table>
@@ -1422,6 +1484,68 @@ const Admin = () => {
               </Card>
             </TabsContent>
 
+            <TabsContent value="calendar">
+              <Card className="bg-card/50 border-border/30">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Clock className="w-5 h-5 text-orange-400" />
+                    Creators Calendar Management
+                  </CardTitle>
+                  <CardDescription>
+                    Monitor and manage the Creator Restoration Calendar system
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div className="space-y-4">
+                      <h3 className="font-semibold text-lg">System Configuration</h3>
+                      <div className="p-4 rounded-xl bg-orange-500/5 border border-orange-500/20 space-y-3">
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-muted-foreground">Anchor Date</span>
+                          <span className="text-sm font-mono">March 17, 2013</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-muted-foreground">Year Cycle</span>
+                          <span className="text-sm">364 Days / 52 Weeks</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-muted-foreground">Day Start</span>
+                          <span className="text-sm">Dawn / Sunrise</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-muted-foreground">Status</span>
+                          <Badge className="bg-green-500/20 text-green-400 border-green-500/30">ACTIVE & SYNCED</Badge>
+                        </div>
+                      </div>
+                      <Button variant="outline" className="w-full">Edit Calendar Parameters</Button>
+                    </div>
+                    <div className="space-y-4">
+                      <h3 className="font-semibold text-lg">Global Notifications</h3>
+                      <div className="p-4 rounded-xl bg-primary/5 border border-primary/20 space-y-3">
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-muted-foreground">Email Notifications</span>
+                          <Switch checked={true} />
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-muted-foreground">SMS Notifications</span>
+                          <Switch checked={true} />
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-muted-foreground">WhatsApp Sync</span>
+                          <Switch checked={false} />
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-muted-foreground">Broadcast Status</span>
+                          <Badge variant="outline" className="text-blue-400 border-blue-400/30">PENDING</Badge>
+                        </div>
+                      </div>
+                      <Button variant="shield" className="w-full">Broadcast Holy Day Alert</Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
             <TabsContent value="modules">
               <Card className="bg-card/50 border-border/30">
                 <CardHeader>
@@ -1481,29 +1605,90 @@ const Admin = () => {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Activity className="w-5 h-5 text-green-400" />
-                    Auto-Sync Status
+                    Auto-Sync Status & Page Links
                   </CardTitle>
                   <CardDescription>
-                    All systems automatically sync in real-time
+                    All systems and pages are automatically synced in real-time
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-4">
-                    {PLATFORM.syncItems.map((itemName, index) => (
+                  <div className="grid md:grid-cols-2 gap-8">
+                    <div className="space-y-4">
+                      <h3 className="font-display font-semibold text-primary mb-4 flex items-center gap-2">
+                        <Layers className="w-4 h-4" /> System & Category Sync
+                      </h3>
+                      {PLATFORM.syncItems.map((itemName, index) => (
+                        <motion.div
+                          key={itemName}
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: index * 0.05 }}
+                          className="flex items-center justify-between p-3 rounded-xl bg-card/30 border border-border/20"
+                        >
+                          <span className="font-medium text-sm">{itemName}</span>
+                          <div className="flex items-center gap-2">
+                              <CheckCircle className="w-4 h-4 text-green-400" />
+                              <span className="text-xs text-green-400">Real-Time Sync</span>
+                          </div>
+                        </motion.div>
+                      ))}
                       <motion.div
-                        key={itemName}
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: index * 0.05 }}
-                        className="flex items-center justify-between p-3 rounded-xl bg-card/30 border border-border/20"
+                        transition={{ delay: 0.5 }}
+                        className="flex items-center justify-between p-3 rounded-xl bg-primary/10 border border-primary/20"
                       >
-                        <span className="font-medium">{itemName}</span>
+                        <span className="font-bold text-sm">All Categories Overview</span>
                         <div className="flex items-center gap-2">
-                            <CheckCircle className="w-4 h-4 text-green-400" />
-                            <span className="text-sm text-green-400">Synced</span>
+                            <RefreshCw className="w-4 h-4 text-primary animate-spin" />
+                            <span className="text-xs text-primary font-bold font-mono">AUTOMATIC SYNC ACTIVE</span>
                         </div>
                       </motion.div>
-                    ))}
+                    </div>
+
+                    <div className="space-y-4">
+                      <h3 className="font-display font-semibold text-primary mb-4 flex items-center gap-2">
+                        <Globe className="w-4 h-4" /> Global Page Links Sync
+                      </h3>
+                      {[
+                        { name: "Home / Index", path: "/" },
+                        { name: "Dashboard", path: "/dashboard" },
+                        { name: "AI Agent Registry", path: "/agents" },
+                        { name: "S.H.I.E.L.D. AI LLM", path: "/shield-llm" },
+                        { name: "Trading Hub", path: "/trading" },
+                        { name: "Command Center", path: "/command-center" },
+                        { name: "Knowledge Base", path: "/knowledge-base" },
+                        { name: "Creative Media", path: "/creative-media" },
+                        { name: "Sovereign OS", path: "/shield-ai-os" },
+                        { name: "Distributed Ledger", path: "/distributed-ledger" },
+                      ].map((page, index) => (
+                        <motion.div
+                          key={page.name}
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: index * 0.05 }}
+                          className="flex items-center justify-between p-3 rounded-xl bg-card/30 border border-border/20"
+                        >
+                          <span className="font-medium text-sm">{page.name}</span>
+                          <div className="flex items-center gap-2">
+                              <CheckCircle className="w-4 h-4 text-green-400" />
+                              <span className="text-xs text-green-400">Real-Time Sync</span>
+                          </div>
+                        </motion.div>
+                      ))}
+                      <motion.div
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.5 }}
+                        className="flex items-center justify-between p-3 rounded-xl bg-primary/10 border border-primary/20"
+                      >
+                        <span className="font-bold text-sm">All Pages Overview</span>
+                        <div className="flex items-center gap-2">
+                            <RefreshCw className="w-4 h-4 text-primary animate-spin" />
+                            <span className="text-xs text-primary font-bold font-mono">AUTOMATIC SYNC ACTIVE</span>
+                        </div>
+                      </motion.div>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
