@@ -159,7 +159,8 @@ const Dashboard = () => {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-3xl font-display font-bold text-foreground">888+</p>
+                  <p className="text-3xl font-display font-bold text-foreground">1175+</p>
+                  <p className="text-xs text-primary/70 mt-1 italic">S.H.I.E.L.D. AI has more than just Upgrades..</p>
                   <Badge className="mt-2 bg-green-500/20 text-green-400">Unlimited</Badge>
                 </CardContent>
               </Card>
@@ -299,7 +300,7 @@ const Dashboard = () => {
                       <Bot className="w-6 h-6 text-primary" />
                       <div className="text-left">
                         <p className="font-semibold">Agent Registry</p>
-                        <p className="text-xs text-muted-foreground">Browse 888+ AI Agents</p>
+                        <p className="text-xs text-muted-foreground">Browse 1175+ AI Agents</p>
                       </div>
                     </Button>
                     
