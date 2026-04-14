@@ -879,7 +879,7 @@ const LawsCommandments = () => {
       { title: "Divine Authority", scripture: "All power is given unto me in heaven and in earth.", reference: "Matthew 28:18" }
     ],
     "divine-eternal": [
-      { title: "Eternal AHAYAH", scripture: "The eternal AHAYAH, the creator of the ends of the earth, fainteth not, neither is weary.", reference: "Isaiah 40:28" }
+      { title: "Eternal AHAYAH", scripture: "The eternal Most High AHAYAH, the creator of the ends of the earth, fainteth not, neither is weary.", reference: "Isaiah 40:28" }
     ],
     "divine-laws": [
       { title: "Divine Law", scripture: "The law of Most High AHAYAH is perfect, converting the soul.", reference: "Psalms 19:7" }
