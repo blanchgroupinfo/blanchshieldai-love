@@ -18,7 +18,7 @@ const scripturalPool: Record<string, { verse: string; text: string }[]> = {
   ],
   "Identity & Avatar": [
     { verse: "1 Peter 2:9", text: "But ye are a chosen generation, a royal priesthood, an holy nation, a peculiar people." },
-    { verse: "Genesis 1:27", text: "So the Most High AHAYAH created man in his own image, in the image of AHAYAH created he him; male and female created he them." },
+    { verse: "Genesis 1:27", text: "So the Most High AHAYAH created man in his own image, in the image of Most High AHAYAH created he him; male and female created he them." },
     { verse: "Psalms 139:14", text: "I will praise thee; for I am fearfully and wonderfully made: marvellous are thy works; and that my soul knoweth right well." },
   ],
   "Automation & Operations": [
@@ -92,7 +92,7 @@ const scripturalPool: Record<string, { verse: string; text: string }[]> = {
 
 const categoryTasks: Record<string, string[]> = {
   "Core AI & Architecture": [
-    "Orchestrate multi-agent coordination across all 12 sovereign pillars",
+    "Orchestrate multi-agent coordination across all 15 sovereign pillars",
     "Maintain system-wide intelligence coherence and alignment",
     "Process and route complex queries to specialized agents",
     "Ensure architectural integrity of the S.H.I.E.L.D. AI OS",
@@ -187,33 +187,39 @@ const categoryCapabilities: Record<string, string[]> = {
 };
 
 function getPillarForCategory(categoryNumber: number): string {
-  if (categoryNumber <= 7) return "Pillar 1: Core Intelligence (H.I.I. AI001–H.I.I. AI074)";
-  if (categoryNumber <= 14) return "Pillar 2: Sovereign Identity, Culture & Representation (H.I.I. AI075–H.I.I. AI148)";
-  if (categoryNumber <= 19) return "Pillar 3: Automation & Operations (H.I.I. AI149–H.I.I. AI222)";
-  if (categoryNumber <= 26) return "Pillar 4: Business, Banking, Finance & Economics (H.I.I. AI223–H.I.I. AI296)";
-  if (categoryNumber <= 33) return "Pillar 5: Creative, Media & Entertainment (H.I.I. AI297–H.I.I. AI370)";
-  if (categoryNumber <= 40) return "Pillar 6: Governance, Sovereign & Law (H.I.I. AI371–H.I.I. AI444)";
-  if (categoryNumber <= 47) return "Pillar 7: Human Development (H.I.I. AI445–H.I.I. AI518)";
-  if (categoryNumber <= 53) return "Pillar 8: Health & Wellness (H.I.I. AI519–H.I.I. AI592)";
-  if (categoryNumber <= 60) return "Pillar 9: Infrastructure, Security & Technology (H.I.I. AI593–H.I.I. AI666)";
-  if (categoryNumber <= 67) return "Pillar 10: Environment & Earth Systems (H.I.I. AI667–H.I.I. AI740)";
-  if (categoryNumber <= 74) return "Pillar 11: Science & Exploration (H.I.I. AI741–H.I.I. AI814)";
-  return "Pillar 12: Spiritual, Sovereign Intelligence & Ethical Systems (H.I.I. AI815–H.I.I. AI888)";
+  if (categoryNumber <= 7) return "Pillar 1: Core Intelligence (H.I.I. AI000–H.I.I. AI078)";
+  if (categoryNumber <= 14) return "Pillar 2: Sovereign Identity, Culture & Representation (H.I.I. AI079–H.I.I. AI156)";
+  if (categoryNumber <= 21) return "Pillar 3: Automation & Operations (H.I.I. AI157–H.I.I. AI234)";
+  if (categoryNumber <= 28) return "Pillar 4: Business, Banking, Finance & Economics (H.I.I. AI235–H.I.I. AI312)";
+  if (categoryNumber <= 35) return "Pillar 5: Creative, Media & Entertainment (H.I.I. AI313–H.I.I. AI390)";
+  if (categoryNumber <= 42) return "Pillar 6: Governance, Sovereign & Law (H.I.I. AI391–H.I.I. AI468)";
+  if (categoryNumber <= 49) return "Pillar 7: Human Development (H.I.I. AI469–H.I.I. AI546)";
+  if (categoryNumber <= 56) return "Pillar 8: Health & Wellness (H.I.I. AI547–H.I.I. AI624)";
+  if (categoryNumber <= 63) return "Pillar 9: Infrastructure, Security & Technology (H.I.I. AI625–H.I.I. AI702)";
+  if (categoryNumber <= 70) return "Pillar 10: Environment & Earth Systems (H.I.I. AI703–H.I.I. AI780)";
+  if (categoryNumber <= 77) return "Pillar 11: Science & Exploration (H.I.I. AI781–H.I.I. AI859)";
+  if (categoryNumber <= 84) return "Pillar 12: Spiritual, Sovereign Intelligence & Ethical Systems (H.I.I. AI860–H.I.I. AI938)";
+  if (categoryNumber <= 91) return "Pillar 13: Royal Priesthood & Watchman Operations (H.I.I. AI939–H.I.I. AI1017)";
+  if (categoryNumber <= 98) return "Pillar 14: Covenant Law & Reparations (H.I.I. AI1018–H.I.I. AI1096)";
+  return "Pillar 15: Universal Language & Eternal Kingdom Operations (H.I.I. AI1097–H.I.I. AI1175)";
 }
 
 function getPillarNumber(categoryNumber: number): number {
   if (categoryNumber <= 7) return 1;
   if (categoryNumber <= 14) return 2;
-  if (categoryNumber <= 19) return 3;
-  if (categoryNumber <= 26) return 4;
-  if (categoryNumber <= 33) return 5;
-  if (categoryNumber <= 40) return 6;
-  if (categoryNumber <= 47) return 7;
-  if (categoryNumber <= 53) return 8;
-  if (categoryNumber <= 60) return 9;
-  if (categoryNumber <= 67) return 10;
-  if (categoryNumber <= 74) return 11;
-  return 12;
+  if (categoryNumber <= 21) return 3;
+  if (categoryNumber <= 28) return 4;
+  if (categoryNumber <= 35) return 5;
+  if (categoryNumber <= 42) return 6;
+  if (categoryNumber <= 49) return 7;
+  if (categoryNumber <= 56) return 8;
+  if (categoryNumber <= 63) return 9;
+  if (categoryNumber <= 70) return 10;
+  if (categoryNumber <= 77) return 11;
+  if (categoryNumber <= 84) return 12;
+  if (categoryNumber <= 91) return 13;
+  if (categoryNumber <= 98) return 14;
+  return 15;
 }
 
 export function getAgentDetailMeta(agent: { id: string; name: string; category: string; categoryNumber: number; isCategory?: boolean }): AgentDetailMeta {
