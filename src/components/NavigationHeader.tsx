@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { Shield, Menu, MessageSquare, Users, BookOpen, Scale, Home, Info, Cpu, Mail, Code, LogIn, LogOut, User, LayoutDashboard, Settings, TrendingUp, Calendar, ScrollText, Globe, Heart, Eye, Zap, Building2, ShoppingBag, Monitor, HardDrive, Film } from "lucide-react";
+import { Shield, Menu, MessageSquare, Users, BookOpen, Scale, Home, Info, Cpu, Mail, Code, LogIn, LogOut, User, LayoutDashboard, Settings, TrendingUp, Calendar, ScrollText, Globe, Heart, Eye, Zap, Building2, ShoppingBag, Monitor, HardDrive, Film, Search, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Link as RouterLink } from "react-router-dom";
@@ -49,9 +50,32 @@ const NavigationHeader = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [user, setUser] = useState<SupabaseUser | null>(null);
+  const [showSearch, setShowSearch] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const searchRef = useRef<HTMLInputElement>(null);
   const location = useLocation();
   const navigate = useNavigate();
   const isHomePage = location.pathname === "/";
+
+  const searchResults = searchQuery.trim() ? navItems.filter(item =>
+    item.label.toLowerCase().includes(searchQuery.toLowerCase())
+  ).slice(0, 8) : [];
+
+  const handleSearchSelect = (href: string) => {
+    navigate(href);
+    setShowSearch(false);
+    setSearchQuery("");
+  };
+
+  const handleAskShieldAI = () => {
+    navigate("/shield-ai-chat");
+    setShowSearch(false);
+    setSearchQuery("");
+  };
+
+  useEffect(() => {
+    if (showSearch && searchRef.current) searchRef.current.focus();
+  }, [showSearch]);
 
   useEffect(() => {
     const handleScroll = () => {
