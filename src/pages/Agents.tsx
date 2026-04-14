@@ -11,7 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
-import { RadioGroup, Radio } from "@/components/ui/radio-group";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { 
   Search, Filter, ArrowLeft, Bot, Users, Cpu, 
   Settings, Palette, Video, Wand2, Crown, Briefcase,
@@ -22,7 +22,7 @@ import {
   Zap, Play, MessageSquare, CheckCircle2, Power,
   Monitor, Layers, Map, Gavel, Coins, GraduationCap,
   Network, Earth, HeartPulse, Trees, FlaskConical, Telescope,
-  Shield, Radio, Landmark, Recycle, Satellite, Microscope,
+  Shield, Radio as RadioIcon, Landmark, Recycle, Satellite, Microscope,
   Library, Scroll, Badge as BadgeIcon
 } from "lucide-react";
 import { toast } from "sonner";
@@ -84,7 +84,7 @@ const iconMap: Record<string, any> = {
   "flask": FlaskConical,
   "telescope": Telescope,
   "shield": Shield,
-  "radio": Radio,
+  "radio": RadioIcon,
   "landmark": Landmark,
   "recycle": Recycle,
   "satellite": Satellite,
@@ -125,7 +125,7 @@ const AgentCard = ({ agent, showCategory = false }: { agent: Agent; showCategory
 const AgentDetail = ({ agentId }: { agentId: string }) => {
   const [activated, setActivated] = useState(false);
   const [deploying, setDeploying] = useState(false);
-  constA [selectedWatchman, setSelectedWatchman] = useState<string>("");
+  const [selectedWatchman, setSelectedWatchman] = useState<string>("");
   const navigate = useNavigate();
   const agent = agents.find(a => a.id === agentId);
   const category = agent ? agentCategories.find(c => c.number === agent.categoryNumber) : null;
@@ -238,7 +238,7 @@ const AgentDetail = ({ agentId }: { agentId: string }) => {
                 >
                   {watchmanTypes.map((type) => (
                     <div key={type} className="flex items-center space-x-2 hover:bg-primary/5 rounded-lg p-2 transition-colors">
-                      <Radio
+                      <RadioGroupItem
                         value={type}
                         id={`watchman-${agentId}-${type}`}
                         className="border-primary"
