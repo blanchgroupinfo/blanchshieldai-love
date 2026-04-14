@@ -465,7 +465,10 @@ const DeployedAgentsDashboard = () => {
 
                 {/* Watchman Type Selection */}
                 <div className="border-t border-border/30 pt-4">
-                  <p className="text-xs font-semibold text-primary mb-2">Watchman Validator Types</p>
+                  <div className="flex items-center gap-2 mb-2">
+                    <p className="text-xs font-semibold text-primary">Watchman Validator Types</p>
+                    <ShieldAIInfoPopup />
+                  </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                     {watchmanTypes.map((type) => (
                       
