@@ -3,8 +3,8 @@ import { Shield, Sparkles, ArrowRight, Cpu, Play } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const stats = [
-  { value: "12", label: "Sovereign Pillars" },
-  { value: "888", label: "H.I.I. AI Agents", sub: "Hebrew Israelite Implementer Aboriginal Identity" },
+  { value: "15", label: "Sovereign Pillars" },
+  { value: "1176", label: "H.I.I. AI Agents", sub: "Hebrew Israelite Implementer Aboriginal Identity" },
   { value: "∞", label: "Ethical Operations" },
   { value: "1", label: "Unified Intelligence" },
   { value: "100%", label: "Morally Aligned" },
