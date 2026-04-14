@@ -785,7 +785,7 @@ const neuroCreativeStudios: NeuroStudioItem[] = [
   { title: "S.H.I.E.L.D. AI Image Background Remover", desc: "S.H.I.E.L.D. AI-powered one-click background removal for professional image editing.", icon: Image, path: "/image-generation" },
   { title: "S.H.I.E.L.D. AI Image Chat", desc: "S.H.I.E.L.D. AI-powered image assistant for generating, editing, and enhancing images across all media formats.", icon: Image },
   { title: "S.H.I.E.L.D. AI Image Generation", desc: "S.H.I.E.L.D. AI-powered image generation and enhancement for creative media projects.", icon: Image, path: "/image-generation" },
-  { title: "S.H.I.E.L.D> AI Image Face-Swap", desc: "S.H.I.E.L.D. AI-powered image face-swapping technology for creative media projects.", icon: Image, path: "/image-generation"},
+  { title: "S.H.I.E.L.D. AI Image Face-Swap", desc: "S.H.I.E.L.D. AI-powered image face-swapping technology for creative media projects.", icon: Image, path: "/image-generation"},
   { title: "S.H.I.E.L.D. AI Image Studio", desc: "S.H.I.E.L.D. AI-powered image editing, retouching, and asset management for creative media projects.", icon: Image, path: "/image-studio" },
   { title: "S.H.I.E.L.D. AI Image to Code Generation", desc: "S.H.I.E.L.D. AI-powered conversion of images to functional code for web and app development.", icon: Code2 }, 
   { title: "S.H.I.E.L.D. AI Image to Film Generation", desc: "S.H.I.E.L.D. AI-powered transformation of images into cinematic film sequences.", icon: Film }, 
