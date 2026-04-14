@@ -95,7 +95,7 @@ const DeployedAgentsDashboard = () => {
   const [filterCategory, setFilterCategory] = useState<string>("all");
   const [visibleCount, setVisibleCount] = useState(ITEMS_PER_PAGE);
   const [selectedWatchmen, setSelectedWatchmen] = useState<string[]>([]);
-  const [selectedAgentWatchman, setSelectedAgentWatchman] = useState<string>("");
+  const [selectedAgentWatchmen, setSelectedAgentWatchmen] = useState<Record<string, string>>({});
   const [customAgentModal, setCustomAgentModal] = useState(false);
   const [customAgentName, setCustomAgentName] = useState("");
   const [customAgentDescription, setCustomAgentDescription] = useState("");
@@ -531,17 +531,17 @@ const DeployedAgentsDashboard = () => {
                               <div className="text-center hidden lg:block">
                                 <p className="text-[10px] text-muted-foreground mb-1">Watchman Validators</p>
                                 <RadioGroup
-                                  value={selectedAgentWatchman}
-                                  onValueChange={setSelectedAgentWatchman}
+                                  value={selectedAgentWatchmen[item.id] || ""}
+                                  onValueChange={(value) => setSelectedAgentWatchmen(prev => ({ ...prev, [item.id]: value }))}
                                   className="flex flex-col gap-1"
                                 >
                                   {watchmanTypes.map((type) => (
                                     <div key={type} className="flex items-center justify-center gap-1">
-                                       <RadioGroupItem
-                                         value={type}
-                                         id={`${item.id}-${type}`}
-                                         className="w-3 h-3"
-                                       />
+                                      <RadioGroupItem
+                                        value={type}
+                                        id={`${item.id}-${type}`}
+                                        className="w-3 h-3"
+                                      />
                                       <Label
                                         htmlFor={`${item.id}-${type}`}
                                         className="text-[8px] cursor-pointer leading-none"
@@ -606,7 +606,7 @@ const DeployedAgentsDashboard = () => {
                 <div className="w-3 h-3 rounded-full bg-green-500 animate-pulse" />
                 <span className="text-muted-foreground text-sm">S.H.I.E.L.D. AI Agent Deployment System — Online</span>
               </div>
-              <span className="text-xs text-muted-foreground">{deployed.length} / 1175 Deployed</span>
+              <span className="text-xs text-muted-foreground">{deployed.length} / 1176 Deployed</span>
             </div>
           </motion.div>
         </div>
