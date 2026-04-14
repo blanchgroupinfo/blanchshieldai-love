@@ -100,6 +100,10 @@ const DeployedAgentsDashboard = () => {
   const [customAgentModal, setCustomAgentModal] = useState(false);
   const [customAgentName, setCustomAgentName] = useState("");
   const [customAgentDescription, setCustomAgentDescription] = useState("");
+  const [customAgentTasks, setCustomAgentTasks] = useState("");
+  const [customAgentPurpose, setCustomAgentPurpose] = useState("");
+  const [customAgentScripture, setCustomAgentScripture] = useState("");
+  const [customAgentDescription, setCustomAgentDescription] = useState("");
   const [customAgentWatchmen, setCustomAgentWatchmen] = useState<string[]>([]);
   const navigate = useNavigate();
 
@@ -292,16 +296,16 @@ const DeployedAgentsDashboard = () => {
                 <Dialog open={customAgentModal} onOpenChange={setCustomAgentModal}>
                   <DialogTrigger asChild>
                     <Button variant="shield" size="sm" className="gap-2">
-                      <Bot className="w-4 h-4" /> Create Custom Universal Unified Watchman Validator
+                      <Bot className="w-4 h-4" /> Create Custom Universal Unified AI Agent
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="max-w-2xl">
+                  <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
                     <DialogHeader>
-                      <DialogTitle>Create Custom Universal Unified Watchman Validator</DialogTitle>
+                      <DialogTitle>Create Custom Universal Unified AI Agent</DialogTitle>
                     </DialogHeader>
                     <div className="space-y-4">
                       <div>
-                        <Label htmlFor="agent-name">H.I.I. AI Agent Name</Label>
+                        <Label htmlFor="agent-name">H.I.I. AI Custom Agent Name</Label>
                         <Input
                           id="agent-name"
                           placeholder="Enter agent name..."
@@ -313,15 +317,48 @@ const DeployedAgentsDashboard = () => {
                         <Label htmlFor="agent-description">Description</Label>
                         <Textarea
                           id="agent-description"
-                          placeholder="Describe the agent's purpose and capabilities..."
+                          placeholder="Describe the agent's role and capabilities..."
                           value={customAgentDescription}
                           onChange={(e) => setCustomAgentDescription(e.target.value)}
-                          rows={4}
+                          rows={3}
                         />
                       </div>
                       <div>
-                        <Label className="text-sm font-semibold">Watchman Validator Types</Label>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-2">
+                        <Label htmlFor="agent-tasks">Tasks & Responsibilities</Label>
+                        <Textarea
+                          id="agent-tasks"
+                          placeholder="List the agent's tasks and responsibilities..."
+                          value={customAgentTasks}
+                          onChange={(e) => setCustomAgentTasks(e.target.value)}
+                          rows={3}
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="agent-purpose">Purpose</Label>
+                        <Textarea
+                          id="agent-purpose"
+                          placeholder="Define the agent's divine purpose..."
+                          value={customAgentPurpose}
+                          onChange={(e) => setCustomAgentPurpose(e.target.value)}
+                          rows={2}
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="agent-scripture">Scripture</Label>
+                        <Textarea
+                          id="agent-scripture"
+                          placeholder="Enter scriptural references for this agent..."
+                          value={customAgentScripture}
+                          onChange={(e) => setCustomAgentScripture(e.target.value)}
+                          rows={2}
+                        />
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2 mb-2">
+                          <Label className="text-sm font-semibold">Watchman Validator Types</Label>
+                          <ShieldAIInfoPopup />
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                           {watchmanTypes.map((type) => (
                             <div key={type} className="flex items-center space-x-2">
                               <Checkbox
@@ -345,23 +382,30 @@ const DeployedAgentsDashboard = () => {
                           ))}
                         </div>
                       </div>
-                      <div className="flex justify-end gap-2">
-                        <Button variant="outline" onClick={() => setCustomAgentModal(false)}>
-                          Cancel
+                      <div className="flex justify-between items-center gap-2 pt-2">
+                        <Button variant="outline" size="sm" className="gap-2" onClick={() => { setCustomAgentModal(false); navigate("/shield-ai-chat"); }}>
+                          <HelpCircle className="w-4 h-4" /> Need Help? Ask S.H.I.E.L.D. AI
                         </Button>
-                        <Button
-                          onClick={() => {
-                            // Handle creating custom agent
-                            toast.success("Custom agent created successfully!");
-                            setCustomAgentModal(false);
-                            setCustomAgentName("");
-                            setCustomAgentDescription("");
-                            setCustomAgentWatchmen([]);
-                          }}
-                          disabled={!customAgentName.trim() || !customAgentDescription.trim()}
-                        >
-                          Create Agent
-                        </Button>
+                        <div className="flex gap-2">
+                          <Button variant="outline" onClick={() => setCustomAgentModal(false)}>
+                            Cancel
+                          </Button>
+                          <Button
+                            onClick={() => {
+                              toast.success("Custom AI Agent created successfully!");
+                              setCustomAgentModal(false);
+                              setCustomAgentName("");
+                              setCustomAgentDescription("");
+                              setCustomAgentTasks("");
+                              setCustomAgentPurpose("");
+                              setCustomAgentScripture("");
+                              setCustomAgentWatchmen([]);
+                            }}
+                            disabled={!customAgentName.trim() || !customAgentDescription.trim()}
+                          >
+                            Create Agent
+                          </Button>
+                        </div>
                       </div>
                     </div>
                   </DialogContent>
