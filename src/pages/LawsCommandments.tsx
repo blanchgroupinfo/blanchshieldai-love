@@ -128,7 +128,7 @@ const LawsCommandments = () => {
     { id: "doctrine-laws", name: "Doctrine Laws", icon: Book, count: 20 },
     { id: "dominion-stewardship", name: "Dominion Stewardship", icon: Globe, count: 15 },
     { id: "domestic-abuse", name: "Domestic Abuse Laws", icon: ShieldAlert, count: 12 },
-    { id: "israel-return", name: "Do Not Return to Israel", icon: MapPin, count: 8 },
+    { id: "israel-return", name: "Do Not Return to the Land of Israel Until Yashaya Come Back", icon: MapPin, count: 8 },
     { id: "world-love", name: "Do Not Love the World", icon: Heart, count: 10 },
     { id: "dress-code", name: "Dress Code & Fringes", icon: Star, count: 15 },
     { id: "drunkenness-laws", name: "Drunkenness Laws", icon: Shield, count: 10 },
