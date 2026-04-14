@@ -1,11 +1,12 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import NavigationHeader from "@/components/NavigationHeader";
 import Footer from "@/components/Footer";
 import ScrollAnimationWrapper from "@/components/ScrollAnimationWrapper";
 import { 
   BookOpen, Search, Filter, Database, Shield, Globe, 
   Cpu, Wallet, Users, Scale, Heart, Zap, Building,
-  BookText, Sparkles, ChevronRight, Info
+  BookText, Sparkles, ChevronRight, Info, FolderOpen, CheckCircle
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -21,7 +22,7 @@ const platformFeatures = [
     title: "AI-Agents System",
     category: "Technology",
     icon: Cpu,
-    description: "888+ Universal Unified AI Agents with H.I.I. AI numbering system. Includes Custom, Clone, Twin, Trustee, Affiliate, and Payment agents across 81 categories.",
+    description: "1175+ Universal Unified AI Agents with H.I.I. AI numbering system. Includes Custom, Clone, Twin, Trustee, Affiliate, and Payment agents across 105 categories.",
     details: [
       "Custom AI Agent creation and deployment",
       "AI Clone and Twin technology",
@@ -156,6 +157,13 @@ const businessModels = [
 const KnowledgeBasePage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.state?.searchQuery) {
+      setSearchQuery(location.state.searchQuery);
+    }
+  }, [location.state]);
 
   const categories = useMemo(() => {
     const cats = new Set<string>();
@@ -253,6 +261,7 @@ const KnowledgeBasePage = () => {
               <TabsTrigger value="knowledge">Organization Knowledge</TabsTrigger>
               <TabsTrigger value="scriptures">Scriptural Foundation</TabsTrigger>
               <TabsTrigger value="commerce">Commerce Models</TabsTrigger>
+              <TabsTrigger value="file-manager">S.H.I.E.L.D. AI Universal File System Manager</TabsTrigger>
             </TabsList>
 
             <TabsContent value="features">
@@ -396,6 +405,91 @@ const KnowledgeBasePage = () => {
                         <div className="p-3 rounded-lg bg-card/50">Consumer to Consumer (C2C)</div>
                         <div className="p-3 rounded-lg bg-card/50">Government to Citizen (G2C)</div>
                         <div className="p-3 rounded-lg bg-card/50">Machine to Agent (M2A)</div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </ScrollAnimationWrapper>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="file-manager">
+              <div className="max-w-4xl mx-auto">
+                <ScrollAnimationWrapper>
+                  <Card className="bg-card/30 border-border/50 mb-8">
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <FolderOpen className="w-5 h-5 text-primary" />
+                        S.H.I.E.L.D. AI Universal File System Manager
+                      </CardTitle>
+                      <CardDescription>
+                        Cross-platform universal file management for every operating system
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
+                        <div className="p-4 rounded-xl bg-primary/5 border border-primary/20 text-center">
+                          <p className="text-2xl font-display font-bold text-primary mb-1">8+</p>
+                          <p className="text-sm text-muted-foreground">Operating Systems</p>
+                        </div>
+                        <div className="p-4 rounded-xl bg-primary/5 border border-primary/20 text-center">
+                          <p className="text-2xl font-display font-bold text-primary mb-1">7+</p>
+                          <p className="text-sm text-muted-foreground">File Systems</p>
+                        </div>
+                        <div className="p-4 rounded-xl bg-primary/5 border border-primary/20 text-center">
+                          <p className="text-2xl font-display font-bold text-primary mb-1">500+</p>
+                          <p className="text-sm text-muted-foreground">File Formats</p>
+                        </div>
+                        <div className="p-4 rounded-xl bg-primary/5 border border-primary/20 text-center">
+                          <p className="text-2xl font-display font-bold text-primary mb-1">12+</p>
+                          <p className="text-sm text-muted-foreground">Cloud Services</p>
+                        </div>
+                        <div className="p-4 rounded-xl bg-primary/5 border border-primary/20 text-center">
+                          <p className="text-2xl font-display font-bold text-primary mb-1">AES-256</p>
+                          <p className="text-sm text-muted-foreground">Encryption</p>
+                        </div>
+                        <div className="p-4 rounded-xl bg-primary/5 border border-primary/20 text-center">
+                          <p className="text-2xl font-display font-bold text-primary mb-1">100%</p>
+                          <p className="text-sm text-muted-foreground">Cross-Platform</p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </ScrollAnimationWrapper>
+
+                <ScrollAnimationWrapper delay={0.1}>
+                  <Card className="bg-card/30 border-border/50">
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <Zap className="w-5 h-5 text-primary" />
+                        Key Capabilities
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="grid sm:grid-cols-2 gap-4 text-sm text-muted-foreground">
+                        <div className="p-3 rounded-lg bg-card/50 flex items-center gap-2">
+                          <CheckCircle className="w-4 h-4 text-primary" />
+                          Create/Read/Write All File Formats
+                        </div>
+                        <div className="p-3 rounded-lg bg-card/50 flex items-center gap-2">
+                          <CheckCircle className="w-4 h-4 text-primary" />
+                          Automatic Format Conversion
+                        </div>
+                        <div className="p-3 rounded-lg bg-card/50 flex items-center gap-2">
+                          <CheckCircle className="w-4 h-4 text-primary" />
+                          Military-Grade Encryption
+                        </div>
+                        <div className="p-3 rounded-lg bg-card/50 flex items-center gap-2">
+                          <CheckCircle className="w-4 h-4 text-primary" />
+                          Zero-Knowledge Privacy
+                        </div>
+                        <div className="p-3 rounded-lg bg-card/50 flex items-center gap-2">
+                          <CheckCircle className="w-4 h-4 text-primary" />
+                          Real-time Sync Across Devices
+                        </div>
+                        <div className="p-3 rounded-lg bg-card/50 flex items-center gap-2">
+                          <CheckCircle className="w-4 h-4 text-primary" />
+                          Persistent Storage with Backups
+                        </div>
                       </div>
                     </CardContent>
                   </Card>
