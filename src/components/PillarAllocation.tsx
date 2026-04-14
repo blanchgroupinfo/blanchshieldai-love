@@ -48,6 +48,7 @@ const PillarAllocation = () => {
                   <td className="py-2.5 px-3">
                     <div className="flex items-center gap-3">
                       <span className="text-foreground font-body">{p.name}</span>
+                    </div>
                   </td>
                   <td className="py-2.5 px-3 text-muted-foreground font-mono text-xs">{p.range}</td>
                   <td className="py-2.5 px-3 text-center text-primary font-display font-bold">{p.capacity}</td>
