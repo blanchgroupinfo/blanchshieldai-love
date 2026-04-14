@@ -1649,7 +1649,7 @@ const CreatorsCalendar = () => {
                                 </div>
                                 <Switch 
                                   checked={reminder?.reminder_enabled || false} 
-                                  onCheckedChange={(checked) => handleIndividualSwitch(reminderName, 0, checked, { reminder_type: 'trumpet' })} 
+                                   onCheckedChange={(checked) => handleIndividualSwitch(reminderName, [], checked, { reminder_type: 'trumpet' })}
                                 />
                             </div>
                           </div>
@@ -1671,7 +1671,7 @@ const CreatorsCalendar = () => {
                                 <Switch
                                   className="scale-75"
                                   checked={reminder ? Boolean((reminder as any)[channel.key]) : false}
-                                  onCheckedChange={(checked) => handleIndividualSwitch(reminderName, 0, reminder?.reminder_enabled || false, { [channel.key]: checked, reminder_type: 'trumpet' })}
+                                   onCheckedChange={(checked) => handleIndividualSwitch(reminderName, [], reminder?.reminder_enabled || false, { [channel.key]: checked, reminder_type: 'trumpet' })}
                                 />
                               </div>
                             ))}
@@ -1752,24 +1752,30 @@ const CreatorsCalendar = () => {
                                 </div>
                               </div>
                               <div className="flex items-center gap-4">
-                                <div className="flex items-center gap-2">
-                                  <span className="text-xs text-muted-foreground">Remind:</span>
-                                  <Select
-                                    value={reminder?.remind_days_before?.toString() || '1'}
-                                    onValueChange={(value) => handleIndividualSwitch(item.name, parseInt(value), reminder?.reminder_enabled || false, {})}
-                                  >
-                                    <SelectTrigger className="w-24 h-8 text-xs"><SelectValue /></SelectTrigger>
-                                    <SelectContent>
-                                      <SelectItem value="1">1 day</SelectItem>
-                                      <SelectItem value="3">3 days</SelectItem>
-                                      <SelectItem value="7">7 days</SelectItem>
-                                    </SelectContent>
-                                  </Select>
-                                </div>
-                                <Switch
-                                  checked={reminder?.reminder_enabled || false}
-                                  onCheckedChange={(checked) => handleIndividualSwitch(item.name, reminder?.remind_days_before || 1, checked, {})}
-                                />
+                                 <div className="flex items-center gap-2">
+                                   <span className="text-xs text-muted-foreground">Remind:</span>
+                                   <Button
+                                     variant="outline"
+                                     size="sm"
+                                     className="h-8 text-xs"
+                                     onClick={() => {
+                                       setCurrentRemindItem(item.name);
+                                       setSelectedRemindOptions(prev => ({
+                                         ...prev,
+                                         [item.name]: prev[item.name] || (reminder?.remind_options || [])
+                                       }));
+                                       setRemindDialogOpen(true);
+                                     }}
+                                   >
+                                     {(selectedRemindOptions[item.name] || reminder?.remind_options || []).length > 0
+                                       ? `${(selectedRemindOptions[item.name] || reminder?.remind_options || []).length} selected`
+                                       : 'Select'}
+                                   </Button>
+                                 </div>
+                                 <Switch
+                                   checked={reminder?.reminder_enabled || false}
+                                   onCheckedChange={(checked) => handleIndividualSwitch(item.name, selectedRemindOptions[item.name] || reminder?.remind_options || [], checked, {})}
+                                 />
                               </div>
                             </div>
 
@@ -1787,11 +1793,11 @@ const CreatorsCalendar = () => {
                                 <div key={channel.label} className="flex flex-col items-center gap-1.5 p-2 rounded-lg bg-background/40 border border-border/5 hover:bg-background/60 transition-colors">
                                   <channel.icon className="w-3.5 h-3.5 text-muted-foreground" />
                                   <span className="text-[10px] text-muted-foreground font-medium">{channel.label}</span>
-                                  <Switch
-                                    className="scale-75"
-                                    checked={reminder ? Boolean((reminder as any)[channel.key]) : false}
-                                    onCheckedChange={(checked) => handleIndividualSwitch(item.name, reminder?.remind_days_before || 1, reminder?.reminder_enabled || false, { [channel.key]: checked })}
-                                  />
+                                   <Switch
+                                     className="scale-75"
+                                     checked={reminder ? Boolean((reminder as any)[channel.key]) : false}
+                                     onCheckedChange={(checked) => handleIndividualSwitch(item.name, selectedRemindOptions[item.name] || reminder?.remind_options || [], reminder?.reminder_enabled || false, { [channel.key]: checked })}
+                                   />
                                 </div>
                               ))}
                             </div>
