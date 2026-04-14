@@ -84,7 +84,7 @@ const iconMap: Record<string, any> = {
   "flask": FlaskConical,
   "telescope": Telescope,
   "shield": Shield,
-  "radio": Radio,
+  "radio": RadioIcon,
   "landmark": Landmark,
   "recycle": Recycle,
   "satellite": Satellite,
@@ -238,7 +238,7 @@ const AgentDetail = ({ agentId }: { agentId: string }) => {
                 >
                   {watchmanTypes.map((type) => (
                     <div key={type} className="flex items-center space-x-2 hover:bg-primary/5 rounded-lg p-2 transition-colors">
-                      <Radio
+                      <RadioGroupItem
                         value={type}
                         id={`watchman-${agentId}-${type}`}
                         className="border-primary"
