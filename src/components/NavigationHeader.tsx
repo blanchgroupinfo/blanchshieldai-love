@@ -139,6 +139,48 @@ const NavigationHeader = () => {
             })()}
           </nav>
 
+          {/* Search Bar */}
+          <div className="relative hidden md:block">
+            {showSearch ? (
+              <div className="relative">
+                <div className="flex items-center gap-2">
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                    <Input
+                      ref={searchRef}
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      placeholder="Search S.H.I.E.L.D. AI Ecosystem..."
+                      className="w-64 pl-9 pr-8 h-9 text-xs bg-card/50 border-border/50"
+                      onKeyDown={(e) => { if (e.key === 'Escape') { setShowSearch(false); setSearchQuery(""); } }}
+                    />
+                    <button onClick={() => { setShowSearch(false); setSearchQuery(""); }} className="absolute right-2 top-1/2 -translate-y-1/2">
+                      <X className="w-3.5 h-3.5 text-muted-foreground hover:text-foreground" />
+                    </button>
+                  </div>
+                </div>
+                {(searchQuery.trim() || true) && showSearch && (
+                  <div className="absolute top-full mt-1 w-72 bg-background border border-border/50 rounded-lg shadow-xl z-50 overflow-hidden">
+                    {searchResults.length > 0 && searchResults.map((item) => (
+                      <button key={item.href} onClick={() => handleSearchSelect(item.href)} className="w-full flex items-center gap-3 px-3 py-2 text-sm hover:bg-primary/10 text-left transition-colors">
+                        <item.icon className="w-4 h-4 text-primary shrink-0" />
+                        <span className="text-foreground">{item.label}</span>
+                      </button>
+                    ))}
+                    <button onClick={handleAskShieldAI} className="w-full flex items-center gap-3 px-3 py-2.5 text-sm bg-primary/5 hover:bg-primary/15 text-left transition-colors border-t border-border/30">
+                      <MessageSquare className="w-4 h-4 text-primary shrink-0" />
+                      <span className="text-primary font-medium">Ask S.H.I.E.L.D. AI</span>
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <Button variant="ghost" size="sm" className="gap-1.5 text-xs text-muted-foreground" onClick={() => setShowSearch(true)}>
+                <Search className="w-3.5 h-3.5" /> Search
+              </Button>
+            )}
+          </div>
+
           {/* CTA + Auth + Command Center + Menu */}
           <div className="flex items-center gap-2">
             <RouterLink to="/command-center">
