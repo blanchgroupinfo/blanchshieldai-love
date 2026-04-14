@@ -1,6 +1,7 @@
-import { useState, useMemo, useRef } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Calendar, Sun, Moon, Star, Book, Clock, ChevronLeft, ChevronRight, Sparkles, Sunrise, AlertCircle, Printer, MapPin, Plus, Bell, Search, Navigation, X, Sunset, Edit, Trash2, Download } from "lucide-react";
+import { Calendar, Sun, Moon, Star, Book, Clock, ChevronLeft, ChevronRight, Sparkles, Sunrise, AlertCircle, Printer, MapPin, Plus, Bell, Search, Navigation, X, Sunset, Edit, Trash2, Download, Megaphone, Volume2, Smartphone, Mail as MailIcon, MessageCircle, Send as SendIcon, Share2, Droplets, Layers, ClipboardCheck, Globe, Zap } from "lucide-react";
 import NavigationHeader from "@/components/NavigationHeader";
 import Footer from "@/components/Footer";
 
@@ -19,7 +20,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { calendarMonths, hebrewDayNames, feasts, calendarScriptures, getFeastsForDay, getGregorianDate, formatGregorianDate, getHebrewDayName, isSabbath, getYearStartDate, getSabbathDays, getCreatorDateForGregorian, type Feast } from "@/data/creatorsCalendar";
 import { useSunTimes } from "@/hooks/useSunTimes";
-import { useCalendarEvents } from "@/hooks/useCalendarEvents";
+import { HolyDayReminder, useCalendarEvents } from "@/hooks/useCalendarEvents";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -45,7 +46,7 @@ const offeringsData = [
     icon: '🌅',
     color: 'orange',
     scriptures: ['Numbers 28:3-4 - "Two lambs of the first year without spot day by day, for a continual burnt offering."', 'Numbers 28:5 - "And a tenth part of an ephah of flour for a meat offering, mingled with the fourth part of an hin of beaten oil."', 'Exodus 29:38-42 - The daily morning sacrifice commanded at the door of the tabernacle.', 'Psalm 5:3 - "My voice shalt thou hear in the morning, O LORD; in the morning will I direct my prayer unto thee, and will look up."'],
-    studyGuide: 'The morning burnt offering represents the dedication of the day to AHAYAH. It was offered at sunrise, signifying that each new day begins with worship. Study Numbers 28:1-8 for the complete ordinance.'
+    studyGuide: 'The morning burnt offering represents the dedication of the day to Most High AHAYAH. It was offered at sunrise, signifying that each new day begins with worship. Study Numbers 28:1-8 for the complete ordinance.'
   },
   {
     title: 'Evening Burnt Offerings',
@@ -53,7 +54,7 @@ const offeringsData = [
     icon: '🌇',
     color: 'purple',
     scriptures: ['Numbers 28:4 - "The other lamb shalt thou offer at even."', 'Numbers 28:8 - "As the meat offering of the morning, and as the drink offering thereof, thou shalt offer it, a sacrifice made by fire."', '1 Kings 18:36 - "And it came to pass at the time of the offering of the evening sacrifice, that Elijah the prophet came near."', 'Daniel 9:21 - "The man Gabriel... touched me about the time of the evening oblation."'],
-    studyGuide: 'The evening sacrifice closes the day in worship. Elijah called upon AHAYAH at the evening sacrifice on Mount Carmel. Study 1 Kings 18:30-39 for the account.'
+    studyGuide: 'The evening sacrifice closes the day in worship. Elijah called upon Most HIgh AHAYAH at the evening sacrifice on Mount Carmel. Study 1 Kings 18:30-39 for the account.'
   },
   {
     title: 'Feast Offerings',
@@ -84,7 +85,7 @@ const offeringsData = [
     description: 'Voluntary offerings of thanksgiving and peace',
     icon: '🙏',
     color: 'green',
-    scriptures: ['Leviticus 7:11-18 - "And this is the law of the sacrifice of peace offerings."', 'Leviticus 22:29 - "When ye will offer a sacrifice of thanksgiving unto AHAYAH, offer it at your own will."', 'Deuteronomy 12:6 - "And thither ye shall bring your burnt offerings, and your sacrifices... and your freewill offerings."', 'Psalm 54:6 - "I will freely sacrifice unto thee: I will praise thy name, O AHAYAH; for it is good."'],
+    scriptures: ['Leviticus 7:11-18 - "And this is the law of the sacrifice of peace offerings."', 'Leviticus 22:29 - "When ye will offer a sacrifice of thanksgiving unto AHAYAH, offer it at your own will."', 'Deuteronomy 12:6 - "And thither ye shall bring your burnt offerings, and your sacrifices... and your freewill offerings."', 'Psalm 54:6 - "I will freely sacrifice unto thee: I will praise thy name, O Most High AHAYAH; for it is good."'],
     studyGuide: 'Peace offerings were voluntary expressions of gratitude. The offerer ate portions of the sacrifice in a communal meal. Study Leviticus 3 and 7:11-36 for the complete peace offering law.'
   },
   {
@@ -92,7 +93,7 @@ const offeringsData = [
     description: 'Offerings for atonement of known sins',
     icon: '🔥',
     color: 'red',
-    scriptures: ['Leviticus 4:1-35 - The law of the sin offering for priests, congregation, rulers, and common people.', 'Leviticus 6:24-30 - "This is the law of the sin offering: In the place where the burnt offering is killed shall the sin offering be killed before AHAYAH: it is most holy."', 'Hebrews 9:22 - "And almost all things are by the law purged with blood; and without shedding of blood is no remission."'],
+    scriptures: ['Leviticus 4:1-35 - The law of the sin offering for priests, congregation, rulers, and common people.', 'Leviticus 6:24-30 - "This is the law of the sin offering: In the place where the burnt offering is killed shall the sin offering be killed before Most High AHAYAH: it is most holy."', 'Hebrews 9:22 - "And almost all things are by the law purged with blood; and without shedding of blood is no remission."'],
     studyGuide: 'The sin offering varied by the status of the offender — a bullock for the priest or congregation, a male goat for a ruler, a female goat or lamb for common people. Study Leviticus 4 in full.'
   },
   {
@@ -101,7 +102,7 @@ const offeringsData = [
     icon: '⚖️',
     color: 'yellow',
     scriptures: ['Numbers 15:27-29 - "And if any soul sin through ignorance, then he shall bring a she goat of the first year for a sin offering."', 'Leviticus 4:2 - "If a soul shall sin through ignorance against any of the commandments of AHAYAH..."', 'Leviticus 5:17-19 - "And if a soul sin, and commit any of these things which are forbidden to be done by the commandments of AHAYAH; though he wist it not, yet is he guilty."'],
-    studyGuide: 'Even unintentional sins required atonement. This teaches us the seriousness of sin in AHAYAH\'s eyes. Study Numbers 15:22-29 and Leviticus 5:14-19.'
+    studyGuide: 'Even unintentional sins required atonement. This teaches us the seriousness of sin in Most High AHAYAH\'s eyes. Study Numbers 15:22-29 and Leviticus 5:14-19.'
   },
   {
     title: 'High Priest Offerings',
@@ -124,11 +125,91 @@ const offeringsData = [
     description: 'Offerings associated with the Temple service',
     icon: '🏛️',
     color: 'cyan',
-    scriptures: ['1 Kings 8:62-64 - Solomon\'s dedication offerings for the Temple.', '2 Chronicles 7:1-5 - "The fire came down from heaven, and consumed the burnt offering and the sacrifices."', 'Ezekiel 43:18-27 - Future temple altar consecration and offerings.', 'Malachi 3:3-4 - "Then shall the offering of Judah and Jerusalem be pleasant unto AHAYAH."'],
+    scriptures: ['1 Kings 8:62-64 - Solomon\'s dedication offerings for the Temple.', '2 Chronicles 7:1-5 - "The fire came down from heaven, and consumed the burnt offering and the sacrifices."', 'Ezekiel 43:18-27 - Future temple altar consecration and offerings.', 'Malachi 3:3-4 - "Then shall the offering of Judah and Jerusalem be pleasant unto Most High AHAYAH."'],
     studyGuide: 'Solomon\'s Temple expanded the Tabernacle\'s service. The Temple offerings will be restored. Study Ezekiel 40-48 for the future Temple and its offerings.'
   }
 ];
 
+const holyDayRemindersList = [
+  { name: 'Holy Days', type: 'holy-day' },
+  { name: 'Holy Feasts', type: 'feast' },
+  { name: 'Holy Sabbaths', type: 'sabbath' },
+  { name: 'New Year', type: 'holy-day' },
+  { name: 'New Month', type: 'new-month' },
+  { name: 'Morning Prayer at Sunrise', type: 'prayer' },
+  { name: 'Noon Prayer at 12:00pm', type: 'prayer' },
+  { name: 'Ninth Hour Prayer at 3:00 PM', type: 'prayer' },
+  { name: 'Evening Prayer at Sunset', type: 'prayer' },
+  { name: 'Passover', type: 'holy-day', details: 'Month 1, Day 14' },
+  { name: 'Feast of Unleavened Bread', type: 'holy-day', details: 'Month 1, Day 15' },
+  { name: 'Second Passover', type: 'holy-day', details: 'Month 2, Day 14 (3 days)' },
+  { name: 'Feast of Pentecost', type: 'holy-day', details: 'Month 3, Day 3' },
+  { name: 'Feast of Trumpets', type: 'holy-day', details: 'Month 7, Day 1 (7 days)' },
+  { name: 'Day of Atonement - Fast', type: 'holy-day', details: 'Month 7, Day 9 (3 days)' },
+  { name: 'Day of Atonement', type: 'holy-day', details: 'Month 7, Day 10' },
+  { name: 'Feast of Tabernacles', type: 'holy-day', details: 'Month 7, Day 15 (3 days)' },
+  { name: 'Feast of Dedication', type: 'holy-day', details: 'Month 9, Day 25' },
+  { name: 'Feast of Dedication (Day 8)', type: 'holy-day', details: 'Month 10, Day 1' },
+  { name: 'Day of Nicanor', type: 'holy-day', details: 'Month 12, Day 13' },
+  { name: 'Feast of Purim', type: 'holy-day', details: 'Month 12, Day 14' },
+];
+
+const trumpetsRemindersList = [
+  { name: 'Morning Prayer at Sunrise', type: 'trumpet' },
+  { name: 'Noon Prayer at 12:00pm', type: 'trumpet' },
+  { name: 'Ninth Hour Prayer at 3:00pm', type: 'trumpet' },
+  { name: 'Evening Prayer at Sunset', type: 'trumpet' },
+  { name: 'Daily Burnt Offerings at Sunrise and Sunset', type: 'trumpet' },
+  { name: 'Peace Offerings at Sunrise', type: 'trumpet' },
+  { name: 'New Months at Sunrise', type: 'trumpet' },
+  { name: 'Holy Days at Sunrise', type: 'trumpet' },
+  { name: 'Holy Feasts at Sunrise', type: 'trumpet' },
+  { name: 'Holy Sabbath at Sunrise', type: 'trumpet' },
+];
+
+const remindOptions = [
+  'All',
+  '1 Hour before Sunrise Everyday',
+  '2 Hours before Sunrise Everyday',
+  '3 Hours before Sunrise Everyday',
+  'Morning Sunrise Everyday',
+  'Noon Prayer at 12:00pm',
+  '1 Hour before Noon Prayer Everyday',
+  '2 Hours before Noon Prayer Everyday',
+  '3 Hours before Noon Prayer Everyday',
+  'Sunset Everyday',
+  '1 Hour before Sunset Everyday',
+  '2 Hours before Sunset Everyday',
+  '3 Hours before Sunset Everyday',
+  'Ninth Hour Prayer at 3:00pm',
+  '1 Hour before Ninth Hour Prayer Everyday',
+  '2 Hours before Ninth Hour Prayer Everyday',
+  '3 Hours before Ninth Hour Prayer Everyday',
+  '1 Day',
+  '2 Days',
+  '3 Days',
+  '5 Days',
+  '7 Days',
+  '10 Days'
+];
+
+const fastingRemindersList = [
+  { name: 'Fourth Month Fast', type: 'fast', description: 'Month 4, Day 9' },
+  { name: 'Fourth Month Fast', type: 'fast', description: 'Month 4, Day 10' },
+  { name: 'Fourth Month Fast', type: 'fast', description: 'Month 4, Day 11' },
+  { name: 'Fifth Month Fast', type: 'fast', description: 'Month 5, Day 9' },
+  { name: 'Fifth Month Fast', type: 'fast', description: 'Month 5, Day 10' },
+  { name: 'Fifth Month Fast', type: 'fast', description: 'Month 5, Day 11' },
+  { name: 'Ninth Month Fast', type: 'fast', description: 'Month 9, Day 20' },
+  { name: 'Ninth Month Fast', type: 'fast', description: 'Month 9, Day 21' },
+  { name: 'Ninth Month Fast', type: 'fast', description: 'Month 9, Day 22' },
+  { name: 'Tenth Month Fast', type: 'fast', description: 'Month 10, Day 9' },
+  { name: 'Tenth Month Fast', type: 'fast', description: 'Month 10, Day 10' },
+  { name: 'Tenth Month Fast', type: 'fast', description: 'Month 10, Day 11' },
+  { name: 'Day of Atonement', type: 'fast', description: 'Month 7, Day 9' },
+  { name: 'Day of Atonement', type: 'fast', description: 'Month 7, Day 10' },
+  { name: 'Day of Atonement', type: 'fast', description: 'Month 7, Day 11' },
+];
 const CreatorsCalendar = () => {
   const today = new Date();
   const todayInCreator = getCreatorDateForGregorian(today);
@@ -145,6 +226,8 @@ const CreatorsCalendar = () => {
   const [locationSearch, setLocationSearch] = useState('');
   const [locationResults, setLocationResults] = useState<Array<{ latitude: number; longitude: number; locationName?: string; }>>([]);
   const [coordInput, setCoordInput] = useState({ lat: '', lon: '' });
+  const [northernHemisphere, setNorthernHemisphere] = useState(true);
+  const [easternHemisphere, setEasternHemisphere] = useState(true);
   
   // Prayer form state
   const [prayerForm, setPrayerForm] = useState({ fullName: '', hebrewName: '', message: '', requestType: 'healing' });
@@ -160,9 +243,25 @@ const CreatorsCalendar = () => {
   const [expandedOffering, setExpandedOffering] = useState<number | null>(null);
 
   const printRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
   const { toast } = useToast();
   const { location, sunTimes, loading: sunLoading, currentTime, getGeolocation, searchLocation, setCoordinates } = useSunTimes();
   const { user, events, reminders, createEvent, deleteEvent, setReminder, getEventsForDay, getReminderForHolyDay } = useCalendarEvents(currentYear);
+  const [optimisticReminders, setOptimisticReminders] = useState<any[]>([]);
+  const [selectedRemindOptions, setSelectedRemindOptions] = useState<Record<string, string[]>>({});
+  const [remindDialogOpen, setRemindDialogOpen] = useState(false);
+  const [currentRemindItem, setCurrentRemindItem] = useState<string>('');
+
+  useEffect(() => {
+    if (reminders) {
+      setOptimisticReminders(reminders);
+    }
+  }, [reminders]);
+
+  const getOptimisticReminder = (name: string) => {
+    return optimisticReminders.find(r => r.holy_day_name === name) || reminders.find(r => r.holy_day_name === name);
+  };
+
   const monthData = calendarMonths[currentMonth];
 
   const gregorianMonthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
@@ -293,6 +392,77 @@ const CreatorsCalendar = () => {
     }
   };
 
+  const handleSelectAll = async (type: 'holy-day' | 'trumpet' | 'fast', enabled: boolean) => {
+    if (!user) return;
+    
+    let list: any[] = [];
+    let prefix = '';
+    
+    if (type === 'holy-day') {
+      list = holyDayRemindersList;
+    } else if (type === 'trumpet') {
+      list = trumpetsRemindersList;
+      prefix = 'Trumpet: ';
+    } else if (type === 'fast') {
+      list = fastingRemindersList;
+    }
+    
+    toast({
+      title: enabled ? "Enabling All Reminders" : "Disabling All Reminders",
+      description: `Updating ${list.length} reminders. Please wait...`,
+    });
+
+    const channels = {
+      email_enabled: enabled,
+      sms_enabled: enabled,
+      whatsapp_enabled: enabled,
+      telegram_enabled: enabled,
+      botim_enabled: enabled,
+      fax_enabled: enabled,
+      hologram_enabled: enabled,
+    };
+
+    // Use Promise.all to update all reminders in the list
+    try {
+      await Promise.all(list.map(item => {
+        const name = prefix + item.name;
+        const reminder = getReminderForHolyDay(name);
+        return setReminder(
+          name,
+          reminder?.remind_options || (enabled ? ['1 Day'] : []),
+          enabled,
+          { ...channels, reminder_type: type === 'trumpet' ? 'trumpet' : 'holy_day' }
+        );
+      }));
+      
+      toast({
+        title: "Update Complete",
+        description: `All ${type.replace('-', ' ')} reminders have been ${enabled ? 'enabled' : 'disabled'}.`,
+      });
+    } catch (error) {
+      console.error("Error updating reminders:", error);
+      toast({
+        title: "Update Failed",
+        description: "Some reminders could not be updated.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleIndividualSwitch = async (name: string, remindOptions: string[], enabled: boolean, options: any) => {
+    // Update optimistic state immediately
+    setOptimisticReminders(prev => {
+      const existing = prev.find(r => r.holy_day_name === name);
+      if (existing) {
+        return prev.map(r => r.id === existing.id ? { ...r, ...options, reminder_enabled: enabled, remind_days_before: daysBefore } : r);
+      }
+      return [...prev, { holy_day_name: name, remind_days_before: daysBefore, reminder_enabled: enabled, ...options }];
+    });
+
+    // Then update in database
+    await setReminder(name, daysBefore, enabled, options);
+  };
+
   // Prayer request submission
   const handlePrayerSubmit = async () => {
     if (!user) return;
@@ -312,7 +482,7 @@ const CreatorsCalendar = () => {
     if (error) {
       toast({ title: "Error", description: "Failed to submit prayer request.", variant: "destructive" });
     } else {
-      toast({ title: "Prayer Request Submitted", description: "Your prayer request has been received. May AHAYAH bless you." });
+      toast({ title: "Prayer Request Submitted", description: "Your prayer request has been received. May Most High AHAYAH bless you." });
       setPrayerForm({ fullName: '', hebrewName: '', message: '', requestType: 'healing' });
     }
   };
@@ -400,7 +570,7 @@ const CreatorsCalendar = () => {
           </h1>
           
           <p className="text-muted-foreground mb-4 max-w-2xl mx-auto">
-            The sacred calendar established by the Most High AHAYAH, marking His holy days, sabbaths, feasts, and appointed times for His people.
+            The sacred calendar established by the Most High AHAYAH, marking His Holy Days, Sabbaths, Feasts, and appointed times for His people.
           </p>
 
           <div className="flex flex-wrap items-center justify-center gap-4 mb-4">
@@ -485,9 +655,23 @@ const CreatorsCalendar = () => {
             </DialogTrigger>
             <DialogContent>
               <DialogHeader><DialogTitle>Enter Coordinates</DialogTitle><DialogDescription>Enter latitude and longitude to calculate sun times</DialogDescription></DialogHeader>
-              <div className="grid grid-cols-2 gap-4 py-4">
-                <div><Label>Latitude (-90 to 90)</Label><Input type="number" placeholder="e.g., 40.7128" value={coordInput.lat} onChange={(e) => setCoordInput(prev => ({ ...prev, lat: e.target.value }))} /></div>
-                <div><Label>Longitude (-180 to 180)</Label><Input type="number" placeholder="e.g., -74.0060" value={coordInput.lon} onChange={(e) => setCoordInput(prev => ({ ...prev, lon: e.target.value }))} /></div>
+              <div className="space-y-4 py-4">
+                <div className="flex items-center justify-between p-2 rounded-lg bg-primary/5 border border-primary/10">
+                  <Label className="flex items-center gap-2 cursor-pointer">
+                    <Navigation className="w-4 h-4 text-primary" /> Northern Hemisphere
+                  </Label>
+                  <Switch checked={northernHemisphere} onCheckedChange={setNorthernHemisphere} />
+                </div>
+                <div className="flex items-center justify-between p-2 rounded-lg bg-primary/5 border border-primary/10">
+                  <Label className="flex items-center gap-2 cursor-pointer">
+                    <Globe className="w-4 h-4 text-primary" /> Eastern Hemisphere
+                  </Label>
+                  <Switch checked={easternHemisphere} onCheckedChange={setEasternHemisphere} />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div><Label>Latitude (-90 to 90)</Label><Input type="number" placeholder="e.g., 40.7128" value={coordInput.lat} onChange={(e) => setCoordInput(prev => ({ ...prev, lat: e.target.value }))} /></div>
+                  <div><Label>Longitude (-180 to 180)</Label><Input type="number" placeholder="e.g., -74.0060" value={coordInput.lon} onChange={(e) => setCoordInput(prev => ({ ...prev, lon: e.target.value }))} /></div>
+                </div>
               </div>
               <DialogFooter><Button onClick={handleCoordinateSubmit}>Calculate Sun Times</Button></DialogFooter>
             </DialogContent>
@@ -526,27 +710,29 @@ const CreatorsCalendar = () => {
       <div className="container mx-auto px-4">
         <Tabs defaultValue="monthly" className="max-w-7xl mx-auto">
           <TabsList className="flex flex-wrap gap-1 h-auto mb-8 no-print">
-            <TabsTrigger value="monthly">Monthly</TabsTrigger>
-            <TabsTrigger value="yearly">Yearly</TabsTrigger>
-            <TabsTrigger value="feasts">Holy Days & Feasts</TabsTrigger>
-            <TabsTrigger value="sacrifices">Daily Sacrifices & Burnt Offerings</TabsTrigger>
-            <TabsTrigger value="sabbath">Sabbath</TabsTrigger>
-            <TabsTrigger value="prayer">Prayer Request</TabsTrigger>
-            <TabsTrigger value="baptism">Baptism</TabsTrigger>
-            <TabsTrigger value="scriptures">Scriptures</TabsTrigger>
-            <TabsTrigger value="reminders">Reminders</TabsTrigger>
+            <TabsTrigger value="monthly" className="gap-2"><Calendar className="w-4 h-4" />Monthly</TabsTrigger>
+            <TabsTrigger value="yearly" className="gap-2"><Layers className="w-4 h-4" />Yearly</TabsTrigger>
+            <TabsTrigger value="feasts" className="gap-2"><Star className="w-4 h-4" />Holy Days & Feasts</TabsTrigger>
+            <TabsTrigger value="sacrifices" className="gap-2"><Sunrise className="w-4 h-4" />Daily Sacrifices</TabsTrigger>
+            <TabsTrigger value="sabbath" className="gap-2"><Moon className="w-4 h-4" />Sabbath</TabsTrigger>
+            <TabsTrigger value="prayer" className="gap-2"><Sparkles className="w-4 h-4" />Prayer Request</TabsTrigger>
+            <TabsTrigger value="baptism" className="gap-2"><Droplets className="w-4 h-4" />Baptism</TabsTrigger>
+            <TabsTrigger value="scriptures" className="gap-2"><Book className="w-4 h-4" />Scriptures</TabsTrigger>
+            <TabsTrigger value="reminders" className="gap-2"><Bell className="w-4 h-4" />Reminders</TabsTrigger>
           </TabsList>
 
           {/* Monthly Calendar Tab */}
           <TabsContent value="monthly">
             <Card className="bg-card/50 border-border/50">
               <CardHeader>
-                <div className="text-center mb-4 p-3 rounded-lg bg-amber-500/5 border border-amber-500/20">
-                  <p className="text-sm text-muted-foreground">
-                    <strong className="text-amber-400">Creators Restoration Year {currentYear - 2012}</strong> begins on{' '}
-                    <strong>{gregorianMonthNames[yearStartInfo.month - 1]} {yearStartInfo.day}, {yearStartInfo.gregorianYear}</strong> (Gregorian) at Dawn
-                  </p>
-                  <p className="text-xs text-muted-foreground mt-1">Anchor: March 17, 2013 = Day 1, Month 1 • 364-Day Year Cycle • After the Equilux</p>
+                <div className="text-center mb-6">
+                  <h2 className="text-3xl font-display font-bold text-amber-400 mb-2 uppercase tracking-widest">Creator Restoration Year {currentYear - 2012}</h2>
+                  <div className="p-3 rounded-lg bg-amber-500/5 border border-primary/20 max-w-2xl mx-auto">
+                    <p className="text-sm text-muted-foreground">
+                      Begins on <strong>{gregorianMonthNames[yearStartInfo.month - 1]} {yearStartInfo.day}, {yearStartInfo.gregorianYear}</strong> (Gregorian) at Dawn
+                    </p>
+                    <p className="text-[10px] text-muted-foreground mt-1 uppercase tracking-tighter italic">"FIXED TO READ IN TRUTH: SACRED CYCLE ANCHORED BY Most High AHAYAH"</p>
+                  </div>
                 </div>
                 <div className="flex flex-col md:flex-row items-center justify-between gap-4">
                   <div className="flex items-center gap-2">
@@ -554,10 +740,12 @@ const CreatorsCalendar = () => {
                     <span className="min-w-[80px] text-center font-bold text-xl">{currentYear}</span>
                     <Button variant="outline" size="sm" onClick={() => setCurrentYear(prev => prev + 1)}><ChevronRight className="w-4 h-4" /></Button>
                   </div>
-                  <CardTitle className="flex items-center gap-3 text-center">
-                    <Calendar className="w-6 h-6 text-amber-400" />
-                    <span className="text-amber-400 text-2xl">Month {monthData.monthNumber}</span>
-                    <span className="text-muted-foreground text-sm">({monthData.gregorianMonths})</span>
+                  <CardTitle className="flex flex-col items-center gap-1 text-center">
+                    <div className="flex items-center gap-3">
+                      <Calendar className="w-6 h-6 text-amber-400" />
+                      <span className="text-amber-400 text-3xl font-display uppercase">Month {monthData.monthNumber}</span>
+                    </div>
+                    <span className="text-muted-foreground text-xs font-mono uppercase tracking-[0.2em]">Sacred Month Division</span>
                   </CardTitle>
                   <div className="flex items-center gap-2">
                     <Button variant="outline" size="sm" onClick={() => setCurrentMonth(prev => prev > 0 ? prev - 1 : 11)}><ChevronLeft className="w-4 h-4" /></Button>
@@ -590,7 +778,7 @@ const CreatorsCalendar = () => {
                           const isSelected = selectedDay === day;
                           const dayEvents = getEventsForDay(monthData.monthNumber, day);
                           const isToday = todayCreatorDate && todayCreatorDate.creatorYear === currentYear && todayCreatorDate.month === monthData.monthNumber && todayCreatorDate.day === day;
-                          return <TableCell key={dayIndex} className={`border border-border/30 p-1.5 align-top cursor-pointer transition-colors min-h-[90px]
+                          return <TableCell key={dayIndex} className={`border border-border/30 p-1.5 align-top cursor-pointer transition-colors min-h-[90px] bg-card
                             ${dayIsSabbath ? 'bg-amber-500/10' : 'hover:bg-card/80'}
                             ${isSelected ? 'ring-2 ring-primary' : ''}
                             ${dayFeasts.length > 0 ? 'bg-primary/5' : ''}
@@ -628,7 +816,14 @@ const CreatorsCalendar = () => {
                   <div className="flex items-center justify-between mb-3">
                     <h4 className="font-bold text-lg">Day {selectedDay} - Month {monthData.monthNumber}</h4>
                     <div className="flex gap-2 no-print">
-                      {user && <Button size="sm" onClick={() => setShowEventDialog(true)} className="gap-1"><Plus className="w-4 h-4" />Add Event</Button>}
+                      {user && (
+                        <>
+                          <Button size="sm" onClick={() => setShowEventDialog(true)} className="gap-1"><Plus className="w-4 h-4" />Add Event</Button>
+                          <Button size="sm" variant="outline" className="gap-1" onClick={() => navigate("/dashboard")}><ClipboardCheck className="w-4 h-4" />Task</Button>
+                          <Button size="sm" variant="outline" className="gap-1" onClick={() => navigate("/platform-features")}><Zap className="w-4 h-4" />Capability</Button>
+                          <Button size="sm" variant="outline" className="gap-1"><Clock className="w-4 h-4" />Appointment Schedule</Button>
+                        </>
+                      )}
                     </div>
                   </div>
                   <p className="text-sm text-muted-foreground mb-2">
@@ -691,6 +886,15 @@ const CreatorsCalendar = () => {
                   </div>
                 </div>
                 <CardDescription>All Holy Days and Weekly Sabbaths • Year begins {gregorianMonthNames[yearStartInfo.month - 1]} {yearStartInfo.day}, {yearStartInfo.gregorianYear} • 364 Days</CardDescription>
+                <div className="mt-4 flex flex-wrap items-center gap-3 text-xs no-print mb-6">
+                  <div className="flex items-center gap-1"><div className="w-3 h-3 rounded bg-green-500/30 ring-2 ring-green-500" /><span>Today</span></div>
+                  <div className="flex items-center gap-1"><div className="w-3 h-3 rounded bg-amber-500/30" /><span>Sabbath</span></div>
+                  <Badge variant="outline" className={`text-[10px] ${getFeastBadgeColor('holy-day')}`}>Holy Day</Badge>
+                  <Badge variant="outline" className={`text-[10px] ${getFeastBadgeColor('feast')}`}>Feast</Badge>
+                  <Badge variant="outline" className={`text-[10px] ${getFeastBadgeColor('fast')}`}>Fast</Badge>
+                  <Badge variant="outline" className={`text-[10px] ${getFeastBadgeColor('new-month')}`}>New Month</Badge>
+                  <Badge variant="outline" className="text-[10px] bg-primary/20 text-primary border-primary/30">Your Event</Badge>
+                </div>
               </CardHeader>
               <CardContent className="space-y-8">
                 {/* Four Seasons Grid */}
@@ -738,10 +942,12 @@ const CreatorsCalendar = () => {
                                     const hasFeast = monthHolyDays.some(f => day >= f.day && day <= f.endDay && f.type !== 'new-month');
                                     const daySabbath = isSabbath(month.monthNumber, day);
                                     const isTodayMini = todayCreatorDate && todayCreatorDate.creatorYear === currentYear && todayCreatorDate.month === month.monthNumber && todayCreatorDate.day === day;
+                                    const isDayOne = day === 1;
                                     return <td key={di} className={`text-center py-0.5 rounded-sm
                                       ${daySabbath ? 'bg-amber-500/20 text-amber-400 font-bold' : ''}
                                       ${hasFeast ? 'bg-primary/20 text-primary font-bold' : ''}
                                       ${isTodayMini ? 'ring-1 ring-green-500 bg-green-500/20 text-green-400 font-bold' : ''}
+                                      ${isDayOne ? 'bg-blue-500/20 text-blue-400 font-bold border border-blue-500/30' : ''}
                                     `}>{day}</td>;
                                   })}
                                 </tr>)}
@@ -929,7 +1135,7 @@ const CreatorsCalendar = () => {
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {offeringsData.map((offering, index) =>
                     <motion.div key={index} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.05 }}
-                      className={`p-4 rounded-lg border cursor-pointer transition-all hover:scale-[1.02] ${expandedOffering === index ? 'md:col-span-2 lg:col-span-3 bg-${offering.color}-500/10 border-${offering.color}-500/30' : `bg-${offering.color}-500/5 border-${offering.color}-500/20`}`}
+                      className={`p-4 rounded-lg border cursor-pointer transition-all hover:scale-[1.02] ${expandedOffering === index ? `md:col-span-2 lg:col-span-3 bg-${offering.color}-500/10 border-${offering.color}-500/20` : `bg-${offering.color}-500/5 border-${offering.color}-500/20`}`}
                       onClick={() => setExpandedOffering(expandedOffering === index ? null : index)}>
                       <div className="flex items-start gap-3">
                         <div className="text-2xl">{offering.icon}</div>
@@ -1113,7 +1319,7 @@ const CreatorsCalendar = () => {
                   <div className="flex items-start gap-4">
                     <Book className="w-6 h-6 text-amber-400 mt-1 flex-shrink-0" />
                     <div>
-                      <p className="italic text-foreground mb-2">"Remember the sabbath day, to keep it holy. Six days shalt thou labour, and do all thy work: But the seventh day is the sabbath of AHAYAH thy God: in it thou shalt not do any work..."</p>
+                      <p className="italic text-foreground mb-2">"Remember the sabbath day, to keep it holy. Six days shalt thou labour, and do all thy work: But the seventh day is the sabbath of Most High AHAYAH thy Power: in it thou shalt not do any work..."</p>
                       <p className="text-sm text-amber-400">Exodus 20:8-10</p>
                     </div>
                   </div>
@@ -1193,42 +1399,410 @@ const CreatorsCalendar = () => {
 
           {/* Reminders Tab */}
           <TabsContent value="reminders">
-            <Card className="bg-card/50 border-border/50">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-3"><Bell className="w-6 h-6 text-primary" />Holy Day Reminders</CardTitle>
-                <CardDescription>{user ? 'Set reminders for upcoming holy days' : 'Sign in to set holy day reminders'}</CardDescription>
-              </CardHeader>
-              <CardContent>
-                {!user ? <div className="text-center py-8">
-                  <Bell className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                  <p className="text-muted-foreground mb-4">Sign in to manage your holy day reminders</p>
-                  <Button asChild><a href="/auth">Sign In</a></Button>
-                </div> : <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {feasts.filter(f => f.type !== 'new-month').map((feast) => {
-                    const reminder = getReminderForHolyDay(feast.name);
-                    return <div key={feast.id} className={`p-4 rounded-lg border transition-all ${reminder?.reminder_enabled ? 'bg-primary/10 border-primary/30' : 'bg-card/50 border-border/30'}`}>
-                      <div className="flex items-center justify-between mb-2">
-                        <h4 className="font-medium text-sm">{feast.name}</h4>
-                        <Badge variant="outline" className={`text-[9px] ${getFeastBadgeColor(feast.type)}`}>{feast.type}</Badge>
+            <div className="space-y-8">
+              {/* Holy Days, Holy Feasts & Holy Sabbaths Reminders */}
+              <Card className="bg-card/50 border-border/50">
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="flex items-center gap-3">
+                      <div className="flex -space-x-2">
+                        <Bell className="w-6 h-6 text-primary" />
+                        <Star className="w-6 h-6 text-amber-400" />
                       </div>
-                      <p className="text-xs text-muted-foreground mb-3">Month {feast.month}, Day {feast.day}</p>
-                      <div className="flex items-center justify-between">
-                        <Select value={reminder?.remind_days_before?.toString() || '1'} onValueChange={(value) => setReminder(feast.name, parseInt(value), true)}>
-                          <SelectTrigger className="w-24 h-8 text-xs"><SelectValue /></SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="1">1 day</SelectItem>
-                            <SelectItem value="3">3 days</SelectItem>
-                            <SelectItem value="7">7 days</SelectItem>
-                            <SelectItem value="14">14 days</SelectItem>
-                          </SelectContent>
-                        </Select>
-                        <Switch checked={reminder?.reminder_enabled || false} onCheckedChange={(checked) => setReminder(feast.name, reminder?.remind_days_before || 1, checked)} />
+                      Holy Days, Holy Feasts, Holy Sabbaths, & Holy Fast Reminders
+                    </CardTitle>
+                    <div className="flex gap-2">
+                      <Select defaultValue="shofar1">
+                        <SelectTrigger className="w-[150px] h-8 text-xs">
+                          <Volume2 className="w-3 h-3 mr-2" />
+                          <SelectValue placeholder="Choose Sound" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="shofar1">Shofar Call 1</SelectItem>
+                          <SelectItem value="shofar2">Shofar Call 2</SelectItem>
+                          <SelectItem value="trumpet1">Trumpet Blast 1</SelectItem>
+                          <SelectItem value="trumpet2">Trumpet Blast 2</SelectItem>
+                          <SelectItem value="bell1">Temple Bell</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <Button variant="outline" size="sm" className="h-8 text-xs gap-1">
+                        <Volume2 className="w-3 h-3" /> Test
+                      </Button>
+                      <div className="flex items-center gap-2 px-2 py-1 rounded-lg bg-primary/5 border border-primary/10">
+                        <span className="text-[10px] text-muted-foreground">Select All</span>
+                        <Switch 
+                          className="scale-75" 
+                          checked={holyDayRemindersList.every(item => {
+                            const r = getOptimisticReminder(item.name);
+                            return r?.reminder_enabled && 
+                                   r.email_enabled && r.sms_enabled && r.whatsapp_enabled && 
+                                   r.telegram_enabled && r.botim_enabled && r.fax_enabled && 
+                                   r.hologram_enabled;
+                          })}
+                          onCheckedChange={(checked) => handleSelectAll('holy-day', checked)}
+                        />
                       </div>
-                    </div>;
-                  })}
-                </div>}
-              </CardContent>
-            </Card>
+                    </div>
+                  </div>
+                  <CardDescription>{user ? 'Set reminders and notification channels' : 'Sign in to set reminders'}</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {!user ? (
+                    <div className="text-center py-8">
+                      <Bell className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+                      <p className="text-muted-foreground mb-4">Sign in to manage your reminders</p>
+                      <Button asChild><a href="/auth">Sign In</a></Button>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      {holyDayRemindersList.map((item, idx) => {
+                        const reminder = getOptimisticReminder(item.name);
+                        return (
+                          <div key={idx} className={`p-4 rounded-xl border transition-all ${reminder?.reminder_enabled ? 'bg-primary/5 border-primary/20' : 'bg-card/50 border-border/30'}`}>
+                            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+                              <div className="flex items-center gap-3">
+                                <div className="p-2 rounded-lg bg-background/50 border border-border/30">
+                                  {item.type === 'prayer' ? <Sunrise className="w-5 h-5 text-orange-400" /> : <Star className="w-5 h-5 text-amber-400" />}
+                                </div>
+                                 <div>
+                                   <h4 className="font-bold text-sm">{item.name}</h4>
+                                   <p className="text-[10px] text-muted-foreground uppercase tracking-wider">{item.type}</p>
+                                   {item.details && <p className="text-[9px] text-muted-foreground">{item.details}</p>}
+                                 </div>
+                              </div>
+                              <div className="flex items-center gap-4">
+                                 <div className="flex items-center gap-2">
+                                   <span className="text-xs text-muted-foreground">Remind:</span>
+                                   <Button
+                                     variant="outline"
+                                     size="sm"
+                                     className="h-8 text-xs"
+                                     onClick={() => {
+                                       setCurrentRemindItem(item.name);
+                                       setSelectedRemindOptions(prev => ({
+                                         ...prev,
+                                         [item.name]: prev[item.name] || (reminder?.remind_options || [])
+                                       }));
+                                       setRemindDialogOpen(true);
+                                     }}
+                                   >
+                                     {(selectedRemindOptions[item.name] || reminder?.remind_options || []).length > 0
+                                       ? `${(selectedRemindOptions[item.name] || reminder?.remind_options || []).length} selected`
+                                       : 'Select'}
+                                   </Button>
+                                 </div>
+                                <Switch 
+                                  checked={reminder?.reminder_enabled || false} 
+                                   onCheckedChange={(checked) => handleIndividualSwitch(item.name, selectedRemindOptions[item.name] || reminder?.remind_options || [], checked, {})}
+                                />
+                              </div>
+                            </div>
+                            
+                            {/* Notification Channels */}
+                            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3 pt-4 border-t border-border/10">
+                              {[
+                                { icon: MailIcon, label: 'Email', key: 'email_enabled' },
+                                { icon: Smartphone, label: 'SMS', key: 'sms_enabled' },
+                                { icon: MessageCircle, label: 'WhatsApp', key: 'whatsapp_enabled' },
+                                { icon: SendIcon, label: 'Telegram', key: 'telegram_enabled' },
+                                { icon: Share2, label: 'Botim', key: 'botim_enabled' },
+                                { icon: Printer, label: 'Fax', key: 'fax_enabled' },
+                                { icon: Sparkles, label: 'Hologram', key: 'hologram_enabled' },
+                              ].map((channel) => (
+                                <div key={channel.label} className="flex flex-col items-center gap-1.5 p-2 rounded-lg bg-background/40 border border-border/5 hover:bg-background/60 transition-colors">
+                                  <channel.icon className="w-3.5 h-3.5 text-muted-foreground" />
+                                  <span className="text-[10px] text-muted-foreground font-medium">{channel.label}</span>
+                                   <Switch
+                                     className="scale-75"
+                                     checked={reminder ? Boolean((reminder as any)[channel.key]) : false}
+                                     onCheckedChange={(checked) => handleIndividualSwitch(item.name, selectedRemindOptions[item.name] || reminder?.remind_options || [], reminder?.reminder_enabled || false, { [channel.key]: checked })}
+                                   />
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+
+              {/* Remind Options Dialog */}
+              <Dialog open={remindDialogOpen} onOpenChange={setRemindDialogOpen}>
+                <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+                  <DialogHeader>
+                    <DialogTitle>Select Remind Options for {currentRemindItem}</DialogTitle>
+                  </DialogHeader>
+                  <div className="grid grid-cols-2 gap-3 py-4">
+                    {remindOptions.map((option) => (
+                      <div key={option} className="flex items-center space-x-2">
+                        <Checkbox
+                          id={`remind-${option}`}
+                          checked={(selectedRemindOptions[currentRemindItem] || []).includes(option)}
+                          onCheckedChange={(checked) => {
+                            setSelectedRemindOptions(prev => {
+                              const current = prev[currentRemindItem] || [];
+                              const updated = checked
+                                ? [...current, option]
+                                : current.filter(o => o !== option);
+                              return { ...prev, [currentRemindItem]: updated };
+                            });
+                          }}
+                        />
+                        <Label htmlFor={`remind-${option}`} className="text-sm cursor-pointer">
+                          {option}
+                        </Label>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="flex justify-end gap-2">
+                    <Button variant="outline" onClick={() => setRemindDialogOpen(false)}>
+                      Cancel
+                    </Button>
+                    <Button
+                      onClick={() => {
+                        const options = selectedRemindOptions[currentRemindItem] || [];
+                        handleIndividualSwitch(currentRemindItem, options, true, {});
+                        setRemindDialogOpen(false);
+                      }}
+                    >
+                      Save
+                    </Button>
+                  </div>
+                </DialogContent>
+              </Dialog>
+
+              {/* Daily Blowing of Trumpets Section */}
+              <Card className="bg-card/50 border-border/50 overflow-hidden relative">
+                <div className="absolute top-0 right-0 p-8 opacity-5">
+                  <Megaphone className="w-32 h-32 text-amber-500 rotate-12" />
+                </div>
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="flex items-center gap-3">
+                      <Megaphone className="w-6 h-6 text-amber-500" />
+                      Daily Blowing of Trumpets Everyday is Holy
+                    </CardTitle>
+                    <div className="flex gap-2">
+                      <Select defaultValue="both">
+                        <SelectTrigger className="w-[180px] h-8 text-xs">
+                          <Volume2 className="w-3 h-3 mr-2" />
+                          <SelectValue placeholder="Sound Profile" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="trumpet">Trumpet Blast</SelectItem>
+                          <SelectItem value="shofar">Shofar / Shawapa</SelectItem>
+                          <SelectItem value="both">Both Instruments</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <Button variant="outline" size="sm" className="h-8 text-xs gap-1">
+                        <Volume2 className="w-3 h-3" /> Test Sound
+                      </Button>
+                      <div className="flex items-center gap-2 px-2 py-1 rounded-lg bg-amber-500/5 border border-amber-500/10">
+                        <span className="text-[10px] text-muted-foreground">Select All</span>
+                        <Switch 
+                          className="scale-75" 
+                          checked={trumpetsRemindersList.every(item => {
+                            const r = getOptimisticReminder(`Trumpet: ${item.name}`);
+                            return r?.reminder_enabled && 
+                                   r.email_enabled && r.sms_enabled && r.whatsapp_enabled && 
+                                   r.telegram_enabled && r.botim_enabled && r.fax_enabled && 
+                                   r.hologram_enabled;
+                          })}
+                          onCheckedChange={(checked) => handleSelectAll('trumpet', checked)}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="mt-4 p-4 rounded-xl bg-amber-500/5 border border-amber-500/20 italic text-sm text-muted-foreground leading-relaxed">
+                    <p>
+                      <strong>Numbers 10:10</strong> &nbsp; Also in the day of your gladness, and in your solemn days, and in the beginnings of your months, ye shall blow with the trumpets over your burnt offerings, and over the sacrifices of your peace offerings; that they may be to you for a memorial before your Most High AHAYAH: I am the Most High AHAYAH your Power.
+                    </p>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {trumpetsRemindersList.map((item, idx) => {
+                      const reminderName = `Trumpet: ${item.name}`;
+                      const reminder = getOptimisticReminder(reminderName);
+                      return (
+                        <div key={idx} className={`p-4 rounded-xl border transition-all ${reminder?.reminder_enabled ? 'bg-amber-500/5 border-amber-500/20' : 'bg-card/50 border-border/30'}`}>
+                          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+                            <div className="flex items-center gap-3">
+                              <div className="p-2 rounded-lg bg-background/50 border border-border/30">
+                                <Megaphone className="w-5 h-5 text-amber-500" />
+                              </div>
+                              <div>
+                                <h4 className="font-bold text-sm">{item.name}</h4>
+                                <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Blowing the Trumpets Reminder</p>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-3">
+                                <div className="flex -space-x-1">
+                                  <div className="p-1 rounded-full bg-background border border-border">
+                                    <Bell className="w-3.5 h-3.5 text-primary" />
+                                  </div>
+                                  <div className="p-1 rounded-full bg-background border border-border">
+                                    <Megaphone className="w-3.5 h-3.5 text-amber-500" />
+                                  </div>
+                                </div>
+                                <Switch 
+                                  checked={reminder?.reminder_enabled || false} 
+                                  onCheckedChange={(checked) => handleIndividualSwitch(reminderName, 0, checked, { reminder_type: 'trumpet' })} 
+                                />
+                            </div>
+                          </div>
+                          
+                          {/* Notification Channels */}
+                          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3 pt-4 border-t border-border/10">
+                            {[
+                              { icon: MailIcon, label: 'Email', key: 'email_enabled' },
+                              { icon: Smartphone, label: 'SMS', key: 'sms_enabled' },
+                              { icon: MessageCircle, label: 'WhatsApp', key: 'whatsapp_enabled' },
+                              { icon: SendIcon, label: 'Telegram', key: 'telegram_enabled' },
+                              { icon: Share2, label: 'Botim', key: 'botim_enabled' },
+                              { icon: Printer, label: 'Fax', key: 'fax_enabled' },
+                              { icon: Sparkles, label: 'Hologram', key: 'hologram_enabled' },
+                            ].map((channel) => (
+                              <div key={channel.label} className="flex flex-col items-center gap-1.5 p-2 rounded-lg bg-background/40 border border-border/5 hover:bg-background/60 transition-colors">
+                                <channel.icon className="w-3.5 h-3.5 text-muted-foreground" />
+                                <span className="text-[10px] text-muted-foreground font-medium">{channel.label}</span>
+                                <Switch
+                                  className="scale-75"
+                                  checked={reminder ? Boolean((reminder as any)[channel.key]) : false}
+                                  onCheckedChange={(checked) => handleIndividualSwitch(reminderName, 0, reminder?.reminder_enabled || false, { [channel.key]: checked, reminder_type: 'trumpet' })}
+                                />
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Fasting Reminders Section */}
+              <Card className="bg-card/50 border-border/50 overflow-hidden relative">
+                <div className="absolute top-0 right-0 p-8 opacity-5">
+                  <Star className="w-32 h-32 text-red-500 rotate-12" />
+                </div>
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="flex items-center gap-3">
+                      <Star className="w-6 h-6 text-red-500" />
+                      Holy Fasts Reminders
+                    </CardTitle>
+                    <div className="flex gap-2">
+                      <Select defaultValue="shofar1">
+                        <SelectTrigger className="w-[150px] h-8 text-xs">
+                          <Volume2 className="w-3 h-3 mr-2" />
+                          <SelectValue placeholder="Choose Sound" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="shofar1">Shofar Call 1</SelectItem>
+                          <SelectItem value="shofar2">Shofar Call 2</SelectItem>
+                          <SelectItem value="trumpet1">Trumpet Blast 1</SelectItem>
+                          <SelectItem value="trumpet2">Trumpet Blast 2</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <Button variant="outline" size="sm" className="h-8 text-xs gap-1">
+                        <Volume2 className="w-3 h-3" /> Test
+                      </Button>
+                      <div className="flex items-center gap-2 px-2 py-1 rounded-lg bg-red-500/5 border border-red-500/10">
+                        <span className="text-[10px] text-muted-foreground">Select All</span>
+                        <Switch 
+                          className="scale-75" 
+                          checked={fastingRemindersList.every(item => {
+                            const r = getOptimisticReminder(item.name);
+                            return r?.reminder_enabled && 
+                                   r.email_enabled && r.sms_enabled && r.whatsapp_enabled && 
+                                   r.telegram_enabled && r.botim_enabled && r.fax_enabled && 
+                                   r.hologram_enabled;
+                          })}
+                          onCheckedChange={(checked) => handleSelectAll('fast', checked)}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <CardDescription>{user ? 'Set reminders for Holy Fast days' : 'Sign in to set reminders'}</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {!user ? (
+                    <div className="text-center py-8">
+                      <Bell className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+                      <p className="text-muted-foreground mb-4">Sign in to manage your reminders</p>
+                      <Button asChild><a href="/auth">Sign In</a></Button>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      {fastingRemindersList.map((item, idx) => {
+                        const reminder = getOptimisticReminder(item.name);
+                        return (
+                          <div key={idx} className={`p-4 rounded-xl border transition-all ${reminder?.reminder_enabled ? 'bg-red-500/5 border-red-500/20' : 'bg-card/50 border-border/30'}`}>
+                            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+                              <div className="flex items-center gap-3">
+                                <div className="p-2 rounded-lg bg-background/50 border border-border/30">
+                                  <Star className="w-5 h-5 text-red-500" />
+                                </div>
+                                <div>
+                                  <h4 className="font-bold text-sm">{item.name}</h4>
+                                  <p className="text-[10px] text-muted-foreground uppercase tracking-wider">{item.description}</p>
+                                </div>
+                              </div>
+                              <div className="flex items-center gap-4">
+                                <div className="flex items-center gap-2">
+                                  <span className="text-xs text-muted-foreground">Remind:</span>
+                                  <Select
+                                    value={reminder?.remind_days_before?.toString() || '1'}
+                                    onValueChange={(value) => handleIndividualSwitch(item.name, parseInt(value), reminder?.reminder_enabled || false, {})}
+                                  >
+                                    <SelectTrigger className="w-24 h-8 text-xs"><SelectValue /></SelectTrigger>
+                                    <SelectContent>
+                                      <SelectItem value="1">1 day</SelectItem>
+                                      <SelectItem value="3">3 days</SelectItem>
+                                      <SelectItem value="7">7 days</SelectItem>
+                                    </SelectContent>
+                                  </Select>
+                                </div>
+                                <Switch
+                                  checked={reminder?.reminder_enabled || false}
+                                  onCheckedChange={(checked) => handleIndividualSwitch(item.name, reminder?.remind_days_before || 1, checked, {})}
+                                />
+                              </div>
+                            </div>
+
+                            {/* Notification Channels */}
+                            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3 pt-4 border-t border-border/10">
+                              {[
+                                { icon: MailIcon, label: 'Email', key: 'email_enabled' },
+                                { icon: Smartphone, label: 'SMS', key: 'sms_enabled' },
+                                { icon: MessageCircle, label: 'WhatsApp', key: 'whatsapp_enabled' },
+                                { icon: SendIcon, label: 'Telegram', key: 'telegram_enabled' },
+                                { icon: Share2, label: 'Botim', key: 'botim_enabled' },
+                                { icon: Printer, label: 'Fax', key: 'fax_enabled' },
+                                { icon: Sparkles, label: 'Hologram', key: 'hologram_enabled' },
+                              ].map((channel) => (
+                                <div key={channel.label} className="flex flex-col items-center gap-1.5 p-2 rounded-lg bg-background/40 border border-border/5 hover:bg-background/60 transition-colors">
+                                  <channel.icon className="w-3.5 h-3.5 text-muted-foreground" />
+                                  <span className="text-[10px] text-muted-foreground font-medium">{channel.label}</span>
+                                  <Switch
+                                    className="scale-75"
+                                    checked={reminder ? Boolean((reminder as any)[channel.key]) : false}
+                                    onCheckedChange={(checked) => handleIndividualSwitch(item.name, reminder?.remind_days_before || 1, reminder?.reminder_enabled || false, { [channel.key]: checked })}
+                                  />
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </div>
           </TabsContent>
         </Tabs>
       </div>
