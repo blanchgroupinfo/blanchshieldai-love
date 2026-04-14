@@ -92,7 +92,7 @@ const hubSections = [
     path: "/Creative=collaboration-Hub",
     color: "text-emerald-400",
     gradient: "from-blue-500/20 to-green-500/20"
-  },-
+  },
   {
     title: "Blanch Studios",
     desc: "Enterprise production environment for the Blanch Group.",
