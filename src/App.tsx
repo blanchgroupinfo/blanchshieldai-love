@@ -60,9 +60,11 @@ import SharedFileViewer from "./pages/SharedFileViewer";
 import UniversalCommerceModels from "./pages/UniversalCommerceModels";
 import PlatformFeatures from "./pages/PlatformFeatures";
 import CreativeMedia from "./pages/CreativeMedia";
+import CreativeMediaHub from "./pages/CreativeMediaHub";
 import CreativeEngine from "./pages/CreativeEngine";
 import CreativePortal from "./pages/CreativePortal";
 import PublishingDashboard from "./pages/PublishingDashboard";
+import HouseOfPrayerBroadcast from "./pages/HouseOfPrayerBroadcast";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -134,9 +136,11 @@ const App = () => (
           <Route path="/universal-commerce" element={<UniversalCommerceModels />} />
           <Route path="/platform-features" element={<PlatformFeatures />} />
           <Route path="/creative-media" element={<CreativeMedia />} />
+          <Route path="/creative-media-hub" element={<CreativeMediaHub />} />
           <Route path="/creative-engine" element={<CreativeEngine />} />
           <Route path="/creative-portal" element={<CreativePortal />} />
           <Route path="/publishing-dashboard" element={<PublishingDashboard />} />
+          <Route path="/broadcast" element={<HouseOfPrayerBroadcast />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
