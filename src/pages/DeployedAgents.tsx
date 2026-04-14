@@ -547,57 +547,39 @@ const DeployedAgentsDashboard = () => {
 
                         {/* Right: Watchman + Metrics + Actions */}
                         <div className="flex items-center gap-4 shrink-0">
-                          {/* Watchman Checkboxes */}
-                          <div className="hidden lg:flex flex-col gap-1">
-                            {watchmanTypes.slice(0, 3).map((type) => (
-                              <div key={type} className="flex items-center space-x-1">
-                                <Checkbox
-                                  id={`agent-${item.id}-watchman-${watchmanTypes.indexOf(type)}`}
-                                  checked={selectedWatchmen.includes(type)}
-                                  onCheckedChange={(checked) => {
-                                    if (checked) {
-                                      setSelectedWatchmen([...selectedWatchmen, type]);
-                                    } else {
-                                      setSelectedWatchmen(selectedWatchmen.filter(w => w !== type));
-                                    }
-                                  }}
-                                  className="w-3 h-3"
-                                />
-                                <Label
-                                  htmlFor={`agent-${item.id}-watchman-${watchmanTypes.indexOf(type)}`}
-                                  className="text-[8px] font-medium leading-none cursor-pointer"
-                                >
-                                  {type.split(' ')[1]}
-                                </Label>
-                              </div>
-                            ))}
-                          </div>
-
+                          {/* Per-agent Watchman Validators — 8 types matching Select All */}
                           {dep && (
                             <>
                               <div className="text-center hidden lg:block">
-                                <p className="text-[10px] text-muted-foreground mb-1">Watchman Validators</p>
-                                <RadioGroup
-                                  value={selectedAgentWatchmen[item.id] || ""}
-                                  onValueChange={(value) => setSelectedAgentWatchmen(prev => ({ ...prev, [item.id]: value }))}
-                                  className="flex flex-col gap-1"
-                                >
+                                <div className="flex items-center gap-1 mb-1">
+                                  <p className="text-[10px] text-muted-foreground">Watchman Validators</p>
+                                  <ShieldAIInfoPopup size="sm" />
+                                </div>
+                                <div className="grid grid-cols-2 gap-x-3 gap-y-0.5">
                                   {watchmanTypes.map((type) => (
-                                    <div key={type} className="flex items-center justify-center gap-1">
-                                      <RadioGroupItem
-                                        value={type}
-                                        id={`${item.id}-${type}`}
+                                    <div key={type} className="flex items-center gap-1">
+                                      <Checkbox
+                                        id={`agent-${item.id}-w-${watchmanTypes.indexOf(type)}`}
+                                        checked={selectedWatchmen.includes(type)}
+                                        onCheckedChange={(checked) => {
+                                          if (checked) {
+                                            setSelectedWatchmen([...selectedWatchmen, type]);
+                                          } else {
+                                            setSelectedWatchmen(selectedWatchmen.filter(w => w !== type));
+                                          }
+                                        }}
                                         className="w-3 h-3"
                                       />
                                       <Label
-                                        htmlFor={`${item.id}-${type}`}
-                                        className="text-[8px] cursor-pointer leading-none"
+                                        htmlFor={`agent-${item.id}-w-${watchmanTypes.indexOf(type)}`}
+                                        className="text-[7px] font-medium leading-none cursor-pointer"
                                       >
-                                        {type.split(' ')[2]}
+                                        {type.split('(')[1]?.split(')')[0] || type.split(' ').slice(2, 3).join(' ')}
                                       </Label>
                                     </div>
                                   ))}
-                                </RadioGroup>
+                                </div>
+                              </div>
                               </div>
                               <div className="text-center hidden lg:block">
                                 <p className="text-[10px] text-muted-foreground">Tasks</p>
