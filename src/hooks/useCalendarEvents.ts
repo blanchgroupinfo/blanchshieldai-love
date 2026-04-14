@@ -18,8 +18,18 @@ export interface CalendarEvent {
 export interface HolyDayReminder {
   id: string;
   holy_day_name: string;
-  remind_days_before: number;
+  remind_days_before: string;
   reminder_enabled: boolean;
+  reminder_type: string;
+  email_enabled: boolean;
+  sms_enabled: boolean;
+  whatsapp_enabled: boolean;
+  telegram_enabled: boolean;
+  botim_enabled: boolean;
+  fax_enabled: boolean;
+  hologram_enabled: boolean;
+  notification_sound: string;
+  trumpet_sound_type: string;
   created_at: string;
 }
 
@@ -194,7 +204,7 @@ export const useCalendarEvents = (year: number) => {
   }, [user, toast]);
 
   // Create or update reminder
-  const setReminder = useCallback(async (holyDayName: string, daysBefore: number, enabled: boolean) => {
+  const setReminder = useCallback(async (holyDayName: string, remindOptions: string[], enabled: boolean, options: Partial<HolyDayReminder> = {}) => {
     if (!user) {
       toast({
         title: "Authentication Required",
@@ -212,8 +222,9 @@ export const useCalendarEvents = (year: number) => {
         const { data, error } = await supabase
           .from('holy_day_reminders')
           .update({
-            remind_days_before: daysBefore,
+            remind_days_before: JSON.stringify(remindOptions),
             reminder_enabled: enabled,
+            ...options
           })
           .eq('id', existing.id)
           .select()
@@ -229,8 +240,10 @@ export const useCalendarEvents = (year: number) => {
           .insert({
             user_id: user.id,
             holy_day_name: holyDayName,
-            remind_days_before: daysBefore,
+            remind_days_before: JSON.stringify(remindOptions),
             reminder_enabled: enabled,
+            reminder_type: options.reminder_type || 'holy_day',
+            ...options
           })
           .select()
           .single();
@@ -238,10 +251,17 @@ export const useCalendarEvents = (year: number) => {
         if (error) throw error;
 
         setReminders(prev => [...prev, data]);
-        toast({
-          title: "Reminder Set",
-          description: `You will be reminded ${daysBefore} day(s) before ${holyDayName}`,
-        });
+        if (!options.reminder_type || options.reminder_type === 'holy_day') {
+          toast({
+            title: "Reminder Set",
+            description: `You will be reminded ${daysBefore} day(s) before ${holyDayName}`,
+          });
+        } else {
+          toast({
+            title: "Reminder Active",
+            description: `${holyDayName} reminder has been configured`,
+          });
+        }
         return data;
       }
     } catch (err) {
