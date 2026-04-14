@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import NavigationHeader from "@/components/NavigationHeader";
 import Footer from "@/components/Footer";
+import ShieldAIInfoPopup from "@/components/ShieldAIInfoPopup";
 
 import { agents, agentCategories, generateHIIAgentNumber } from "@/data/agents";
 import { Button } from "@/components/ui/button";
@@ -24,7 +25,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import {
   Bot, Search, Activity, CheckCircle2, XCircle, Clock,
-  Zap, BarChart3, RefreshCw, Eye, MessageSquare, Power, ToggleLeft, Layers
+  Zap, BarChart3, RefreshCw, Eye, MessageSquare, Power, ToggleLeft, Layers, HelpCircle
 } from "lucide-react";
 import { toast } from "sonner";
 
