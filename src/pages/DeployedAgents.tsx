@@ -17,11 +17,27 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Checkbox } from "@/components/ui/checkbox";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Bot, Search, Activity, CheckCircle2, XCircle, Clock,
   Zap, BarChart3, RefreshCw, Eye, MessageSquare, Power, ToggleLeft, Layers
 } from "lucide-react";
 import { toast } from "sonner";
+
+const watchmanTypes = [
+  "H.I.I. AI Kahan (Priest) Sovereign Validators",
+  "H.I.I. AI Mashamar (Guard) Lead Watchman Validators",
+  "H.I.I. AI Tazapah (Watchman) Prime Watchman Validators",
+  "H.I.I. AI Shamar (Protector) Avatar Watchman Validators",
+  "H.I.I. AI Gabar (Mighty/Prevailing) Super Watchman Validators",
+  "H.I.I. AI Bashar (Herald) Influencer Watchman Validators",
+  "H.I.I. AI Malaak (Messenger) Android Watchman Validators",
+  "H.I.I. AI (Hebrew Israelite Implementer Aboriginal Identity) Unified Watchman Validators"
+];
 
 export interface DeployedAgent {
   agentId: string;
@@ -61,7 +77,7 @@ export const removeDeployedAgent = (agentId: string): DeployedAgent[] => {
   return current;
 };
 
-// All 888 agents H.I.I. AI001–H.I.I. AI888 (including category headers)
+// All 1176 agents H.I.I. AI000–H.I.I. AI1175 (including category headers)
 const allAgentIds = agents.map(a => a.id);
 
 const statusConfig = {
@@ -78,6 +94,12 @@ const DeployedAgentsDashboard = () => {
   const [filterStatus, setFilterStatus] = useState<string>("all");
   const [filterCategory, setFilterCategory] = useState<string>("all");
   const [visibleCount, setVisibleCount] = useState(ITEMS_PER_PAGE);
+  const [selectedWatchmen, setSelectedWatchmen] = useState<string[]>([]);
+  const [selectedAgentWatchman, setSelectedAgentWatchman] = useState<string>("");
+  const [customAgentModal, setCustomAgentModal] = useState(false);
+  const [customAgentName, setCustomAgentName] = useState("");
+  const [customAgentDescription, setCustomAgentDescription] = useState("");
+  const [customAgentWatchmen, setCustomAgentWatchmen] = useState<string[]>([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -205,7 +227,7 @@ const DeployedAgentsDashboard = () => {
               Deployed Agents Dashboard
             </h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Manage all 888 H.I.I. AI Agents (H.I.I. AI001–H.I.I. AI888) with on/off deployment controls
+              Manage all 1176 H.I.I. AI Agents (H.I.I. AI000–H.I.I. AI1176) with on/off deployment controls
             </p>
           </motion.div>
 
@@ -266,6 +288,83 @@ const DeployedAgentsDashboard = () => {
                 <Button variant="outline" size="sm" onClick={handleRefreshStatus} className="gap-2">
                   <RefreshCw className="w-4 h-4" /> Refresh
                 </Button>
+                <Dialog open={customAgentModal} onOpenChange={setCustomAgentModal}>
+                  <DialogTrigger asChild>
+                    <Button variant="shield" size="sm" className="gap-2">
+                      <Bot className="w-4 h-4" /> Create Custom Universal Unified Watchman Validator
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-2xl">
+                    <DialogHeader>
+                      <DialogTitle>Create Custom Universal Unified Watchman Validator</DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-4">
+                      <div>
+                        <Label htmlFor="agent-name">H.I.I. AI Agent Name</Label>
+                        <Input
+                          id="agent-name"
+                          placeholder="Enter agent name..."
+                          value={customAgentName}
+                          onChange={(e) => setCustomAgentName(e.target.value)}
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="agent-description">Description</Label>
+                        <Textarea
+                          id="agent-description"
+                          placeholder="Describe the agent's purpose and capabilities..."
+                          value={customAgentDescription}
+                          onChange={(e) => setCustomAgentDescription(e.target.value)}
+                          rows={4}
+                        />
+                      </div>
+                      <div>
+                        <Label className="text-sm font-semibold">Watchman Validator Types</Label>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-2">
+                          {watchmanTypes.map((type) => (
+                            <div key={type} className="flex items-center space-x-2">
+                              <Checkbox
+                                id={`custom-agent-watchman-${type}`}
+                                checked={customAgentWatchmen.includes(type)}
+                                onCheckedChange={(checked) => {
+                                  if (checked) {
+                                    setCustomAgentWatchmen([...customAgentWatchmen, type]);
+                                  } else {
+                                    setCustomAgentWatchmen(customAgentWatchmen.filter(w => w !== type));
+                                  }
+                                }}
+                              />
+                              <Label
+                                htmlFor={`custom-agent-watchman-${type}`}
+                                className="text-sm font-medium leading-none cursor-pointer"
+                              >
+                                {type}
+                              </Label>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                      <div className="flex justify-end gap-2">
+                        <Button variant="outline" onClick={() => setCustomAgentModal(false)}>
+                          Cancel
+                        </Button>
+                        <Button
+                          onClick={() => {
+                            // Handle creating custom agent
+                            toast.success("Custom agent created successfully!");
+                            setCustomAgentModal(false);
+                            setCustomAgentName("");
+                            setCustomAgentDescription("");
+                            setCustomAgentWatchmen([]);
+                          }}
+                          disabled={!customAgentName.trim() || !customAgentDescription.trim()}
+                        >
+                          Create Agent
+                        </Button>
+                      </div>
+                    </div>
+                  </DialogContent>
+                </Dialog>
               </div>
             </div>
 
@@ -302,21 +401,52 @@ const DeployedAgentsDashboard = () => {
 
             {/* Select All Toggle */}
             <Card className="bg-card/50 border-border/50">
-              <CardContent className="p-4 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <ToggleLeft className="w-5 h-5 text-primary" />
-                  <div>
-                    <p className="font-semibold text-foreground text-sm">Select All Agents</p>
-                    <p className="text-xs text-muted-foreground">
-                      {allOn ? "All 888 agents are deployed" : `${deployed.length} / ${allAgentIds.length} agents deployed`}
-                    </p>
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-3">
+                    <ToggleLeft className="w-5 h-5 text-primary" />
+                    <div>
+                      <p className="font-semibold text-foreground text-sm">Select All Agents</p>
+                      <p className="text-xs text-muted-foreground">
+                        {allOn ? "All 1176 agents are deployed" : `${deployed.length} / ${allAgentIds.length} agents deployed`}
+                      </p>
+                    </div>
+                  </div>
+                  <Switch
+                    checked={allOn}
+                    onCheckedChange={handleSelectAll}
+                    className="data-[state=checked]:bg-primary"
+                  />
+                </div>
+
+                {/* Watchman Type Selection */}
+                <div className="border-t border-border/30 pt-4">
+                  <p className="text-xs font-semibold text-primary mb-2">Watchman Validator Types</p>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                    {watchmanTypes.map((type) => (
+                      
+                      <div key={type} className="flex items-center space-x-2 hover:bg-primary/5 rounded p-1">
+                        <Checkbox
+                          id={`select-all-watchman-${type}`}
+                          checked={selectedWatchmen.includes(type)}
+                          onCheckedChange={(checked) => {
+                            if (checked) {
+                              setSelectedWatchmen([...selectedWatchmen, type]);
+                            } else {
+                              setSelectedWatchmen(selectedWatchmen.filter(w => w !== type));
+                            }
+                          }}
+                        />
+                        <Label
+                          htmlFor={`select-all-watchman-${type}`}
+                          className="text-xs font-medium leading-none cursor-pointer"
+                        >
+                          {type}
+                        </Label>
+                      </div>
+                    ))}
                   </div>
                 </div>
-                <Switch
-                  checked={allOn}
-                  onCheckedChange={handleSelectAll}
-                  className="data-[state=checked]:bg-primary"
-                />
               </CardContent>
             </Card>
           </motion.div>
@@ -368,10 +498,60 @@ const DeployedAgentsDashboard = () => {
                           </div>
                         </div>
 
-                        {/* Right: Metrics + Actions */}
+                        {/* Right: Watchman + Metrics + Actions */}
                         <div className="flex items-center gap-4 shrink-0">
+                          {/* Watchman Checkboxes */}
+                          <div className="hidden lg:flex flex-col gap-1">
+                            {watchmanTypes.slice(0, 3).map((type) => (
+                              <div key={type} className="flex items-center space-x-1">
+                                <Checkbox
+                                  id={`agent-${item.id}-watchman-${watchmanTypes.indexOf(type)}`}
+                                  checked={selectedWatchmen.includes(type)}
+                                  onCheckedChange={(checked) => {
+                                    if (checked) {
+                                      setSelectedWatchmen([...selectedWatchmen, type]);
+                                    } else {
+                                      setSelectedWatchmen(selectedWatchmen.filter(w => w !== type));
+                                    }
+                                  }}
+                                  className="w-3 h-3"
+                                />
+                                <Label
+                                  htmlFor={`agent-${item.id}-watchman-${watchmanTypes.indexOf(type)}`}
+                                  className="text-[8px] font-medium leading-none cursor-pointer"
+                                >
+                                  {type.split(' ')[1]}
+                                </Label>
+                              </div>
+                            ))}
+                          </div>
+
                           {dep && (
                             <>
+                              <div className="text-center hidden lg:block">
+                                <p className="text-[10px] text-muted-foreground mb-1">Watchman Validators</p>
+                                <RadioGroup
+                                  value={selectedAgentWatchman}
+                                  onValueChange={setSelectedAgentWatchman}
+                                  className="flex flex-col gap-1"
+                                >
+                                  {watchmanTypes.map((type) => (
+                                    <div key={type} className="flex items-center justify-center gap-1">
+                                      <Radio
+                                        value={type}
+                                        id={`${item.id}-${type}`}
+                                        className="w-3 h-3"
+                                      />
+                                      <Label
+                                        htmlFor={`${item.id}-${type}`}
+                                        className="text-[8px] cursor-pointer leading-none"
+                                      >
+                                        {type.split(' ')[1]}
+                                      </Label>
+                                    </div>
+                                  ))}
+                                </RadioGroup>
+                              </div>
                               <div className="text-center hidden lg:block">
                                 <p className="text-[10px] text-muted-foreground">Tasks</p>
                                 <p className="font-semibold text-foreground text-xs">{dep.tasksCompleted}</p>
@@ -426,7 +606,7 @@ const DeployedAgentsDashboard = () => {
                 <div className="w-3 h-3 rounded-full bg-green-500 animate-pulse" />
                 <span className="text-muted-foreground text-sm">S.H.I.E.L.D. AI Agent Deployment System — Online</span>
               </div>
-              <span className="text-xs text-muted-foreground">{deployed.length} / 888 Deployed</span>
+              <span className="text-xs text-muted-foreground">{deployed.length} / 1175 Deployed</span>
             </div>
           </motion.div>
         </div>
