@@ -9,7 +9,8 @@ import {
   Sparkles, Palette, Film, Music, Image, Box,
   Smartphone, Share2, Newspaper, LayoutGrid,
   Rocket, Brain, Wand2, Shield, Camera, Megaphone,
-  Monitor, Building2, Layers, ExternalLink, ArrowRight
+  Monitor, Building2, Layers, ExternalLink, ArrowRight,
+  Globe, Code2
 } from "lucide-react";
 
 const hubSections = [
@@ -67,7 +68,7 @@ const hubSections = [
     icon: Rocket,
     path: "/creative-media-projects",
     color: "text-emerald-400",
-    gradient: "from-amber-500/20 to-brown-500/20"
+    gradient: "from-amber-500/20 to-orange-500/20"
   },
   {
     title: "S.H.I.E.L.D. AI Creative Templates",
@@ -75,7 +76,7 @@ const hubSections = [
     icon: Box,
     path: "/creative-templates",
     color: "text-blue-400",
-    gradient: "from-rose500/20 to-pink-500/20"
+    gradient: "from-rose-500/20 to-pink-500/20"
   },
   {
     title: "S.H.I.E.L.D. AI Creative Publishing Dashboard",
@@ -89,7 +90,7 @@ const hubSections = [
     title: "S.H.I.E.L.D. AI Creative Collaboration Hub",
     desc: "Work with team members in real-time.",
     icon: Monitor,
-    path: "/Creative=collaboration-Hub",
+    path: "/creative-collaboration-hub",
     color: "text-emerald-400",
     gradient: "from-blue-500/20 to-green-500/20"
   },
@@ -112,24 +113,40 @@ const hubSections = [
 ];
 
 const studioTools = [  
+  { name: "All Industries", icon: Building2 },
   { name: "Animation", icon: Rocket },
+  { name: "Art", icon: Wand2 },
+  { name: "Audio", icon: Music },
+  { name: "Blanch Drive", icon: ArrowRight },
+  { name: "Blanch OS", icon: Monitor },
+  { name: "Books", icon: Newspaper },
+  { name: "Broadcast", icon: Rocket },
   { name: "CAD", icon: Building2 },
   { name: "Digital Publishing", icon: Newspaper },
-  { name: "Image & Photography", icon: Camera },
-  { name: "Marketing & PR", icon: Megaphone },
+  { name: "Documents", icon: Newspaper },
+  { name: "Education & Learning Resources", icon: Newspaper },
+  { name: "Image & Photography", icon: Camera }, 
   { name: "Film & Video", icon: Film },
+  { name: "Film Scripts", icon: Film },
   { name: "Game Dev", icon: Box },
   { name: "Graphics Design", icon: Wand2 },
   { name: "Hologram", icon: Sparkles },
+  { name: "Marketing & PR", icon: Megaphone },
+  { name: "Metaverse", icon: Sparkles },
   { name: "Music & Audio", icon: Music },
-  { name: "Digital Publishing", icon: Newspaper },
-  { name: "Software, Sovereign OS, Interface, Technology", icon: Monitor },
-  { name: "Web/App Dev", icon: Monitor }
+  { name: "Operating Systems", icon: Code2 },
+  { name: "Podcast", icon: Rocket },
+  { name: "Sacret Texts", icon: Sparkles },
+  { name: "S.H.I.E.L.D. AI Drive", icon: ArrowRight },
+  { name: "S.H.I.E.L.D. AI OS", icon: Monitor },
+  { name: "Software ", icon: Monitor },
+  { name: "Sovereign OS, Interface, Technology", icon: Monitor },
+  { name: "Television", icon: Monitor },
+  { name: "Web/App Dev", icon: Code2 }
 ];
 
-import { Globe, Code2 } from "lucide-react";
-
 const CreativeMediaHub = () => {
+
   const navigate = useNavigate();
 
   return (
@@ -148,10 +165,13 @@ const CreativeMediaHub = () => {
               <Sparkles className="w-3 h-3 mr-1" /> S.H.I.E.L.D. AI Ecosystem
             </Badge>
             <h1 className="text-4xl md:text-6xl font-display font-bold mb-6">
-              Creative Media <span className="text-primary">Hub</span>
+              S.H.I.E.L.D. AI Creative Media <span className="text-primary">Hub</span>
             </h1>
             <p className="text-lg text-muted-foreground mb-10">
-              The central nerve center for all creative endeavors within the S.H.I.E.L.D. AI and Blanch Group ecosystem. 
+              Your central command for all creative media operations. Access engines, manage projects, and collaborate seamlessly.
+
+              The central hub connecting all creative media capabilities — from content generation and editing to publishing and collaboration. 
+              Manage your entire creative workflow from one unified interface.The central nerve center for all creative endeavors within the S.H.I.E.L.D.AI and Blanch Group ecosystem. 
               Sovereign production, autonomous generation, and global distribution.
             </p>
 
@@ -162,6 +182,26 @@ const CreativeMediaHub = () => {
               <Button variant="outline" size="lg" className="gap-2" onClick={() => navigate("/creative-media")}>
                 <Palette className="w-5 h-5" /> Explore All Media
               </Button>
+            </div>
+
+            {/* Stats Row */}
+            <div className="flex flex-wrap justify-center gap-6 md:gap-12 mt-10">
+              <div className="text-center">
+                <p className="text-3xl md:text-4xl font-display font-bold text-primary">12</p>
+                <p className="text-xs text-muted-foreground uppercase tracking-wide">Active Hubs</p>
+              </div>
+              <div className="text-center">
+                <p className="text-3xl md:text-4xl font-display font-bold text-primary">12</p>
+                <p className="text-xs text-muted-foreground uppercase tracking-wide">Projects</p>
+              </div>
+              <div className="text-center">
+                <p className="text-3xl md:text-4xl font-display font-bold text-primary">4</p>
+                <p className="text-xs text-muted-foreground uppercase tracking-wide">Team Members</p>
+              </div>
+              <div className="text-center">
+                <p className="text-3xl md:text-4xl font-display font-bold text-emerald-400">Real-time</p>
+                <p className="text-xs text-muted-foreground uppercase tracking-wide">Sync Active</p>
+              </div>
             </div>
           </motion.div>
 
@@ -209,7 +249,7 @@ const CreativeMediaHub = () => {
                 </div>
               ))}
             </div>
-          </section>
+              </section>
 
           <div className="mt-20 text-center">
             <p className="text-muted-foreground italic text-sm mb-8">
