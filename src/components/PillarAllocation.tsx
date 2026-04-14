@@ -47,9 +47,6 @@ const PillarAllocation = () => {
                   <td className="py-2.5 px-3 font-display font-bold text-primary">{p.num}</td>
                   <td className="py-2.5 px-3">
                     <div className="flex items-center gap-3">
-                      {p.image && (
-                        <img src={p.image} alt={p.name} className="w-8 h-8 rounded object-cover" />
-                      )}
                       <span className="text-foreground font-body">{p.name}</span>
                     </div>
                   </td>
