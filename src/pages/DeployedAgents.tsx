@@ -103,7 +103,6 @@ const DeployedAgentsDashboard = () => {
   const [customAgentTasks, setCustomAgentTasks] = useState("");
   const [customAgentPurpose, setCustomAgentPurpose] = useState("");
   const [customAgentScripture, setCustomAgentScripture] = useState("");
-  const [customAgentDescription, setCustomAgentDescription] = useState("");
   const [customAgentWatchmen, setCustomAgentWatchmen] = useState<string[]>([]);
   const navigate = useNavigate();
 
