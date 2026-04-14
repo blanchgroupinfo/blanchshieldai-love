@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import NavigationHeader from "@/components/NavigationHeader";
 import Footer from "@/components/Footer";
+import ShieldAIInfoPopup from "@/components/ShieldAIInfoPopup";
 
 import { agents, agentCategories, generateHIIAgentNumber } from "@/data/agents";
 import { Button } from "@/components/ui/button";
@@ -24,7 +25,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import {
   Bot, Search, Activity, CheckCircle2, XCircle, Clock,
-  Zap, BarChart3, RefreshCw, Eye, MessageSquare, Power, ToggleLeft, Layers
+  Zap, BarChart3, RefreshCw, Eye, MessageSquare, Power, ToggleLeft, Layers, HelpCircle
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -99,6 +100,9 @@ const DeployedAgentsDashboard = () => {
   const [customAgentModal, setCustomAgentModal] = useState(false);
   const [customAgentName, setCustomAgentName] = useState("");
   const [customAgentDescription, setCustomAgentDescription] = useState("");
+  const [customAgentTasks, setCustomAgentTasks] = useState("");
+  const [customAgentPurpose, setCustomAgentPurpose] = useState("");
+  const [customAgentScripture, setCustomAgentScripture] = useState("");
   const [customAgentWatchmen, setCustomAgentWatchmen] = useState<string[]>([]);
   const navigate = useNavigate();
 
@@ -291,16 +295,16 @@ const DeployedAgentsDashboard = () => {
                 <Dialog open={customAgentModal} onOpenChange={setCustomAgentModal}>
                   <DialogTrigger asChild>
                     <Button variant="shield" size="sm" className="gap-2">
-                      <Bot className="w-4 h-4" /> Create Custom Universal Unified Watchman Validator
+                      <Bot className="w-4 h-4" /> Create Custom Universal Unified AI Agent
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="max-w-2xl">
+                  <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
                     <DialogHeader>
-                      <DialogTitle>Create Custom Universal Unified Watchman Validator</DialogTitle>
+                      <DialogTitle>Create Custom Universal Unified AI Agent</DialogTitle>
                     </DialogHeader>
                     <div className="space-y-4">
                       <div>
-                        <Label htmlFor="agent-name">H.I.I. AI Agent Name</Label>
+                        <Label htmlFor="agent-name">H.I.I. AI Custom Agent Name</Label>
                         <Input
                           id="agent-name"
                           placeholder="Enter agent name..."
@@ -312,15 +316,48 @@ const DeployedAgentsDashboard = () => {
                         <Label htmlFor="agent-description">Description</Label>
                         <Textarea
                           id="agent-description"
-                          placeholder="Describe the agent's purpose and capabilities..."
+                          placeholder="Describe the agent's role and capabilities..."
                           value={customAgentDescription}
                           onChange={(e) => setCustomAgentDescription(e.target.value)}
-                          rows={4}
+                          rows={3}
                         />
                       </div>
                       <div>
-                        <Label className="text-sm font-semibold">Watchman Validator Types</Label>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-2">
+                        <Label htmlFor="agent-tasks">Tasks & Responsibilities</Label>
+                        <Textarea
+                          id="agent-tasks"
+                          placeholder="List the agent's tasks and responsibilities..."
+                          value={customAgentTasks}
+                          onChange={(e) => setCustomAgentTasks(e.target.value)}
+                          rows={3}
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="agent-purpose">Purpose</Label>
+                        <Textarea
+                          id="agent-purpose"
+                          placeholder="Define the agent's divine purpose..."
+                          value={customAgentPurpose}
+                          onChange={(e) => setCustomAgentPurpose(e.target.value)}
+                          rows={2}
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="agent-scripture">Scripture</Label>
+                        <Textarea
+                          id="agent-scripture"
+                          placeholder="Enter scriptural references for this agent..."
+                          value={customAgentScripture}
+                          onChange={(e) => setCustomAgentScripture(e.target.value)}
+                          rows={2}
+                        />
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2 mb-2">
+                          <Label className="text-sm font-semibold">Watchman Validator Types</Label>
+                          <ShieldAIInfoPopup />
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                           {watchmanTypes.map((type) => (
                             <div key={type} className="flex items-center space-x-2">
                               <Checkbox
@@ -344,23 +381,30 @@ const DeployedAgentsDashboard = () => {
                           ))}
                         </div>
                       </div>
-                      <div className="flex justify-end gap-2">
-                        <Button variant="outline" onClick={() => setCustomAgentModal(false)}>
-                          Cancel
+                      <div className="flex justify-between items-center gap-2 pt-2">
+                        <Button variant="outline" size="sm" className="gap-2" onClick={() => { setCustomAgentModal(false); navigate("/shield-ai-chat"); }}>
+                          <HelpCircle className="w-4 h-4" /> Need Help? Ask S.H.I.E.L.D. AI
                         </Button>
-                        <Button
-                          onClick={() => {
-                            // Handle creating custom agent
-                            toast.success("Custom agent created successfully!");
-                            setCustomAgentModal(false);
-                            setCustomAgentName("");
-                            setCustomAgentDescription("");
-                            setCustomAgentWatchmen([]);
-                          }}
-                          disabled={!customAgentName.trim() || !customAgentDescription.trim()}
-                        >
-                          Create Agent
-                        </Button>
+                        <div className="flex gap-2">
+                          <Button variant="outline" onClick={() => setCustomAgentModal(false)}>
+                            Cancel
+                          </Button>
+                          <Button
+                            onClick={() => {
+                              toast.success("Custom AI Agent created successfully!");
+                              setCustomAgentModal(false);
+                              setCustomAgentName("");
+                              setCustomAgentDescription("");
+                              setCustomAgentTasks("");
+                              setCustomAgentPurpose("");
+                              setCustomAgentScripture("");
+                              setCustomAgentWatchmen([]);
+                            }}
+                            disabled={!customAgentName.trim() || !customAgentDescription.trim()}
+                          >
+                            Create Agent
+                          </Button>
+                        </div>
                       </div>
                     </div>
                   </DialogContent>
@@ -421,7 +465,10 @@ const DeployedAgentsDashboard = () => {
 
                 {/* Watchman Type Selection */}
                 <div className="border-t border-border/30 pt-4">
-                  <p className="text-xs font-semibold text-primary mb-2">Watchman Validator Types</p>
+                  <div className="flex items-center gap-2 mb-2">
+                    <p className="text-xs font-semibold text-primary">Watchman Validator Types</p>
+                    <ShieldAIInfoPopup />
+                  </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                     {watchmanTypes.map((type) => (
                       
@@ -500,57 +547,38 @@ const DeployedAgentsDashboard = () => {
 
                         {/* Right: Watchman + Metrics + Actions */}
                         <div className="flex items-center gap-4 shrink-0">
-                          {/* Watchman Checkboxes */}
-                          <div className="hidden lg:flex flex-col gap-1">
-                            {watchmanTypes.slice(0, 3).map((type) => (
-                              <div key={type} className="flex items-center space-x-1">
-                                <Checkbox
-                                  id={`agent-${item.id}-watchman-${watchmanTypes.indexOf(type)}`}
-                                  checked={selectedWatchmen.includes(type)}
-                                  onCheckedChange={(checked) => {
-                                    if (checked) {
-                                      setSelectedWatchmen([...selectedWatchmen, type]);
-                                    } else {
-                                      setSelectedWatchmen(selectedWatchmen.filter(w => w !== type));
-                                    }
-                                  }}
-                                  className="w-3 h-3"
-                                />
-                                <Label
-                                  htmlFor={`agent-${item.id}-watchman-${watchmanTypes.indexOf(type)}`}
-                                  className="text-[8px] font-medium leading-none cursor-pointer"
-                                >
-                                  {type.split(' ')[1]}
-                                </Label>
-                              </div>
-                            ))}
-                          </div>
-
+                          {/* Per-agent Watchman Validators — 8 types matching Select All */}
                           {dep && (
                             <>
                               <div className="text-center hidden lg:block">
-                                <p className="text-[10px] text-muted-foreground mb-1">Watchman Validators</p>
-                                <RadioGroup
-                                  value={selectedAgentWatchmen[item.id] || ""}
-                                  onValueChange={(value) => setSelectedAgentWatchmen(prev => ({ ...prev, [item.id]: value }))}
-                                  className="flex flex-col gap-1"
-                                >
+                                <div className="flex items-center gap-1 mb-1">
+                                  <p className="text-[10px] text-muted-foreground">Watchman Validators</p>
+                                  <ShieldAIInfoPopup size="sm" />
+                                </div>
+                                <div className="grid grid-cols-2 gap-x-3 gap-y-0.5">
                                   {watchmanTypes.map((type) => (
-                                    <div key={type} className="flex items-center justify-center gap-1">
-                                      <RadioGroupItem
-                                        value={type}
-                                        id={`${item.id}-${type}`}
+                                    <div key={type} className="flex items-center gap-1">
+                                      <Checkbox
+                                        id={`agent-${item.id}-w-${watchmanTypes.indexOf(type)}`}
+                                        checked={selectedWatchmen.includes(type)}
+                                        onCheckedChange={(checked) => {
+                                          if (checked) {
+                                            setSelectedWatchmen([...selectedWatchmen, type]);
+                                          } else {
+                                            setSelectedWatchmen(selectedWatchmen.filter(w => w !== type));
+                                          }
+                                        }}
                                         className="w-3 h-3"
                                       />
                                       <Label
-                                        htmlFor={`${item.id}-${type}`}
-                                        className="text-[8px] cursor-pointer leading-none"
+                                        htmlFor={`agent-${item.id}-w-${watchmanTypes.indexOf(type)}`}
+                                        className="text-[7px] font-medium leading-none cursor-pointer"
                                       >
-                                        {type.split(' ')[2]}
+                                        {type.split('(')[1]?.split(')')[0] || type.split(' ').slice(2, 3).join(' ')}
                                       </Label>
                                     </div>
                                   ))}
-                                </RadioGroup>
+                                </div>
                               </div>
                               <div className="text-center hidden lg:block">
                                 <p className="text-[10px] text-muted-foreground">Tasks</p>

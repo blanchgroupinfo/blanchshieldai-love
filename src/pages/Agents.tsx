@@ -12,6 +12,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
+import ShieldAIInfoPopup from "@/components/ShieldAIInfoPopup";
 import { 
   Search, Filter, ArrowLeft, Bot, Users, Cpu, 
   Settings, Palette, Video, Wand2, Crown, Briefcase,
@@ -125,7 +127,7 @@ const AgentCard = ({ agent, showCategory = false }: { agent: Agent; showCategory
 const AgentDetail = ({ agentId }: { agentId: string }) => {
   const [activated, setActivated] = useState(false);
   const [deploying, setDeploying] = useState(false);
-  const [selectedWatchman, setSelectedWatchman] = useState<string>("");
+  const [selectedWatchmen, setSelectedWatchmen] = useState<string[]>([]);
   const navigate = useNavigate();
   const agent = agents.find(a => a.id === agentId);
   const category = agent ? agentCategories.find(c => c.number === agent.categoryNumber) : null;
@@ -138,7 +140,6 @@ const AgentDetail = ({ agentId }: { agentId: string }) => {
     setTimeout(() => {
       setDeploying(false);
       setActivated(true);
-      // Persist to localStorage for the deployed agents dashboard
       try {
         const stored = localStorage.getItem("shield-deployed-agents");
         const current = stored ? JSON.parse(stored) : [];
@@ -149,6 +150,7 @@ const AgentDetail = ({ agentId }: { agentId: string }) => {
             status: "active",
             tasksCompleted: Math.floor(Math.random() * 50),
             uptime: 95 + Math.random() * 5,
+            watchmenTypes: selectedWatchmen,
           });
           localStorage.setItem("shield-deployed-agents", JSON.stringify(current));
         }
@@ -157,11 +159,17 @@ const AgentDetail = ({ agentId }: { agentId: string }) => {
         description: "Agent is now deployed and operational within the S.H.I.E.L.D. AI OS ecosystem.",
       });
     }, 1500);
-  }, [agentId, agent?.name]);
+  }, [agentId, agent?.name, selectedWatchmen]);
 
   const handleAskAgent = useCallback(() => {
     navigate("/shield-ai-chat");
   }, [navigate]);
+
+  const toggleWatchman = (type: string) => {
+    setSelectedWatchmen(prev =>
+      prev.includes(type) ? prev.filter(w => w !== type) : [...prev, type]
+    );
+  };
 
   if (!agent || !meta) {
     return (
@@ -228,19 +236,19 @@ const AgentDetail = ({ agentId }: { agentId: string }) => {
                 </Button>
               </div>
 
-              {/* Watchman Validator Type Selection */}
+              {/* Watchman Validator Type Selection — Checkboxes for multiple */}
               <div className="mt-6">
-                <h3 className="text-sm font-semibold text-primary mb-3">Watchman Validator Type Selection</h3>
-                <RadioGroup
-                  value={selectedWatchman}
-                  onValueChange={setSelectedWatchman}
-                  className="grid grid-cols-1 md:grid-cols-2 gap-3"
-                >
+                <div className="flex items-center gap-2 mb-3">
+                  <h3 className="text-sm font-semibold text-primary">Watchman Validator Type Selection</h3>
+                  <ShieldAIInfoPopup />
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   {watchmanTypes.map((type) => (
                     <div key={type} className="flex items-center space-x-2 hover:bg-primary/5 rounded-lg p-2 transition-colors">
-                      <RadioGroupItem
-                        value={type}
+                      <Checkbox
                         id={`watchman-${agentId}-${type}`}
+                        checked={selectedWatchmen.includes(type)}
+                        onCheckedChange={() => toggleWatchman(type)}
                         className="border-primary"
                       />
                       <label
@@ -251,7 +259,7 @@ const AgentDetail = ({ agentId }: { agentId: string }) => {
                       </label>
                     </div>
                   ))}
-                </RadioGroup>
+                </div>
               </div>
             </div>
           </div>
