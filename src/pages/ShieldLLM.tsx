@@ -198,14 +198,10 @@ const features = [
     icon: TrendingUp,
     title: "Financial Analytics",
     description: "Advanced financial modeling, risk analysis, and market prediction. Data-driven investment insights."
-   }, {
+  }, {
     icon: BarChart3,
     title: "Data Visualization",
     description: "Create stunning charts, graphs, and infographics. Transform data into actionable visual insights."
-  }, {
-    icon: Sparkles,
-    title: "Hologram & Metaverse",
-    description: "Generate immersive holographic experiences and metaverse environments. Create interactive virtual worlds and augmented reality content."
   }
 ];
 
@@ -233,7 +229,7 @@ const capabilities = [
   "Music Composition",
   "Game Design",
   "Cybersecurity Analysis",
-  "Blockchain Audit",
+  "Blockchain & Distributed Ledger Technology Audit",
   "Data Analysis",
   "Forecasting & Prediction",
   "Process Automation",
