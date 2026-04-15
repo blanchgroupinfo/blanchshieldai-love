@@ -834,7 +834,7 @@ const ShieldLLM = () => {
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-12">
               <h2 className="text-3xl font-display font-bold mb-4 text-foreground">Sovereign Performance Benchmarks</h2>
-              <p className="text-muted-foreground italic font-body">Our LLM is engineered for accuracy, ethics, and sovereign alignment.</p>
+              <p className="text-muted-foreground italic font-body">Our S.H.I.E.L.D. AI LLM is engineered for accuracy, ethics, and sovereign alignment.</p>
             </div>
             
             <div className="overflow-x-auto rounded-2xl border border-border/50 shadow-2xl shadow-primary/5">
