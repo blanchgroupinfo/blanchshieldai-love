@@ -202,6 +202,10 @@ const features = [
     icon: BarChart3,
     title: "Data Visualization",
     description: "Create stunning charts, graphs, and infographics. Transform data into actionable visual insights."
+  }, {
+    icon: Sparkles,
+    title: "Hologram & Metaverse",
+    description: "Generate immersive holographic experiences and metaverse environments. Create interactive virtual worlds and augmented reality content."
   }
 ];
 
