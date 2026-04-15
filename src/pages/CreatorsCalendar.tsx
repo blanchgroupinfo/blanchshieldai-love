@@ -1,7 +1,7 @@
 import { useState, useMemo, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Calendar, Sun, Moon, Star, Book, Clock, ChevronLeft, ChevronRight, Sparkles, Sunrise, AlertCircle, Printer, MapPin, Plus, Bell, Search, Navigation, X, Sunset, Edit, Trash2, Download, Megaphone, Volume2, Smartphone, Mail as MailIcon, MessageCircle, Send as SendIcon, Share2, Droplets, Layers, ClipboardCheck, Globe, Zap } from "lucide-react";
+import { Calendar, Sun, Moon, Star, Book, Clock, ChevronLeft, ChevronRight, ChevronDown, Sparkles, Sunrise, AlertCircle, Printer, MapPin, Plus, Bell, Search, Navigation, X, Sunset, Edit, Trash2, Download, Megaphone, Volume2, Smartphone, Mail as MailIcon, MessageCircle, Send as SendIcon, Share2, Droplets, Layers, ClipboardCheck, Globe, Zap } from "lucide-react";
 import NavigationHeader from "@/components/NavigationHeader";
 import Footer from "@/components/Footer";
 
@@ -15,6 +15,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -167,31 +169,7 @@ const trumpetsRemindersList = [
   { name: 'Holy Sabbath at Sunrise', type: 'trumpet' },
 ];
 
-const remindOptions = [
-  'All',
-  '1 Hour before Sunrise Everyday',
-  '2 Hours before Sunrise Everyday',
-  '3 Hours before Sunrise Everyday',
-  'Morning Sunrise Everyday',
-  'Noon Prayer at 12:00pm',
-  '1 Hour before Noon Prayer Everyday',
-  '2 Hours before Noon Prayer Everyday',
-  '3 Hours before Noon Prayer Everyday',
-  'Sunset Everyday',
-  '1 Hour before Sunset Everyday',
-  '2 Hours before Sunset Everyday',
-  '3 Hours before Sunset Everyday',
-  'Ninth Hour Prayer at 3:00pm',
-  '1 Hour before Ninth Hour Prayer Everyday',
-  '2 Hours before Ninth Hour Prayer Everyday',
-  '3 Hours before Ninth Hour Prayer Everyday',
-  '1 Day',
-  '2 Days',
-  '3 Days',
-  '5 Days',
-  '7 Days',
-  '10 Days'
-];
+
 
 const fastingRemindersList = [
   { name: 'Fourth Month Fast', type: 'fast', description: 'Month 4, Day 9' },
@@ -210,6 +188,128 @@ const fastingRemindersList = [
   { name: 'Day of Atonement', type: 'fast', description: 'Month 7, Day 10' },
   { name: 'Day of Atonement', type: 'fast', description: 'Month 7, Day 11' },
 ];
+
+// Reminder checkbox dropdown options
+const reminderOptions = [
+  { value: -999, label: 'All' },
+  { value: 0, label: 'Morning Sunrise Everyday' },
+  { value: -1, label: '1 Hour before Sunrise Everyday' },
+  { value: -2, label: '2 Hours before Sunrise Everyday' },
+  { value: -3, label: '3 Hours before Sunrise Everyday' },
+  { value: 100, label: 'Noon Prayer at 12:00pm' },
+  { value: 101, label: '1 Hour before Noon Prayer Everyday' },
+  { value: 102, label: '2 Hours before Noon Prayer Everyday' },
+  { value: 103, label: '3 Hours before Noon Prayer Everyday' },
+  { value: 200, label: 'Sunset Everyday' },
+  { value: 201, label: '1 Hour before Sunset Everyday' },
+  { value: 202, label: '2 Hours before Sunset Everyday' },
+  { value: 203, label: '3 Hours before Sunset Everyday' },
+  { value: 300, label: 'Ninth Hour Prayer at 3:00pm' },
+  { value: 301, label: '1 Hour before Ninth Hour Prayer Everyday' },
+  { value: 302, label: '2 Hours before Ninth Hour Prayer Everyday' },
+  { value: 303, label: '3 Hours before Ninth Hour Prayer Everyday' },
+  { value: 1, label: '1 Day' },
+  { value: 2, label: '2 Days' },
+  { value: 3, label: '3 Days' },
+  { value: 5, label: '5 Days' },
+  { value: 7, label: '7 Days' },
+  { value: 10, label: '10 Days' },
+];
+
+// Reminder Checkbox Dropdown Component
+const ReminderCheckboxDropdown = ({ itemName, currentDaysBefore, currentRemindTimes, reminderEnabled, onChange }: {
+  itemName: string;
+  currentDaysBefore?: number;
+  currentRemindTimes?: number[];
+  reminderEnabled: boolean;
+  onChange: (daysBefore: number, enabled: boolean, remindTimes: number[]) => void;
+}) => {
+  const [open, setOpen] = useState(false);
+  const [selectedOptions, setSelectedOptions] = useState<number[]>([]);
+
+  // Initialize selected options based on currentDaysBefore or currentRemindTimes
+  useEffect(() => {
+    if (currentRemindTimes && currentRemindTimes.length > 0) {
+      setSelectedOptions(currentRemindTimes);
+    } else if (currentDaysBefore === -999 || currentDaysBefore === undefined) {
+      setSelectedOptions(reminderOptions.map(o => o.value));
+    } else if (currentDaysBefore < 0) {
+      setSelectedOptions([currentDaysBefore]);
+    } else {
+      setSelectedOptions([currentDaysBefore]);
+    }
+  }, [currentDaysBefore, currentRemindTimes]);
+
+  const handleOptionToggle = (value: number, checked: boolean) => {
+    let newSelected: number[];
+    if (value === -999) {
+      // "All" selected - select all options
+      newSelected = checked ? reminderOptions.map(o => o.value) : [];
+    } else {
+      if (checked) {
+        newSelected = [...selectedOptions, value];
+      } else {
+        newSelected = selectedOptions.filter(v => v !== value);
+      }
+    }
+    setSelectedOptions(newSelected);
+
+    // Trigger onChange with the full array of selected options
+    if (newSelected.length === reminderOptions.length) {
+      onChange(-999, true, reminderOptions.map(o => o.value)); // All selected
+    } else if (newSelected.length === 0) {
+      onChange(1, false, []); // None selected
+    } else {
+      onChange(newSelected[0] || 1, reminderEnabled, newSelected);
+    }
+  };
+
+  const isAllSelected = selectedOptions.length === reminderOptions.length;
+  const displayText = isAllSelected ? 'All' : selectedOptions.length > 0
+    ? selectedOptions.map(v => {
+        const opt = reminderOptions.find(o => o.value === v);
+        return opt ? opt.label.split(' ')[0] : v;
+      }).join(', ')
+    : 'Select';
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button variant="outline" size="sm" className="w-48 h-8 text-xs justify-between">
+          <span className="truncate">{displayText}</span>
+          <ChevronDown className="ml-2 h-3 w-3 shrink-0 opacity-50" />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-64 p-0" align="start">
+        <div className="p-2 border-b">
+          <div className="flex items-center gap-2">
+            <Checkbox
+              id={`${itemName}-all`}
+              checked={isAllSelected}
+              onCheckedChange={(checked) => handleOptionToggle(-999, checked as boolean)}
+            />
+            <Label htmlFor={`${itemName}-all`} className="text-sm font-medium cursor-pointer">All</Label>
+          </div>
+        </div>
+        <ScrollArea className="h-64">
+          <div className="p-2 space-y-1">
+            {reminderOptions.map((option) => (
+              <div key={option.value} className="flex items-center gap-2">
+                <Checkbox
+                  id={`${itemName}-${option.value}`}
+                  checked={selectedOptions.includes(option.value)}
+                  onCheckedChange={(checked) => handleOptionToggle(option.value, checked as boolean)}
+                />
+                <Label htmlFor={`${itemName}-${option.value}`} className="text-xs cursor-pointer">{option.label}</Label>
+              </div>
+            ))}
+          </div>
+        </ScrollArea>
+      </PopoverContent>
+    </Popover>
+  );
+};
+
 const CreatorsCalendar = () => {
   const today = new Date();
   const todayInCreator = getCreatorDateForGregorian(today);
@@ -248,9 +348,11 @@ const CreatorsCalendar = () => {
   const { location, sunTimes, loading: sunLoading, currentTime, getGeolocation, searchLocation, setCoordinates } = useSunTimes();
   const { user, events, reminders, createEvent, deleteEvent, setReminder, getEventsForDay, getReminderForHolyDay } = useCalendarEvents(currentYear);
   const [optimisticReminders, setOptimisticReminders] = useState<any[]>([]);
-  const [selectedRemindOptions, setSelectedRemindOptions] = useState<Record<string, string[]>>({});
-  const [remindDialogOpen, setRemindDialogOpen] = useState(false);
-  const [currentRemindItem, setCurrentRemindItem] = useState<string>('');
+
+
+
+
+
 
   useEffect(() => {
     if (reminders) {
@@ -429,7 +531,7 @@ const CreatorsCalendar = () => {
         const reminder = getReminderForHolyDay(name);
         return setReminder(
           name,
-          reminder?.remind_options || (enabled ? ['1 Day'] : []),
+          reminder?.remind_days_before || (enabled ? 1 : 0),
           enabled,
           { ...channels, reminder_type: type === 'trumpet' ? 'trumpet' : 'holy_day' }
         );
@@ -449,8 +551,15 @@ const CreatorsCalendar = () => {
     }
   };
 
-  const handleIndividualSwitch = async (name: string, remindOptions: string[], enabled: boolean, options: any) => {
-    // Update optimistic state immediately
+  const handleIndividualSwitch = async (name: string, daysBefore: number, enabled: boolean, options: any) => {
+    if (!user) {
+      toast({ title: "Sign In Required", description: "Please sign in to manage reminders", variant: "destructive" });
+      return;
+    }
+
+    console.log('handleIndividualSwitch called:', { name, daysBefore, enabled, options });
+
+    // Update optimistic state immediately for instant feedback
     setOptimisticReminders(prev => {
       const existing = prev.find(r => r.holy_day_name === name);
       if (existing) {
@@ -460,7 +569,18 @@ const CreatorsCalendar = () => {
     });
 
     // Then update in database
-    await setReminder(name, daysBefore, enabled, options);
+    try {
+      const result = await setReminder(name, daysBefore, enabled, options);
+      if (result) {
+        console.log('Reminder updated successfully:', result);
+      } else {
+        console.error('Reminder update returned null');
+        toast({ title: "Error", description: "Failed to save reminder. Please try again.", variant: "destructive" });
+      }
+    } catch (error) {
+      console.error('Error updating reminder:', error);
+      toast({ title: "Error", description: "Failed to save reminder", variant: "destructive" });
+    }
   };
 
   // Prayer request submission
@@ -1086,6 +1206,35 @@ const CreatorsCalendar = () => {
                 </CardContent>
               </Card>
 
+              {/* Winter Feasts - full width */}
+              <Card className="bg-card/50 border-border/50 md:col-span-2">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-3 text-blue-400"><Sparkles className="w-6 h-6" />Winter Feasts (Months 9-12)</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid md:grid-cols-3 gap-4">
+                    {feasts.filter(f => ['dedication', 'nicanor', 'purim'].includes(f.id)).map((feast, index) => (
+                      <motion.div 
+                        key={feast.id} 
+                        initial={{ opacity: 0, y: 20 }} 
+                        animate={{ opacity: 1, y: 0 }} 
+                        transition={{ delay: index * 0.1 }} 
+                        className="p-3 rounded-lg bg-blue-500/5 border border-blue-500/20"
+                      >
+                        <div className="flex items-center justify-between mb-1">
+                          <h4 className="font-medium text-blue-300">{feast.name}</h4>
+                          <Badge variant="outline" className={`text-[10px] ${getFeastBadgeColor(feast.type)}`}>{feast.type}</Badge>
+                        </div>
+                        <p className="text-xs text-muted-foreground">{feast.hebrewName}</p>
+                        <p className="text-xs text-muted-foreground">Month {feast.month}, Day {feast.day}{feast.endDay !== feast.day ? `-${feast.endDay}` : ''}</p>
+                        <p className="text-sm mt-1">{feast.description}</p>
+                        {feast.noWork && <Badge variant="outline" className="mt-2 bg-red-500/10 text-red-300 text-[10px]">No Work</Badge>}
+                      </motion.div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+
               {/* Fast Days - full width */}
               <Card className="bg-card/50 border-border/50 md:col-span-2">
                 <CardHeader>
@@ -1430,14 +1579,11 @@ const CreatorsCalendar = () => {
                       </Button>
                       <div className="flex items-center gap-2 px-2 py-1 rounded-lg bg-primary/5 border border-primary/10">
                         <span className="text-[10px] text-muted-foreground">Select All</span>
-                        <Switch 
-                          className="scale-75" 
-                          checked={holyDayRemindersList.every(item => {
+                        <Switch
+                          className="scale-75"
+                          checked={user && holyDayRemindersList.every(item => {
                             const r = getOptimisticReminder(item.name);
-                            return r?.reminder_enabled && 
-                                   r.email_enabled && r.sms_enabled && r.whatsapp_enabled && 
-                                   r.telegram_enabled && r.botim_enabled && r.fax_enabled && 
-                                   r.hologram_enabled;
+                            return r?.reminder_enabled === true;
                           })}
                           onCheckedChange={(checked) => handleSelectAll('holy-day', checked)}
                         />
@@ -1471,33 +1617,23 @@ const CreatorsCalendar = () => {
                                  </div>
                               </div>
                               <div className="flex items-center gap-4">
-                                 <div className="flex items-center gap-2">
-                                   <span className="text-xs text-muted-foreground">Remind:</span>
-                                   <Button
-                                     variant="outline"
-                                     size="sm"
-                                     className="h-8 text-xs"
-                                     onClick={() => {
-                                       setCurrentRemindItem(item.name);
-                                       setSelectedRemindOptions(prev => ({
-                                         ...prev,
-                                         [item.name]: prev[item.name] || (reminder?.remind_options || [])
-                                       }));
-                                       setRemindDialogOpen(true);
-                                     }}
-                                   >
-                                     {(selectedRemindOptions[item.name] || reminder?.remind_options || []).length > 0
-                                       ? `${(selectedRemindOptions[item.name] || reminder?.remind_options || []).length} selected`
-                                       : 'Select'}
-                                   </Button>
-                                 </div>
-                                <Switch 
-                                  checked={reminder?.reminder_enabled || false} 
-                                   onCheckedChange={(checked) => handleIndividualSwitch(item.name, selectedRemindOptions[item.name] || reminder?.remind_options || [], checked, {})}
+                                  <div className="flex items-center gap-2">
+                                    <span className="text-xs text-muted-foreground">Remind:</span>
+                                    <ReminderCheckboxDropdown
+                                      itemName={item.name}
+                                      currentDaysBefore={reminder?.remind_days_before}
+                                      currentRemindTimes={(reminder as any)?.remind_times}
+                                      reminderEnabled={reminder?.reminder_enabled || false}
+                                      onChange={(daysBefore, enabled, remindTimes) => handleIndividualSwitch(item.name, daysBefore, enabled, { remind_times: remindTimes })}
+                                    />
+                                  </div>
+                                <Switch
+                                  checked={reminder?.reminder_enabled || false}
+                                    onCheckedChange={(checked) => handleIndividualSwitch(item.name, reminder?.remind_days_before || 1, checked, {})}
                                 />
                               </div>
                             </div>
-                            
+
                             {/* Notification Channels */}
                             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3 pt-4 border-t border-border/10">
                               {[
@@ -1515,7 +1651,12 @@ const CreatorsCalendar = () => {
                                    <Switch
                                      className="scale-75"
                                      checked={reminder ? Boolean((reminder as any)[channel.key]) : false}
-                                     onCheckedChange={(checked) => handleIndividualSwitch(item.name, selectedRemindOptions[item.name] || reminder?.remind_options || [], reminder?.reminder_enabled || false, { [channel.key]: checked })}
+                                      onCheckedChange={(checked) => handleIndividualSwitch(
+                                        item.name,
+                                        reminder?.remind_days_before || 1,
+                                        reminder?.reminder_enabled !== false,
+                                        { [channel.key]: checked }
+                                      )}
                                    />
                                 </div>
                               ))}
@@ -1528,50 +1669,6 @@ const CreatorsCalendar = () => {
                 </CardContent>
               </Card>
 
-              {/* Remind Options Dialog */}
-              <Dialog open={remindDialogOpen} onOpenChange={setRemindDialogOpen}>
-                <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
-                  <DialogHeader>
-                    <DialogTitle>Select Remind Options for {currentRemindItem}</DialogTitle>
-                  </DialogHeader>
-                  <div className="grid grid-cols-2 gap-3 py-4">
-                    {remindOptions.map((option) => (
-                      <div key={option} className="flex items-center space-x-2">
-                        <Checkbox
-                          id={`remind-${option}`}
-                          checked={(selectedRemindOptions[currentRemindItem] || []).includes(option)}
-                          onCheckedChange={(checked) => {
-                            setSelectedRemindOptions(prev => {
-                              const current = prev[currentRemindItem] || [];
-                              const updated = checked
-                                ? [...current, option]
-                                : current.filter(o => o !== option);
-                              return { ...prev, [currentRemindItem]: updated };
-                            });
-                          }}
-                        />
-                        <Label htmlFor={`remind-${option}`} className="text-sm cursor-pointer">
-                          {option}
-                        </Label>
-                      </div>
-                    ))}
-                  </div>
-                  <div className="flex justify-end gap-2">
-                    <Button variant="outline" onClick={() => setRemindDialogOpen(false)}>
-                      Cancel
-                    </Button>
-                    <Button
-                      onClick={() => {
-                        const options = selectedRemindOptions[currentRemindItem] || [];
-                        handleIndividualSwitch(currentRemindItem, options, true, {});
-                        setRemindDialogOpen(false);
-                      }}
-                    >
-                      Save
-                    </Button>
-                  </div>
-                </DialogContent>
-              </Dialog>
 
               {/* Daily Blowing of Trumpets Section */}
               <Card className="bg-card/50 border-border/50 overflow-hidden relative">
@@ -1601,14 +1698,11 @@ const CreatorsCalendar = () => {
                       </Button>
                       <div className="flex items-center gap-2 px-2 py-1 rounded-lg bg-amber-500/5 border border-amber-500/10">
                         <span className="text-[10px] text-muted-foreground">Select All</span>
-                        <Switch 
-                          className="scale-75" 
-                          checked={trumpetsRemindersList.every(item => {
+                        <Switch
+                          className="scale-75"
+                          checked={user && trumpetsRemindersList.every(item => {
                             const r = getOptimisticReminder(`Trumpet: ${item.name}`);
-                            return r?.reminder_enabled && 
-                                   r.email_enabled && r.sms_enabled && r.whatsapp_enabled && 
-                                   r.telegram_enabled && r.botim_enabled && r.fax_enabled && 
-                                   r.hologram_enabled;
+                            return r?.reminder_enabled === true;
                           })}
                           onCheckedChange={(checked) => handleSelectAll('trumpet', checked)}
                         />
@@ -1622,7 +1716,14 @@ const CreatorsCalendar = () => {
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-4">
+                  {!user ? (
+                    <div className="text-center py-8">
+                      <Bell className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+                      <p className="text-muted-foreground mb-4">Sign in to manage your reminders</p>
+                      <Button asChild><a href="/auth">Sign In</a></Button>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
                     {trumpetsRemindersList.map((item, idx) => {
                       const reminderName = `Trumpet: ${item.name}`;
                       const reminder = getOptimisticReminder(reminderName);
@@ -1639,21 +1740,23 @@ const CreatorsCalendar = () => {
                               </div>
                             </div>
                             <div className="flex items-center gap-3">
-                                <div className="flex -space-x-1">
-                                  <div className="p-1 rounded-full bg-background border border-border">
-                                    <Bell className="w-3.5 h-3.5 text-primary" />
-                                  </div>
-                                  <div className="p-1 rounded-full bg-background border border-border">
-                                    <Megaphone className="w-3.5 h-3.5 text-amber-500" />
-                                  </div>
+                                <div className="flex items-center gap-2">
+                                  <span className="text-xs text-muted-foreground">Remind:</span>
+                                  <ReminderCheckboxDropdown
+                                    itemName={reminderName}
+                                    currentDaysBefore={reminder?.remind_days_before}
+                                    currentRemindTimes={(reminder as any)?.remind_times}
+                                    reminderEnabled={reminder?.reminder_enabled || false}
+                                    onChange={(daysBefore, enabled, remindTimes) => handleIndividualSwitch(reminderName, daysBefore, enabled, { reminder_type: 'trumpet', remind_times: remindTimes })}
+                                  />
                                 </div>
-                                <Switch 
-                                  checked={reminder?.reminder_enabled || false} 
-                                   onCheckedChange={(checked) => handleIndividualSwitch(reminderName, [], checked, { reminder_type: 'trumpet' })}
+                                <Switch
+                                  checked={reminder?.reminder_enabled || false}
+                                   onCheckedChange={(checked) => handleIndividualSwitch(reminderName, 0, checked, { reminder_type: 'trumpet' })}
                                 />
                             </div>
                           </div>
-                          
+
                           {/* Notification Channels */}
                           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3 pt-4 border-t border-border/10">
                             {[
@@ -1671,7 +1774,7 @@ const CreatorsCalendar = () => {
                                 <Switch
                                   className="scale-75"
                                   checked={reminder ? Boolean((reminder as any)[channel.key]) : false}
-                                   onCheckedChange={(checked) => handleIndividualSwitch(reminderName, [], reminder?.reminder_enabled || false, { [channel.key]: checked, reminder_type: 'trumpet' })}
+                                    onCheckedChange={(checked) => handleIndividualSwitch(reminderName, 0, reminder?.reminder_enabled || false, { [channel.key]: checked, reminder_type: 'trumpet' })}
                                 />
                               </div>
                             ))}
@@ -1680,6 +1783,7 @@ const CreatorsCalendar = () => {
                       );
                     })}
                   </div>
+                  )}
                 </CardContent>
               </Card>
 
@@ -1712,14 +1816,11 @@ const CreatorsCalendar = () => {
                       </Button>
                       <div className="flex items-center gap-2 px-2 py-1 rounded-lg bg-red-500/5 border border-red-500/10">
                         <span className="text-[10px] text-muted-foreground">Select All</span>
-                        <Switch 
-                          className="scale-75" 
-                          checked={fastingRemindersList.every(item => {
+                        <Switch
+                          className="scale-75"
+                          checked={user && fastingRemindersList.every(item => {
                             const r = getOptimisticReminder(item.name);
-                            return r?.reminder_enabled && 
-                                   r.email_enabled && r.sms_enabled && r.whatsapp_enabled && 
-                                   r.telegram_enabled && r.botim_enabled && r.fax_enabled && 
-                                   r.hologram_enabled;
+                            return r?.reminder_enabled === true;
                           })}
                           onCheckedChange={(checked) => handleSelectAll('fast', checked)}
                         />
@@ -1752,29 +1853,19 @@ const CreatorsCalendar = () => {
                                 </div>
                               </div>
                               <div className="flex items-center gap-4">
-                                 <div className="flex items-center gap-2">
-                                   <span className="text-xs text-muted-foreground">Remind:</span>
-                                   <Button
-                                     variant="outline"
-                                     size="sm"
-                                     className="h-8 text-xs"
-                                     onClick={() => {
-                                       setCurrentRemindItem(item.name);
-                                       setSelectedRemindOptions(prev => ({
-                                         ...prev,
-                                         [item.name]: prev[item.name] || (reminder?.remind_options || [])
-                                       }));
-                                       setRemindDialogOpen(true);
-                                     }}
-                                   >
-                                     {(selectedRemindOptions[item.name] || reminder?.remind_options || []).length > 0
-                                       ? `${(selectedRemindOptions[item.name] || reminder?.remind_options || []).length} selected`
-                                       : 'Select'}
-                                   </Button>
-                                 </div>
+                                  <div className="flex items-center gap-2">
+                                    <span className="text-xs text-muted-foreground">Remind:</span>
+                                    <ReminderCheckboxDropdown
+                                      itemName={item.name}
+                                      currentDaysBefore={reminder?.remind_days_before}
+                                      currentRemindTimes={(reminder as any)?.remind_times}
+                                      reminderEnabled={reminder?.reminder_enabled || false}
+                                      onChange={(daysBefore, enabled, remindTimes) => handleIndividualSwitch(item.name, daysBefore, enabled, { remind_times: remindTimes })}
+                                    />
+                                  </div>
                                  <Switch
                                    checked={reminder?.reminder_enabled || false}
-                                   onCheckedChange={(checked) => handleIndividualSwitch(item.name, selectedRemindOptions[item.name] || reminder?.remind_options || [], checked, {})}
+                                    onCheckedChange={(checked) => handleIndividualSwitch(item.name, reminder?.remind_days_before || 1, checked, {})}
                                  />
                               </div>
                             </div>
@@ -1796,7 +1887,12 @@ const CreatorsCalendar = () => {
                                    <Switch
                                      className="scale-75"
                                      checked={reminder ? Boolean((reminder as any)[channel.key]) : false}
-                                     onCheckedChange={(checked) => handleIndividualSwitch(item.name, selectedRemindOptions[item.name] || reminder?.remind_options || [], reminder?.reminder_enabled || false, { [channel.key]: checked })}
+                                      onCheckedChange={(checked) => handleIndividualSwitch(
+                                        item.name,
+                                        reminder?.remind_days_before || 1,
+                                        reminder?.reminder_enabled !== false,
+                                        { [channel.key]: checked }
+                                      )}
                                    />
                                 </div>
                               ))}
