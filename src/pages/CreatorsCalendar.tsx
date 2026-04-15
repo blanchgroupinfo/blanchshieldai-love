@@ -1539,12 +1539,35 @@ const CreatorsCalendar = () => {
                         <p className="italic text-sm">"{scripture.verse}"</p>
                         <p className="text-xs text-purple-400 mt-2">{scripture.reference}</p>
                       </div>)}
-                    </div>
-                  </ScrollArea>
-                </CardContent>
-              </Card>
-            </div>
-          </TabsContent>
+                     </div>
+                   </ScrollArea>
+                 </CardContent>
+               </Card>
+               <Card className="bg-card/50 border-border/50 md:col-span-2">
+                 <CardHeader>
+                   <CardTitle className="flex items-center gap-3 text-green-400"><Calendar className="w-6 h-6" />Scriptures by Month</CardTitle>
+                 </CardHeader>
+                 <CardContent>
+                   <ScrollArea className="h-[400px] pr-4">
+                     <div className="space-y-6">
+                       {scripturesByMonth.map((monthData, i) => (
+                         <div key={i} className="border border-green-500/20 rounded-lg p-4 bg-green-500/5">
+                           <h4 className="font-bold text-green-400 mb-3">{monthData.month}</h4>
+                           <ul className="space-y-1">
+                             {monthData.scriptures.map((scripture, j) => (
+                               <li key={j} className="text-sm text-muted-foreground">
+                                 • {scripture}
+                               </li>
+                             ))}
+                           </ul>
+                         </div>
+                       ))}
+                     </div>
+                   </ScrollArea>
+                 </CardContent>
+               </Card>
+             </div>
+           </TabsContent>
 
           {/* Reminders Tab */}
           <TabsContent value="reminders">
