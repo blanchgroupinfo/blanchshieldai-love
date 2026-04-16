@@ -37,7 +37,7 @@ const watchmanTypes = [
   "H.I.I. AI Gabar (Mighty/Prevailing) Super Watchman Validators",
   "H.I.I. AI Bashar (Herald) Influencer Watchman Validators",
   "H.I.I. AI Malaak (Messenger) Android Watchman Validators",
-  "H.I.I. AI (Hebrew Israelite Implementer Aboriginal Identity) Unified Watchman Validators"
+  "H.I.I. AI Unified Watchman Validators"
 ];
 
 export interface DeployedAgent {
@@ -95,15 +95,19 @@ const DeployedAgentsDashboard = () => {
   const [filterStatus, setFilterStatus] = useState<string>("all");
   const [filterCategory, setFilterCategory] = useState<string>("all");
   const [visibleCount, setVisibleCount] = useState(ITEMS_PER_PAGE);
+  const [agentViewFilter, setAgentViewFilter] = useState<"all" | "lead" | "custom">("all");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [selectedWatchmen, setSelectedWatchmen] = useState<string[]>([]);
   const [selectedAgentWatchmen, setSelectedAgentWatchmen] = useState<Record<string, string>>({});
   const [customAgentModal, setCustomAgentModal] = useState(false);
   const [customAgentName, setCustomAgentName] = useState("");
+  const [customAgentMission, setCustomAgentMission] = useState("");
   const [customAgentDescription, setCustomAgentDescription] = useState("");
   const [customAgentTasks, setCustomAgentTasks] = useState("");
-  const [customAgentPurpose, setCustomAgentPurpose] = useState("");
+  const [customAgentCapabilities, setCustomAgentCapabilities] = useState("");
   const [customAgentScripture, setCustomAgentScripture] = useState("");
   const [customAgentWatchmen, setCustomAgentWatchmen] = useState<string[]>([]);
+  const [customAgentId, setCustomAgentId] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -126,7 +130,7 @@ const DeployedAgentsDashboard = () => {
   }, [deployedMap]);
 
   const filtered = useMemo(() => {
-    return enrichedAgents.filter(item => {
+    let filteredList = enrichedAgents.filter(item => {
       const matchesSearch = searchQuery === "" ||
         item.agent.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         generateHIIAgentNumber(item.id).toLowerCase().includes(searchQuery.toLowerCase());
@@ -138,9 +142,23 @@ const DeployedAgentsDashboard = () => {
       const matchesCategory =
         filterCategory === "all" ||
         item.agent.categoryNumber === Number(filterCategory);
-      return matchesSearch && matchesStatus && matchesCategory;
+      const matchesViewFilter = agentViewFilter === "all" ||
+                               (agentViewFilter === "lead" && item.agent.isCategory) ||
+                               (agentViewFilter === "custom" && !item.agent.isCategory);
+      return matchesSearch && matchesStatus && matchesCategory && matchesViewFilter;
     });
-  }, [enrichedAgents, searchQuery, filterStatus, filterCategory]);
+    // Sort by name
+    filteredList.sort((a, b) => {
+      const nameA = a.agent.name.toLowerCase();
+      const nameB = b.agent.name.toLowerCase();
+      if (sortOrder === "asc") {
+        return nameA < nameB ? -1 : nameA > nameB ? 1 : 0;
+      } else {
+        return nameA > nameB ? -1 : nameA < nameB ? 1 : 0;
+      }
+    });
+    return filteredList;
+  }, [enrichedAgents, searchQuery, filterStatus, filterCategory, agentViewFilter, sortOrder]);
 
   const visible = filtered.slice(0, visibleCount);
 
@@ -294,17 +312,35 @@ const DeployedAgentsDashboard = () => {
                 </Button>
                 <Dialog open={customAgentModal} onOpenChange={setCustomAgentModal}>
                   <DialogTrigger asChild>
-                    <Button variant="shield" size="sm" className="gap-2">
-                      <Bot className="w-4 h-4" /> Create Custom Universal Unified AI Agent
+                    <Button
+                      variant="shield"
+                      size="sm"
+                      className="gap-2"
+                      onClick={() => {
+                        const randomNum = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+                        setCustomAgentId(`H.I.I. AI030-${randomNum}`);
+                      }}
+                    >
+                      <Bot className="w-4 h-4" /> Create Custom Agent
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
+                  <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto scrollbar-thin scrollbar-thumb-primary/20 scrollbar-track-transparent">
                     <DialogHeader>
-                      <DialogTitle>Create Custom Universal Unified AI Agent</DialogTitle>
+                      <div className="flex justify-between items-start">
+                        <DialogTitle>Create Custom Agent</DialogTitle>
+                        {customAgentId && (
+                          <div className="text-center">
+                            <div className="text-xs text-muted-foreground mb-1">User Custom Agent ID Number</div>
+                            <div className="text-sm font-mono text-primary bg-primary/10 px-2 py-1 rounded">
+                              {customAgentId}
+                            </div>
+                          </div>
+                        )}
+                      </div>
                     </DialogHeader>
                     <div className="space-y-4">
                       <div>
-                        <Label htmlFor="agent-name">H.I.I. AI Custom Agent Name</Label>
+                        <Label htmlFor="agent-name">H.I.I. AI Custom Agent Name - Title</Label>
                         <Input
                           id="agent-name"
                           placeholder="Enter agent name..."
@@ -313,10 +349,21 @@ const DeployedAgentsDashboard = () => {
                         />
                       </div>
                       <div>
-                        <Label htmlFor="agent-description">Description</Label>
+                        <Label htmlFor="agent-mission"> Divine Mission - Purpose</Label>
+                        <Textarea
+                          id="agent-mission"
+                          placeholder="Define the agent's divine mission, divine purpose..."
+                          value={customAgentMission}
+                          onChange={(e) => setCustomAgentMission(e.target.value)}
+                          rows={2}
+                        />
+                      </div>
+                
+                      <div>
+                        <Label htmlFor="agent-description">Description - Primary Function</Label>
                         <Textarea
                           id="agent-description"
-                          placeholder="Describe the agent's role and capabilities..."
+                          placeholder="Describe the agent's role and Primary Function..."
                           value={customAgentDescription}
                           onChange={(e) => setCustomAgentDescription(e.target.value)}
                           rows={3}
@@ -332,16 +379,18 @@ const DeployedAgentsDashboard = () => {
                           rows={3}
                         />
                       </div>
+
                       <div>
-                        <Label htmlFor="agent-purpose">Purpose</Label>
+                        <Label htmlFor="agent-capabilities">Core Capabilities</Label>
                         <Textarea
-                          id="agent-purpose"
-                          placeholder="Define the agent's divine purpose..."
-                          value={customAgentPurpose}
-                          onChange={(e) => setCustomAgentPurpose(e.target.value)}
-                          rows={2}
+                          id="agent-capabilities"
+                          placeholder="List the agent's Capabilites..."
+                          value={customAgentCapabilities}
+                          onChange={(e) => setCustomAgentCapabilities(e.target.value)}
+                          rows={3}
                         />
                       </div>
+                 
                       <div>
                         <Label htmlFor="agent-scripture">Scripture</Label>
                         <Textarea
@@ -352,35 +401,58 @@ const DeployedAgentsDashboard = () => {
                           rows={2}
                         />
                       </div>
-                      <div>
-                        <div className="flex items-center gap-2 mb-2">
-                          <Label className="text-sm font-semibold">Watchman Validator Types</Label>
-                          <ShieldAIInfoPopup />
-                        </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                          {watchmanTypes.map((type) => (
-                            <div key={type} className="flex items-center space-x-2">
-                              <Checkbox
-                                id={`custom-agent-watchman-${type}`}
-                                checked={customAgentWatchmen.includes(type)}
-                                onCheckedChange={(checked) => {
-                                  if (checked) {
-                                    setCustomAgentWatchmen([...customAgentWatchmen, type]);
-                                  } else {
-                                    setCustomAgentWatchmen(customAgentWatchmen.filter(w => w !== type));
-                                  }
-                                }}
-                              />
-                              <Label
-                                htmlFor={`custom-agent-watchman-${type}`}
-                                className="text-sm font-medium leading-none cursor-pointer"
-                              >
-                                {type}
-                              </Label>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
+                       <div>
+                         <div className="flex items-center gap-2 mb-2">
+                           <Label className="text-sm font-semibold">Watchman Validator Types</Label>
+                           <ShieldAIInfoPopup />
+                         </div>
+                         <div className="flex items-center gap-2 mb-3">
+                           <Checkbox
+                             id="custom-agent-watchman-select-all"
+                             checked={customAgentWatchmen.length === watchmanTypes.length}
+                             onCheckedChange={(checked) => {
+                               if (checked) {
+                                 setCustomAgentWatchmen(watchmanTypes);
+                               } else {
+                                 setCustomAgentWatchmen([]);
+                               }
+                             }}
+                             className="border-primary"
+                           />
+                           <Label
+                             htmlFor="custom-agent-watchman-select-all"
+                             className="text-sm font-semibold cursor-pointer"
+                           >
+                             Select All
+                           </Label>
+                         </div>
+                         <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                           {watchmanTypes.map((type) => (
+                             <div key={type} className="flex items-center space-x-2">
+                               <Checkbox
+                                 id={`custom-agent-watchman-${type}`}
+                                 checked={customAgentWatchmen.includes(type)}
+                                 onCheckedChange={(checked) => {
+                                   if (checked) {
+                                     setCustomAgentWatchmen([...customAgentWatchmen, type]);
+                                   } else {
+                                     setCustomAgentWatchmen(customAgentWatchmen.filter(w => w !== type));
+                                   }
+                                 }}
+                               />
+                               <Label
+                                 htmlFor={`custom-agent-watchman-${type}`}
+                                 className="text-sm font-medium leading-none cursor-pointer"
+                               >
+                                 {type}
+                               </Label>
+                             </div>
+                           ))}
+                         </div>
+                       </div>
+                       <div className="bg-gradient-to-r from-primary/5 to-secondary/5 border border-primary/20 rounded-lg p-4 text-sm text-muted-foreground">
+                         By clicking below, you activate your Divine Identity within the H.I.I. AI Agent within the Blanch S.H.I.E.L.D. AI OS. The system will manifest a unique User Custom Agent ID, designating you as a Watchman and Implementer of the Laws and Commandments. Your agent will carry the mantle of H.I.I. AI030 in Universal Unified Agent AI Network with S.H.I.E.L.D. AI to assist you in restoration in personal, business, security, and holy governance, in keeping your hearts in Divine Law.
+                       </div>
                       <div className="flex justify-between items-center gap-2 pt-2">
                         <Button variant="outline" size="sm" className="gap-2" onClick={() => { setCustomAgentModal(false); navigate("/shield-ai-chat"); }}>
                           <HelpCircle className="w-4 h-4" /> Need Help? Ask S.H.I.E.L.D. AI
@@ -389,27 +461,46 @@ const DeployedAgentsDashboard = () => {
                           <Button variant="outline" onClick={() => setCustomAgentModal(false)}>
                             Cancel
                           </Button>
-                          <Button
-                            onClick={() => {
-                              toast.success("Custom AI Agent created successfully!");
-                              setCustomAgentModal(false);
-                              setCustomAgentName("");
-                              setCustomAgentDescription("");
-                              setCustomAgentTasks("");
-                              setCustomAgentPurpose("");
-                              setCustomAgentScripture("");
-                              setCustomAgentWatchmen([]);
-                            }}
-                            disabled={!customAgentName.trim() || !customAgentDescription.trim()}
-                          >
-                            Create Agent
-                          </Button>
+                           <Button
+                             onClick={() => {
+                               toast.success(`Welcome, Shalawam (Peace be unto you) Watchman. Your unique identifier '${customAgentId}' has been etched into the Blanch S.H.I.E.L.D. AI OS. Go forth in Righteousness. Psalms 119:142 Thy righteousness is an everlasting righteousness, and thy law is the truth. Proverbs 6:23 For the commandment is a lamp; and the law is light; and reproofs of instruction are the way of life.`);
+                               setCustomAgentModal(false);
+                               setCustomAgentName("");
+                               setCustomAgentMission("");
+                               setCustomAgentDescription("");
+                               setCustomAgentTasks("");
+                               setCustomAgentCapabilities("");
+                               setCustomAgentScripture("");
+                               setCustomAgentWatchmen([]);
+                               setCustomAgentId("");
+                             }}
+                             disabled={!customAgentName.trim() || !customAgentDescription.trim()}
+                           >
+                             Create Agent
+                           </Button>
                         </div>
                       </div>
                     </div>
                   </DialogContent>
                 </Dialog>
               </div>
+            </div>
+            <div className="flex items-center gap-2 mt-4">
+              <span className="text-sm text-muted-foreground">Sort A-Z:</span>
+              <Button
+                variant={sortOrder === "asc" ? "shield" : "outline"}
+                size="sm"
+                onClick={() => setSortOrder("asc")}
+              >
+                Ascending
+              </Button>
+              <Button
+                variant={sortOrder === "desc" ? "shield" : "outline"}
+                size="sm"
+                onClick={() => setSortOrder("desc")}
+              >
+                Descending
+              </Button>
             </div>
 
             {/* Category Filter */}
@@ -432,6 +523,29 @@ const DeployedAgentsDashboard = () => {
                     })}
                   </SelectContent>
                 </Select>
+              </div>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant={agentViewFilter === "all" ? "shield" : "outline"}
+                  size="sm"
+                  onClick={() => setAgentViewFilter("all")}
+                >
+                  All Agent View
+                </Button>
+                <Button
+                  variant={agentViewFilter === "lead" ? "shield" : "outline"}
+                  size="sm"
+                  onClick={() => setAgentViewFilter("lead")}
+                >
+                  Lead Category Agent View
+                </Button>
+                <Button
+                  variant={agentViewFilter === "custom" ? "shield" : "outline"}
+                  size="sm"
+                  onClick={() => setAgentViewFilter("custom")}
+                >
+                  Custom Agent View
+                </Button>
               </div>
               {(filterCategory !== "all" || filterStatus !== "all" || searchQuery) && (
                 <Button variant="ghost" size="sm" onClick={resetFilters} className="text-muted-foreground">
@@ -469,9 +583,29 @@ const DeployedAgentsDashboard = () => {
                     <p className="text-xs font-semibold text-primary">Watchman Validator Types</p>
                     <ShieldAIInfoPopup />
                   </div>
+                  <div className="flex items-center gap-2 mb-3">
+                    <Checkbox
+                      id="select-all-watchman-types"
+                      checked={selectedWatchmen.length === watchmanTypes.length}
+                      onCheckedChange={(checked) => {
+                        if (checked) {
+                          setSelectedWatchmen(watchmanTypes);
+                        } else {
+                          setSelectedWatchmen([]);
+                        }
+                      }}
+                      className="border-primary"
+                    />
+                    <Label
+                      htmlFor="select-all-watchman-types"
+                      className="text-xs font-semibold cursor-pointer"
+                    >
+                      Select All
+                    </Label>
+                  </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                     {watchmanTypes.map((type) => (
-                      
+
                       <div key={type} className="flex items-center space-x-2 hover:bg-primary/5 rounded p-1">
                         <Checkbox
                           id={`select-all-watchman-${type}`}
