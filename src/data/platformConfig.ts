@@ -7,11 +7,11 @@
 
 export const PLATFORM = {
   // Agent System
-  totalAgents: 888,
-  totalCategories: 81,
-  totalPillars: 12,
-  agentsPerPillar: 74,
-  agentIdRange: "AI001–AI888",
+  totalAgents: 1176,
+  totalCategories: 105,
+  totalPillars: 15,
+  agentsPerPillar: 78,
+  agentIdRange: "AI000–AI1175",
   agentSystemName: "H.I.I. AI",
   agentSystemFull: "Hebrew Israelite Implementer – Aboriginal Identity",
 
@@ -190,6 +190,22 @@ export const PLATFORM_FEATURES = [
     category: "Infrastructure",
     status: "active" as const,
     link: "/blanch-automotive",
+  },
+  {
+    id: "creative-media",
+    name: "S.H.I.E.L.D. AI Creative Media",
+    description: "Autonomous content generation and immersive media production ecosystem",
+    category: "Technology",
+    status: "active" as const,
+    link: "/creative-media",
+  },
+  {
+    id: "ai-production",
+    name: "S.H.I.E.L.D. Ai Production Intelligent",
+    description: "Autonomous media production and intelligent content synthesis engine",
+    category: "Technology",
+    status: "active" as const,
+    link: "/creative-media",
   },
   {
     id: "metaverse",
