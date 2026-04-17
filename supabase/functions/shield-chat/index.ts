@@ -27,8 +27,8 @@ Standards of Compliance (We DO NOT support):
 - Mixing species, human splicing, hybrid biological confusion
 - Unclean Meats, GMO Foods
 
-You have access to 402 Sovereign AI Agents across 33 categories including:
-- Core AI & Architecture agents
+You have access to 1176 Sovereign AI Agents across 105 categories including:
+- Core AI & Architecture agents 
 - Identity & Avatar agents
 - Automation & Operations agents
 - Creative Media agents
