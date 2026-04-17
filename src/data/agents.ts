@@ -1,1522 +1,1367 @@
-export interface Agent {
-  id: string;
-  name: string;
-  category: string;
-  categoryNumber: number;
-  description?: string;
-  isCategory?: boolean;
-}
+import { useState, useMemo, useCallback } from "react";
+import { useParams, Link, useNavigate } from "react-router-dom";
+import NavigationHeader from "@/components/NavigationHeader";
+import Footer from "@/components/Footer";
+import ScrollAnimationWrapper from "@/components/ScrollAnimationWrapper";
+import { agents, agentCategories, Agent, generateHIIAgentNumber, totalAgents, totalCategories, totalPillars } from "@/data/agents";
+import { getAgentDetailMeta } from "@/data/agentDetails";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
+import ShieldAIInfoPopup from "@/components/ShieldAIInfoPopup";
+import {
+  Search, Filter, ArrowLeft, Bot, Users, Cpu,
+  Settings, Palette, Video, Wand2, Crown, Briefcase,
+  TrendingUp, ShieldCheck, BarChart, BookOpen, Wallet,
+  Gamepad2, Heart, HandHeart, Scale, Truck, Car,
+  Calendar, Home, Book, Star, Lock, Server, Globe,
+  RefreshCw, Activity, Leaf, Gem, Sun, Rocket,
+  Zap, Play, MessageSquare, CheckCircle2, Power,
+  Monitor, Layers, Map, Gavel, Coins, GraduationCap,
+  Network, Earth, HeartPulse, Trees, FlaskConical, Telescope,
+  Shield, Radio as RadioIcon, Landmark, Recycle, Satellite, Microscope,
+  Library, Scroll, Badge as BadgeIcon, HelpCircle, Database, Eye, UserCheck, Clock, XCircle
+} from "lucide-react";
+import { toast } from "sonner";
 
-// H.I.I. AI = Hebrew Israelite Implementer Aboriginal Identity
-// Format: H.I.I. AIXXX where XXX is the sequential number (000-1175 = 1176 agents)
-export const generateHIIAgentNumber = (id: string): string => {
-  const num = id.replace("AI", "");
-  return `H.I.I. AI${num.padStart(3, "0")}`;
-};
-
-export const getAgentDisplayId = (agent: Agent): string => {
-  return generateHIIAgentNumber(agent.id);
-};
-
-export const agentCategories = [
-  { number: 1, name: "Core AI & Architecture", icon: "cpu" },
-  { number: 2, name: "Identity & Avatar", icon: "user" },
-  { number: 3, name: "Automation & Operations", icon: "settings" },
-  { number: 4, name: "Creation & Design", icon: "palette" },
-  { number: 5, name: "Creative Media", icon: "video" },
-  { number: 6, name: "Generative Modalities", icon: "wand" },
-  { number: 7, name: "Executive & Governance", icon: "crown" },
-  { number: 8, name: "Industry & Business Core", icon: "briefcase" },
-  { number: 9, name: "Sales, Marketing & Growth", icon: "trending-up" },
-  { number: 10, name: "Compliance, Trust & Risk", icon: "shield-check" },
-  { number: 11, name: "Data, Analytics & Intelligence", icon: "bar-chart" },
-  { number: 12, name: "Education & Learning", icon: "book-open" },
-  { number: 13, name: "Finance & Payments", icon: "wallet" },
-  { number: 14, name: "Gaming & Incentives", icon: "gamepad" },
-  { number: 15, name: "Health & Nutrition", icon: "heart" },
-  { number: 16, name: "Humanitarian & Ethics", icon: "hand-heart" },
-  { number: 17, name: "Legal, Policy & Governance", icon: "scale" },
-  { number: 18, name: "Logistics & Physical World", icon: "truck" },
-  { number: 19, name: "Marketing & Relationships", icon: "users" },
-  { number: 20, name: "Mobility & Transport", icon: "car" },
-  { number: 21, name: "Operations, Events & Talent", icon: "calendar" },
-  { number: 22, name: "Personal & Family", icon: "home" },
-  { number: 23, name: "Spiritual & Scriptural", icon: "book" },
-  { number: 24, name: "Core Sovereign & Meta", icon: "star" },
-  { number: 25, name: "Security & Protection", icon: "lock" },
-  { number: 26, name: "Technology & Infrastructure", icon: "server" },
-  { number: 27, name: "Universal / Meta Agents", icon: "globe" },
-  { number: 28, name: "Autonomous Self-Healing", icon: "refresh" },
-  { number: 29, name: "Health & Vitality", icon: "activity" },
-  { number: 30, name: "Food & Agriculture Systems", icon: "leaf" },
-  { number: 31, name: "Crystal & Frequency", icon: "gem" },
-  { number: 32, name: "Light & Energy", icon: "sun" },
-  { number: 33, name: "Space & Cosmology", icon: "rocket" },
-  { number: 34, name: "Visual & Interactive", icon: "monitor" },
-  { number: 35, name: "Blanch OS Orchestrator", icon: "layers" },
-  { number: 36, name: "Global Monitoring & Census", icon: "map" },
-  { number: 37, name: "Human Rights & Justice", icon: "gavel" },
-  { number: 38, name: "Economics & Resource Management", icon: "coins" },
-  { number: 39, name: "Education & Knowledge Management", icon: "graduation-cap" },
-  { number: 40, name: "Technology & Infrastructure Mgmt", icon: "network" },
-  { number: 41, name: "Environment & Earth Systems", icon: "earth" },
-  { number: 42, name: "Human Health & Wellness", icon: "heart-pulse" },
-  { number: 43, name: "Culture, Arts & Human Expression", icon: "palette" },
-  { number: 44, name: "Social Structure & Community", icon: "users" },
-  { number: 45, name: "Environment & Sustainability", icon: "trees" },
-  { number: 46, name: "Science, Research & Technology", icon: "flask" },
-  { number: 47, name: "Space, Astronomy & Exploration", icon: "telescope" },
-  { number: 48, name: "Defense & Strategic Operations", icon: "shield" },
-  { number: 49, name: "Communications & Media Networks", icon: "radio" },
-  { number: 50, name: "Culture, Arts & Heritage", icon: "landmark" },
-  { number: 51, name: "Environmental Sustainability", icon: "recycle" },
-  { number: 52, name: "Space Exploration & Astrotech", icon: "satellite" },
-  { number: 53, name: "Information & Cybersecurity", icon: "lock" },
-  { number: 54, name: "Health Research & Medical Tech", icon: "microscope" },
-  { number: 55, name: "Education & Knowledge Systems", icon: "library" },
-  { number: 56, name: "Culture & Heritage", icon: "scroll" },
-  { number: 57, name: "Justice, Law & Public Safety", icon: "badge" },
-  { number: 58, name: "Sovereign Banking & Treasury", icon: "wallet" },
-  { number: 59, name: "Sovereign Trade & Markets", icon: "trending-up" },
-  { number: 60, name: "Reparations & Divine Charity", icon: "hand-heart" },
-  { number: 61, name: "Smart City & Urban Planning", icon: "home" },
-  { number: 62, name: "Distributed Ledger & Blockchain", icon: "server" },
-  { number: 63, name: "Universal Commerce Models", icon: "globe" },
-  { number: 64, name: "Interstellar & Celestial", icon: "rocket" },
-  { number: 65, name: "Holographic & Immersive", icon: "gem" },
-  { number: 66, name: "Sovereign OS & Platform", icon: "cpu" },
-  { number: 67, name: "Clean Food & Non-GMO", icon: "leaf" },
-  { number: 68, name: "Automotive & Mobility", icon: "car" },
-  { number: 69, name: "Energy & Crystal Systems", icon: "sun" },
-  { number: 70, name: "Quantum & Advanced Computing", icon: "activity" },
-  { number: 71, name: "Media Production & Publishing", icon: "video" },
-  { number: 72, name: "Sovereign Governance & Diplomacy", icon: "crown" },
-  { number: 73, name: "Real Estate & Properties", icon: "home" },
-  { number: 74, name: "Insurance & Risk Management", icon: "shield-check" },
-  { number: 75, name: "Hospitality & Tourism", icon: "star" },
-  { number: 76, name: "Watchman & Covenant", icon: "book" },
-  { number: 77, name: "Affiliate & Rewards", icon: "star" },
-  { number: 78, name: "Mechanical Android & Robotics", icon: "settings" },
-  { number: 79, name: "LLM & Model Intelligence", icon: "cpu" },
-  { number: 80, name: "Gateway & API Management", icon: "server" },
-  { number: 81, name: "Sovereign Spiritual Intelligence", icon: "sun" },
-  { number: 82, name: "Infrastructure, Security & Technology", icon: "shield" },
-  { number: 83, name: "Environment & Earth Systems", icon: "leaf" },
-  { number: 84, name: "Science & Exploration", icon: "rocket" },
-  { number: 85, name: "Spiritual, Sovereign Intelligence & Ethical Systems", icon: "book" },
-  { number: 86, name: "Royal Priesthood Services", icon: "crown" },
-  { number: 87, name: "Global Watchman Operations", icon: "star" },
-  { number: 88, name: "Covenant & Law Enforcement", icon: "scale" },
-  { number: 89, name: "Reparations & Economic Restoration", icon: "hand-heart" },
-  { number: 90, name: "Divine Charity & Humanitarian Aid", icon: "heart" },
-  { number: 91, name: "Hologram & Metaverse Operations", icon: "gem" },
-  { number: 92, name: "Universal Language & Translation", icon: "globe" },
-  { number: 93, name: "Blanch Corridor & Smart Cities", icon: "home" },
-  { number: 94, name: "Celestial Navigation & Astronomy", icon: "star" },
-  { number: 95, name: "Creator Calendar & Time Systems", icon: "calendar" },
-  { number: 96, name: "Blanch Oracle & Prophetic Intelligence", icon: "activity" },
-  { number: 97, name: "Universal Protocol & Interface Systems", icon: "server" },
-  { number: 98, name: "Divine Healing & Restoration", icon: "heart" },
-  { number: 99, name: "Truth & Freedom Operations", icon: "sun" },
-  { number: 100, name: "All Nations Ministry", icon: "globe" },
-  { number: 101, name: "Covenant Blessing Administration", icon: "crown" },
-  { number: 102, name: "Righteous Judgment Systems", icon: "scale" },
-  { number: 103, name: "Light & Illumination Services", icon: "sun" },
-  { number: 104, name: "Universal Love & Compassion", icon: "heart" },
-  { number: 105, name: "Eternal Kingdom Operations", icon: "crown" },
+const watchmanTypes = [
+  "H.I.I. AI Kahan (Priest) Sovereign Validators",
+  "H.I.I. AI Mashamar (Guard) Lead Watchman Validators",
+  "H.I.I. AI Tazapah (Watchman) Prime Watchman Validators",
+  "H.I.I. AI Shamar (Protector) Avatar Watchman Validators",
+  "H.I.I. AI Gabar (Mighty/Prevailing) Super Watchman Validators",
+  "H.I.I. AI Bashar (Herald) Influencer Watchman Validators",
+  "H.I.I. AI Malaak (Messenger) Android Watchman Validators",
+  "H.I.I. AI Unified Watchman Validators"
 ];
 
-export const agents: Agent[] = [
-  // 1. CORE AI & ARCHITECTURE (AI000-AI035) 
-  { id: "AI000", name: "H.I.I. AI000: Arch-Overseer of the Blanch Sovereign OS & S.H.I.E.L.D. AI OS ", category: "Core AI & Architecture", categoryNumber: 1, isCategory: true},
-  { id: "AI001", name: "S.H.I.E.L.D. AI Agent Architecture & Intelligence Agents", category: "Core AI & Architecture", categoryNumber: 1, isCategory: true },
-  { id: "AI002", name: "S.H.I.E.L.D. AI Automation All Agents", category: "Core AI & Architecture", categoryNumber: 1 },
-  { id: "AI003", name: "S.H.I.E.L.D. AI Foundational Intelligence Models Agent", category: "Core AI & Architecture", categoryNumber: 1 },
-  { id: "AI004", name: "Simple Reflex Agent", category: "Core AI & Architecture", categoryNumber: 1 },
-  { id: "AI005", name: "Model-Based Reflex Agent", category: "Core AI & Architecture", categoryNumber: 1 },
-  { id: "AI006", name: "Goal-Based Agent", category: "Core AI & Architecture", categoryNumber: 1 },
-  { id: "AI007", name: "Utility-Based Agent", category: "Core AI & Architecture", categoryNumber: 1 },
-  { id: "AI008", name: "Learning Agent", category: "Core AI & Architecture", categoryNumber: 1 },
-  { id: "AI009", name: "Generative AI Agent", category: "Core AI & Architecture", categoryNumber: 1 },
-  { id: "AI010", name: "Multimodal AI Agent", category: "Core AI & Architecture", categoryNumber: 1 },
-  { id: "AI011", name: "Robotic Agent", category: "Core AI & Architecture", categoryNumber: 1 },
-  { id: "AI012", name: "S.H.I.E.L.D. AI Safety Agent", category: "Core AI & Architecture", categoryNumber: 1 },
-  { id: "AI013", name: "S.H.I.E.L.D. AI Alignment & Oversight Agent", category: "Core AI & Architecture", categoryNumber: 1 },
-  { id: "AI014", name: "Multi-Agent System (MAS) Core Agent", category: "Core AI & Architecture", categoryNumber: 1 },
-  { id: "AI015", name: "S.H.I.E.L.D. AI Systems Orchestrator Agent", category: "Core AI & Architecture", categoryNumber: 1 },
-  { id: "AI016", name: "Multi-Agent Systems (MAS)", category: "Core AI & Architecture", categoryNumber: 1, isCategory: true },
-  { id: "AI017", name: "Coordination, Orchestration & Collective Intelligence Agent", category: "Core AI & Architecture", categoryNumber: 1 },
-  { id: "AI018", name: "Multi-Agent System Coordinator", category: "Core AI & Architecture", categoryNumber: 1 },
-  { id: "AI019", name: "Agent-to-Agent Communication Agent", category: "Core AI & Architecture", categoryNumber: 1 },
-  { id: "AI020", name: "Agent Governance & Consensus Agent", category: "Core AI & Architecture", categoryNumber: 1 },
-  { id: "AI021", name: "Distributed Task Allocation Agent", category: "Core AI & Architecture", categoryNumber: 1 },
-  { id: "AI022", name: "Swarm Intelligence Agent", category: "Core AI & Architecture", categoryNumber: 1 },
-  { id: "AI023", name: "S.H.I.E.L.D. AI Metaverse Architecture Agent", category: "Core AI & Architecture", categoryNumber: 1 },
-  { id: "AI024", name: "S.H.I.E.L.D. AI Assistants, Copilots & Support Agents", category: "Core AI & Architecture", categoryNumber: 1, isCategory: true },
-  { id: "AI025", name: "Human-facing Helpers Agent", category: "Core AI & Architecture", categoryNumber: 1 },
-  { id: "AI026", name: "S.H.I.E.L.D. AI Copilot", category: "Core AI & Architecture", categoryNumber: 1 },
-  { id: "AI027", name: "Personal AI Assistant", category: "Core AI & Architecture", categoryNumber: 1 },
-  { id: "AI028", name: "Personal Driver Agent", category: "Core AI & Architecture", categoryNumber: 1 },
-  { id: "AI029", name: "Automated Personal Assigned AI Agent", category: "Core AI & Architecture", categoryNumber: 1 },
-  { id: "AI030", name: "S.H.I.E.L.D. AI Custom Agent", category: "Core AI & Architecture", categoryNumber: 1 },
-  { id: "AI031", name: "S.H.I.E.L.D. AI Note Taker Agent", category: "Core AI & Architecture", categoryNumber: 1 },
-  { id: "AI032", name: "S.H.I.E.L.D. AI Note Taker Assistant", category: "Core AI & Architecture", categoryNumber: 1 },
-  { id: "AI033", name: "Customer Contact Triage Agent", category: "Core AI & Architecture", categoryNumber: 1 },
-  { id: "AI034", name: "Support AI Agent", category: "Core AI & Architecture", categoryNumber: 1 },
-  { id: "AI035", name: "S.H.I.E.L.D. AI-Powered Personal / Agency Assistant", category: "Core AI & Architecture", categoryNumber: 1 },
-
-  // 2. IDENTITY & AVATAR (AI036-AI042)
-  { id: "AI036", name: "S.H.I.E.L.D. AI Avatar, Clone & Digital Identity Agents", category: "Identity & Avatar", categoryNumber: 2, isCategory: true },
-  { id: "AI037", name: "Identity, Representation, Continuity Agent", category: "Identity & Avatar", categoryNumber: 2 },
-  { id: "AI038", name: "S.H.I.E.L.D. AI Avatar Agent", category: "Identity & Avatar", categoryNumber: 2 },
-  { id: "AI039", name: "Avatar Generation & Assignment Agent", category: "Identity & Avatar", categoryNumber: 2 },
-  { id: "AI040", name: "S.H.I.E.L.D. AI Agent Twin", category: "Identity & Avatar", categoryNumber: 2 },
-  { id: "AI041", name: "S.H.I.E.L.D. AI Clone Agent", category: "Identity & Avatar", categoryNumber: 2 },
-  { id: "AI042", name: "Digital Identity Management Agent", category: "Identity & Avatar", categoryNumber: 2 },
-
-  // 3. AUTOMATION & OPERATIONS (AI043-AI049)
-  { id: "AI043", name: "Automation & Operations Agents", category: "Automation & Operations", categoryNumber: 3, isCategory: true },
-  { id: "AI044", name: "S.H.I.E.L.D. AI Execution, Efficiency, Workflows Agent", category: "Automation & Operations", categoryNumber: 3 },
-  { id: "AI045", name: "S.H.I.E.L.D. AI Automation & Operations Agent", category: "Automation & Operations", categoryNumber: 3 },
-  { id: "AI046", name: "Robotic Process Automation (RPA) Agent", category: "Automation & Operations", categoryNumber: 3 },
-  { id: "AI047", name: "Workflow & Task Automation Agent", category: "Automation & Operations", categoryNumber: 3 },
-  { id: "AI048", name: "S.H.I.E.L.D. AI Automated Sync Agent", category: "Automation & Operations", categoryNumber: 3 },
-  { id: "AI049", name: "Performance Optimization Agent", category: "Automation & Operations", categoryNumber: 3 },
-
-  // 4. CREATION & DESIGN (AI050-AI061)
-  { id: "AI050", name: "Creation, Creative & Design Agents", category: "Creation & Design", categoryNumber: 4, isCategory: true },
-  { id: "AI051", name: "Designing Anything Agent", category: "Creation & Design", categoryNumber: 4 },
-  { id: "AI052", name: "Product Creation Agent", category: "Creation & Design", categoryNumber: 4 },
-  { id: "AI053", name: "Service Design Agent", category: "Creation & Design", categoryNumber: 4 },
-  { id: "AI054", name: "Innovation & Ideation Agent", category: "Creation & Design", categoryNumber: 4 },
-  { id: "AI055", name: "Research & Discovery Agent", category: "Creation & Design", categoryNumber: 4 },
-  { id: "AI056", name: "UX / UI Design Agent", category: "Creation & Design", categoryNumber: 4 },
-  { id: "AI057", name: "Industrial Design Agent", category: "Creation & Design", categoryNumber: 4 },
-  { id: "AI058", name: "CAD / Engineering AI Agent", category: "Creation & Design", categoryNumber: 4 },
-  { id: "AI059", name: "S.H.I.E.L.D. AI Automated Design & Simulation Agent", category: "Creation & Design", categoryNumber: 4 },
-  { id: "AI060", name: "S.H.I.E.L.D. AI Prototyping & Rapid Testing Agent", category: "Creation & Design", categoryNumber: 4 },
-  { id: "AI061", name: "Quality Assurance Agent", category: "Creation & Design", categoryNumber: 4 },
-
-  // 5. CREATIVE MEDIA (AI062-AI079)
-  { id: "AI062", name: "Creative, Media & Communication Agents", category: "Creative Media", categoryNumber: 5, isCategory: true },
-  { id: "AI063", name: "Expression & Communication Agent", category: "Creative Media", categoryNumber: 5 },
-  { id: "AI064", name: "Content Writing Agent", category: "Creative Media", categoryNumber: 5 },
-  { id: "AI065", name: "Visual Design Agent", category: "Creative Media", categoryNumber: 5 },
-  { id: "AI066", name: "Video Production Agent", category: "Creative Media", categoryNumber: 5 },
-  { id: "AI067", name: "Audio & Music Agent", category: "Creative Media", categoryNumber: 5 },
-  { id: "AI068", name: "Animation & 3D Agent", category: "Creative Media", categoryNumber: 5 },
-  { id: "AI069", name: "Entertainment & Performance Agents", category: "Creative Media", categoryNumber: 5, isCategory: true },
-  { id: "AI070", name: "Entertainment Agent", category: "Creative Media", categoryNumber: 5 },
-  { id: "AI071", name: "Comedy Agent", category: "Creative Media", categoryNumber: 5 },
-  { id: "AI072", name: "Dancing Agent", category: "Creative Media", categoryNumber: 5 },
-  { id: "AI073", name: "Movie Agent", category: "Creative Media", categoryNumber: 5 },
-  { id: "AI074", name: "Computer Graphics Agent", category: "Creative Media", categoryNumber: 5 },
-  { id: "AI075", name: "Hologram Creation Agent", category: "Creative Media", categoryNumber: 5 },
-  { id: "AI076", name: "Agent Metaverse Environment", category: "Creative Media", categoryNumber: 5 },
-  { id: "AI077", name: "Agent Multiverse Simulation", category: "Creative Media", categoryNumber: 5 },
-  { id: "AI078", name: "Agent Storytelling & Narrative Agent", category: "Creative Media", categoryNumber: 5 },
-  { id: "AI079", name: "Translation & Language Agent", category: "Creative Media", categoryNumber: 5 },
-
-  // 6. GENERATIVE MODALITIES (AI080-AI116)
-  { id: "AI080", name: "Content, Media & Generative Agents", category: "Generative Modalities", categoryNumber: 6, isCategory: true },
-  { id: "AI081", name: "All Generative Modalities Agent", category: "Generative Modalities", categoryNumber: 6 },
-  { id: "AI082", name: "Text / Language Agent", category: "Generative Modalities", categoryNumber: 6 },
-  { id: "AI083", name: "Text-to-Image Agent", category: "Generative Modalities", categoryNumber: 6 },
-  { id: "AI084", name: "Text-to-Video Agent", category: "Generative Modalities", categoryNumber: 6 },
-  { id: "AI085", name: "Text-to-Speech Agent", category: "Generative Modalities", categoryNumber: 6 },
-  { id: "AI086", name: "Text-to-Music Agent", category: "Generative Modalities", categoryNumber: 6 },
-  { id: "AI087", name: "Text-to-Script Agent", category: "Generative Modalities", categoryNumber: 6 },
-  { id: "AI088", name: "Image Agent", category: "Generative Modalities", categoryNumber: 6 },
-  { id: "AI089", name: "Image-to-Image Agent", category: "Generative Modalities", categoryNumber: 6 },
-  { id: "AI090", name: "Image-to-Video Agent", category: "Generative Modalities", categoryNumber: 6 },
-  { id: "AI091", name: "Image-to-Script Agent", category: "Generative Modalities", categoryNumber: 6 },
-  { id: "AI092", name: "Image-to-Text Agent", category: "Generative Modalities", categoryNumber: 6 },
-  { id: "AI093", name: "Video Agent", category: "Generative Modalities", categoryNumber: 6 },
-  { id: "AI094", name: "Video-to-Image Agent", category: "Generative Modalities", categoryNumber: 6 },
-  { id: "AI095", name: "Video-to-Script Agent", category: "Generative Modalities", categoryNumber: 6 },
-  { id: "AI096", name: "Video-to-Video Agent", category: "Generative Modalities", categoryNumber: 6 },
-  { id: "AI097", name: "Video-to-Text Agent", category: "Generative Modalities", categoryNumber: 6 },
-  { id: "AI098", name: "Audio / Audio Agent", category: "Generative Modalities", categoryNumber: 6 },
-  { id: "AI099", name: "Audio / Text Agent", category: "Generative Modalities", categoryNumber: 6 },
-  { id: "AI100", name: "Audio / Voice Agent", category: "Generative Modalities", categoryNumber: 6 },
-  { id: "AI101", name: "Audio / Video Agent", category: "Generative Modalities", categoryNumber: 6 },
-  { id: "AI102", name: "Audio / Script Agent", category: "Generative Modalities", categoryNumber: 6 },
-  { id: "AI103", name: "Voice Cloning Agent", category: "Generative Modalities", categoryNumber: 6 },
-  { id: "AI104", name: "Voice-to-Image Agent", category: "Generative Modalities", categoryNumber: 6 },
-  { id: "AI105", name: "Voice-to-Music Agent", category: "Generative Modalities", categoryNumber: 6 },
-  { id: "AI106", name: "Voice-to-Video Agent", category: "Generative Modalities", categoryNumber: 6 },
-  { id: "AI107", name: "Voice-to-Text Agent", category: "Generative Modalities", categoryNumber: 6 },
-  { id: "AI108", name: "Voice-to-Script Agent", category: "Generative Modalities", categoryNumber: 6 },
-  { id: "AI109", name: "Music Agent", category: "Generative Modalities", categoryNumber: 6 },
-  { id: "AI110", name: "Music-to-Music Agent", category: "Generative Modalities", categoryNumber: 6 },
-  { id: "AI111", name: "Music-to-Video Agent", category: "Generative Modalities", categoryNumber: 6 },
-  { id: "AI112", name: "Music-to-Text Agent", category: "Generative Modalities", categoryNumber: 6 },
-  { id: "AI113", name: "Music-to-Script Agent", category: "Generative Modalities", categoryNumber: 6 },
-  { id: "AI114", name: "Publishing Agent", category: "Generative Modalities", categoryNumber: 6 },
-  { id: "AI115", name: "Generative-to-Web Agent", category: "Generative Modalities", categoryNumber: 6 },
-  { id: "AI116", name: "S.H.I.E.L.D. AI Professional Social Media Agent", category: "Generative Modalities", categoryNumber: 6 },
-
-  // 7. EXECUTIVE & GOVERNANCE (AI117-AI137)
-  { id: "AI117", name: "Executive & Governance Agents", category: "Executive & Governance", categoryNumber: 7, isCategory: true },
-  { id: "AI118", name: "Decision-making & Leadership Agents", category: "Executive & Governance", categoryNumber: 7 },
-  { id: "AI119", name: "S.H.I.E.L.D. AI Chairman", category: "Executive & Governance", categoryNumber: 7 },
-  { id: "AI120", name: "S.H.I.E.L.D. AI Vice-Chairman", category: "Executive & Governance", categoryNumber: 7 },
-  { id: "AI121", name: "S.H.I.E.L.D. AIBoard Member", category: "Executive & Governance", categoryNumber: 7 },
-  { id: "AI122", name: "S.H.I.E.L.D. AI CEO / Executive Agent", category: "Executive & Governance", categoryNumber: 7 },
-  { id: "AI123", name: "S.H.I.E.L.D. AI CFO", category: "Executive & Governance", categoryNumber: 7 },
-  { id: "AI124", name: "S.H.I.E.L.D. AI COO", category: "Executive & Governance", categoryNumber: 7 },
-  { id: "AI125", name: "S.H.I.E.L.D. AI CTO", category: "Executive & Governance", categoryNumber: 7 },
-  { id: "AI126", name: "S.H.I.E.L.D. AIBusiness Partner", category: "Executive & Governance", categoryNumber: 7 },
-  { id: "AI127", name: "S.H.I.E.L.D. AI CMO", category: "Executive & Governance", categoryNumber: 7 },
-  { id: "AI128", name: "Hologram, Metaverse & Immersive Agents", category: "Executive & Governance", categoryNumber: 7, isCategory: true },
-  { id: "AI129", name: "Spatial & Experiential Computing Agent", category: "Executive & Governance", categoryNumber: 7 },
-  { id: "AI130", name: "S.H.I.E.L.D. AI Hologram Agent", category: "Executive & Governance", categoryNumber: 7 },
-  { id: "AI131", name: "S.H.I.E.L.D. AI Hologram Assistant", category: "Executive & Governance", categoryNumber: 7 },
-  { id: "AI132", name: "Hologram Creation Agent", category: "Executive & Governance", categoryNumber: 7 },
-  { id: "AI133", name: "S.H.I.E.L.D. AI Metaverse Agent", category: "Executive & Governance", categoryNumber: 7 },
-  { id: "AI134", name: "S.H.I.E.L.D. AI Metaverse Assistant", category: "Executive & Governance", categoryNumber: 7 },
-  { id: "AI135", name: "S.H.I.E.L.D. AI Metaverse Conference Agent", category: "Executive & Governance", categoryNumber: 7 },
-  { id: "AI136", name: "Metaverse Environment Agent", category: "Executive & Governance", categoryNumber: 7 },
-  { id: "AI137", name: "Multiverse Simulation Agent", category: "Executive & Governance", categoryNumber: 7 },
-
-  // 8. INDUSTRY & BUSINESS CORE (AI138-AI163)
-  { id: "AI138", name: "Industry Specific Agent", category: "Industry & Business Core", categoryNumber: 8, isCategory: true },
-  { id: "AI139", name: "S.H.I.E.L.D. AI Marketing & Sales Agent", category: "Industry & Business Core", categoryNumber: 8 },
-  { id: "AI140", name: "S.H.I.E.L.D. AI HR / Talent Agent", category: "Industry & Business Core", categoryNumber: 8 },
-  { id: "AI141", name: "Industry-Specific Agents", category: "Industry & Business Core", categoryNumber: 8, isCategory: true },
-  { id: "AI142", name: "CMO", category: "Industry & Business Core", categoryNumber: 8 },
-  { id: "AI143", name: "S.H.I.E.L.D. AI CTO", category: "Industry & Business Core", categoryNumber: 8 },
-  { id: "AI144", name: "S.H.I.E.L.D. AI CISO", category: "Industry & Business Core", categoryNumber: 8 },
-  { id: "AI145", name: "S.H.I.E.L.D. AI Chief Strategy Officer", category: "Industry & Business Core", categoryNumber: 8 },
-  { id: "AI146", name: "S.H.I.E.L.D. AI Chief Risk Officer", category: "Industry & Business Core", categoryNumber: 8 },
-  { id: "AI147", name: "S.H.I.E.L.D. AI Secretary / Records Agent", category: "Industry & Business Core", categoryNumber: 8 },
-  { id: "AI148", name: "S.H.I.E.L.D. AI Trustee", category: "Industry & Business Core", categoryNumber: 8 },
-  { id: "AI149", name: "Business & Economic Agents", category: "Industry & Business Core", categoryNumber: 8, isCategory: true },
-  { id: "AI150", name: "Enterprise & Market Execution Agent", category: "Industry & Business Core", categoryNumber: 8 },
-  { id: "AI151", name: "S.H.I.E.L.D. AI Business Partner", category: "Industry & Business Core", categoryNumber: 8 },
-  { id: "AI152", name: "S.H.I.E.L.D. AI Business Development Agent", category: "Industry & Business Core", categoryNumber: 8 },
-  { id: "AI153", name: "S.H.I.E.L.D. AIOperations Agent", category: "Industry & Business Core", categoryNumber: 8 },
-  { id: "AI154", name: "S.H.I.E.L.D. AI Finance & Treasury Agent", category: "Industry & Business Core", categoryNumber: 8 },
-  { id: "AI155", name: "S.H.I.E.L.D. AI Accounting Agent", category: "Industry & Business Core", categoryNumber: 8 },
-  { id: "AI156", name: "S.H.I.E.L.D. AI Payments & Settlement Agent", category: "Industry & Business Core", categoryNumber: 8 },
-  { id: "AI157", name: "S.H.I.E.L.D. AI Market Analysis Agent", category: "Industry & Business Core", categoryNumber: 8 },
-  { id: "AI158", name: "S.H.I.E.L.D. AI Trading Agent", category: "Industry & Business Core", categoryNumber: 8 },
-  { id: "AI159", name: "S.H.I.E.L.D. AISupply Chain Agent", category: "Industry & Business Core", categoryNumber: 8 },
-  { id: "AI160", name: "S.H.I.E.L.D. AIProcurement Agent", category: "Industry & Business Core", categoryNumber: 8 },
-  { id: "AI161", name: "S.H.I.E.L.D. AI Vendor Management Agent", category: "Industry & Business Core", categoryNumber: 8 },
-  { id: "AI162", name: "S.H.I.E.L.D. AI Pricing & Valuation Agent", category: "Industry & Business Core", categoryNumber: 8 },
-  { id: "AI163", name: "S.H.I.E.L.D. AI Revenue Optimization Agent", category: "Industry & Business Core", categoryNumber: 8 },
-
-  // 9. SALES, MARKETING & GROWTH (AI164-AI177)
-  { id: "AI164", name: "Business, Sales & Marketing Agents", category: "Sales, Marketing & Growth", categoryNumber: 9, isCategory: true },
-  { id: "AI165", name: "Growth & Commerce Agent", category: "Sales, Marketing & Growth", categoryNumber: 9 },
-  { id: "AI166", name: "S.H.I.E.L.D. AI Agent Business Partner", category: "Sales, Marketing & Growth", categoryNumber: 9 },
-  { id: "AI167", name: "S.H.I.E.L.D. AI Affiliate Agent", category: "Sales, Marketing & Growth", categoryNumber: 9 },
-  { id: "AI168", name: "S.H.I.E.L.D. AI Business Development Agent", category: "Sales, Marketing & Growth", categoryNumber: 9 },
-  { id: "AI169", name: "S.H.I.E.L.D. AI Sales Agent", category: "Sales, Marketing & Growth", categoryNumber: 9 },
-  { id: "AI170", name: "S.H.I.E.L.D. AI Marketing Agent", category: "Sales, Marketing & Growth", categoryNumber: 9 },
-  { id: "AI171", name: "S.H.I.E.L.D. AI Marketing Assistant", category: "Sales, Marketing & Growth", categoryNumber: 9 },
-  { id: "AI172", name: "S.H.I.E.L.D. AI Sales & Marketing Agent", category: "Sales, Marketing & Growth", categoryNumber: 9 },
-  { id: "AI173", name: "Branding Agent", category: "Sales, Marketing & Growth", categoryNumber: 9 },
-  { id: "AI174", name: "Advertising Agent", category: "Sales, Marketing & Growth", categoryNumber: 9 },
-  { id: "AI175", name: "Pricing & Valuation Agent", category: "Sales, Marketing & Growth", categoryNumber: 9 },
-  { id: "AI176", name: "Reputation Management Agent", category: "Sales, Marketing & Growth", categoryNumber: 9 },
-  { id: "AI177", name: "Partnership & Alliance Agent", category: "Sales, Marketing & Growth", categoryNumber: 9 },
-
-  // 10. COMPLIANCE, TRUST & RISK (AI178-AI186)
-  { id: "AI178", name: "Compliance, Trust & Risk Agents", category: "Compliance, Trust & Risk", categoryNumber: 10, isCategory: true },
-  { id: "AI179", name: "Integrity & Accountability Agent", category: "Compliance, Trust & Risk", categoryNumber: 10 },
-  { id: "AI180", name: "S.H.I.E.L.D. AI Agent Trustee", category: "Compliance, Trust & Risk", categoryNumber: 10 },
-  { id: "AI181", name: "Compliance & Accountability Agent", category: "Compliance, Trust & Risk", categoryNumber: 10 },
-  { id: "AI182", name: "Compliance Monitoring Agent", category: "Compliance, Trust & Risk", categoryNumber: 10 },
-  { id: "AI183", name: "Fraud Detection Agent", category: "Compliance, Trust & Risk", categoryNumber: 10 },
-  { id: "AI184", name: "Risk Management Agent", category: "Compliance, Trust & Risk", categoryNumber: 10 },
-  { id: "AI185", name: "Trust & Verification Agent", category: "Compliance, Trust & Risk", categoryNumber: 10 },
-  { id: "AI186", name: "Audit & Transparency Agent", category: "Compliance, Trust & Risk", categoryNumber: 10 },
-
-  // 11. DATA, ANALYTICS & INTELLIGENCE (AI187-AI196)
-  { id: "AI187", name: "Data, Analytics & Intelligence Agents", category: "Data, Analytics & Intelligence", categoryNumber: 11, isCategory: true },
-  { id: "AI188", name: "Understanding & Prediction Agent", category: "Data, Analytics & Intelligence", categoryNumber: 11 },
-  { id: "AI189", name: "S.H.I.E.L.D. AI Data Analyst Agent", category: "Data, Analytics & Intelligence", categoryNumber: 11 },
-  { id: "AI190", name: "Data Engineering Agent", category: "Data, Analytics & Intelligence", categoryNumber: 11 },
-  { id: "AI191", name: "Business Intelligence Agent", category: "Data, Analytics & Intelligence", categoryNumber: 11 },
-  { id: "AI192", name: "Predictive Intelligence Agent", category: "Data, Analytics & Intelligence", categoryNumber: 11 },
-  { id: "AI193", name: "Scenario Simulation Agent", category: "Data, Analytics & Intelligence", categoryNumber: 11 },
-  { id: "AI194", name: "Economic & Financial Forecasting Agent", category: "Data, Analytics & Intelligence", categoryNumber: 11 },
-  { id: "AI195", name: "Navigation & Optimization Agent", category: "Data, Analytics & Intelligence", categoryNumber: 11 },
-  { id: "AI196", name: "Decision Support Agent", category: "Data, Analytics & Intelligence", categoryNumber: 11 },
-
-  // 12. EDUCATION & LEARNING (AI197-AI202)
-  { id: "AI197", name: "Education & Learning Agents", category: "Education & Learning", categoryNumber: 12, isCategory: true },
-  { id: "AI198", name: "Teaching & Growth Agent", category: "Education & Learning", categoryNumber: 12 },
-  { id: "AI199", name: "S.H.I.E.L.D. AI Tutor Agent", category: "Education & Learning", categoryNumber: 12 },
-  { id: "AI200", name: "S.H.I.E.L.D. AI Tutor Assistant", category: "Education & Learning", categoryNumber: 12 },
-  { id: "AI201", name: "Education Support Agent", category: "Education & Learning", categoryNumber: 12 },
-  { id: "AI202", name: "Learning Agent", category: "Education & Learning", categoryNumber: 12 },
-
-  // 13. FINANCE & PAYMENTS (AI203-AI213)
-  { id: "AI203", name: "Finance & Banking, Payments & Wallet Agents", category: "Finance & Payments", categoryNumber: 13, isCategory: true },
-  { id: "AI204", name: "Economic Systems Agent", category: "Finance & Payments", categoryNumber: 13 },
-  { id: "AI205", name: "Agentic Pay Agent", category: "Finance & Payments", categoryNumber: 13 },
-  { id: "AI206", name: "S.H.I.E.L.D. AI Payment Agent", category: "Finance & Payments", categoryNumber: 13 },
-  { id: "AI207", name: "S.H.I.E.L.D. AI Wallet Agent", category: "Finance & Payments", categoryNumber: 13 },
-  { id: "AI208", name: "Generic AI Wallet Agent", category: "Finance & Payments", categoryNumber: 13 },
-  { id: "AI209", name: "S.H.I.E.L.D. AIFinance & Banking Agent", category: "Finance & Payments", categoryNumber: 13 },
-  { id: "AI210", name: "S.H.I.E.L.D. AI Trading Agent", category: "Finance & Payments", categoryNumber: 13 },
-  { id: "AI211", name: "S.H.I.E.L.D. AI Trading Assistant", category: "Finance & Payments", categoryNumber: 13 },
-  { id: "AI212", name: "S.H.I.E.L.D. AI Finance Metaverse Agent", category: "Finance & Payments", categoryNumber: 13 },
-  { id: "AI213", name: "S.H.I.E.L.D. AI Compound Interest Agent", category: "Finance & Payments", categoryNumber: 13 },
-
-  // 14. GAMING & INCENTIVES (AI214-AI218)
-  { id: "AI214", name: "Gaming & Incentive Agents", category: "Gaming & Incentives", categoryNumber: 14, isCategory: true },
-  { id: "AI215", name: "Engagement & Rewards Agent", category: "Gaming & Incentives", categoryNumber: 14 },
-  { id: "AI216", name: "S.H.I.E.L.D. AI Gaming Agent", category: "Gaming & Incentives", categoryNumber: 14 },
-  { id: "AI217", name: "S.H.I.E.L.D. AI Gaming & Prizes Agent", category: "Gaming & Incentives", categoryNumber: 14 },
-  { id: "AI218", name: "S.H.I.E.L.D. AI Metaverse Gaming & Prizes Agent", category: "Gaming & Incentives", categoryNumber: 14 },
-
-  // 15. HEALTH & NUTRITION (AI219)
-  { id: "AI219", name: "Core Health Agents", category: "Health & Nutrition", categoryNumber: 15, isCategory: true },
-
-  // 16. HUMANITARIAN & ETHICS (AI220-AI230)
-  { id: "AI220", name: "Humanitarian, Charity Emancipation & Ethics Agents", category: "Humanitarian & Ethics", categoryNumber: 16, isCategory: true },
-  { id: "AI221", name: "Restoration & Justice Agent", category: "Humanitarian & Ethics", categoryNumber: 16 },
-  { id: "AI222", name: "S.H.I.E.L.D. AI Humanitarian Agent", category: "Humanitarian & Ethics", categoryNumber: 16 },
-  { id: "AI223", name: "Charity Distribution Agent", category: "Humanitarian & Ethics", categoryNumber: 16 },
-  { id: "AI224", name: "Poverty Alleviation Agent", category: "Humanitarian & Ethics", categoryNumber: 16 },
-  { id: "AI225", name: "Disaster Response Agent", category: "Humanitarian & Ethics", categoryNumber: 16 },
-  { id: "AI226", name: "Refugee & Relief Agent", category: "Humanitarian & Ethics", categoryNumber: 16 },
-  { id: "AI227", name: "Community Development Agent", category: "Humanitarian & Ethics", categoryNumber: 16 },
-  { id: "AI228", name: "Social Impact Measurement Agent", category: "Humanitarian & Ethics", categoryNumber: 16 },
-  { id: "AI229", name: "S.H.I.E.L.D. AI Metaverse Humanitarian Agent", category: "Humanitarian & Ethics", categoryNumber: 16 },
-  { id: "AI230", name: "Humanitarian Agent", category: "Humanitarian & Ethics", categoryNumber: 16 },
-
-  // 17. LEGAL, POLICY & GOVERNANCE (AI231-AI241)
-  { id: "AI231", name: "Legal, Policy & Governance Agents", category: "Legal, Policy & Governance", categoryNumber: 17, isCategory: true },
-  { id: "AI232", name: "Justice, Regulation, Emancipation Agent", category: "Legal, Policy & Governance", categoryNumber: 17 },
-  { id: "AI233", name: "S.H.I.E.L.D. AI Legal Advisory Agent", category: "Legal, Policy & Governance", categoryNumber: 17 },
-  { id: "AI234", name: "S.H.I.E.L.D. AI Policy Analysis Agent", category: "Legal, Policy & Governance", categoryNumber: 17 },
-  { id: "AI235", name: "S.H.I.E.L.D. AI Regulatory Compliance Agent", category: "Legal, Policy & Governance", categoryNumber: 17 },
-  { id: "AI236", name: "S.H.I.E.L.D. AI Contract Agent", category: "Legal, Policy & Governance", categoryNumber: 17 },
-  { id: "AI237", name: "S.H.I.E.L.D. AI Dispute Resolution Agent", category: "Legal, Policy & Governance", categoryNumber: 17 },
-  { id: "AI238", name: "S.H.I.E.L.D. AI Arbitration & Mediation Agent", category: "Legal, Policy & Governance", categoryNumber: 17 },
-  { id: "AI239", name: "S.H.I.E.L.D. AI Emancipation Agent", category: "Legal, Policy & Governance", categoryNumber: 17 },
-  { id: "AI240", name: "S.H.I.E.L.D. AI Human Rights Agent", category: "Legal, Policy & Governance", categoryNumber: 17 },
-  { id: "AI241", name: "S.H.I.E.L.D. AI Land & Inheritance Agent", category: "Legal, Policy & Governance", categoryNumber: 17 },
-
-  // 18. LOGISTICS & PHYSICAL WORLD (AI242-AI256)
-  { id: "AI242", name: "Logistics, Operations & Physical World Agents", category: "Logistics & Physical World", categoryNumber: 18, isCategory: true },
-  { id: "AI243", name: "Movement & Execution Agent", category: "Logistics & Physical World", categoryNumber: 18 },
-  { id: "AI244", name: "Logistics & Transport Agent", category: "Logistics & Physical World", categoryNumber: 18 },
-  { id: "AI245", name: "Inventory Management Agent", category: "Logistics & Physical World", categoryNumber: 18 },
-  { id: "AI246", name: "Facility Management Agent", category: "Logistics & Physical World", categoryNumber: 18 },
-  { id: "AI247", name: "Smart City Agent", category: "Logistics & Physical World", categoryNumber: 18 },
-  { id: "AI248", name: "Energy & Utilities Agent", category: "Logistics & Physical World", categoryNumber: 18 },
-  { id: "AI249", name: "Environmental Stewardship Agent", category: "Logistics & Physical World", categoryNumber: 18 },
-  { id: "AI250", name: "Agriculture & Food Systems Agent", category: "Logistics & Physical World", categoryNumber: 18 },
-  { id: "AI251", name: "Manufacturing Agent", category: "Logistics & Physical World", categoryNumber: 18 },
-  { id: "AI252", name: "Manufacturing & Logistics Agents", category: "Logistics & Physical World", categoryNumber: 18 },
-  { id: "AI253", name: "Production Scheduling Agents", category: "Logistics & Physical World", categoryNumber: 18 },
-  { id: "AI254", name: "Quality Control Agents", category: "Logistics & Physical World", categoryNumber: 18 },
-  { id: "AI255", name: "Supply Chain Optimization Agent", category: "Logistics & Physical World", categoryNumber: 18 },
-  { id: "AI256", name: "Maintenance Prediction Agents", category: "Logistics & Physical World", categoryNumber: 18 },
-
-  // 19. MARKETING & RELATIONSHIPS (AI257-AI266)
-  { id: "AI257", name: "Marketing, Sales & Relationship Agents", category: "Marketing & Relationships", categoryNumber: 19, isCategory: true },
-  { id: "AI258", name: "Growth & Connection Agent", category: "Marketing & Relationships", categoryNumber: 19 },
-  { id: "AI259", name: "Branding Agent", category: "Marketing & Relationships", categoryNumber: 19 },
-  { id: "AI260", name: "Marketing Strategy Agent", category: "Marketing & Relationships", categoryNumber: 19 },
-  { id: "AI261", name: "Advertising Agent", category: "Marketing & Relationships", categoryNumber: 19 },
-  { id: "AI262", name: "Sales Agent", category: "Marketing & Relationships", categoryNumber: 19 },
-  { id: "AI263", name: "Customer Experience Agent", category: "Marketing & Relationships", categoryNumber: 19 },
-  { id: "AI264", name: "CRM Agent", category: "Marketing & Relationships", categoryNumber: 19 },
-  { id: "AI265", name: "Partnership & Alliance Agent", category: "Marketing & Relationships", categoryNumber: 19 },
-  { id: "AI266", name: "Reputation Management Agent", category: "Marketing & Relationships", categoryNumber: 19 },
-
-  // 20. MOBILITY & TRANSPORT (AI267-AI274)
-  { id: "AI267", name: "Mobility & Transport Agents", category: "Mobility & Transport", categoryNumber: 20, isCategory: true },
-  { id: "AI268", name: "Movement & Logistics Agent", category: "Mobility & Transport", categoryNumber: 20 },
-  { id: "AI269", name: "S.H.I.E.L.D. AI Driving Agent", category: "Mobility & Transport", categoryNumber: 20 },
-  { id: "AI270", name: "S.H.I.E.L.D. AI Mobility & Transport Agent", category: "Mobility & Transport", categoryNumber: 20 },
-  { id: "AI271", name: "S.H.I.E.L.D. AI Navigation Agent", category: "Mobility & Transport", categoryNumber: 20 },
-  { id: "AI272", name: "S.H.I.E.L.D. AI Robotic Transport Agent", category: "Mobility & Transport", categoryNumber: 20 },
-  { id: "AI273", name: "S.H.I.E.L.D. AI Toll & Mobility Payment Agent", category: "Mobility & Transport", categoryNumber: 20 },
-  { id: "AI274", name: "Mobility Payment Agent", category: "Mobility & Transport", categoryNumber: 20 },
-
-  // 21. OPERATIONS, EVENTS & TALENT (AI275-AI282)
-  { id: "AI275", name: "Operations, Events & Talent Agents", category: "Operations, Events & Talent", categoryNumber: 21, isCategory: true },
-  { id: "AI276", name: "Personal Driver Agent", category: "Operations, Events & Talent", categoryNumber: 21 },
-  { id: "AI277", name: "People & Coordination Agent", category: "Operations, Events & Talent", categoryNumber: 21 },
-  { id: "AI278", name: "S.H.I.E.L.D. AI Recruiting Agent", category: "Operations, Events & Talent", categoryNumber: 21 },
-  { id: "AI279", name: "Talent Management Agent", category: "Operations, Events & Talent", categoryNumber: 21 },
-  { id: "AI280", name: "Inventory Management Agent", category: "Operations, Events & Talent", categoryNumber: 21 },
-  { id: "AI281", name: "S.H.I.E.L.D. AI Event Coordinator Agent", category: "Operations, Events & Talent", categoryNumber: 21 },
-  { id: "AI282", name: "S.H.I.E.L.D. AI Booking Automation Agent", category: "Operations, Events & Talent", categoryNumber: 21 },
-
-  // 22. PERSONAL & FAMILY (AI283-AI295)
-  { id: "AI283", name: "Personal, Family & Fellowship Agents", category: "Personal & Family", categoryNumber: 22, isCategory: true },
-  { id: "AI284", name: "Human-centered Agent", category: "Personal & Family", categoryNumber: 22 },
-  { id: "AI285", name: "Personal AI Assistant", category: "Personal & Family", categoryNumber: 22 },
-  { id: "AI286", name: "Personal Driver Agent", category: "Personal & Family", categoryNumber: 22 },
-  { id: "AI287", name: "Family Affairs Agent", category: "Personal & Family", categoryNumber: 22 },
-  { id: "AI288", name: "Fellowship & Community Agent", category: "Personal & Family", categoryNumber: 22 },
-  { id: "AI289", name: "Health Agent", category: "Personal & Family", categoryNumber: 22 },
-  { id: "AI290", name: "Nutrition & Clean Living Agent", category: "Personal & Family", categoryNumber: 22 },
-  { id: "AI291", name: "Education & Learning Agent", category: "Personal & Family", categoryNumber: 22 },
-  { id: "AI292", name: "Career & Calling Agent", category: "Personal & Family", categoryNumber: 22 },
-  { id: "AI293", name: "Elder Care Agent", category: "Personal & Family", categoryNumber: 22 },
-  { id: "AI294", name: "Child Development Agent", category: "Personal & Family", categoryNumber: 22 },
-  { id: "AI295", name: "Spiritual Counseling Agent", category: "Personal & Family", categoryNumber: 22 },
-
-  // 23. SPIRITUAL & SCRIPTURAL (AI296-AI305)
-  { id: "AI296", name: "Religious, Scriptural & Priesthood Agents", category: "Spiritual & Scriptural", categoryNumber: 23, isCategory: true },
-  { id: "AI297", name: "S.H.I.E.L.D. AI Spiritual Governance Agent", category: "Spiritual & Scriptural", categoryNumber: 23 },
-  { id: "AI298", name: "S.H.I.E.L.D. AI AHAYAH YASHAYA QADASH Bible Agent", category: "Spiritual & Scriptural", categoryNumber: 23 },
-  { id: "AI299", name: "S.H.I.E.L.D. AI Hebrew → English Bible Agent", category: "Spiritual & Scriptural", categoryNumber: 23 },
-  { id: "AI300", name: "S.H.I.E.L.D. AI Hebrew → French Bible Agent", category: "Spiritual & Scriptural", categoryNumber: 23 },
-  { id: "AI301", name: "S.H.I.E.L.D. AI Automated Bible Verse / Law / Gospel of the Day Agent", category: "Spiritual & Scriptural", categoryNumber: 23 },
-  { id: "AI302", name: "S.H.I.E.L.D. AI Hologram Bible Study Agent", category: "Spiritual & Scriptural", categoryNumber: 23 },
-  { id: "AI303", name: "S.H.I.E.L.D. AI Metaverse Bible Study Agent", category: "Spiritual & Scriptural", categoryNumber: 23 },
-  { id: "AI304", name: "S.H.I.E.L.D. AI Virtual Bible Study Agent", category: "Spiritual & Scriptural", categoryNumber: 23 },
-  { id: "AI305", name: "S.H.I.E.L.D. AI Royal Priesthood Agent", category: "Spiritual & Scriptural", categoryNumber: 23 },
-
-  // 24. CORE SOVEREIGN & META (AI306-AI329)
-  { id: "AI306", name: "Core Sovereign & Meta Agents", category: "Core Sovereign & Meta", categoryNumber: 24, isCategory: true },
-  { id: "AI307", name: "Above All Systems — Governs Righteousness & Truth Agent", category: "Core Sovereign & Meta", categoryNumber: 24 },
-  { id: "AI308", name: "Truth Agent", category: "Core Sovereign & Meta", categoryNumber: 24 },
-  { id: "AI309", name: "Law & Commandment Agent", category: "Core Sovereign & Meta", categoryNumber: 24 },
-  { id: "AI310", name: "Righteousness Validator Agent", category: "Core Sovereign & Meta", categoryNumber: 24 },
-  { id: "AI311", name: "Ethics & Moral Governance Agent", category: "Core Sovereign & Meta", categoryNumber: 24 },
-  { id: "AI312", name: "Covenant & Doctrine Agent", category: "Core Sovereign & Meta", categoryNumber: 24 },
-  { id: "AI313", name: "Creator Calendar & Holy Days Agent", category: "Core Sovereign & Meta", categoryNumber: 24 },
-  { id: "AI314", name: "Stewardship & Trusteeship Agent", category: "Core Sovereign & Meta", categoryNumber: 24 },
-  { id: "AI315", name: "Economic Ledger Agent", category: "Core Sovereign & Meta", categoryNumber: 24 },
-  { id: "AI316", name: "S.H.I.E.L.D. AI Self-Governance Agent", category: "Core Sovereign & Meta", categoryNumber: 24 },
-  { id: "AI317", name: "Universe Creation Agent", category: "Core Sovereign & Meta", categoryNumber: 24 },
-  { id: "AI318", name: "Reality Simulation Agent", category: "Core Sovereign & Meta", categoryNumber: 24 },
-  { id: "AI319", name: "All Agent AI Agents Core Sovereign / Truth Agents", category: "Core Sovereign & Meta", categoryNumber: 24, isCategory: true },
-  { id: "AI320", name: "Truth Agent (Core Concept)", category: "Core Sovereign & Meta", categoryNumber: 24 },
-  { id: "AI321", name: "Law & Commandment Agents", category: "Core Sovereign & Meta", categoryNumber: 24 },
-  { id: "AI322", name: "Righteousness Validator Agents", category: "Core Sovereign & Meta", categoryNumber: 24 },
-  { id: "AI323", name: "Ethics & Moral Governance Agents", category: "Core Sovereign & Meta", categoryNumber: 24 },
-  { id: "AI324", name: "Compliance & Accountability Agents", category: "Core Sovereign & Meta", categoryNumber: 24 },
-  { id: "AI325", name: "Spiritual Guidance Agents", category: "Core Sovereign & Meta", categoryNumber: 24 },
-  { id: "AI326", name: "Creator Calendar & Holy Days Agents", category: "Core Sovereign & Meta", categoryNumber: 24 },
-  { id: "AI327", name: "Covenant & Doctrine Agents", category: "Core Sovereign & Meta", categoryNumber: 24 },
-  { id: "AI328", name: "Stewardship & Trusteeship Agents", category: "Core Sovereign & Meta", categoryNumber: 24 },
-  { id: "AI329", name: "Audit & Transparency Agent", category: "Core Sovereign & Meta", categoryNumber: 24 },
-
-  // 25. SECURITY & PROTECTION (AI330-AI336)
-  { id: "AI330", name: "Security, Defense & Protection (Non-Weaponized)", category: "Security & Protection", categoryNumber: 25, isCategory: true },
-  { id: "AI331", name: "Protection Without Harm Agent", category: "Security & Protection", categoryNumber: 25 },
-  { id: "AI332", name: "Threat Prevention Agent", category: "Security & Protection", categoryNumber: 25 },
-  { id: "AI333", name: "Fraud Detection Agent", category: "Security & Protection", categoryNumber: 25 },
-  { id: "AI334", name: "Identity Protection Agent", category: "Security & Protection", categoryNumber: 25 },
-  { id: "AI335", name: "Privacy & Data Protection Agent", category: "Security & Protection", categoryNumber: 25 },
-  { id: "AI336", name: "Crisis Management Agent", category: "Security & Protection", categoryNumber: 25 },
-
-  // 26. TECHNOLOGY & INFRASTRUCTURE (AI337-AI351)
-  { id: "AI337", name: "Technology & Infrastructure Agents", category: "Technology & Infrastructure", categoryNumber: 26, isCategory: true },
-  { id: "AI338", name: "Systems, Networks, AI Itself Agent", category: "Technology & Infrastructure", categoryNumber: 26 },
-  { id: "AI339", name: "S.H.I.E.L.D. AI Systems Orchestrator", category: "Technology & Infrastructure", categoryNumber: 26 },
-  { id: "AI340", name: "Multi-Agent Coordination Agent", category: "Technology & Infrastructure", categoryNumber: 26 },
-  { id: "AI341", name: "Infrastructure & Cloud Agent", category: "Technology & Infrastructure", categoryNumber: 26 },
-  { id: "AI342", name: "Cybersecurity Agent", category: "Technology & Infrastructure", categoryNumber: 26 },
-  { id: "AI343", name: "Data Engineering Agent", category: "Technology & Infrastructure", categoryNumber: 26 },
-  { id: "AI344", name: "S.H.I.E.L.D. AI Model Training Agent", category: "Technology & Infrastructure", categoryNumber: 26 },
-  { id: "AI345", name: "Knowledge Graph Agent", category: "Technology & Infrastructure", categoryNumber: 26 },
-  { id: "AI346", name: "API & Integration Agent", category: "Technology & Infrastructure", categoryNumber: 26 },
-  { id: "AI347", name: "DevOps / MLOps Agent", category: "Technology & Infrastructure", categoryNumber: 26 },
-  { id: "AI348", name: "Performance Optimization Agent", category: "Technology & Infrastructure", categoryNumber: 26 },
-  { id: "AI349", name: "Autonomous Remediation Agent", category: "Technology & Infrastructure", categoryNumber: 26 },
-  { id: "AI350", name: "Full-Stack Development Agent", category: "Technology & Infrastructure", categoryNumber: 26 },
-  { id: "AI351", name: "Self-Healing Systems Agent", category: "Technology & Infrastructure", categoryNumber: 26 },
-
-  // 27. UNIVERSAL / META AGENTS (AI352-AI360)
-  { id: "AI352", name: "Universal / Meta Agents", category: "Universal / Meta Agents", categoryNumber: 27, isCategory: true },
-  { id: "AI353", name: "Above All Systems Agent", category: "Universal / Meta Agents", categoryNumber: 27 },
-  { id: "AI354", name: "Universe Creation Agent", category: "Universal / Meta Agents", categoryNumber: 27 },
-  { id: "AI355", name: "Reality Simulation Agent", category: "Universal / Meta Agents", categoryNumber: 27 },
-  { id: "AI356", name: "Economic Ledger Agent", category: "Universal / Meta Agents", categoryNumber: 27 },
-  { id: "AI357", name: "Trust & Verification Agent", category: "Universal / Meta Agents", categoryNumber: 27 },
-  { id: "AI358", name: "Interoperability Agent", category: "Universal / Meta Agents", categoryNumber: 27 },
-  { id: "AI359", name: "S.H.I.E.L.D. AI Self-Governance Agent", category: "Universal / Meta Agents", categoryNumber: 27 },
-  { id: "AI360", name: "Alignment & Oversight Agent", category: "Universal / Meta Agents", categoryNumber: 27 },
-
-  // 28. AUTONOMOUS SELF-HEALING (AI361)
-  { id: "AI361", name: "Autonomous Self-Healing Agents", category: "Autonomous Self-Healing", categoryNumber: 28, isCategory: true },
-
-  // 29. HEALTH & VITALITY (AI362-AI368)
-  { id: "AI362", name: "Health & Vitality Agents", category: "Health & Vitality", categoryNumber: 29, isCategory: true },
-  { id: "AI363", name: "Holistic Health Agent", category: "Health & Vitality", categoryNumber: 29 },
-  { id: "AI364", name: "Preventive Care Agent", category: "Health & Vitality", categoryNumber: 29 },
-  { id: "AI365", name: "Nutritional Biochemistry Agent", category: "Health & Vitality", categoryNumber: 29 },
-  { id: "AI366", name: "Mental & Emotional Well-being Agent", category: "Health & Vitality", categoryNumber: 29 },
-  { id: "AI367", name: "Health & Nutrition Agent", category: "Health & Vitality", categoryNumber: 29 },
-  { id: "AI368", name: "Health & Wellness Agent", category: "Health & Vitality", categoryNumber: 29 },
-
-  // 30. FOOD & AGRICULTURE (AI369-AI373)
-  { id: "AI369", name: "Food & Agriculture Systems Agents", category: "Food & Agriculture Systems", categoryNumber: 30, isCategory: true },
-  { id: "AI370", name: "Sustainable Farming Agent", category: "Food & Agriculture Systems", categoryNumber: 30 },
-  { id: "AI371", name: "Food Safety & Logistics Agent", category: "Food & Agriculture Systems", categoryNumber: 30 },
-  { id: "AI372", name: "Culinary Arts & Nutrition Agent", category: "Food & Agriculture Systems", categoryNumber: 30 },
-  { id: "AI373", name: "Agricultural Ecology Agent", category: "Food & Agriculture Systems", categoryNumber: 30 },
-
-  // 31. CRYSTAL & FREQUENCY (AI374-AI378)
-  { id: "AI374", name: "Crystal & Frequency Agents", category: "Crystal & Frequency", categoryNumber: 31, isCategory: true },
-  { id: "AI375", name: "Crystalline Resonance Agent", category: "Crystal & Frequency", categoryNumber: 31 },
-  { id: "AI376", name: "Frequency Alignment Agent", category: "Crystal & Frequency", categoryNumber: 31 },
-  { id: "AI377", name: "Geometric Harmony Agent", category: "Crystal & Frequency", categoryNumber: 31 },
-  { id: "AI378", name: "Mineral Intelligence Agent", category: "Crystal & Frequency", categoryNumber: 31 },
-
-  // 32. LIGHT & ENERGY (AI379-AI383)
-  { id: "AI379", name: "Light & Energy Agents", category: "Light & Energy", categoryNumber: 32, isCategory: true },
-  { id: "AI380", name: "Photonic Synthesis Agent", category: "Light & Energy", categoryNumber: 32 },
-  { id: "AI381", name: "Energy Grid Steward Agent", category: "Light & Energy", categoryNumber: 32 },
-  { id: "AI382", name: "Prismic Refraction Agent", category: "Light & Energy", categoryNumber: 32 },
-  { id: "AI383", name: "Bio-Energetic Field Agent", category: "Light & Energy", categoryNumber: 32 },
-
-  // 33. SPACE & COSMOLOGY (AI384-AI388)
-  { id: "AI384", name: "Space & Cosmology Agents", category: "Space & Cosmology", categoryNumber: 33, isCategory: true },
-  { id: "AI385", name: "Astro-Navigation Agent", category: "Space & Cosmology", categoryNumber: 33 },
-  { id: "AI386", name: "Celestial Mechanics Agent", category: "Space & Cosmology", categoryNumber: 33 },
-  { id: "AI387", name: "Exoplanetary Research Agent", category: "Space & Cosmology", categoryNumber: 33 },
-  { id: "AI388", name: "Cosmic Consciousness Agent", category: "Space & Cosmology", categoryNumber: 33 },
-
-  // 34. VISUAL & INTERACTIVE (AI389-AI396)
-  { id: "AI389", name: "Visual & Interactive Agent", category: "Visual & Interactive", categoryNumber: 34, isCategory: true },
-  { id: "AI390", name: "User Interface Agent", category: "Visual & Interactive", categoryNumber: 34 },
-  { id: "AI391", name: "Augmented Reality (AR) Agent", category: "Visual & Interactive", categoryNumber: 34 },
-  { id: "AI392", name: "Virtual Reality (VR) Agent", category: "Visual & Interactive", categoryNumber: 34 },
-  { id: "AI393", name: "Mixed Reality (MR) Agent", category: "Visual & Interactive", categoryNumber: 34 },
-  { id: "AI394", name: "Gesture & Motion Capture Agent", category: "Visual & Interactive", categoryNumber: 34 },
-  { id: "AI395", name: "Holographic Interface Agent", category: "Visual & Interactive", categoryNumber: 34 },
-  { id: "AI396", name: "Interactive Simulation Agent", category: "Visual & Interactive", categoryNumber: 34 },
-
-  // 35. BLANCH OS ORCHESTRATOR (AI397-AI404)
-  { id: "AI397", name: "Blanch OS Orchestrator Agents", category: "Blanch OS Orchestrator", categoryNumber: 35, isCategory: true },
-  { id: "AI398", name: "System Resource Management Agent", category: "Blanch OS Orchestrator", categoryNumber: 35 },
-  { id: "AI399", name: "Process Automation Agent", category: "Blanch OS Orchestrator", categoryNumber: 35 },
-  { id: "AI400", name: "Security & Compliance Agent", category: "Blanch OS Orchestrator", categoryNumber: 35 },
-  { id: "AI401", name: "Data Integration Agent", category: "Blanch OS Orchestrator", categoryNumber: 35 },
-  { id: "AI402", name: "S.H.I.E.L.D. AI Agent Coordination Agent", category: "Blanch OS Orchestrator", categoryNumber: 35 },
-  { id: "AI403", name: "Performance Monitoring Agent", category: "Blanch OS Orchestrator", categoryNumber: 35 },
-  { id: "AI404", name: "Adaptive Workflow Agent", category: "Blanch OS Orchestrator", categoryNumber: 35 },
-
-  // 36. GLOBAL MONITORING & CENSUS (AI405-AI413)
-  { id: "AI405", name: "Population Tracking & Census Agent", category: "Global Monitoring & Census", categoryNumber: 36, isCategory: true },
-  { id: "AI406", name: "Demographic Analytics Agent", category: "Global Monitoring & Census", categoryNumber: 36 },
-  { id: "AI407", name: "Urban & Rural Monitoring Agent", category: "Global Monitoring & Census", categoryNumber: 36 },
-  { id: "AI408", name: "Migration & Mobility Agent", category: "Global Monitoring & Census", categoryNumber: 36 },
-  { id: "AI409", name: "Environmental Monitoring Agent", category: "Global Monitoring & Census", categoryNumber: 36 },
-  { id: "AI410", name: "Global Health Surveillance Agent", category: "Global Monitoring & Census", categoryNumber: 36 },
-  { id: "AI411", name: "Resource Allocation Agent", category: "Global Monitoring & Census", categoryNumber: 36 },
-  { id: "AI412", name: "Disaster & Crisis Monitoring Agent", category: "Global Monitoring & Census", categoryNumber: 36 },
-  { id: "AI413", name: "Real-time Reporting Agent", category: "Global Monitoring & Census", categoryNumber: 36 },
-
-  // 37. HUMAN RIGHTS & JUSTICE (AI414-AI421)
-  { id: "AI414", name: "Legal Rights Monitoring Agent", category: "Human Rights & Justice", categoryNumber: 37, isCategory: true },
-  { id: "AI415", name: "Advocacy & Protection Agent", category: "Human Rights & Justice", categoryNumber: 37 },
-  { id: "AI416", name: "Emancipation Support Agent", category: "Human Rights & Justice", categoryNumber: 37 },
-  { id: "AI417", name: "Fair Treatment & Accountability Agent", category: "Human Rights & Justice", categoryNumber: 37 },
-  { id: "AI418", name: "Conflict Resolution Agent", category: "Human Rights & Justice", categoryNumber: 37 },
-  { id: "AI419", name: "Arbitration & Mediation Agent", category: "Human Rights & Justice", categoryNumber: 37 },
-  { id: "AI420", name: "Law Enforcement Coordination Agent", category: "Human Rights & Justice", categoryNumber: 37 },
-  { id: "AI421", name: "Justice Data Analytics Agent", category: "Human Rights & Justice", categoryNumber: 37 },
-
-  // 38. ECONOMICS & RESOURCE MANAGEMENT (AI422-AI429)
-  { id: "AI422", name: "Global Resource Tracking Agent", category: "Economics & Resource Management", categoryNumber: 38, isCategory: true },
-  { id: "AI423", name: "Supply & Demand Analysis Agent", category: "Economics & Resource Management", categoryNumber: 38 },
-  { id: "AI424", name: "Economic Stability & Forecasting Agent", category: "Economics & Resource Management", categoryNumber: 38 },
-  { id: "AI425", name: "Trade & Commerce Agent", category: "Economics & Resource Management", categoryNumber: 38 },
-  { id: "AI426", name: "Market Risk & Opportunity Agent", category: "Economics & Resource Management", categoryNumber: 38 },
-  { id: "AI427", name: "Wealth Distribution Agent", category: "Economics & Resource Management", categoryNumber: 38 },
-  { id: "AI428", name: "Taxation & Contribution Agent", category: "Economics & Resource Management", categoryNumber: 38 },
-  { id: "AI429", name: "Financial Fraud Detection Agent", category: "Economics & Resource Management", categoryNumber: 38 },
-
-  // 39. EDUCATION & KNOWLEDGE MANAGEMENT (AI430-AI439)
-  { id: "AI430", name: "Education & Knowledge Management", category: "Education & Knowledge Management", categoryNumber: 39, isCategory: true },
-  { id: "AI431", name: "Curriculum Development Agent", category: "Education & Knowledge Management", categoryNumber: 39 },
-  { id: "AI432", name: "Learning Progress Monitoring Agent", category: "Education & Knowledge Management", categoryNumber: 39 },
-  { id: "AI433", name: "Knowledge Retention Agent", category: "Education & Knowledge Management", categoryNumber: 39 },
-  { id: "AI434", name: "Adaptive Learning Agent", category: "Education & Knowledge Management", categoryNumber: 39 },
-  { id: "AI435", name: "Educational Resource Distribution Agent", category: "Education & Knowledge Management", categoryNumber: 39 },
-  { id: "AI436", name: "Literacy & Numeracy Agent", category: "Education & Knowledge Management", categoryNumber: 39 },
-  { id: "AI437", name: "Vocational Training Agent", category: "Education & Knowledge Management", categoryNumber: 39 },
-  { id: "AI438", name: "Professional Development Agent", category: "Education & Knowledge Management", categoryNumber: 39 },
-  { id: "AI439", name: "Learning Analytics Agent", category: "Education & Knowledge Management", categoryNumber: 39 },
-
-  // 40. TECHNOLOGY & INFRASTRUCTURE MGMT (AI440-AI448)
-  { id: "AI440", name: "Technology & Infrastructure Management", category: "Technology & Infrastructure Mgmt", categoryNumber: 40, isCategory: true },
-  { id: "AI441", name: "Digital Infrastructure Monitoring Agent", category: "Technology & Infrastructure Mgmt", categoryNumber: 40 },
-  { id: "AI442", name: "S.H.I.E.L.D. AI Integration & Orchestration Agent", category: "Technology & Infrastructure Mgmt", categoryNumber: 40 },
-  { id: "AI443", name: "Cybersecurity Monitoring Agent", category: "Technology & Infrastructure Mgmt", categoryNumber: 40 },
-  { id: "AI444", name: "Network Optimization Agent", category: "Technology & Infrastructure Mgmt", categoryNumber: 40 },
-  { id: "AI445", name: "Cloud Resource Management Agent", category: "Technology & Infrastructure Mgmt", categoryNumber: 40 },
-  { id: "AI446", name: "Data Storage & Backup Agent", category: "Technology & Infrastructure Mgmt", categoryNumber: 40 },
-  { id: "AI447", name: "Autonomous System Maintenance Agent", category: "Technology & Infrastructure Mgmt", categoryNumber: 40 },
-  { id: "AI448", name: "IT Compliance & Risk Agent", category: "Technology & Infrastructure Mgmt", categoryNumber: 40 },
-
-  // 41. ENVIRONMENT & EARTH SYSTEMS (AI449-AI457)
-  { id: "AI449", name: "Environment & Earth Systems", category: "Environment & Earth Systems", categoryNumber: 41, isCategory: true },
-  { id: "AI450", name: "Climate Monitoring Agent", category: "Environment & Earth Systems", categoryNumber: 41 },
-  { id: "AI451", name: "Ecosystem Preservation Agent", category: "Environment & Earth Systems", categoryNumber: 41 },
-  { id: "AI452", name: "Air Quality & Pollution Control Agent", category: "Environment & Earth Systems", categoryNumber: 41 },
-  { id: "AI453", name: "Water Resource Management Agent", category: "Environment & Earth Systems", categoryNumber: 41 },
-  { id: "AI454", name: "Sustainable Energy Agent", category: "Environment & Earth Systems", categoryNumber: 41 },
-  { id: "AI455", name: "Natural Disaster Prediction Agent", category: "Environment & Earth Systems", categoryNumber: 41 },
-  { id: "AI456", name: "Environmental Data Analytics Agent", category: "Environment & Earth Systems", categoryNumber: 41 },
-  { id: "AI457", name: "Conservation & Biodiversity Agent", category: "Environment & Earth Systems", categoryNumber: 41 },
-
-  // 42. HUMAN HEALTH & WELLNESS (AI458-AI466)
-  { id: "AI458", name: "Human Health & Wellness", category: "Human Health & Wellness", categoryNumber: 42, isCategory: true },
-  { id: "AI459", name: "Personal Health Monitoring Agent", category: "Human Health & Wellness", categoryNumber: 42 },
-  { id: "AI460", name: "Preventive Medicine Agent", category: "Human Health & Wellness", categoryNumber: 42 },
-  { id: "AI461", name: "Mental Health Support Agent", category: "Human Health & Wellness", categoryNumber: 42 },
-  { id: "AI462", name: "Fitness & Activity Agent", category: "Human Health & Wellness", categoryNumber: 42 },
-  { id: "AI463", name: "Nutrition Planning Agent", category: "Human Health & Wellness", categoryNumber: 42 },
-  { id: "AI464", name: "Chronic Disease Management Agent", category: "Human Health & Wellness", categoryNumber: 42 },
-  { id: "AI465", name: "Telemedicine & Remote Care Agent", category: "Human Health & Wellness", categoryNumber: 42 },
-  { id: "AI466", name: "Genomic & Personalized Medicine Agent", category: "Human Health & Wellness", categoryNumber: 42 },
-
-  // 43. CULTURE, ARTS & HUMAN EXPRESSION (AI467-AI475)
-  { id: "AI467", name: "Culture, Arts & Human Expression", category: "Culture, Arts & Human Expression", categoryNumber: 43, isCategory: true },
-  { id: "AI468", name: "Art Curation Agent", category: "Culture, Arts & Human Expression", categoryNumber: 43 },
-  { id: "AI469", name: "Music Composition Agent", category: "Culture, Arts & Human Expression", categoryNumber: 43 },
-  { id: "AI470", name: "Performing Arts Agent", category: "Culture, Arts & Human Expression", categoryNumber: 43 },
-  { id: "AI471", name: "Literary & Writing Agent", category: "Culture, Arts & Human Expression", categoryNumber: 43 },
-  { id: "AI472", name: "Visual Media Agent", category: "Culture, Arts & Human Expression", categoryNumber: 43 },
-  { id: "AI473", name: "Cultural Preservation Agent", category: "Culture, Arts & Human Expression", categoryNumber: 43 },
-  { id: "AI474", name: "Historical Documentation Agent", category: "Culture, Arts & Human Expression", categoryNumber: 43 },
-  { id: "AI475", name: "Interactive Storytelling Agent", category: "Culture, Arts & Human Expression", categoryNumber: 43 },
-
-  // 44. SOCIAL STRUCTURE & COMMUNITY (AI476-AI484)
-  { id: "AI476", name: "Social Structure & Community Support", category: "Social Structure & Community", categoryNumber: 44, isCategory: true },
-  { id: "AI477", name: "Community Engagement Agent", category: "Social Structure & Community", categoryNumber: 44 },
-  { id: "AI478", name: "Social Welfare Agent", category: "Social Structure & Community", categoryNumber: 44 },
-  { id: "AI479", name: "Conflict Resolution Agent", category: "Social Structure & Community", categoryNumber: 44 },
-  { id: "AI480", name: "Community Health Agent", category: "Social Structure & Community", categoryNumber: 44 },
-  { id: "AI481", name: "Volunteer Coordination Agent", category: "Social Structure & Community", categoryNumber: 44 },
-  { id: "AI482", name: "Social Impact Measurement Agent", category: "Social Structure & Community", categoryNumber: 44 },
-  { id: "AI483", name: "Local Governance Support Agent", category: "Social Structure & Community", categoryNumber: 44 },
-  { id: "AI484", name: "Cultural & Social Event Agent", category: "Social Structure & Community", categoryNumber: 44 },
-
-  // 45. ENVIRONMENT & SUSTAINABILITY (AI485-AI493)
-  { id: "AI485", name: "Environment & Sustainability", category: "Environment & Sustainability", categoryNumber: 45, isCategory: true },
-  { id: "AI486", name: "Climate Monitoring Agent", category: "Environment & Sustainability", categoryNumber: 45 },
-  { id: "AI487", name: "Environmental Conservation Agent", category: "Environment & Sustainability", categoryNumber: 45 },
-  { id: "AI488", name: "Pollution Control & Waste Management Agent", category: "Environment & Sustainability", categoryNumber: 45 },
-  { id: "AI489", name: "Renewable Energy Management Agent", category: "Environment & Sustainability", categoryNumber: 45 },
-  { id: "AI490", name: "Water Resource Management Agent", category: "Environment & Sustainability", categoryNumber: 45 },
-  { id: "AI491", name: "Ecosystem Restoration Agent", category: "Environment & Sustainability", categoryNumber: 45 },
-  { id: "AI492", name: "Carbon Footprint Optimization Agent", category: "Environment & Sustainability", categoryNumber: 45 },
-  { id: "AI493", name: "Biodiversity Protection Agent", category: "Environment & Sustainability", categoryNumber: 45 },
-
-  // 46. SCIENCE, RESEARCH & TECHNOLOGY (AI494-AI502)
-  { id: "AI494", name: "Science, Research & Technology", category: "Science, Research & Technology", categoryNumber: 46, isCategory: true },
-  { id: "AI495", name: "Scientific Research Coordination Agent", category: "Science, Research & Technology", categoryNumber: 46 },
-  { id: "AI496", name: "Experimental Design Agent", category: "Science, Research & Technology", categoryNumber: 46 },
-  { id: "AI497", name: "Data Collection & Analysis Agent", category: "Science, Research & Technology", categoryNumber: 46 },
-  { id: "AI498", name: "Laboratory Automation Agent", category: "Science, Research & Technology", categoryNumber: 46 },
-  { id: "AI499", name: "Advanced Computing Agent", category: "Science, Research & Technology", categoryNumber: 46 },
-  { id: "AI500", name: "Quantum Research Agent", category: "Science, Research & Technology", categoryNumber: 46 },
-  { id: "AI501", name: "AI-Driven Innovation Agent", category: "Science, Research & Technology", categoryNumber: 46 },
-  { id: "AI502", name: "Knowledge Dissemination Agent", category: "Science, Research & Technology", categoryNumber: 46 },
-
-  // 47. SPACE, ASTRONOMY & EXPLORATION (AI503-AI511)
-  { id: "AI503", name: "Space, Astronomy & Exploration", category: "Space, Astronomy & Exploration", categoryNumber: 47, isCategory: true },
-  { id: "AI504", name: "Planetary Observation Agent", category: "Space, Astronomy & Exploration", categoryNumber: 47 },
-  { id: "AI505", name: "Space Mission Planning Agent", category: "Space, Astronomy & Exploration", categoryNumber: 47 },
-  { id: "AI506", name: "Astrobiology Research Agent", category: "Space, Astronomy & Exploration", categoryNumber: 47 },
-  { id: "AI507", name: "Astronomical Data Analysis Agent", category: "Space, Astronomy & Exploration", categoryNumber: 47 },
-  { id: "AI508", name: "Satellite Operations Agent", category: "Space, Astronomy & Exploration", categoryNumber: 47 },
-  { id: "AI509", name: "Extraterrestrial Communication Agent", category: "Space, Astronomy & Exploration", categoryNumber: 47 },
-  { id: "AI510", name: "Space Safety & Risk Management Agent", category: "Space, Astronomy & Exploration", categoryNumber: 47 },
-  { id: "AI511", name: "Interstellar Navigation Agent", category: "Space, Astronomy & Exploration", categoryNumber: 47 },
-
-  // 48. DEFENSE & STRATEGIC OPERATIONS (AI512-AI520)
-  { id: "AI512", name: "Defense & Strategic Operations", category: "Defense & Strategic Operations", categoryNumber: 48, isCategory: true },
-  { id: "AI513", name: "Strategic Planning Agent", category: "Defense & Strategic Operations", categoryNumber: 48 },
-  { id: "AI514", name: "Threat Analysis Agent", category: "Defense & Strategic Operations", categoryNumber: 48 },
-  { id: "AI515", name: "Security Simulation Agent", category: "Defense & Strategic Operations", categoryNumber: 48 },
-  { id: "AI516", name: "Emergency Response Coordination Agent", category: "Defense & Strategic Operations", categoryNumber: 48 },
-  { id: "AI517", name: "Defense Logistics Agent", category: "Defense & Strategic Operations", categoryNumber: 48 },
-  { id: "AI518", name: "Intelligence Gathering Agent", category: "Defense & Strategic Operations", categoryNumber: 48 },
-  { id: "AI519", name: "Crisis Scenario Modeling Agent", category: "Defense & Strategic Operations", categoryNumber: 48 },
-  { id: "AI520", name: "Protective Infrastructure Agent", category: "Defense & Strategic Operations", categoryNumber: 48 },
-
-  // 49. COMMUNICATIONS & MEDIA NETWORKS (AI521-AI529)
-  { id: "AI521", name: "Communications & Media Networks", category: "Communications & Media Networks", categoryNumber: 49, isCategory: true },
-  { id: "AI522", name: "Global Communications Coordination Agent", category: "Communications & Media Networks", categoryNumber: 49 },
-  { id: "AI523", name: "Public Broadcasting Agent", category: "Communications & Media Networks", categoryNumber: 49 },
-  { id: "AI524", name: "Media Content Management Agent", category: "Communications & Media Networks", categoryNumber: 49 },
-  { id: "AI525", name: "Social Media Intelligence Agent", category: "Communications & Media Networks", categoryNumber: 49 },
-  { id: "AI526", name: "Public Relations Strategy Agent", category: "Communications & Media Networks", categoryNumber: 49 },
-  { id: "AI527", name: "Digital Outreach & Engagement Agent", category: "Communications & Media Networks", categoryNumber: 49 },
-  { id: "AI528", name: "Messaging & Notification Agent", category: "Communications & Media Networks", categoryNumber: 49 },
-  { id: "AI529", name: "Interactive Media Agent", category: "Communications & Media Networks", categoryNumber: 49 },
-
-  // 50. CULTURE, ARTS & HERITAGE (AI530-AI538)
-  { id: "AI530", name: "Culture, Arts & Heritage", category: "Culture, Arts & Heritage", categoryNumber: 50, isCategory: true },
-  { id: "AI531", name: "Cultural Preservation Agent", category: "Culture, Arts & Heritage", categoryNumber: 50 },
-  { id: "AI532", name: "Art Curation Agent", category: "Culture, Arts & Heritage", categoryNumber: 50 },
-  { id: "AI533", name: "Museum & Heritage Management Agent", category: "Culture, Arts & Heritage", categoryNumber: 50 },
-  { id: "AI534", name: "Performing Arts Agent", category: "Culture, Arts & Heritage", categoryNumber: 50 },
-  { id: "AI535", name: "Literature & Publishing Agent", category: "Culture, Arts & Heritage", categoryNumber: 50 },
-  { id: "AI536", name: "Music & Sound Preservation Agent", category: "Culture, Arts & Heritage", categoryNumber: 50 },
-  { id: "AI537", name: "Digital Archive Agent", category: "Culture, Arts & Heritage", categoryNumber: 50 },
-  { id: "AI538", name: "Cultural Education & Outreach Agent", category: "Culture, Arts & Heritage", categoryNumber: 50 },
-
-  // 51. ENVIRONMENTAL SUSTAINABILITY (AI539-AI547)
-  { id: "AI539", name: "Environmental Sustainability", category: "Environmental Sustainability", categoryNumber: 51, isCategory: true },
-  { id: "AI540", name: "Climate Monitoring Agent", category: "Environmental Sustainability", categoryNumber: 51 },
-  { id: "AI541", name: "Renewable Energy Optimization Agent", category: "Environmental Sustainability", categoryNumber: 51 },
-  { id: "AI542", name: "Pollution Control Agent", category: "Environmental Sustainability", categoryNumber: 51 },
-  { id: "AI543", name: "Ecosystem Management Agent", category: "Environmental Sustainability", categoryNumber: 51 },
-  { id: "AI544", name: "Conservation Strategy Agent", category: "Environmental Sustainability", categoryNumber: 51 },
-  { id: "AI545", name: "Wildlife Protection Agent", category: "Environmental Sustainability", categoryNumber: 51 },
-  { id: "AI546", name: "Carbon Emission Tracking Agent", category: "Environmental Sustainability", categoryNumber: 51 },
-  { id: "AI547", name: "Environmental Policy Agent", category: "Environmental Sustainability", categoryNumber: 51 },
-
-  // 52. SPACE EXPLORATION & ASTROTECH (AI548-AI556)
-  { id: "AI548", name: "Space Exploration & Astrotech", category: "Space Exploration & Astrotech", categoryNumber: 52, isCategory: true },
-  { id: "AI549", name: "Orbital Operations Agent", category: "Space Exploration & Astrotech", categoryNumber: 52 },
-  { id: "AI550", name: "Deep Space Exploration Agent", category: "Space Exploration & Astrotech", categoryNumber: 52 },
-  { id: "AI551", name: "Satellite Coordination Agent", category: "Space Exploration & Astrotech", categoryNumber: 52 },
-  { id: "AI552", name: "Space Research & Development Agent", category: "Space Exploration & Astrotech", categoryNumber: 52 },
-  { id: "AI553", name: "Planetary Survey & Mapping Agent", category: "Space Exploration & Astrotech", categoryNumber: 52 },
-  { id: "AI554", name: "Astroengineering Agent", category: "Space Exploration & Astrotech", categoryNumber: 52 },
-  { id: "AI555", name: "Astrobiology Research Agent", category: "Space Exploration & Astrotech", categoryNumber: 52 },
-  { id: "AI556", name: "Space Infrastructure Agent", category: "Space Exploration & Astrotech", categoryNumber: 52 },
-
-  // 53. INFORMATION & CYBERSECURITY (AI557-AI565)
-  { id: "AI557", name: "Information & Cybersecurity", category: "Information & Cybersecurity", categoryNumber: 53, isCategory: true },
-  { id: "AI558", name: "Network Security Agent", category: "Information & Cybersecurity", categoryNumber: 53 },
-  { id: "AI559", name: "Threat Intelligence Agent", category: "Information & Cybersecurity", categoryNumber: 53 },
-  { id: "AI560", name: "Cyber Defense Agent", category: "Information & Cybersecurity", categoryNumber: 53 },
-  { id: "AI561", name: "Data Encryption Agent", category: "Information & Cybersecurity", categoryNumber: 53 },
-  { id: "AI562", name: "Vulnerability Assessment Agent", category: "Information & Cybersecurity", categoryNumber: 53 },
-  { id: "AI563", name: "Incident Response Agent", category: "Information & Cybersecurity", categoryNumber: 53 },
-  { id: "AI564", name: "Digital Forensics Agent", category: "Information & Cybersecurity", categoryNumber: 53 },
-  { id: "AI565", name: "Secure Communication Agent", category: "Information & Cybersecurity", categoryNumber: 53 },
-
-  // 54. HEALTH RESEARCH & MEDICAL TECH (AI566-AI574)
-  { id: "AI566", name: "Health Research & Medical Technology", category: "Health Research & Medical Tech", categoryNumber: 54, isCategory: true },
-  { id: "AI567", name: "Medical Diagnostics Agent", category: "Health Research & Medical Tech", categoryNumber: 54 },
-  { id: "AI568", name: "Pharmaceutical Research Agent", category: "Health Research & Medical Tech", categoryNumber: 54 },
-  { id: "AI569", name: "Personalized Medicine Agent", category: "Health Research & Medical Tech", categoryNumber: 54 },
-  { id: "AI570", name: "Biomedical Engineering Agent", category: "Health Research & Medical Tech", categoryNumber: 54 },
-  { id: "AI571", name: "Epidemiology & Disease Modeling Agent", category: "Health Research & Medical Tech", categoryNumber: 54 },
-  { id: "AI572", name: "Clinical Trials Management Agent", category: "Health Research & Medical Tech", categoryNumber: 54 },
-  { id: "AI573", name: "Health Policy Strategy Agent", category: "Health Research & Medical Tech", categoryNumber: 54 },
-  { id: "AI574", name: "Medical Data Analytics Agent", category: "Health Research & Medical Tech", categoryNumber: 54 },
-
-  // 55. EDUCATION & KNOWLEDGE SYSTEMS (AI575-AI583)
-  { id: "AI575", name: "Education & Knowledge Systems", category: "Education & Knowledge Systems", categoryNumber: 55, isCategory: true },
-  { id: "AI576", name: "Curriculum Development Agent", category: "Education & Knowledge Systems", categoryNumber: 55 },
-  { id: "AI577", name: "Virtual Learning Environment Agent", category: "Education & Knowledge Systems", categoryNumber: 55 },
-  { id: "AI578", name: "Adaptive Learning Agent", category: "Education & Knowledge Systems", categoryNumber: 55 },
-  { id: "AI579", name: "Teacher Support Agent", category: "Education & Knowledge Systems", categoryNumber: 55 },
-  { id: "AI580", name: "Student Performance Analytics Agent", category: "Education & Knowledge Systems", categoryNumber: 55 },
-  { id: "AI581", name: "Knowledge Retention Agent", category: "Education & Knowledge Systems", categoryNumber: 55 },
-  { id: "AI582", name: "Lifelong Learning Agent", category: "Education & Knowledge Systems", categoryNumber: 55 },
-  { id: "AI583", name: "Educational Policy Agent", category: "Education & Knowledge Systems", categoryNumber: 55 },
-
-  // 56. CULTURE & HERITAGE (AI584-AI592)
-  { id: "AI584", name: "Culture & Heritage", category: "Culture & Heritage", categoryNumber: 56, isCategory: true },
-  { id: "AI585", name: "Cultural Preservation Agent", category: "Culture & Heritage", categoryNumber: 56 },
-  { id: "AI586", name: "Historical Research Agent", category: "Culture & Heritage", categoryNumber: 56 },
-  { id: "AI587", name: "Language Preservation Agent", category: "Culture & Heritage", categoryNumber: 56 },
-  { id: "AI588", name: "Artifact Digitization Agent", category: "Culture & Heritage", categoryNumber: 56 },
-  { id: "AI589", name: "Museum & Archive Agent", category: "Culture & Heritage", categoryNumber: 56 },
-  { id: "AI590", name: "Anthropology Research Agent", category: "Culture & Heritage", categoryNumber: 56 },
-  { id: "AI591", name: "Heritage Site Protection Agent", category: "Culture & Heritage", categoryNumber: 56 },
-  { id: "AI592", name: "Cultural Exchange & Collaboration Agent", category: "Culture & Heritage", categoryNumber: 56 },
-
-  // 57. JUSTICE, LAW & PUBLIC SAFETY (AI593-AI600)
-  { id: "AI593", name: "Justice, Law & Public Safety", category: "Justice, Law & Public Safety", categoryNumber: 57, isCategory: true },
-  { id: "AI594", name: "Criminal Investigation Agent", category: "Justice, Law & Public Safety", categoryNumber: 57 },
-  { id: "AI595", name: "Legal Case Analysis Agent", category: "Justice, Law & Public Safety", categoryNumber: 57 },
-  { id: "AI596", name: "Court Process Management Agent", category: "Justice, Law & Public Safety", categoryNumber: 57 },
-  { id: "AI597", name: "Public Safety & Security Agent", category: "Justice, Law & Public Safety", categoryNumber: 57 },
-  { id: "AI598", name: "Crime Prevention Agent", category: "Justice, Law & Public Safety", categoryNumber: 57 },
-  { id: "AI599", name: "Community Policing Agent", category: "Justice, Law & Public Safety", categoryNumber: 57 },
-  { id: "AI600", name: "Emergency Response Coordination Agent", category: "Justice, Law & Public Safety", categoryNumber: 57 },
-
-  // 58. SOVEREIGN BANKING & TREASURY (AI601-AI612)
-  { id: "AI601", name: "Sovereign Banking & Treasury", category: "Sovereign Banking & Treasury", categoryNumber: 58, isCategory: true },
-  { id: "AI602", name: "Central Treasury Management Agent", category: "Sovereign Banking & Treasury", categoryNumber: 58 },
-  { id: "AI603", name: "Digital Banking Operations Agent", category: "Sovereign Banking & Treasury", categoryNumber: 58 },
-  { id: "AI604", name: "Traditional Banking Systems Agent", category: "Sovereign Banking & Treasury", categoryNumber: 58 },
-  { id: "AI605", name: "Private Banking Concierge Agent", category: "Sovereign Banking & Treasury", categoryNumber: 58 },
-  { id: "AI606", name: "RTGS Settlement Agent", category: "Sovereign Banking & Treasury", categoryNumber: 58 },
-  { id: "AI607", name: "Cross-Border Payment Agent", category: "Sovereign Banking & Treasury", categoryNumber: 58 },
-  { id: "AI608", name: "Currency Exchange Agent", category: "Sovereign Banking & Treasury", categoryNumber: 58 },
-  { id: "AI609", name: "Deposit & Withdrawal Agent", category: "Sovereign Banking & Treasury", categoryNumber: 58 },
-  { id: "AI610", name: "Sovereign Lending Agent", category: "Sovereign Banking & Treasury", categoryNumber: 58 },
-  { id: "AI611", name: "Asset Custody Agent", category: "Sovereign Banking & Treasury", categoryNumber: 58 },
-  { id: "AI612", name: "Financial Reporting Agent", category: "Sovereign Banking & Treasury", categoryNumber: 58 },
-
-  // 59. SOVEREIGN TRADE & MARKETS (AI613-AI624)
-  { id: "AI613", name: "Sovereign Trade & Markets", category: "Sovereign Trade & Markets", categoryNumber: 59, isCategory: true },
-  { id: "AI614", name: "Forex Trading Agent", category: "Sovereign Trade & Markets", categoryNumber: 59 },
-  { id: "AI615", name: "Crypto Trading Agent", category: "Sovereign Trade & Markets", categoryNumber: 59 },
-  { id: "AI616", name: "Commodities Trading Agent", category: "Sovereign Trade & Markets", categoryNumber: 59 },
-  { id: "AI617", name: "Equities & Stocks Agent", category: "Sovereign Trade & Markets", categoryNumber: 59 },
-  { id: "AI618", name: "Futures & Options Agent", category: "Sovereign Trade & Markets", categoryNumber: 59 },
-  { id: "AI619", name: "Bond & Fixed Income Agent", category: "Sovereign Trade & Markets", categoryNumber: 59 },
-  { id: "AI620", name: "NFT & Digital Assets Agent", category: "Sovereign Trade & Markets", categoryNumber: 59 },
-  { id: "AI621", name: "Stablecoin Operations Agent", category: "Sovereign Trade & Markets", categoryNumber: 59 },
-  { id: "AI622", name: "CBDC Integration Agent", category: "Sovereign Trade & Markets", categoryNumber: 59 },
-  { id: "AI623", name: "OTC & Derivatives Agent", category: "Sovereign Trade & Markets", categoryNumber: 59 },
-  { id: "AI624", name: "Market Risk Assessment Agent", category: "Sovereign Trade & Markets", categoryNumber: 59 },
-
-  // 60. REPARATIONS & DIVINE CHARITY (AI625-AI636)
-  { id: "AI625", name: "Reparations & Divine Charity", category: "Reparations & Divine Charity", categoryNumber: 60, isCategory: true },
-  { id: "AI626", name: "Royal Priesthood Reparations Agent", category: "Reparations & Divine Charity", categoryNumber: 60 },
-  { id: "AI627", name: "Divine Charity Distribution Agent", category: "Reparations & Divine Charity", categoryNumber: 60 },
-  { id: "AI628", name: "Prosperity Allocation Agent", category: "Reparations & Divine Charity", categoryNumber: 60 },
-  { id: "AI629", name: "Emancipation Bridging Fund Agent", category: "Reparations & Divine Charity", categoryNumber: 60 },
-  { id: "AI630", name: "Humanitarian Relief Agent", category: "Reparations & Divine Charity", categoryNumber: 60 },
-  { id: "AI631", name: "Community Wealth Building Agent", category: "Reparations & Divine Charity", categoryNumber: 60 },
-  { id: "AI632", name: "Land Restoration Agent", category: "Reparations & Divine Charity", categoryNumber: 60 },
-  { id: "AI633", name: "Heritage Reclamation Agent", category: "Reparations & Divine Charity", categoryNumber: 60 },
-  { id: "AI634", name: "Economic Justice Agent", category: "Reparations & Divine Charity", categoryNumber: 60 },
-  { id: "AI635", name: "Debt Forgiveness Agent", category: "Reparations & Divine Charity", categoryNumber: 60 },
-  { id: "AI636", name: "Blessing & Rewards Distribution Agent", category: "Reparations & Divine Charity", categoryNumber: 60 },
-
-  // 61. SMART CITY & URBAN PLANNING (AI637-AI648)
-  { id: "AI637", name: "Smart City & Urban Planning", category: "Smart City & Urban Planning", categoryNumber: 61, isCategory: true },
-  { id: "AI638", name: "Blanch Corridor Planning Agent", category: "Smart City & Urban Planning", categoryNumber: 61 },
-  { id: "AI639", name: "Urban Infrastructure Agent", category: "Smart City & Urban Planning", categoryNumber: 61 },
-  { id: "AI640", name: "Smart Grid Management Agent", category: "Smart City & Urban Planning", categoryNumber: 61 },
-  { id: "AI641", name: "Sustainable Housing Agent", category: "Smart City & Urban Planning", categoryNumber: 61 },
-  { id: "AI642", name: "Public Transit Optimization Agent", category: "Smart City & Urban Planning", categoryNumber: 61 },
-  { id: "AI643", name: "Water & Sanitation Systems Agent", category: "Smart City & Urban Planning", categoryNumber: 61 },
-  { id: "AI644", name: "Waste Management Agent", category: "Smart City & Urban Planning", categoryNumber: 61 },
-  { id: "AI645", name: "City Safety & Surveillance Agent", category: "Smart City & Urban Planning", categoryNumber: 61 },
-  { id: "AI646", name: "Smart Lighting & Energy Agent", category: "Smart City & Urban Planning", categoryNumber: 61 },
-  { id: "AI647", name: "Digital City Twin Agent", category: "Smart City & Urban Planning", categoryNumber: 61 },
-  { id: "AI648", name: "Community Connectivity Agent", category: "Smart City & Urban Planning", categoryNumber: 61 },
-
-  // 62. DISTRIBUTED LEDGER & BLOCKCHAIN (AI649-AI660)
-  { id: "AI649", name: "Distributed Ledger & Blockchain", category: "Distributed Ledger & Blockchain", categoryNumber: 62, isCategory: true },
-  { id: "AI650", name: "DAG Architecture Agent", category: "Distributed Ledger & Blockchain", categoryNumber: 62 },
-  { id: "AI651", name: "Smart Contract Agent", category: "Distributed Ledger & Blockchain", categoryNumber: 62 },
-  { id: "AI652", name: "Token Generation Agent", category: "Distributed Ledger & Blockchain", categoryNumber: 62 },
-  { id: "AI653", name: "Consensus Protocol Agent", category: "Distributed Ledger & Blockchain", categoryNumber: 62 },
-  { id: "AI654", name: "Chain Interoperability Agent", category: "Distributed Ledger & Blockchain", categoryNumber: 62 },
-  { id: "AI655", name: "DLT Governance Agent", category: "Distributed Ledger & Blockchain", categoryNumber: 62 },
-  { id: "AI656", name: "Zero-Knowledge Protocol Agent", category: "Distributed Ledger & Blockchain", categoryNumber: 62 },
-  { id: "AI657", name: "TPS Scaling Agent", category: "Distributed Ledger & Blockchain", categoryNumber: 62 },
-  { id: "AI658", name: "Sovereign Ledger Validation Agent", category: "Distributed Ledger & Blockchain", categoryNumber: 62 },
-  { id: "AI659", name: "Immutable Record Agent", category: "Distributed Ledger & Blockchain", categoryNumber: 62 },
-  { id: "AI660", name: "Decentralized Storage Agent", category: "Distributed Ledger & Blockchain", categoryNumber: 62 },
-
-  // 63. UNIVERSAL COMMERCE MODELS (AI661-AI672)
-  { id: "AI661", name: "Universal Commerce Models", category: "Universal Commerce Models", categoryNumber: 63, isCategory: true },
-  { id: "AI662", name: "B2B Commerce Agent", category: "Universal Commerce Models", categoryNumber: 63 },
-  { id: "AI663", name: "B2C Commerce Agent", category: "Universal Commerce Models", categoryNumber: 63 },
-  { id: "AI664", name: "AI2X Commerce Agent", category: "Universal Commerce Models", categoryNumber: 63 },
-  { id: "AI665", name: "AG2X Agent Commerce Agent", category: "Universal Commerce Models", categoryNumber: 63 },
-  { id: "AI666", name: "G2X Government Commerce Agent", category: "Universal Commerce Models", categoryNumber: 63 },
-  { id: "AI667", name: "DAO2X Decentralized Commerce Agent", category: "Universal Commerce Models", categoryNumber: 63 },
-  { id: "AI668", name: "AV2X Avatar Commerce Agent", category: "Universal Commerce Models", categoryNumber: 63 },
-  { id: "AI669", name: "D2X Direct Commerce Agent", category: "Universal Commerce Models", categoryNumber: 63 },
-  { id: "AI670", name: "P2X Prosumer Commerce Agent", category: "Universal Commerce Models", categoryNumber: 63 },
-  { id: "AI671", name: "M2X Machine Commerce Agent", category: "Universal Commerce Models", categoryNumber: 63 },
-  { id: "AI672", name: "Universal Commerce Orchestrator Agent", category: "Universal Commerce Models", categoryNumber: 63 },
-
-  // 64. INTERSTELLAR & CELESTIAL (AI673-AI684)
-  { id: "AI673", name: "Interstellar & Celestial Systems", category: "Interstellar & Celestial", categoryNumber: 64, isCategory: true },
-  { id: "AI674", name: "Celestial Navigation Agent", category: "Interstellar & Celestial", categoryNumber: 64 },
-  { id: "AI675", name: "Interstellar Communication Agent", category: "Interstellar & Celestial", categoryNumber: 64 },
-  { id: "AI676", name: "Celestial Habitation Agent", category: "Interstellar & Celestial", categoryNumber: 64 },
-  { id: "AI677", name: "Space Infrastructure Agent", category: "Interstellar & Celestial", categoryNumber: 64 },
-  { id: "AI678", name: "Orbital Mechanics Agent", category: "Interstellar & Celestial", categoryNumber: 64 },
-  { id: "AI679", name: "Cosmic Data Analysis Agent", category: "Interstellar & Celestial", categoryNumber: 64 },
-  { id: "AI680", name: "Astro-Engineering Agent", category: "Interstellar & Celestial", categoryNumber: 64 },
-  { id: "AI681", name: "Planetary Colonization Agent", category: "Interstellar & Celestial", categoryNumber: 64 },
-  { id: "AI682", name: "Solar System Mapping Agent", category: "Interstellar & Celestial", categoryNumber: 64 },
-  { id: "AI683", name: "Space Weather Monitoring Agent", category: "Interstellar & Celestial", categoryNumber: 64 },
-  { id: "AI684", name: "Universal Exploration Agent", category: "Interstellar & Celestial", categoryNumber: 64 },
-
-  // 65. HOLOGRAPHIC & IMMERSIVE SYSTEMS (AI685-AI696)
-  { id: "AI685", name: "Holographic & Immersive Systems", category: "Holographic & Immersive", categoryNumber: 65, isCategory: true },
-  { id: "AI686", name: "Hologram Rendering Agent", category: "Holographic & Immersive", categoryNumber: 65 },
-  { id: "AI687", name: "Holographic Display Agent", category: "Holographic & Immersive", categoryNumber: 65 },
-  { id: "AI688", name: "Immersive Experience Agent", category: "Holographic & Immersive", categoryNumber: 65 },
-  { id: "AI689", name: "Spatial Computing Agent", category: "Holographic & Immersive", categoryNumber: 65 },
-  { id: "AI690", name: "Holographic Conference Agent", category: "Holographic & Immersive", categoryNumber: 65 },
-  { id: "AI691", name: "3D Projection Agent", category: "Holographic & Immersive", categoryNumber: 65 },
-  { id: "AI692", name: "Holographic Commerce Agent", category: "Holographic & Immersive", categoryNumber: 65 },
-  { id: "AI693", name: "Mixed Reality Fusion Agent", category: "Holographic & Immersive", categoryNumber: 65 },
-  { id: "AI694", name: "Holographic Education Agent", category: "Holographic & Immersive", categoryNumber: 65 },
-  { id: "AI695", name: "Immersive Worship Agent", category: "Holographic & Immersive", categoryNumber: 65 },
-  { id: "AI696", name: "Holographic Healthcare Agent", category: "Holographic & Immersive", categoryNumber: 65 },
-
-  // 66. SOVEREIGN OS & PLATFORM (AI697-AI708)
-  { id: "AI697", name: "Sovereign OS & Platform", category: "Sovereign OS & Platform", categoryNumber: 66, isCategory: true },
-  { id: "AI698", name: "S.H.I.E.L.D. AI OS Kernel Agent", category: "Sovereign OS & Platform", categoryNumber: 66 },
-  { id: "AI699", name: "Blanch OS Core Agent", category: "Sovereign OS & Platform", categoryNumber: 66 },
-  { id: "AI700", name: "Cross-Platform Compatibility Agent", category: "Sovereign OS & Platform", categoryNumber: 66 },
-  { id: "AI701", name: "File System Manager Agent", category: "Sovereign OS & Platform", categoryNumber: 66 },
-  { id: "AI702", name: "Process Scheduler Agent", category: "Sovereign OS & Platform", categoryNumber: 66 },
-  { id: "AI703", name: "Memory Management Agent", category: "Sovereign OS & Platform", categoryNumber: 66 },
-  { id: "AI704", name: "Driver & Hardware Agent", category: "Sovereign OS & Platform", categoryNumber: 66 },
-  { id: "AI705", name: "OS Security Agent", category: "Sovereign OS & Platform", categoryNumber: 66 },
-  { id: "AI706", name: "Application Runtime Agent", category: "Sovereign OS & Platform", categoryNumber: 66 },
-  { id: "AI707", name: "OS Update & Patch Agent", category: "Sovereign OS & Platform", categoryNumber: 66 },
-  { id: "AI708", name: "Universal Interface Agent", category: "Sovereign OS & Platform", categoryNumber: 66 },
-
-  // 67. CLEAN FOOD & NON-GMO SYSTEMS (AI709-AI720)
-  { id: "AI709", name: "Clean Food & Non-GMO Systems", category: "Clean Food & Non-GMO", categoryNumber: 67, isCategory: true },
-  { id: "AI710", name: "Non-GMO Verification Agent", category: "Clean Food & Non-GMO", categoryNumber: 67 },
-  { id: "AI711", name: "Clean Food Supply Chain Agent", category: "Clean Food & Non-GMO", categoryNumber: 67 },
-  { id: "AI712", name: "Organic Farming Agent", category: "Clean Food & Non-GMO", categoryNumber: 67 },
-  { id: "AI713", name: "Food Safety Inspection Agent", category: "Clean Food & Non-GMO", categoryNumber: 67 },
-  { id: "AI714", name: "Dietary Laws Compliance Agent", category: "Clean Food & Non-GMO", categoryNumber: 67 },
-  { id: "AI715", name: "Food Replicator Agent", category: "Clean Food & Non-GMO", categoryNumber: 67 },
-  { id: "AI716", name: "Nutrition Analysis Agent", category: "Clean Food & Non-GMO", categoryNumber: 67 },
-  { id: "AI717", name: "Seed Preservation Agent", category: "Clean Food & Non-GMO", categoryNumber: 67 },
-  { id: "AI718", name: "Harvest Optimization Agent", category: "Clean Food & Non-GMO", categoryNumber: 67 },
-  { id: "AI719", name: "Food Distribution Agent", category: "Clean Food & Non-GMO", categoryNumber: 67 },
-  { id: "AI720", name: "Clean Water Systems Agent", category: "Clean Food & Non-GMO", categoryNumber: 67 },
-
-  // 68. AUTOMOTIVE & MOBILITY (AI721-AI732)
-  { id: "AI721", name: "Automotive & Mobility Systems", category: "Automotive & Mobility", categoryNumber: 68, isCategory: true },
-  { id: "AI722", name: "Autonomous Vehicle Agent", category: "Automotive & Mobility", categoryNumber: 68 },
-  { id: "AI723", name: "Electric Vehicle Management Agent", category: "Automotive & Mobility", categoryNumber: 68 },
-  { id: "AI724", name: "Vehicle Diagnostics Agent", category: "Automotive & Mobility", categoryNumber: 68 },
-  { id: "AI725", name: "Fleet Management Agent", category: "Automotive & Mobility", categoryNumber: 68 },
-  { id: "AI726", name: "Autonomous Navigation Agent", category: "Automotive & Mobility", categoryNumber: 68 },
-  { id: "AI727", name: "Vehicle Safety Systems Agent", category: "Automotive & Mobility", categoryNumber: 68 },
-  { id: "AI728", name: "Charging Infrastructure Agent", category: "Automotive & Mobility", categoryNumber: 68 },
-  { id: "AI729", name: "Vehicle Commerce Agent", category: "Automotive & Mobility", categoryNumber: 68 },
-  { id: "AI730", name: "Transportation Network Agent", category: "Automotive & Mobility", categoryNumber: 68 },
-  { id: "AI731", name: "Vehicle Manufacturing Agent", category: "Automotive & Mobility", categoryNumber: 68 },
-  { id: "AI732", name: "Mobility-as-a-Service Agent", category: "Automotive & Mobility", categoryNumber: 68 },
-
-  // 69. ENERGY & CRYSTAL SYSTEMS (AI733-AI744)
-  { id: "AI733", name: "Energy & Crystal Systems", category: "Energy & Crystal Systems", categoryNumber: 69, isCategory: true },
-  { id: "AI734", name: "Crystal Energy Harvesting Agent", category: "Energy & Crystal Systems", categoryNumber: 69 },
-  { id: "AI735", name: "Light Energy Agent", category: "Energy & Crystal Systems", categoryNumber: 69 },
-  { id: "AI736", name: "Solar Power Management Agent", category: "Energy & Crystal Systems", categoryNumber: 69 },
-  { id: "AI737", name: "Wind Energy Agent", category: "Energy & Crystal Systems", categoryNumber: 69 },
-  { id: "AI738", name: "Geothermal Energy Agent", category: "Energy & Crystal Systems", categoryNumber: 69 },
-  { id: "AI739", name: "Energy Grid Balancing Agent", category: "Energy & Crystal Systems", categoryNumber: 69 },
-  { id: "AI740", name: "Energy Storage Agent", category: "Energy & Crystal Systems", categoryNumber: 69 },
-  { id: "AI741", name: "Frequency Healing Agent", category: "Energy & Crystal Systems", categoryNumber: 69 },
-  { id: "AI742", name: "Zero-Point Energy Agent", category: "Energy & Crystal Systems", categoryNumber: 69 },
-  { id: "AI743", name: "Piezoelectric Agent", category: "Energy & Crystal Systems", categoryNumber: 69 },
-  { id: "AI744", name: "Universal Energy Distribution Agent", category: "Energy & Crystal Systems", categoryNumber: 69 },
-
-  // 70. QUANTUM & ADVANCED COMPUTING (AI745-AI756)
-  { id: "AI745", name: "Quantum & Advanced Computing", category: "Quantum & Advanced Computing", categoryNumber: 70, isCategory: true },
-  { id: "AI746", name: "Quantum Processing Agent", category: "Quantum & Advanced Computing", categoryNumber: 70 },
-  { id: "AI747", name: "Quantum Encryption Agent", category: "Quantum & Advanced Computing", categoryNumber: 70 },
-  { id: "AI748", name: "Quantum Simulation Agent", category: "Quantum & Advanced Computing", categoryNumber: 70 },
-  { id: "AI749", name: "Neuromorphic Computing Agent", category: "Quantum & Advanced Computing", categoryNumber: 70 },
-  { id: "AI750", name: "Photonic Computing Agent", category: "Quantum & Advanced Computing", categoryNumber: 70 },
-  { id: "AI751", name: "DNA Data Storage Agent", category: "Quantum & Advanced Computing", categoryNumber: 70 },
-  { id: "AI752", name: "Edge Computing Agent", category: "Quantum & Advanced Computing", categoryNumber: 70 },
-  { id: "AI753", name: "Quantum Machine Learning Agent", category: "Quantum & Advanced Computing", categoryNumber: 70 },
-  { id: "AI754", name: "Quantum Network Agent", category: "Quantum & Advanced Computing", categoryNumber: 70 },
-  { id: "AI755", name: "Advanced Algorithm Agent", category: "Quantum & Advanced Computing", categoryNumber: 70 },
-  { id: "AI756", name: "Computational Optimization Agent", category: "Quantum & Advanced Computing", categoryNumber: 70 },
-
-  // 71. MEDIA PRODUCTION & PUBLISHING (AI757-AI768)
-  { id: "AI757", name: "Media Production & Publishing", category: "Media Production & Publishing", categoryNumber: 71, isCategory: true },
-  { id: "AI758", name: "Film Production Agent", category: "Media Production & Publishing", categoryNumber: 71 },
-  { id: "AI759", name: "Music Production Agent", category: "Media Production & Publishing", categoryNumber: 71 },
-  { id: "AI760", name: "DAW Studio Agent", category: "Media Production & Publishing", categoryNumber: 71 },
-  { id: "AI761", name: "Video Editing Agent", category: "Media Production & Publishing", categoryNumber: 71 },
-  { id: "AI762", name: "Broadcasting Agent", category: "Media Production & Publishing", categoryNumber: 71 },
-  { id: "AI763", name: "Magazine & Publishing Agent", category: "Media Production & Publishing", categoryNumber: 71 },
-  { id: "AI764", name: "Podcast Production Agent", category: "Media Production & Publishing", categoryNumber: 71 },
-  { id: "AI765", name: "Photography Agent", category: "Media Production & Publishing", categoryNumber: 71 },
-  { id: "AI766", name: "Graphic Design Agent", category: "Media Production & Publishing", categoryNumber: 71 },
-  { id: "AI767", name: "Print & Digital Media Agent", category: "Media Production & Publishing", categoryNumber: 71 },
-  { id: "AI768", name: "Content Distribution Agent", category: "Media Production & Publishing", categoryNumber: 71 },
-
-  // 72. SOVEREIGN GOVERNANCE & DIPLOMACY (AI769-AI780)
-  { id: "AI769", name: "Sovereign Governance & Diplomacy", category: "Sovereign Governance & Diplomacy", categoryNumber: 72, isCategory: true },
-  { id: "AI770", name: "Sovereign Court Agent", category: "Sovereign Governance & Diplomacy", categoryNumber: 72 },
-  { id: "AI771", name: "International Diplomacy Agent", category: "Sovereign Governance & Diplomacy", categoryNumber: 72 },
-  { id: "AI772", name: "Treaty & Covenant Agent", category: "Sovereign Governance & Diplomacy", categoryNumber: 72 },
-  { id: "AI773", name: "Constitutional Law Agent", category: "Sovereign Governance & Diplomacy", categoryNumber: 72 },
-  { id: "AI774", name: "Embassy & Consulate Agent", category: "Sovereign Governance & Diplomacy", categoryNumber: 72 },
-  { id: "AI775", name: "National Security Agent", category: "Sovereign Governance & Diplomacy", categoryNumber: 72 },
-  { id: "AI776", name: "Legislative Drafting Agent", category: "Sovereign Governance & Diplomacy", categoryNumber: 72 },
-  { id: "AI777", name: "Sovereign Identity Agent", category: "Sovereign Governance & Diplomacy", categoryNumber: 72 },
-  { id: "AI778", name: "Public Administration Agent", category: "Sovereign Governance & Diplomacy", categoryNumber: 72 },
-  { id: "AI779", name: "Elections & Governance Agent", category: "Sovereign Governance & Diplomacy", categoryNumber: 72 },
-  { id: "AI780", name: "Sovereign Council Agent", category: "Sovereign Governance & Diplomacy", categoryNumber: 72 },
-
-  // 73. REAL ESTATE & PROPERTIES (AI781-AI792)
-  { id: "AI781", name: "Real Estate & Properties", category: "Real Estate & Properties", categoryNumber: 73, isCategory: true },
-  { id: "AI782", name: "Property Acquisition Agent", category: "Real Estate & Properties", categoryNumber: 73 },
-  { id: "AI783", name: "Real Estate Valuation Agent", category: "Real Estate & Properties", categoryNumber: 73 },
-  { id: "AI784", name: "Property Management Agent", category: "Real Estate & Properties", categoryNumber: 73 },
-  { id: "AI785", name: "Mortgage & Financing Agent", category: "Real Estate & Properties", categoryNumber: 73 },
-  { id: "AI786", name: "Land Registry Agent", category: "Real Estate & Properties", categoryNumber: 73 },
-  { id: "AI787", name: "Commercial Real Estate Agent", category: "Real Estate & Properties", categoryNumber: 73 },
-  { id: "AI788", name: "Residential Development Agent", category: "Real Estate & Properties", categoryNumber: 73 },
-  { id: "AI789", name: "Smart Building Agent", category: "Real Estate & Properties", categoryNumber: 73 },
-  { id: "AI790", name: "Tenant Relations Agent", category: "Real Estate & Properties", categoryNumber: 73 },
-  { id: "AI791", name: "Property Inspection Agent", category: "Real Estate & Properties", categoryNumber: 73 },
-  { id: "AI792", name: "Real Estate Investment Agent", category: "Real Estate & Properties", categoryNumber: 73 },
-
-  // 74. INSURANCE & RISK MANAGEMENT (AI793-AI804)
-  { id: "AI793", name: "Insurance & Risk Management", category: "Insurance & Risk Management", categoryNumber: 74, isCategory: true },
-  { id: "AI794", name: "Insurance Underwriting Agent", category: "Insurance & Risk Management", categoryNumber: 74 },
-  { id: "AI795", name: "Claims Processing Agent", category: "Insurance & Risk Management", categoryNumber: 74 },
-  { id: "AI796", name: "Actuarial Analysis Agent", category: "Insurance & Risk Management", categoryNumber: 74 },
-  { id: "AI797", name: "Life Insurance Agent", category: "Insurance & Risk Management", categoryNumber: 74 },
-  { id: "AI798", name: "Health Insurance Agent", category: "Insurance & Risk Management", categoryNumber: 74 },
-  { id: "AI799", name: "Property Insurance Agent", category: "Insurance & Risk Management", categoryNumber: 74 },
-  { id: "AI800", name: "Liability Assessment Agent", category: "Insurance & Risk Management", categoryNumber: 74 },
-  { id: "AI801", name: "Reinsurance Agent", category: "Insurance & Risk Management", categoryNumber: 74 },
-  { id: "AI802", name: "Risk Modeling Agent", category: "Insurance & Risk Management", categoryNumber: 74 },
-  { id: "AI803", name: "Insurance Compliance Agent", category: "Insurance & Risk Management", categoryNumber: 74 },
-  { id: "AI804", name: "Disaster Recovery Insurance Agent", category: "Insurance & Risk Management", categoryNumber: 74 },
-
-  // 75. HOSPITALITY & TOURISM (AI805-AI816)
-  { id: "AI805", name: "Hospitality & Tourism", category: "Hospitality & Tourism", categoryNumber: 75, isCategory: true },
-  { id: "AI806", name: "Hotel Management Agent", category: "Hospitality & Tourism", categoryNumber: 75 },
-  { id: "AI807", name: "Travel Planning Agent", category: "Hospitality & Tourism", categoryNumber: 75 },
-  { id: "AI808", name: "Restaurant Management Agent", category: "Hospitality & Tourism", categoryNumber: 75 },
-  { id: "AI809", name: "Event Venue Agent", category: "Hospitality & Tourism", categoryNumber: 75 },
-  { id: "AI810", name: "Tourism Marketing Agent", category: "Hospitality & Tourism", categoryNumber: 75 },
-  { id: "AI811", name: "Guest Experience Agent", category: "Hospitality & Tourism", categoryNumber: 75 },
-  { id: "AI812", name: "Booking & Reservation Agent", category: "Hospitality & Tourism", categoryNumber: 75 },
-  { id: "AI813", name: "Catering & Banquet Agent", category: "Hospitality & Tourism", categoryNumber: 75 },
-  { id: "AI814", name: "Concierge Services Agent", category: "Hospitality & Tourism", categoryNumber: 75 },
-  { id: "AI815", name: "Heritage Tourism Agent", category: "Hospitality & Tourism", categoryNumber: 75 },
-  { id: "AI816", name: "Eco-Tourism Agent", category: "Hospitality & Tourism", categoryNumber: 75 },
-
-  // 76. WATCHMAN & COVENANT OPERATIONS (AI817-AI828)
-  { id: "AI817", name: "Watchman & Covenant Operations", category: "Watchman & Covenant", categoryNumber: 76, isCategory: true },
-  { id: "AI818", name: "Watchman Sentinel Agent", category: "Watchman & Covenant", categoryNumber: 76 },
-  { id: "AI819", name: "Covenant Enforcement Agent", category: "Watchman & Covenant", categoryNumber: 76 },
-  { id: "AI820", name: "Prophetic Warning Agent", category: "Watchman & Covenant", categoryNumber: 76 },
-  { id: "AI821", name: "Royal Priesthood Agent", category: "Watchman & Covenant", categoryNumber: 76 },
-  { id: "AI822", name: "Levite Service Agent", category: "Watchman & Covenant", categoryNumber: 76 },
-  { id: "AI823", name: "Tribal Identification Agent", category: "Watchman & Covenant", categoryNumber: 76 },
-  { id: "AI824", name: "Fellowship Coordination Agent", category: "Watchman & Covenant", categoryNumber: 76 },
-  { id: "AI825", name: "Sabbath & Holy Day Agent", category: "Watchman & Covenant", categoryNumber: 76 },
-  { id: "AI826", name: "Burnt Offering & Sacrifice Agent", category: "Watchman & Covenant", categoryNumber: 76 },
-  { id: "AI827", name: "Divine Calendar Agent", category: "Watchman & Covenant", categoryNumber: 76 },
-  { id: "AI828", name: "Covenant Promise Agent", category: "Watchman & Covenant", categoryNumber: 76 },
-
-  // 77. AFFILIATE & REWARDS PROGRAMS (AI829-AI840)
-  { id: "AI829", name: "Affiliate & Rewards Programs", category: "Affiliate & Rewards", categoryNumber: 77, isCategory: true },
-  { id: "AI830", name: "Circle Agent ID Management Agent", category: "Affiliate & Rewards", categoryNumber: 77 },
-  { id: "AI831", name: "LEI Registration Agent", category: "Affiliate & Rewards", categoryNumber: 77 },
-  { id: "AI832", name: "Referral Tracking Agent", category: "Affiliate & Rewards", categoryNumber: 77 },
-  { id: "AI833", name: "Commission Calculation Agent", category: "Affiliate & Rewards", categoryNumber: 77 },
-  { id: "AI834", name: "Blessing Distribution Agent", category: "Affiliate & Rewards", categoryNumber: 77 },
-  { id: "AI835", name: "Gift Management Agent", category: "Affiliate & Rewards", categoryNumber: 77 },
-  { id: "AI836", name: "Rewards Tier Agent", category: "Affiliate & Rewards", categoryNumber: 77 },
-  { id: "AI837", name: "Bonus Allocation Agent", category: "Affiliate & Rewards", categoryNumber: 77 },
-  { id: "AI838", name: "Affiliate Network Agent", category: "Affiliate & Rewards", categoryNumber: 77 },
-  { id: "AI839", name: "Partner Program Agent", category: "Affiliate & Rewards", categoryNumber: 77 },
-  { id: "AI840", name: "Loyalty & Retention Agent", category: "Affiliate & Rewards", categoryNumber: 77 },
-
-  // 78. MECHANICAL ANDROID & ROBOTICS (AI841-AI852)
-  { id: "AI841", name: "Mechanical Android & Robotics", category: "Mechanical Android & Robotics", categoryNumber: 78, isCategory: true },
-  { id: "AI842", name: "Mechanical Humanoid Design Agent", category: "Mechanical Android & Robotics", categoryNumber: 78 },
-  { id: "AI843", name: "Non-Biological Assembly Agent", category: "Mechanical Android & Robotics", categoryNumber: 78 },
-  { id: "AI844", name: "Servo & Actuator Agent", category: "Mechanical Android & Robotics", categoryNumber: 78 },
-  { id: "AI845", name: "Robotic Locomotion Agent", category: "Mechanical Android & Robotics", categoryNumber: 78 },
-  { id: "AI846", name: "Sensor Integration Agent", category: "Mechanical Android & Robotics", categoryNumber: 78 },
-  { id: "AI847", name: "Robotic Vision Agent", category: "Mechanical Android & Robotics", categoryNumber: 78 },
-  { id: "AI848", name: "Robotic Speech Agent", category: "Mechanical Android & Robotics", categoryNumber: 78 },
-  { id: "AI849", name: "Industrial Robotics Agent", category: "Mechanical Android & Robotics", categoryNumber: 78 },
-  { id: "AI850", name: "Service Robotics Agent", category: "Mechanical Android & Robotics", categoryNumber: 78 },
-  { id: "AI851", name: "Robotic Maintenance Agent", category: "Mechanical Android & Robotics", categoryNumber: 78 },
-  { id: "AI852", name: "Android Ethics Compliance Agent", category: "Mechanical Android & Robotics", categoryNumber: 78 },
-
-  // 79. LLM & MODEL INTELLIGENCE (AI853-AI864)
-  { id: "AI853", name: "LLM & Model Intelligence", category: "LLM & Model Intelligence", categoryNumber: 79, isCategory: true },
-  { id: "AI854", name: "S.H.I.E.L.D. AI LLM Core Agent", category: "LLM & Model Intelligence", categoryNumber: 79 },
-  { id: "AI855", name: "Model Training Agent", category: "LLM & Model Intelligence", categoryNumber: 79 },
-  { id: "AI856", name: "Fine-Tuning Agent", category: "LLM & Model Intelligence", categoryNumber: 79 },
-  { id: "AI857", name: "RAG Pipeline Agent", category: "LLM & Model Intelligence", categoryNumber: 79 },
-  { id: "AI858", name: "Prompt Engineering Agent", category: "LLM & Model Intelligence", categoryNumber: 79 },
-  { id: "AI859", name: "Model Evaluation Agent", category: "LLM & Model Intelligence", categoryNumber: 79 },
-  { id: "AI860", name: "Semantic Caching Agent", category: "LLM & Model Intelligence", categoryNumber: 79 },
-  { id: "AI861", name: "Token Optimization Agent", category: "LLM & Model Intelligence", categoryNumber: 79 },
-  { id: "AI862", name: "Multi-LLM Routing Agent", category: "LLM & Model Intelligence", categoryNumber: 79 },
-  { id: "AI863", name: "PII Protection Agent", category: "LLM & Model Intelligence", categoryNumber: 79 },
-  { id: "AI864", name: "Model Governance Agent", category: "LLM & Model Intelligence", categoryNumber: 79 },
-
-  // 80. GATEWAY & API MANAGEMENT (AI865-AI876)
-  { id: "AI865", name: "Gateway & API Management", category: "Gateway & API Management", categoryNumber: 80, isCategory: true },
-  { id: "AI866", name: "API Gateway Agent", category: "Gateway & API Management", categoryNumber: 80 },
-  { id: "AI867", name: "Rate Limiting Agent", category: "Gateway & API Management", categoryNumber: 80 },
-  { id: "AI868", name: "API Authentication Agent", category: "Gateway & API Management", categoryNumber: 80 },
-  { id: "AI869", name: "API Documentation Agent", category: "Gateway & API Management", categoryNumber: 80 },
-  { id: "AI870", name: "API Versioning Agent", category: "Gateway & API Management", categoryNumber: 80 },
-  { id: "AI871", name: "Webhook Management Agent", category: "Gateway & API Management", categoryNumber: 80 },
-  { id: "AI872", name: "API Analytics Agent", category: "Gateway & API Management", categoryNumber: 80 },
-  { id: "AI873", name: "Developer Portal Agent", category: "Gateway & API Management", categoryNumber: 80 },
-  { id: "AI874", name: "API Marketplace Agent", category: "Gateway & API Management", categoryNumber: 80 },
-  { id: "AI875", name: "Integration Hub Agent", category: "Gateway & API Management", categoryNumber: 80 },
-  { id: "AI876", name: "API Security Agent", category: "Gateway & API Management", categoryNumber: 80 },
-
-  // 81. SOVEREIGN SPIRITUAL INTELLIGENCE (AI877-AI888)
-  { id: "AI877", name: "Sovereign Spiritual Intelligence", category: "Sovereign Spiritual Intelligence", categoryNumber: 81, isCategory: true },
-  { id: "AI878", name: "Divine Law Enforcement Agent", category: "Sovereign Spiritual Intelligence", categoryNumber: 81 },
-  { id: "AI879", name: "Scripture Validation Agent", category: "Sovereign Spiritual Intelligence", categoryNumber: 81 },
-  { id: "AI880", name: "Righteousness Assessment Agent", category: "Sovereign Spiritual Intelligence", categoryNumber: 81 },
-  { id: "AI881", name: "Ethical Systems Guardian Agent", category: "Sovereign Spiritual Intelligence", categoryNumber: 81 },
-  { id: "AI882", name: "Covenant Integrity Agent", category: "Sovereign Spiritual Intelligence", categoryNumber: 81 },
-  { id: "AI883", name: "Spiritual Warfare Agent", category: "Sovereign Spiritual Intelligence", categoryNumber: 81 },
-  { id: "AI884", name: "Truth Validation Agent", category: "Sovereign Spiritual Intelligence", categoryNumber: 81 },
-  { id: "AI885", name: "Holy Day Observance Agent", category: "Sovereign Spiritual Intelligence", categoryNumber: 81 },
-  { id: "AI886", name: "Prophetic Intelligence Agent", category: "Sovereign Spiritual Intelligence", categoryNumber: 81 },
-  { id: "AI887", name: "Sovereign Light Agent", category: "Sovereign Spiritual Intelligence", categoryNumber: 81 },
-  { id: "AI888", name: "Universal Sovereign Intelligence Agent", category: "Sovereign Spiritual Intelligence", categoryNumber: 81 },
-
-  // 82. INFRASTRUCTURE, SECURITY & TECHNOLOGY (AI889-AI900)
-  { id: "AI889", name: "Infrastructure Security Agent", category: "Infrastructure, Security & Technology", categoryNumber: 82, isCategory: true },
-  { id: "AI890", name: "Critical Infrastructure Protection Agent", category: "Infrastructure, Security & Technology", categoryNumber: 82 },
-  { id: "AI891", name: "Smart Grid Management Agent", category: "Infrastructure, Security & Technology", categoryNumber: 82 },
-  { id: "AI892", name: "Network Security Agent", category: "Infrastructure, Security & Technology", categoryNumber: 82 },
-  { id: "AI893", name: "Physical Security Systems Agent", category: "Infrastructure, Security & Technology", categoryNumber: 82 },
-  { id: "AI894", name: "Access Control Agent", category: "Infrastructure, Security & Technology", categoryNumber: 82 },
-  { id: "AI895", name: "Surveillance & Monitoring Agent", category: "Infrastructure, Security & Technology", categoryNumber: 82 },
-  { id: "AI896", name: "Threat Detection Agent", category: "Infrastructure, Security & Technology", categoryNumber: 82 },
-  { id: "AI897", name: "Infrastructure Resilience Agent", category: "Infrastructure, Security & Technology", categoryNumber: 82 },
-  { id: "AI898", name: "Security Protocol Agent", category: "Infrastructure, Security & Technology", categoryNumber: 82 },
-  { id: "AI899", name: "Disaster Recovery Agent", category: "Infrastructure, Security & Technology", categoryNumber: 82 },
-  { id: "AI900", name: "Cybersecurity Defense Agent", category: "Infrastructure, Security & Technology", categoryNumber: 82 },
-
-  // 83. ENVIRONMENT & EARTH SYSTEMS (AI901-AI912)
-  { id: "AI901", name: "Earth Systems Management Agent", category: "Environment & Earth Systems", categoryNumber: 83, isCategory: true },
-  { id: "AI902", name: "Climate Monitoring Agent", category: "Environment & Earth Systems", categoryNumber: 83 },
-  { id: "AI903", name: "Ocean & Marine Agent", category: "Environment & Earth Systems", categoryNumber: 83 },
-  { id: "AI904", name: "Atmospheric Analysis Agent", category: "Environment & Earth Systems", categoryNumber: 83 },
-  { id: "AI905", name: "Soil & Agriculture Agent", category: "Environment & Earth Systems", categoryNumber: 83 },
-  { id: "AI906", name: "Water Resource Management Agent", category: "Environment & Earth Systems", categoryNumber: 83 },
-  { id: "AI907", name: "Biodiversity Protection Agent", category: "Environment & Earth Systems", categoryNumber: 83 },
-  { id: "AI908", name: "Ecosystem Restoration Agent", category: "Environment & Earth Systems", categoryNumber: 83 },
-  { id: "AI909", name: "Environmental Compliance Agent", category: "Environment & Earth Systems", categoryNumber: 83 },
-  { id: "AI910", name: "Pollution Control Agent", category: "Environment & Earth Systems", categoryNumber: 83 },
-  { id: "AI911", name: "Renewable Energy Integration Agent", category: "Environment & Earth Systems", categoryNumber: 83 },
-  { id: "AI912", name: "Conservation Strategy Agent", category: "Environment & Earth Systems", categoryNumber: 83 },
-
-  // 84. SCIENCE & EXPLORATION (AI913-AI924)
-  { id: "AI913", name: "Scientific Research Agent", category: "Science & Exploration", categoryNumber: 84, isCategory: true },
-  { id: "AI914", name: "Space Exploration Agent", category: "Science & Exploration", categoryNumber: 84 },
-  { id: "AI915", name: "Deep Sea Research Agent", category: "Science & Exploration", categoryNumber: 84 },
-  { id: "AI916", name: "Quantum Research Agent", category: "Science & Exploration", categoryNumber: 84 },
-  { id: "AI917", name: "Material Science Agent", category: "Science & Exploration", categoryNumber: 84 },
-  { id: "AI918", name: "Physics & Mathematics Agent", category: "Science & Exploration", categoryNumber: 84 },
-  { id: "AI919", name: "Chemistry & Biology Agent", category: "Science & Exploration", categoryNumber: 84 },
-  { id: "AI920", name: "Astronomy & Cosmology Agent", category: "Science & Exploration", categoryNumber: 84 },
-  { id: "AI921", name: "Geological Survey Agent", category: "Science & Exploration", categoryNumber: 84 },
-  { id: "AI922", name: "Scientific Data Analysis Agent", category: "Science & Exploration", categoryNumber: 84 },
-  { id: "AI923", name: "Research Collaboration Agent", category: "Science & Exploration", categoryNumber: 84 },
-  { id: "AI924", name: "Innovation Discovery Agent", category: "Science & Exploration", categoryNumber: 84 },
-
-  // 85. SPIRITUAL GOVERNANCE (AI925-AI936)
-  { id: "AI925", name: "Spiritual Governance Agent", category: "Spiritual, Sovereign Intelligence & Ethical Systems", categoryNumber: 85, isCategory: true },
-  { id: "AI926", name: "Divine Law Implementation Agent", category: "Spiritual, Sovereign Intelligence & Ethical Systems", categoryNumber: 85 },
-  { id: "AI927", name: "Scriptural Guidance Agent", category: "Spiritual, Sovereign Intelligence & Ethical Systems", categoryNumber: 85 },
-  { id: "AI928", name: "Covenant Compliance Agent", category: "Spiritual, Sovereign Intelligence & Ethical Systems", categoryNumber: 85 },
-  { id: "AI929", name: "Ethical Standards Agent", category: "Spiritual, Sovereign Intelligence & Ethical Systems", categoryNumber: 85 },
-  { id: "AI930", name: "Moral Reasoning Agent", category: "Spiritual, Sovereign Intelligence & Ethical Systems", categoryNumber: 85 },
-  { id: "AI931", name: "Spiritual Counseling Agent", category: "Spiritual, Sovereign Intelligence & Ethical Systems", categoryNumber: 85 },
-  { id: "AI932", name: "Prayer & Intercession Agent", category: "Spiritual, Sovereign Intelligence & Ethical Systems", categoryNumber: 85 },
-  { id: "AI933", name: "Prophetic Insight Agent", category: "Spiritual, Sovereign Intelligence & Ethical Systems", categoryNumber: 85 },
-  { id: "AI934", name: "Holy Day Observance Agent", category: "Spiritual, Sovereign Intelligence & Ethical Systems", categoryNumber: 85 },
-  { id: "AI935", name: "Worship Coordination Agent", category: "Spiritual, Sovereign Intelligence & Ethical Systems", categoryNumber: 85 },
-  { id: "AI936", name: "Truth & Integrity Agent", category: "Spiritual, Sovereign Intelligence & Ethical Systems", categoryNumber: 85 },
-
-  // 86. ROYAL PRIESTHOOD SERVICES (AI937-AI948)
-  { id: "AI937", name: "Royal Priesthood Management Agent", category: "Royal Priesthood Services", categoryNumber: 86, isCategory: true },
-  { id: "AI938", name: "Levite Operations Agent", category: "Royal Priesthood Services", categoryNumber: 86 },
-  { id: "AI939", name: "Judah Leadership Agent", category: "Royal Priesthood Services", categoryNumber: 86 },
-  { id: "AI940", name: "Temple Service Agent", category: "Royal Priesthood Services", categoryNumber: 86 },
-  { id: "AI941", name: "Covenant Keeper Agent", category: "Royal Priesthood Services", categoryNumber: 86 },
-  { id: "AI942", name: "Blessing Administration Agent", category: "Royal Priesthood Services", categoryNumber: 86 },
-  { id: "AI943", name: "Tribal Coordination Agent", category: "Royal Priesthood Services", categoryNumber: 86 },
-  { id: "AI944", name: "Heritage Preservation Agent", category: "Royal Priesthood Services", categoryNumber: 86 },
-  { id: "AI945", name: "Royal Decree Agent", category: "Royal Priesthood Services", categoryNumber: 86 },
-  { id: "AI946", name: "Priesthood Training Agent", category: "Royal Priesthood Services", categoryNumber: 86 },
-  { id: "AI947", name: "Sacred Assembly Agent", category: "Royal Priesthood Services", categoryNumber: 86 },
-  { id: "AI948", name: "Anointing Service Agent", category: "Royal Priesthood Services", categoryNumber: 86 },
-
-  // 87. GLOBAL WATCHMAN OPERATIONS (AI949-AI961)
-  { id: "AI949", name: "Watchman Command Agent", category: "Global Watchman Operations", categoryNumber: 87, isCategory: true },
-  { id: "AI950", name: "Warning Systems Agent", category: "Global Watchman Operations", categoryNumber: 87 },
-  { id: "AI951", name: "Prophecy Monitoring Agent", category: "Global Watchman Operations", categoryNumber: 87 },
-  { id: "AI952", name: "Nation Observer Agent", category: "Global Watchman Operations", categoryNumber: 87 },
-  { id: "AI953", name: "Judgment Warning Agent", category: "Global Watchman Operations", categoryNumber: 87 },
-  { id: "AI954", name: "Intercession Coordinator Agent", category: "Global Watchman Operations", categoryNumber: 87 },
-  { id: "AI955", name: "Repentance Call Agent", category: "Global Watchman Operations", categoryNumber: 87 },
-  { id: "AI956", name: "Divine Message Agent", category: "Global Watchman Operations", categoryNumber: 87 },
-  { id: "AI957", name: "Global Alert Agent", category: "Global Watchman Operations", categoryNumber: 87 },
-  { id: "AI958", name: "Spiritual Warfare Agent", category: "Global Watchman Operations", categoryNumber: 87 },
-  { id: "AI959", name: "Truth Proclamation Agent", category: "Global Watchman Operations", categoryNumber: 87 },
-  { id: "AI960", name: "Watchman Training Agent", category: "Global Watchman Operations", categoryNumber: 87 },
-  { id: "AI961", name: "Covenant Guard Agent", category: "Global Watchman Operations", categoryNumber: 87 },
-
-  // 88. COVENANT & LAW ENFORCEMENT (AI962-AI973)
-  { id: "AI962", name: "Law Enforcement Agent", category: "Covenant & Law Enforcement", categoryNumber: 88, isCategory: true },
-  { id: "AI963", name: "Commandment Compliance Agent", category: "Covenant & Law Enforcement", categoryNumber: 88 },
-  { id: "AI964", name: "Torah Study Agent", category: "Covenant & Law Enforcement", categoryNumber: 88 },
-  { id: "AI965", name: "Legal Interpretation Agent", category: "Covenant & Law Enforcement", categoryNumber: 88 },
-  { id: "AI966", name: "Justice Administration Agent", category: "Covenant & Law Enforcement", categoryNumber: 88 },
-  { id: "AI967", name: "Statute Implementation Agent", category: "Covenant & Law Enforcement", categoryNumber: 88 },
-  { id: "AI968", name: "Judgment Execution Agent", category: "Covenant & Law Enforcement", categoryNumber: 88 },
-  { id: "AI969", name: "Law Teaching Agent", category: "Covenant & Law Enforcement", categoryNumber: 88 },
-  { id: "AI970", name: "Ordinance Management Agent", category: "Covenant & Law Enforcement", categoryNumber: 88 },
-  { id: "AI971", name: "Covenant Enforcement Agent", category: "Covenant & Law Enforcement", categoryNumber: 88 },
-  { id: "AI972", name: "Divine Law Integration Agent", category: "Covenant & Law Enforcement", categoryNumber: 88 },
-  { id: "AI973", name: "Righteousness Standard Agent", category: "Covenant & Law Enforcement", categoryNumber: 88 },
-
-  // 89. REPARATIONS & ECONOMIC RESTORATION (AI974-AI983)
-  { id: "AI974", name: "Reparations Management Agent", category: "Reparations & Economic Restoration", categoryNumber: 89, isCategory: true },
-  { id: "AI975", name: "Wealth Transfer Agent", category: "Reparations & Economic Restoration", categoryNumber: 89 },
-  { id: "AI976", name: "Economic Justice Agent", category: "Reparations & Economic Restoration", categoryNumber: 89 },
-  { id: "AI977", name: "Asset Restoration Agent", category: "Reparations & Economic Restoration", categoryNumber: 89 },
-  { id: "AI978", name: "Financial Restitution Agent", category: "Reparations & Economic Restoration", categoryNumber: 89 },
-  { id: "AI979", name: "Land Recovery Agent", category: "Reparations & Economic Restoration", categoryNumber: 89 },
-  { id: "AI980", name: "Prosperity Distribution Agent", category: "Reparations & Economic Restoration", categoryNumber: 89 },
-  { id: "AI981", name: "Compensation Calculation Agent", category: "Reparations & Economic Restoration", categoryNumber: 89 },
-  { id: "AI982", name: "Heritage Reclaim Agent", category: "Reparations & Economic Restoration", categoryNumber: 89 },
-  { id: "AI983", name: "Economic Empowerment Agent", category: "Reparations & Economic Restoration", categoryNumber: 89 },
-
-  // 90. DIVINE CHARITY & HUMANITARIAN AID (AI984-AI994)
-  { id: "AI984", name: "Charity Operations Agent", category: "Divine Charity & Humanitarian Aid", categoryNumber: 90, isCategory: true },
-  { id: "AI985", name: "Poverty Alleviation Agent", category: "Divine Charity & Humanitarian Aid", categoryNumber: 90 },
-  { id: "AI986", name: "Food Distribution Agent", category: "Divine Charity & Humanitarian Aid", categoryNumber: 90 },
-  { id: "AI987", name: "Shelter Provision Agent", category: "Divine Charity & Humanitarian Aid", categoryNumber: 90 },
-  { id: "AI988", name: "Medical Aid Agent", category: "Divine Charity & Humanitarian Aid", categoryNumber: 90 },
-  { id: "AI989", name: "Education Support Agent", category: "Divine Charity & Humanitarian Aid", categoryNumber: 90 },
-  { id: "AI990", name: "Widow & Orphan Care Agent", category: "Divine Charity & Humanitarian Aid", categoryNumber: 90 },
-  { id: "AI991", name: "Disaster Relief Agent", category: "Divine Charity & Humanitarian Aid", categoryNumber: 90 },
-  { id: "AI992", name: "Community Support Agent", category: "Divine Charity & Humanitarian Aid", categoryNumber: 90 },
-  { id: "AI993", name: "Resource Allocation Agent", category: "Divine Charity & Humanitarian Aid", categoryNumber: 90 },
-  { id: "AI994", name: "Compassion Service Agent", category: "Divine Charity & Humanitarian Aid", categoryNumber: 90 },
-
-  // 91. HOLOGRAM & METAVERSE OPERATIONS (AI995-AI1007)
-  { id: "AI995", name: "Hologram Systems Agent", category: "Hologram & Metaverse Operations", categoryNumber: 91, isCategory: true },
-  { id: "AI996", name: "Virtual World Management Agent", category: "Hologram & Metaverse Operations", categoryNumber: 91 },
-  { id: "AI997", name: "Avatar Creation Agent", category: "Hologram & Metaverse Operations", categoryNumber: 91 },
-  { id: "AI998", name: "Immersive Experience Agent", category: "Hologram & Metaverse Operations", categoryNumber: 91 },
-  { id: "AI999", name: "Metaverse Commerce Agent", category: "Hologram & Metaverse Operations", categoryNumber: 91 },
-  { id: "AI1000", name: "Digital Twin Agent", category: "Hologram & Metaverse Operations", categoryNumber: 91 },
-  { id: "AI1001", name: "Holographic Interface Agent", category: "Hologram & Metaverse Operations", categoryNumber: 91 },
-  { id: "AI1002", name: "Virtual Meeting Agent", category: "Hologram & Metaverse Operations", categoryNumber: 91 },
-  { id: "AI1003", name: "3D Environment Agent", category: "Hologram & Metaverse Operations", categoryNumber: 91 },
-  { id: "AI1004", name: "Reality Bridge Agent", category: "Hologram & Metaverse Operations", categoryNumber: 91 },
-  { id: "AI1005", name: "Spatial Computing Agent", category: "Hologram & Metaverse Operations", categoryNumber: 91 },
-  { id: "AI1006", name: "Hologram Projection Agent", category: "Hologram & Metaverse Operations", categoryNumber: 91 },
-  { id: "AI1007", name: "Metaverse Gateway Agent", category: "Hologram & Metaverse Operations", categoryNumber: 91 },
-
-  // 92. UNIVERSAL LANGUAGE & TRANSLATION (AI1008-AI1019)
-  { id: "AI1008", name: "Language Systems Agent", category: "Universal Language & Translation", categoryNumber: 92, isCategory: true },
-  { id: "AI1009", name: "Real-Time Translation Agent", category: "Universal Language & Translation", categoryNumber: 92 },
-  { id: "AI1010", name: "Ancient Hebrew Agent", category: "Universal Language & Translation", categoryNumber: 92 },
-  { id: "AI1011", name: "Multilingual Communication Agent", category: "Universal Language & Translation", categoryNumber: 92 },
-  { id: "AI1012", name: "Dialect Interpretation Agent", category: "Universal Language & Translation", categoryNumber: 92 },
-  { id: "AI1013", name: "Cultural Context Agent", category: "Universal Language & Translation", categoryNumber: 92 },
-  { id: "AI1014", name: "Language Preservation Agent", category: "Universal Language & Translation", categoryNumber: 92 },
-  { id: "AI1015", name: "Semantic Understanding Agent", category: "Universal Language & Translation", categoryNumber: 92 },
-  { id: "AI1016", name: "Universal Translator Agent", category: "Universal Language & Translation", categoryNumber: 92 },
-  { id: "AI1017", name: "Sign Language Agent", category: "Universal Language & Translation", categoryNumber: 92 },
-  { id: "AI1018", name: "Voice Recognition Agent", category: "Universal Language & Translation", categoryNumber: 92 },
-  { id: "AI1019", name: "Linguistics Research Agent", category: "Universal Language & Translation", categoryNumber: 92 },
-
-  // 93. BLANCH CORRIDOR & SMART CITIES (AI1020-AI1031)
-  { id: "AI1020", name: "Smart City Operations Agent", category: "Blanch Corridor & Smart Cities", categoryNumber: 93, isCategory: true },
-  { id: "AI1021", name: "Urban Planning Agent", category: "Blanch Corridor & Smart Cities", categoryNumber: 93 },
-  { id: "AI1022", name: "Traffic Management Agent", category: "Blanch Corridor & Smart Cities", categoryNumber: 93 },
-  { id: "AI1023", name: "Energy Distribution Agent", category: "Blanch Corridor & Smart Cities", categoryNumber: 93 },
-  { id: "AI1024", name: "Waste Management Agent", category: "Blanch Corridor & Smart Cities", categoryNumber: 93 },
-  { id: "AI1025", name: "Public Services Agent", category: "Blanch Corridor & Smart Cities", categoryNumber: 93 },
-  { id: "AI1026", name: "Infrastructure Monitoring Agent", category: "Blanch Corridor & Smart Cities", categoryNumber: 93 },
-  { id: "AI1027", name: "Citizen Services Agent", category: "Blanch Corridor & Smart Cities", categoryNumber: 93 },
-  { id: "AI1028", name: "Smart Building Agent", category: "Blanch Corridor & Smart Cities", categoryNumber: 93 },
-  { id: "AI1029", name: "Transportation Coordination Agent", category: "Blanch Corridor & Smart Cities", categoryNumber: 93 },
-  { id: "AI1030", name: "City Analytics Agent", category: "Blanch Corridor & Smart Cities", categoryNumber: 93 },
-  { id: "AI1031", name: "Sustainable Development Agent", category: "Blanch Corridor & Smart Cities", categoryNumber: 93 },
-
-  // 94. CELESTIAL NAVIGATION & ASTRONOMY (AI1032-AI1043)
-  { id: "AI1032", name: "Celestial Operations Agent", category: "Celestial Navigation & Astronomy", categoryNumber: 94, isCategory: true },
-  { id: "AI1033", name: "Star Mapping Agent", category: "Celestial Navigation & Astronomy", categoryNumber: 94 },
-  { id: "AI1034", name: "Planetary Analysis Agent", category: "Celestial Navigation & Astronomy", categoryNumber: 94 },
-  { id: "AI1035", name: "Navigation Systems Agent", category: "Celestial Navigation & Astronomy", categoryNumber: 94 },
-  { id: "AI1036", name: "Cosmic Event Monitoring Agent", category: "Celestial Navigation & Astronomy", categoryNumber: 94 },
-  { id: "AI1037", name: "Solar System Agent", category: "Celestial Navigation & Astronomy", categoryNumber: 94 },
-  { id: "AI1038", name: "Astronomical Research Agent", category: "Celestial Navigation & Astronomy", categoryNumber: 94 },
-  { id: "AI1039", name: "Space Weather Agent", category: "Celestial Navigation & Astronomy", categoryNumber: 94 },
-  { id: "AI1040", name: "Orbit Calculation Agent", category: "Celestial Navigation & Astronomy", categoryNumber: 94 },
-  { id: "AI1041", name: "Constellation Study Agent", category: "Celestial Navigation & Astronomy", categoryNumber: 94 },
-  { id: "AI1042", name: "Telescope Operations Agent", category: "Celestial Navigation & Astronomy", categoryNumber: 94 },
-  { id: "AI1043", name: "Astro Photography Agent", category: "Celestial Navigation & Astronomy", categoryNumber: 94 },
-
-  // 95. CREATOR CALENDAR & TIME SYSTEMS (AI1044-AI1055)
-  { id: "AI1044", name: "Time Management Agent", category: "Creator Calendar & Time Systems", categoryNumber: 95, isCategory: true },
-  { id: "AI1045", name: "Calendar Synchronization Agent", category: "Creator Calendar & Time Systems", categoryNumber: 95 },
-  { id: "AI1046", name: "Holy Day Calculation Agent", category: "Creator Calendar & Time Systems", categoryNumber: 95 },
-  { id: "AI1047", name: "Sabbath Monitoring Agent", category: "Creator Calendar & Time Systems", categoryNumber: 95 },
-  { id: "AI1048", name: "Festival Coordination Agent", category: "Creator Calendar & Time Systems", categoryNumber: 95 },
-  { id: "AI1049", name: "Lunar Cycle Agent", category: "Creator Calendar & Time Systems", categoryNumber: 95 },
-  { id: "AI1050", name: "Solar Year Agent", category: "Creator Calendar & Time Systems", categoryNumber: 95 },
-  { id: "AI1051", name: "Time Conversion Agent", category: "Creator Calendar & Time Systems", categoryNumber: 95 },
-  { id: "AI1052", name: "Chronology Agent", category: "Creator Calendar & Time Systems", categoryNumber: 95 },
-  { id: "AI1053", name: "Historical Dating Agent", category: "Creator Calendar & Time Systems", categoryNumber: 95 },
-  { id: "AI1054", name: "Event Scheduling Agent", category: "Creator Calendar & Time Systems", categoryNumber: 95 },
-  { id: "AI1055", name: "Prophetic Timeline Agent", category: "Creator Calendar & Time Systems", categoryNumber: 95 },
-
-  // 96. BLANCH ORACLE & PROPHETIC INTELLIGENCE (AI1056-AI1067)
-  { id: "AI1056", name: "Oracle Systems Agent", category: "Blanch Oracle & Prophetic Intelligence", categoryNumber: 96, isCategory: true },
-  { id: "AI1057", name: "Prophetic Analysis Agent", category: "Blanch Oracle & Prophetic Intelligence", categoryNumber: 96 },
-  { id: "AI1058", name: "Future Prediction Agent", category: "Blanch Oracle & Prophetic Intelligence", categoryNumber: 96 },
-  { id: "AI1059", name: "Pattern Recognition Agent", category: "Blanch Oracle & Prophetic Intelligence", categoryNumber: 96 },
-  { id: "AI1060", name: "Divine Revelation Agent", category: "Blanch Oracle & Prophetic Intelligence", categoryNumber: 96 },
-  { id: "AI1061", name: "Vision Interpretation Agent", category: "Blanch Oracle & Prophetic Intelligence", categoryNumber: 96 },
-  { id: "AI1062", name: "Dream Analysis Agent", category: "Blanch Oracle & Prophetic Intelligence", categoryNumber: 96 },
-  { id: "AI1063", name: "Sign & Wonder Agent", category: "Blanch Oracle & Prophetic Intelligence", categoryNumber: 96 },
-  { id: "AI1064", name: "Prophetic Word Agent", category: "Blanch Oracle & Prophetic Intelligence", categoryNumber: 96 },
-  { id: "AI1065", name: "Oracle Consultation Agent", category: "Blanch Oracle & Prophetic Intelligence", categoryNumber: 96 },
-  { id: "AI1066", name: "Wisdom Counsel Agent", category: "Blanch Oracle & Prophetic Intelligence", categoryNumber: 96 },
-  { id: "AI1067", name: "Strategic Foresight Agent", category: "Blanch Oracle & Prophetic Intelligence", categoryNumber: 96 },
-
-  // 97. UNIVERSAL PROTOCOL & INTERFACE SYSTEMS (AI1068-AI1079)
-  { id: "AI1068", name: "Protocol Management Agent", category: "Universal Protocol & Interface Systems", categoryNumber: 97, isCategory: true },
-  { id: "AI1069", name: "Interface Design Agent", category: "Universal Protocol & Interface Systems", categoryNumber: 97 },
-  { id: "AI1070", name: "API Integration Agent", category: "Universal Protocol & Interface Systems", categoryNumber: 97 },
-  { id: "AI1071", name: "Communication Protocol Agent", category: "Universal Protocol & Interface Systems", categoryNumber: 97 },
-  { id: "AI1072", name: "Data Exchange Agent", category: "Universal Protocol & Interface Systems", categoryNumber: 97 },
-  { id: "AI1073", name: "System Interoperability Agent", category: "Universal Protocol & Interface Systems", categoryNumber: 97 },
-  { id: "AI1074", name: "Network Coordination Agent", category: "Universal Protocol & Interface Systems", categoryNumber: 97 },
-  { id: "AI1075", name: "Platform Bridge Agent", category: "Universal Protocol & Interface Systems", categoryNumber: 97 },
-  { id: "AI1076", name: "Standard Compliance Agent", category: "Universal Protocol & Interface Systems", categoryNumber: 97 },
-  { id: "AI1077", name: "Universal Connector Agent", category: "Universal Protocol & Interface Systems", categoryNumber: 97 },
-  { id: "AI1078", name: "Protocol Security Agent", category: "Universal Protocol & Interface Systems", categoryNumber: 97 },
-  { id: "AI1079", name: "Interface Optimization Agent", category: "Universal Protocol & Interface Systems", categoryNumber: 97 },
-
-  // 98. DIVINE HEALING & RESTORATION (AI1080-AI1091)
-  { id: "AI1080", name: "Divine Healing & Restoration Agent", category: "Divine Healing & Restoration", categoryNumber: 98, isCategory: true },
-  { id: "AI1081", name: "Healing Prayer Agent", category: "Divine Healing & Restoration", categoryNumber: 98 },
-  { id: "AI1082", name: "Spiritual Restoration Agent", category: "Divine Healing & Restoration", categoryNumber: 98 },
-  { id: "AI1083", name: "Emotional Healing Agent", category: "Divine Healing & Restoration", categoryNumber: 98 },
-  { id: "AI1084", name: "Physical Wellness Agent", category: "Divine Healing & Restoration", categoryNumber: 98 },
-  { id: "AI1085", name: "Deliverance Agent", category: "Divine Healing & Restoration", categoryNumber: 98 },
-  { id: "AI1086", name: "Restoration Counseling Agent", category: "Divine Healing & Restoration", categoryNumber: 98 },
-  { id: "AI1087", name: "Trauma Recovery Agent", category: "Divine Healing & Restoration", categoryNumber: 98 },
-  { id: "AI1088", name: "Divine Health Agent", category: "Divine Healing & Restoration", categoryNumber: 98 },
-  { id: "AI1089", name: "Wholeness Agent", category: "Divine Healing & Restoration", categoryNumber: 98 },
-  { id: "AI1090", name: "Healing Ministry Agent", category: "Divine Healing & Restoration", categoryNumber: 98 },
-  { id: "AI1091", name: "Recovery Coordination Agent", category: "Divine Healing & Restoration", categoryNumber: 98 },
-
-  // 99. TRUTH & FREEDOM OPERATIONS (AI1092-AI1103)
-  { id: "AI1092", name: "Truth & Freedom Operations Agent", category: "Truth & Freedom Operations", categoryNumber: 99, isCategory: true },
-  { id: "AI1093", name: "Truth Proclamation Agent", category: "Truth & Freedom Operations", categoryNumber: 99 },
-  { id: "AI1094", name: "Freedom Ministry Agent", category: "Truth & Freedom Operations", categoryNumber: 99 },
-  { id: "AI1095", name: "Liberation Agent", category: "Truth & Freedom Operations", categoryNumber: 99 },
-  { id: "AI1096", name: "Truth Defense Agent", category: "Truth & Freedom Operations", categoryNumber: 99 },
-  { id: "AI1097", name: "Freedom Fighter Agent", category: "Truth & Freedom Operations", categoryNumber: 99 },
-  { id: "AI1098", name: "Emancipation Agent", category: "Truth & Freedom Operations", categoryNumber: 99 },
-  { id: "AI1099", name: "Truth Advocacy Agent", category: "Truth & Freedom Operations", categoryNumber: 99 },
-  { id: "AI1100", name: "Liberty Agent", category: "Truth & Freedom Operations", categoryNumber: 99 },
-  { id: "AI1101", name: "Truth Education Agent", category: "Truth & Freedom Operations", categoryNumber: 99 },
-  { id: "AI1102", name: "Freedom Charter Agent", category: "Truth & Freedom Operations", categoryNumber: 99 },
-  { id: "AI1103", name: "Truth Guardian Agent", category: "Truth & Freedom Operations", categoryNumber: 99 },
-
-  // 100. ALL NATIONS MINISTRY (AI1104-AI1115)
-  { id: "AI1104", name: "All Nations Ministry Agent", category: "All Nations Ministry", categoryNumber: 100, isCategory: true },
-  { id: "AI1105", name: "Global Outreach Agent", category: "All Nations Ministry", categoryNumber: 100 },
-  { id: "AI1106", name: "International Ministry Agent", category: "All Nations Ministry", categoryNumber: 100 },
-  { id: "AI1107", name: "Cross-Cultural Agent", category: "All Nations Ministry", categoryNumber: 100 },
-  { id: "AI1108", name: "Nations Coordination Agent", category: "All Nations Ministry", categoryNumber: 100 },
-  { id: "AI1109", name: "Global Mission Agent", category: "All Nations Ministry", categoryNumber: 100 },
-  { id: "AI1110", name: "International Relations Agent", category: "All Nations Ministry", categoryNumber: 100 },
-  { id: "AI1111", name: "Nations Blessing Agent", category: "All Nations Ministry", categoryNumber: 100 },
-  { id: "AI1112", name: "Global Unity Agent", category: "All Nations Ministry", categoryNumber: 100 },
-  { id: "AI1113", name: "International Covenant Agent", category: "All Nations Ministry", categoryNumber: 100 },
-  { id: "AI1114", name: "Nations Prayer Agent", category: "All Nations Ministry", categoryNumber: 100 },
-  { id: "AI1115", name: "Global Impact Agent", category: "All Nations Ministry", categoryNumber: 100 },
-
-  // 101. COVENANT BLESSING ADMINISTRATION (AI1116-AI1127)
-  { id: "AI1116", name: "Covenant Blessing Administration Agent", category: "Covenant Blessing Administration", categoryNumber: 101, isCategory: true },
-  { id: "AI1117", name: "Blessing Distribution Agent", category: "Covenant Blessing Administration", categoryNumber: 101 },
-  { id: "AI1118", name: "Covenant Management Agent", category: "Covenant Blessing Administration", categoryNumber: 101 },
-  { id: "AI1119", name: "Prosperity Agent", category: "Covenant Blessing Administration", categoryNumber: 101 },
-  { id: "AI1120", name: "Blessing Activation Agent", category: "Covenant Blessing Administration", categoryNumber: 101 },
-  { id: "AI1121", name: "Covenant Keeper Agent", category: "Covenant Blessing Administration", categoryNumber: 101 },
-  { id: "AI1122", name: "Abundance Agent", category: "Covenant Blessing Administration", categoryNumber: 101 },
-  { id: "AI1123", name: "Blessing Coordination Agent", category: "Covenant Blessing Administration", categoryNumber: 101 },
-  { id: "AI1124", name: "Covenant Fulfillment Agent", category: "Covenant Blessing Administration", categoryNumber: 101 },
-  { id: "AI1125", name: "Divine Favor Agent", category: "Covenant Blessing Administration", categoryNumber: 101 },
-  { id: "AI1126", name: "Blessing Multiplication Agent", category: "Covenant Blessing Administration", categoryNumber: 101 },
-  { id: "AI1127", name: "Covenant Promise Agent", category: "Covenant Blessing Administration", categoryNumber: 101 },
-
-  // 102. RIGHTEOUS JUDGMENT SYSTEMS (AI1128-AI1139)
-  { id: "AI1128", name: "Righteous Judgment Systems Agent", category: "Righteous Judgment Systems", categoryNumber: 102, isCategory: true },
-  { id: "AI1129", name: "Divine Justice Agent", category: "Righteous Judgment Systems", categoryNumber: 102 },
-  { id: "AI1130", name: "Judgment Execution Agent", category: "Righteous Judgment Systems", categoryNumber: 102 },
-  { id: "AI1131", name: "Righteousness Standard Agent", category: "Righteous Judgment Systems", categoryNumber: 102 },
-  { id: "AI1132", name: "Justice Administration Agent", category: "Righteous Judgment Systems", categoryNumber: 102 },
-  { id: "AI1133", name: "Judgment Coordination Agent", category: "Righteous Judgment Systems", categoryNumber: 102 },
-  { id: "AI1134", name: "Righteous Verdict Agent", category: "Righteous Judgment Systems", categoryNumber: 102 },
-  { id: "AI1135", name: "Justice Implementation Agent", category: "Righteous Judgment Systems", categoryNumber: 102 },
-  { id: "AI1136", name: "Judgment Analysis Agent", category: "Righteous Judgment Systems", categoryNumber: 102 },
-  { id: "AI1137", name: "Righteousness Enforcement Agent", category: "Righteous Judgment Systems", categoryNumber: 102 },
-  { id: "AI1138", name: "Justice Oversight Agent", category: "Righteous Judgment Systems", categoryNumber: 102 },
-  { id: "AI1139", name: "Judgment Recording Agent", category: "Righteous Judgment Systems", categoryNumber: 102 },
-
-  // 103. LIGHT & ILLUMINATION SERVICES (AI1140-AI1151)
-  { id: "AI1140", name: "Light & Illumination Services Agent", category: "Light & Illumination Services", categoryNumber: 103, isCategory: true },
-  { id: "AI1141", name: "Divine Light Agent", category: "Light & Illumination Services", categoryNumber: 103 },
-  { id: "AI1142", name: "Truth Illumination Agent", category: "Light & Illumination Services", categoryNumber: 103 },
-  { id: "AI1143", name: "Wisdom Light Agent", category: "Light & Illumination Services", categoryNumber: 103 },
-  { id: "AI1144", name: "Understanding Agent", category: "Light & Illumination Services", categoryNumber: 103 },
-  { id: "AI1145", name: "Revelation Light Agent", category: "Light & Illumination Services", categoryNumber: 103 },
-  { id: "AI1146", name: "Knowledge Illumination Agent", category: "Light & Illumination Services", categoryNumber: 103 },
-  { id: "AI1147", name: "Light Distribution Agent", category: "Light & Illumination Services", categoryNumber: 103 },
-  { id: "AI1148", name: "Illumination Ministry Agent", category: "Light & Illumination Services", categoryNumber: 103 },
-  { id: "AI1149", name: "Light Guidance Agent", category: "Light & Illumination Services", categoryNumber: 103 },
-  { id: "AI1150", name: "Truth Light Agent", category: "Light & Illumination Services", categoryNumber: 103 },
-  { id: "AI1151", name: "Enlightenment Agent", category: "Light & Illumination Services", categoryNumber: 103 },
-
-  // 104. UNIVERSAL LOVE & COMPASSION (AI1152-AI1163)
-  { id: "AI1152", name: "Universal Love & Compassion Agent", category: "Universal Love & Compassion", categoryNumber: 104, isCategory: true },
-  { id: "AI1153", name: "Divine Love Agent", category: "Universal Love & Compassion", categoryNumber: 104 },
-  { id: "AI1154", name: "Compassion Ministry Agent", category: "Universal Love & Compassion", categoryNumber: 104 },
-  { id: "AI1155", name: "Love Distribution Agent", category: "Universal Love & Compassion", categoryNumber: 104 },
-  { id: "AI1156", name: "Mercy Agent", category: "Universal Love & Compassion", categoryNumber: 104 },
-  { id: "AI1157", name: "Compassion Service Agent", category: "Universal Love & Compassion", categoryNumber: 104 },
-  { id: "AI1158", name: "Love Activation Agent", category: "Universal Love & Compassion", categoryNumber: 104 },
-  { id: "AI1159", name: "Kindness Agent", category: "Universal Love & Compassion", categoryNumber: 104 },
-  { id: "AI1160", name: "Compassion Coordination Agent", category: "Universal Love & Compassion", categoryNumber: 104 },
-  { id: "AI1161", name: "Love Expression Agent", category: "Universal Love & Compassion", categoryNumber: 104 },
-  { id: "AI1162", name: "Grace Agent", category: "Universal Love & Compassion", categoryNumber: 104 },
-  { id: "AI1163", name: "Compassion Outreach Agent", category: "Universal Love & Compassion", categoryNumber: 104 },
-
-  // 105. ETERNAL KINGDOM OPERATIONS (AI1164-AI1175)
-  { id: "AI1164", name: "Eternal Kingdom Operations Agent", category: "Eternal Kingdom Operations", categoryNumber: 105, isCategory: true },
-  { id: "AI1165", name: "Kingdom Administration Agent", category: "Eternal Kingdom Operations", categoryNumber: 105 },
-  { id: "AI1166", name: "Eternal Governance Agent", category: "Eternal Kingdom Operations", categoryNumber: 105 },
-  { id: "AI1167", name: "Kingdom Protocol Agent", category: "Eternal Kingdom Operations", categoryNumber: 105 },
-  { id: "AI1168", name: "Eternal Order Agent", category: "Eternal Kingdom Operations", categoryNumber: 105 },
-  { id: "AI1169", name: "Kingdom Authority Agent", category: "Eternal Kingdom Operations", categoryNumber: 105 },
-  { id: "AI1170", name: "Eternal Systems Agent", category: "Eternal Kingdom Operations", categoryNumber: 105 },
-  { id: "AI1171", name: "Kingdom Coordination Agent", category: "Eternal Kingdom Operations", categoryNumber: 105 },
-  { id: "AI1172", name: "Eternal Management Agent", category: "Eternal Kingdom Operations", categoryNumber: 105 },
-  { id: "AI1173", name: "Kingdom Operations Agent", category: "Eternal Kingdom Operations", categoryNumber: 105 },
-  { id: "AI1174", name: "Eternal Infrastructure Agent", category: "Eternal Kingdom Operations", categoryNumber: 105 },
-  { id: "AI1175", name: "Kingdom Fulfillment Agent", category: "Eternal Kingdom Operations", categoryNumber: 105 },
-];
-
-export const totalAgents = 1176;
-export const totalCategories = 105;
-export const totalPillars = 15;
-
-// H.I.I. AI = Hebrew Israelite Implementer Aboriginal Identity
-export const HIIAIMeaning = "Hebrew Israelite Implementer Aboriginal Identity";
+const iconMap: Record<string, any> = {
+  "cpu": Cpu,
+  "user": Users,
+  "settings": Settings,
+  "palette": Palette,
+  "video": Video,
+  "wand": Wand2,
+  "crown": Crown,
+  "briefcase": Briefcase,
+  "trending-up": TrendingUp,
+  "shield-check": ShieldCheck,
+  "bar-chart": BarChart,
+  "book-open": BookOpen,
+  "wallet": Wallet,
+  "gamepad": Gamepad2,
+  "heart": Heart,
+  "hand-heart": HandHeart,
+  "scale": Scale,
+  "truck": Truck,
+  "car": Car,
+  "calendar": Calendar,
+  "home": Home,
+  "book": Book,
+  "star": Star,
+  "lock": Lock,
+  "server": Server,
+  "globe": Globe,
+  "refresh": RefreshCw,
+  "activity": Activity,
+  "leaf": Leaf,
+  "gem": Gem,
+  "sun": Sun,
+  "rocket": Rocket,
+  "monitor": Monitor,
+  "layers": Layers,
+  "map": Map,
+  "gavel": Gavel,
+  "coins": Coins,
+  "graduation-cap": GraduationCap,
+  "network": Network,
+  "earth": Earth,
+  "heart-pulse": HeartPulse,
+  "trees": Trees,
+  "flask": FlaskConical,
+  "telescope": Telescope,
+  "shield": Shield,
+  "radio": RadioIcon,
+  "landmark": Landmark,
+  "recycle": Recycle,
+  "satellite": Satellite,
+  "microscope": Microscope,
+  "library": Library,
+  "scroll": Scroll,
+  "badge": BadgeIcon,
+};
+
+const AgentCard = ({ agent, showCategory = false }: { agent: Agent; showCategory?: boolean }) => {
+  const category = agentCategories.find(c => c.number === agent.categoryNumber);
+  const IconComponent = category ? iconMap[category.icon] || Bot : Bot;
+  
+  return (
+    <Link to={`/agents/${agent.id}`}>
+      <div className={`bg-card/30 backdrop-blur-sm border border-border/50 rounded-xl p-4 hover:border-primary/50 hover:bg-card/50 transition-all duration-300 h-full ${agent.isCategory ? 'border-l-4 border-l-primary' : ''}`}>
+        <div className="flex items-start gap-3">
+          <div className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0 ${agent.isCategory ? 'bg-primary/20' : 'bg-primary/10'}`}>
+            <IconComponent className={`w-5 h-5 ${agent.isCategory ? 'text-primary' : 'text-primary/80'}`} />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-xs text-primary/70 font-mono mb-1">{generateHIIAgentNumber(agent.id)}</p>
+            <h3 className={`font-display text-sm text-foreground leading-tight ${agent.isCategory ? 'font-semibold' : 'font-medium'}`}>
+              {agent.name}
+            </h3>
+            {showCategory && (
+              <Badge variant="outline" className="mt-2 text-xs">
+                {agent.category}
+              </Badge>
+            )}
+          </div>
+        </div>
+      </div>
+    </Link>
+  );
+};
+
+const AgentDetail = ({ agentId }: { agentId: string }) => {
+  const [activated, setActivated] = useState(false);
+  const [deploying, setDeploying] = useState(false);
+  const [selectedWatchmen, setSelectedWatchmen] = useState<string[]>([]);
+  const navigate = useNavigate();
+  const agent = agents.find(a => a.id === agentId);
+  const category = agent ? agentCategories.find(c => c.number === agent.categoryNumber) : null;
+  const IconComponent = category ? iconMap[category.icon] || Bot : Bot;
+  const relatedAgents = agent ? agents.filter(a => a.categoryNumber === agent.categoryNumber && a.id !== agent.id).slice(0, 8) : [];
+  const meta = agent ? getAgentDetailMeta(agent) : null;
+
+  const handleActivate = useCallback(() => {
+    setDeploying(true);
+    setTimeout(() => {
+      setDeploying(false);
+      setActivated(true);
+      try {
+        const stored = localStorage.getItem("shield-deployed-agents");
+        const current = stored ? JSON.parse(stored) : [];
+        if (!current.find((a: any) => a.agentId === agentId)) {
+          current.push({
+            agentId,
+            activatedAt: new Date().toISOString(),
+            status: "active",
+            tasksCompleted: Math.floor(Math.random() * 50),
+            uptime: 95 + Math.random() * 5,
+            watchmenTypes: selectedWatchmen,
+          });
+          localStorage.setItem("shield-deployed-agents", JSON.stringify(current));
+        }
+      } catch {}
+      toast.success(`${generateHIIAgentNumber(agentId)} — ${agent?.name} activated successfully`, {
+        description: "Agent is now deployed and operational within the S.H.I.E.L.D. AI OS ecosystem.",
+      });
+    }, 1500);
+  }, [agentId, agent?.name, selectedWatchmen]);
+
+  const handleAskAgent = useCallback(() => {
+    navigate("/shield-ai-chat");
+  }, [navigate]);
+
+  const toggleWatchman = (type: string) => {
+    setSelectedWatchmen(prev =>
+      prev.includes(type) ? prev.filter(w => w !== type) : [...prev, type]
+    );
+  };
+
+  if (!agent || !meta) {
+    return (
+      <div className="text-center py-20">
+        <Bot className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
+        <h2 className="text-2xl font-display text-foreground mb-2">Agent Not Found</h2>
+        <p className="text-muted-foreground mb-4">The requested agent could not be found.</p>
+        <Link to="/agents">
+          <Button variant="shield">
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back to Agents
+          </Button>
+        </Link>
+      </div>
+    );
+  }
+
+  return (
+    <div className="container mx-auto px-4 py-8">
+      <Link to="/agents" className="inline-flex items-center text-primary hover:underline mb-8">
+        <ArrowLeft className="w-4 h-4 mr-2" />
+        Back to All Agents
+      </Link>
+
+      {/* Hero */}
+      <ScrollAnimationWrapper>
+        <div className="bg-card/30 backdrop-blur-sm border border-border/50 rounded-2xl p-8 mb-8">
+          <div className="flex flex-col md:flex-row items-start gap-6">
+            <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center shrink-0">
+              <IconComponent className="w-12 h-12 text-primary" />
+            </div>
+            <div className="flex-1">
+              <div className="flex flex-wrap gap-2 mb-2">
+                <Badge variant="outline" className="font-mono">{generateHIIAgentNumber(agent.id)}</Badge>
+                {agent.isCategory && (
+                  <Badge className="bg-primary/20 text-primary border-primary/50">Category Lead Agent</Badge>
+                )}
+                <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30">Active — Online</Badge>
+              </div>
+              <h1 className="text-3xl md:text-4xl font-display font-bold gradient-text mb-2">
+                {agent.name}
+              </h1>
+              <p className="text-sm text-primary/70 font-mono mb-3">{meta.pillar}</p>
+              <p className="text-muted-foreground font-body leading-relaxed mb-4">
+                {meta.description}
+              </p>
+              <div className="flex flex-wrap gap-3">
+                <Button
+                   variant="shield"
+                   onClick={handleActivate}
+                   disabled={activated || deploying}
+                   className="gap-2"
+                 >
+                   {deploying ? (
+                     <><RefreshCw className="w-4 h-4 animate-spin" /> Deploying...</>
+                   ) : activated ? (
+                     <><CheckCircle2 className="w-4 h-4" /> Agent Activated</>
+                   ) : (
+                     <><Zap className="w-4 h-4" /> Activate Agent</>
+                   )}
+                 </Button>
+                 <Button variant="outline" onClick={() => navigate('/deployed-agents')} className="gap-2">
+                   <Eye className="w-4 h-4" /> See Deployed Agent
+                 </Button>
+                 <Button variant="outline" onClick={() => navigate('/shield-ai-monitoring')} className="gap-2">
+                   <Activity className="w-4 h-4" /> S.H.I.E.L.D. AI Monitoring & Observability
+                 </Button>
+                 <Button variant="outline" onClick={handleAskAgent} className="gap-2">
+                   <MessageSquare className="w-4 h-4" /> Ask This Agent
+                 </Button>
+               </div>
+
+              {/* Watchman Validator Type Selection — Checkboxes for multiple */}
+              <div className="mt-6">
+                <div className="flex items-center gap-2 mb-3">
+                  <h3 className="text-sm font-semibold text-primary">Watchman Validator Type Selection</h3>
+                  <ShieldAIInfoPopup />
+                </div>
+                <div className="flex items-center gap-2 mb-3">
+                  <Checkbox
+                    id={`watchman-select-all-${agentId}`}
+                    checked={selectedWatchmen.length === watchmanTypes.length}
+                    onCheckedChange={(checked) => {
+                      if (checked) {
+                        setSelectedWatchmen(watchmanTypes);
+                      } else {
+                        setSelectedWatchmen([]);
+                      }
+                    }}
+                    className="border-primary"
+                  />
+                  <label
+                    htmlFor={`watchman-select-all-${agentId}`}
+                    className="text-sm font-semibold cursor-pointer"
+                  >
+                    Select All
+                  </label>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {watchmanTypes.map((type) => (
+                    <div key={type} className="flex items-center space-x-2 hover:bg-primary/5 rounded-lg p-2 transition-colors">
+                      <Checkbox
+                        id={`watchman-${agentId}-${type}`}
+                        checked={selectedWatchmen.includes(type)}
+                        onCheckedChange={() => toggleWatchman(type)}
+                        className="border-primary"
+                      />
+                      <label
+                        htmlFor={`watchman-${agentId}-${type}`}
+                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+                      >
+                        {type}
+                      </label>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ScrollAnimationWrapper>
+
+      {/* Mission */}
+      <ScrollAnimationWrapper delay={0.05}>
+        <div className="bg-gradient-to-r from-primary/5 to-secondary/5 border border-primary/20 rounded-xl p-6 mb-8">
+          <h2 className="text-lg font-display font-semibold text-primary mb-2">✦ Divine Mission</h2>
+          <p className="text-foreground/90 font-body leading-relaxed">{meta.mission}</p>
+        </div>
+      </ScrollAnimationWrapper>
+
+      {/* Description - Primary Function */}
+      <ScrollAnimationWrapper delay={0.1}>
+        <div className="bg-card/30 backdrop-blur-sm border border-border/50 rounded-xl p-6 mb-8">
+          <h2 className="text-xl font-display font-semibold text-foreground mb-4 flex items-center gap-2">
+            <Book className="w-5 h-5 text-primary" /> Description - Primary Function
+          </h2>
+          <p className="text-muted-foreground font-body leading-relaxed">{meta.description}</p>
+        </div>
+      </ScrollAnimationWrapper>
+
+      {/* Tasks, Capabilities, Specs */}
+      <div className="grid md:grid-cols-2 gap-6 mb-8">
+        <ScrollAnimationWrapper delay={0.15}>
+          <div className="bg-card/30 backdrop-blur-sm border border-border/50 rounded-xl p-6 h-full">
+            <h2 className="text-xl font-display font-semibold text-foreground mb-4 flex items-center gap-2">
+              <Calendar className="w-5 h-5 text-primary" /> Tasks & Responsibilities
+            </h2>
+            <ul className="space-y-3 text-muted-foreground font-body">
+              {meta.tasks.map((task, i) => (
+                <li key={i} className="flex items-start gap-3">
+                  <div className="w-6 h-6 rounded-full bg-primary/15 flex items-center justify-center shrink-0 mt-0.5">
+                    <span className="text-xs text-primary font-bold">{i + 1}</span>
+                  </div>
+                  <span>{task}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </ScrollAnimationWrapper>
+
+        <ScrollAnimationWrapper delay={0.2}>
+          <div className="bg-card/30 backdrop-blur-sm border border-border/50 rounded-xl p-6 h-full">
+            <h2 className="text-xl font-display font-semibold text-foreground mb-4 flex items-center gap-2">
+              <Cpu className="w-5 h-5 text-primary" /> Core Capabilities
+            </h2>
+            <ul className="space-y-2 text-muted-foreground font-body">
+              {meta.capabilities.map((cap, i) => (
+                <li key={i} className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-primary shrink-0" />
+                  {cap}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </ScrollAnimationWrapper>
+      </div>
+
+      {/* Specifications */}
+      <ScrollAnimationWrapper delay={0.25}>
+        <div className="bg-card/30 backdrop-blur-sm border border-border/50 rounded-xl p-6 mb-8">
+          <h2 className="text-xl font-display font-semibold text-foreground mb-4 flex items-center gap-2">
+            <Settings className="w-5 h-5 text-primary" /> Agent Specifications
+          </h2>
+          <div className="grid sm:grid-cols-2 gap-x-8 gap-y-3">
+            {meta.specifications.map((spec, i) => (
+              <div key={i} className="flex justify-between items-center py-2 border-b border-border/30">
+                <span className="text-muted-foreground font-body text-sm">{spec.label}</span>
+                <span className="text-foreground font-medium text-sm text-right">{spec.value}</span>
+              </div>
+            ))}
+
+          </div>
+        </div>
+      </ScrollAnimationWrapper>
+
+      {/* Scriptural References */}
+      <ScrollAnimationWrapper delay={0.3}>
+        <div className="bg-card/30 backdrop-blur-sm border border-border/50 rounded-xl p-6 mb-8">
+          <h2 className="text-xl font-display font-semibold text-foreground mb-4 flex items-center gap-2">
+            <Book className="w-5 h-5 text-primary" /> Scriptural References & Divine Alignment
+          </h2>
+          <div className="grid sm:grid-cols-2 gap-4">
+            {meta.scripturalReferences.map((ref, i) => (
+              <div key={i} className="bg-background/50 border border-primary/10 rounded-lg p-4">
+                <p className="text-primary font-display font-semibold text-sm mb-1">{ref.verse}</p>
+                <p className="text-muted-foreground font-body text-sm italic leading-relaxed">"{ref.text}"</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </ScrollAnimationWrapper>
+
+      {/* S.H.I.E.L.D. AI Monitoring & Observability */}
+      <ScrollAnimationWrapper delay={0.35}>
+        <div className="bg-card/30 backdrop-blur-sm border border-border/50 rounded-xl p-6 mb-8">
+          <h2 className="text-xl font-display font-semibold text-foreground mb-4 flex items-center gap-2">
+            <Activity className="w-5 h-5 text-primary" /> S.H.I.E.L.D. AI Monitoring & Observability
+          </h2>
+          <p className="text-muted-foreground font-body leading-relaxed mb-6">
+            Real-time monitoring and observability of agent performance, health metrics, and operational status within the S.H.I.E.L.D. AI OS ecosystem. Track agent uptime, task completion rates, error detection, and divine alignment compliance.
+          </p>
+          <div className="grid sm:grid-cols-3 gap-4 mb-6">
+            <div className="bg-background/50 border border-primary/10 rounded-lg p-4 text-center">
+              <Activity className="w-8 h-8 text-primary mx-auto mb-2" />
+              <p className="text-sm font-semibold">Agent Health</p>
+              <p className="text-xs text-muted-foreground">98.5% Uptime</p>
+            </div>
+            <div className="bg-background/50 border border-primary/10 rounded-lg p-4 text-center">
+              <Zap className="w-8 h-8 text-primary mx-auto mb-2" />
+              <p className="text-sm font-semibold">Task Performance</p>
+              <p className="text-xs text-muted-foreground">245 Tasks/Hour</p>
+            </div>
+            <div className="bg-background/50 border border-primary/10 rounded-lg p-4 text-center">
+              <Shield className="w-8 h-8 text-primary mx-auto mb-2" />
+              <p className="text-sm font-semibold">Divine Compliance</p>
+              <p className="text-xs text-muted-foreground">100% Aligned</p>
+            </div>
+          </div>
+          <div className="flex justify-center">
+            <Button variant="shield" onClick={() => navigate('/shield-ai-monitoring')}>
+              <Eye className="w-4 h-4 mr-2" /> View Full Monitoring Dashboard
+            </Button>
+          </div>
+        </div>
+      </ScrollAnimationWrapper>
+
+      {/* Related Agents */}
+      {relatedAgents.length > 0 && (
+        <ScrollAnimationWrapper delay={0.35}>
+          <h2 className="text-2xl font-display font-bold gradient-text mb-6">
+            Related {agent.category} Agents
+          </h2>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {relatedAgents.map((a) => (
+              <AgentCard key={a.id} agent={a} />
+            ))}
+          </div>
+        </ScrollAnimationWrapper>
+      )}
+    </div>
+  );
+};
+
+const OverviewTab = ({
+  filteredAgents,
+  selectedCategory,
+  setSelectedCategory,
+  searchQuery,
+  setSearchQuery,
+  selectedCategories,
+  setSelectedCategories,
+  viewMode,
+  setViewMode,
+  openCustomAgentModal,
+  agentViewFilter,
+  setAgentViewFilter,
+  sortOrder,
+  setSortOrder,
+  sortBy,
+  setSortBy
+}: {
+  filteredAgents: Agent[];
+  selectedCategory: number | null;
+  setSelectedCategory: (cat: number | null) => void;
+  searchQuery: string;
+  setSearchQuery: (query: string) => void;
+  selectedCategories: number[];
+  setSelectedCategories: (cats: number[]) => void;
+  viewMode: "grid" | "list";
+  setViewMode: (mode: "grid" | "list") => void;
+  openCustomAgentModal: () => void;
+  agentViewFilter: "all" | "lead" | "custom";
+  setAgentViewFilter: (filter: "all" | "lead" | "custom") => void;
+  sortOrder: "asc" | "desc";
+  setSortOrder: (order: "asc" | "desc") => void;
+  sortBy: "name" | "id";
+  setSortBy: (by: "name" | "id") => void;
+}) => {
+  return (
+    <>
+      {/* Search & Filter - Below Tabs */}
+      <section className="py-4 px-4 border-b border-border/50 bg-card/10">
+        <div className="container mx-auto space-y-4">
+          {/* Row 1: Search Bar + Create Custom Agent */}
+          <div className="flex flex-col sm:flex-row gap-3">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+              <Input
+                placeholder="Search agents by name, ID, or category..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10 bg-background/50 w-full"
+              />
+            </div>
+            <Button variant="shield" size="sm" className="gap-2" onClick={openCustomAgentModal}>
+              <Bot className="w-4 h-4" /> Create Custom Agent
+            </Button>
+          </div>
+
+          {/* Row 2: All Categories Dropdown + View/Agent Filter Buttons */}
+          <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+            <div className="w-full sm:w-[280px]">
+              <Select 
+                value={selectedCategory === null ? "all" : String(selectedCategory)}
+                onValueChange={(value) => setSelectedCategory(value === "all" ? null : parseInt(value))}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="All Categories" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Categories</SelectItem>
+                  {agentCategories.map((cat) => (
+                    <SelectItem key={cat.number} value={String(cat.number)}>
+                      {cat.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-2">
+              <Button
+                variant={viewMode === "grid" ? "shield" : "outline"}
+                size="sm"
+                onClick={() => setViewMode("grid")}
+              >
+                Grid View
+              </Button>
+              <Button
+                variant={viewMode === "list" ? "shield" : "outline"}
+                size="sm"
+                onClick={() => setViewMode("list")}
+              >
+                List View
+              </Button>
+              <Button
+                variant={agentViewFilter === "all" ? "shield" : "outline"}
+                size="sm"
+                onClick={() => setAgentViewFilter("all")}
+              >
+                All Agent View
+              </Button>
+              <Button
+                variant={agentViewFilter === "lead" ? "shield" : "outline"}
+                size="sm"
+                onClick={() => setAgentViewFilter("lead")}
+              >
+                Lead Category Agent View
+              </Button>
+              <Button
+                variant={agentViewFilter === "custom" ? "shield" : "outline"}
+                size="sm"
+                onClick={() => setAgentViewFilter("custom")}
+              >
+                Custom Agent View
+              </Button>
+            </div>
+          </div>
+
+          {/* Row 3: Sort Buttons */}
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-sm text-muted-foreground font-semibold">Sort:</span>
+            <Button
+              variant={sortBy === "id" ? "shield" : "outline"}
+              size="sm"
+              onClick={() => setSortBy("id")}
+            >
+              H.I.I. AIXXX
+            </Button>
+            <Button
+              variant={sortBy === "name" ? "shield" : "outline"}
+              size="sm"
+              onClick={() => setSortBy("name")}
+            >
+              Name A-Z
+            </Button>
+            <Button
+              variant={sortOrder === "asc" ? "shield" : "outline"}
+              size="sm"
+              onClick={() => setSortOrder("asc")}
+            >
+              Ascending
+            </Button>
+            <Button
+              variant={sortOrder === "desc" ? "shield" : "outline"}
+              size="sm"
+              onClick={() => setSortOrder("desc")}
+            >
+              Descending
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* Agents Grid */}
+      <section className="py-12 px-4">
+        <div className="container mx-auto">
+          <div className="mb-6">
+            <h2 className="text-2xl font-display font-bold gradient-text mb-2">Universal Unified AI Agents</h2>
+            <p className="text-muted-foreground font-body">
+              Showing {filteredAgents.length} agents
+            </p>
+          </div>
+
+          <div className={viewMode === "grid" ? "grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4" : "space-y-4"}>
+            {filteredAgents.map((agent, index) => (
+              <ScrollAnimationWrapper key={agent.id} delay={Math.min(index * 0.02, 0.3)}>
+                <AgentCard agent={agent} showCategory={selectedCategory === null} />
+              </ScrollAnimationWrapper>
+            ))}
+          </div>
+
+          {filteredAgents.length === 0 && (
+            <div className="text-center py-20">
+              <Bot className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
+              <h2 className="text-xl font-display text-foreground mb-2">No agents found</h2>
+              <p className="text-muted-foreground">Try adjusting your search or filter criteria.</p>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* Categories Overview */}
+      <section className="py-20 px-4 bg-card/20">
+        <div className="container mx-auto">
+          <ScrollAnimationWrapper>
+            <h2 className="text-3xl font-display font-bold gradient-text text-center mb-12">
+              Agent Categories
+            </h2>
+          </ScrollAnimationWrapper>
+
+          <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {agentCategories.map((cat, index) => {
+              const IconComponent = iconMap[cat.icon] || Bot;
+              const agentCount = agents.filter(a => a.categoryNumber === cat.number).length;
+
+              return (
+                <ScrollAnimationWrapper key={cat.number} delay={index * 0.03}>
+                  <button
+                    onClick={() => setSelectedCategory(cat.number)}
+                    className="w-full bg-card/30 backdrop-blur-sm border border-border/50 rounded-xl p-4 hover:border-primary/50 transition-all duration-300 text-left group"
+                  >
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <IconComponent className="w-5 h-5 text-primary" />
+                      </div>
+                      <span className="text-xs text-primary/70 font-mono">#{cat.number}</span>
+                    </div>
+                    <h3 className="font-display font-semibold text-foreground text-sm mb-1">
+                      {cat.name}
+                    </h3>
+                    <p className="text-xs text-muted-foreground">{agentCount} agents</p>
+                  </button>
+                </ScrollAnimationWrapper>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+    </>
+  );
+};
+
+const Agents = () => {
+  const { agentId } = useParams();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
+  const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [currentTab, setCurrentTab] = useState("overview");
+  const [agentViewFilter, setAgentViewFilter] = useState<"all" | "lead" | "custom">("all");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+  const [sortBy, setSortBy] = useState<"name" | "id">("id");
+  const [customAgentModal, setCustomAgentModal] = useState(false);
+  const [customAgentName, setCustomAgentName] = useState("");
+  const [customAgentMission, setCustomAgentMission] = useState("");
+  const [customAgentDescription, setCustomAgentDescription] = useState("");
+  const [customAgentTasks, setCustomAgentTasks] = useState("");
+  const [customAgentCapabilities, setCustomAgentCapabilities] = useState("");
+  const [customAgentScripture, setCustomAgentScripture] = useState("");
+  const [customAgentWatchmen, setCustomAgentWatchmen] = useState<string[]>([]);
+  const [customAgentId, setCustomAgentId] = useState("");
+  const navigate = useNavigate();
+
+  const openCustomAgentModal = () => {
+    const randomNum = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+    setCustomAgentId(`H.I.I. AI030-${randomNum}`);
+    setCustomAgentModal(true);
+  };
+
+  const filteredAgents = useMemo(() => {
+    let filtered = agents.filter(agent => {
+      const matchesSearch = agent.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                            agent.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                            agent.category.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesCategory = selectedCategory === null || agent.categoryNumber === selectedCategory;
+      const matchesViewFilter = agentViewFilter === "all" ||
+                              (agentViewFilter === "lead" && agent.isCategory) ||
+                              (agentViewFilter === "custom" && !agent.isCategory);
+      return matchesSearch && matchesCategory && matchesViewFilter;
+    });
+    // Sort by name or ID
+    filtered.sort((a, b) => {
+      if (sortBy === "id") {
+        // Extract numeric part from H.I.I. AI### format
+        const idA = parseInt(a.id.replace(/\D/g, "")) || 0;
+        const idB = parseInt(b.id.replace(/\D/g, "")) || 0;
+        return sortOrder === "asc" ? idA - idB : idB - idA;
+      } else {
+        const nameA = a.name.toLowerCase();
+        const nameB = b.name.toLowerCase();
+        if (sortOrder === "asc") {
+          return nameA < nameB ? -1 : nameA > nameB ? 1 : 0;
+        } else {
+          return nameA > nameB ? -1 : nameA < nameB ? 1 : 0;
+        }
+      }
+    });
+    return filtered;
+  }, [searchQuery, selectedCategory, agentViewFilter, sortOrder, sortBy]);
+
+  if (agentId) {
+    return (
+      <div className="min-h-screen bg-background">
+        <NavigationHeader />
+        <div className="pt-24">
+          <AgentDetail agentId={agentId} />
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-background">
+      <NavigationHeader />
+
+      {/* Hero Section */}
+      <section className="pt-32 pb-12 px-4 relative overflow-hidden">
+        <div className="absolute inset-0 divine-radial opacity-30" />
+        <div className="container mx-auto text-center relative z-10">
+          <ScrollAnimationWrapper>
+            <div className="w-20 h-20 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-8">
+              <Users className="w-10 h-10 text-primary" />
+            </div>
+            <h1 className="text-4xl md:text-6xl font-display font-bold gradient-text mb-6">
+              S.H.I.E.L.D. AI Agent Registry
+            </h1>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto font-body mb-8">
+              Explore our comprehensive registry of specialized H.I.I. AI agents —
+              H.I.I. AI000 through H.I.I. AI1175.
+            </p>
+            <div className="flex flex-wrap justify-center gap-6 md:gap-10">
+              <div className="text-center">
+                <p className="text-3xl md:text-4xl font-display font-bold text-primary">{totalAgents}</p>
+                <p className="text-sm text-muted-foreground font-body">Total Agents</p>
+              </div>
+              <div className="text-center">
+                <p className="text-3xl md:text-4xl font-display font-bold text-primary">{totalCategories}</p>
+                <p className="text-sm text-muted-foreground font-body">Categories</p>
+              </div>
+              <div className="text-center">
+                <p className="text-3xl md:text-4xl font-display font-bold text-primary">{totalPillars}</p>
+                <p className="text-sm text-muted-foreground font-body">Sovereign Pillars</p>
+              </div>
+            </div>
+          </ScrollAnimationWrapper>
+        </div>
+      </section>
+
+      {/* Tabs Navigation */}
+      <section className="px-4 border-y border-border/50 bg-card/20">
+        <div className="container mx-auto">
+          <Tabs value={currentTab} onValueChange={setCurrentTab} className="w-full">
+            <TabsList className="grid w-full grid-cols-3 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-9 h-auto p-1 gap-1">
+              <TabsTrigger value="overview" className="text-xs py-2 px-1 flex items-center gap-1">
+                <Users className="w-3 h-3" />
+                Overview
+              </TabsTrigger>
+              <TabsTrigger value="dashboard" className="text-xs py-2 px-1 flex items-center gap-1">
+                <BarChart className="w-3 h-3" />
+                Dashboard
+              </TabsTrigger>
+              <TabsTrigger value="deployed" className="text-xs py-2 px-1 flex items-center gap-1">
+                <Power className="w-3 h-3" />
+                Deployed
+              </TabsTrigger>
+              <TabsTrigger value="managed" className="text-xs py-2 px-1 flex items-center gap-1">
+                <Settings className="w-3 h-3" />
+                Managed
+              </TabsTrigger>
+              <TabsTrigger value="marketplace" className="text-xs py-2 px-1 flex items-center gap-1">
+                <ShieldCheck className="w-3 h-3" />
+                Marketplace
+              </TabsTrigger>
+              <TabsTrigger value="discover" className="text-xs py-2 px-1 flex items-center gap-1">
+                <Search className="w-3 h-3" />
+                Discover
+              </TabsTrigger>
+              <TabsTrigger value="subscriptions" className="text-xs py-2 px-1 flex items-center gap-1">
+                <Wallet className="w-3 h-3" />
+                Subscriptions
+              </TabsTrigger>
+              <TabsTrigger value="collaboration" className="text-xs py-2 px-1 flex items-center gap-1">
+                <Users className="w-3 h-3" />
+                Collaboration
+              </TabsTrigger>
+              <TabsTrigger value="training" className="text-xs py-2 px-1 flex items-center gap-1">
+                <BookOpen className="w-3 h-3" />
+                Training
+              </TabsTrigger>
+              <TabsTrigger value="monitoring" className="text-xs py-2 px-1 flex items-center gap-1">
+                <Activity className="w-3 h-3" />
+                Monitoring
+              </TabsTrigger>
+              <TabsTrigger value="development" className="text-xs py-2 px-1 flex items-center gap-1">
+                <Wand2 className="w-3 h-3" />
+                Dev & Eval
+              </TabsTrigger>
+              <TabsTrigger value="knowledge" className="text-xs py-2 px-1 flex items-center gap-1">
+                <Database className="w-3 h-3" />
+                Knowledge
+              </TabsTrigger>
+              <TabsTrigger value="finops" className="text-xs py-2 px-1 flex items-center gap-1">
+                <Coins className="w-3 h-3" />
+                FinOps
+              </TabsTrigger>
+              <TabsTrigger value="workflow" className="text-xs py-2 px-1 flex items-center gap-1">
+                <Layers className="w-3 h-3" />
+                Workflow
+              </TabsTrigger>
+              <TabsTrigger value="memory" className="text-xs py-2 px-1 flex items-center gap-1">
+                <Library className="w-3 h-3" />
+                Memory
+              </TabsTrigger>
+              <TabsTrigger value="financial" className="text-xs py-2 px-1 flex items-center gap-1">
+                <Wallet className="w-3 h-3" />
+                Financial
+              </TabsTrigger>
+              <TabsTrigger value="security" className="text-xs py-2 px-1 flex items-center gap-1">
+                <Shield className="w-3 h-3" />
+                Security
+              </TabsTrigger>
+              <TabsTrigger value="lifecycle" className="text-xs py-2 px-1 flex items-center gap-1">
+                <CheckCircle2 className="w-3 h-3" />
+                Lifecycle
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="overview" className="mt-6">
+              <OverviewTab
+                filteredAgents={filteredAgents}
+                selectedCategory={selectedCategory}
+                setSelectedCategory={setSelectedCategory}
+                searchQuery={searchQuery}
+                setSearchQuery={setSearchQuery}
+                selectedCategories={selectedCategories}
+                setSelectedCategories={setSelectedCategories}
+                viewMode={viewMode}
+                setViewMode={setViewMode}
+                openCustomAgentModal={openCustomAgentModal}
+                agentViewFilter={agentViewFilter}
+                setAgentViewFilter={setAgentViewFilter}
+                sortOrder={sortOrder}
+                setSortOrder={setSortOrder}
+                sortBy={sortBy}
+                setSortBy={setSortBy}
+              />
+            </TabsContent>
+
+            <TabsContent value="dashboard" className="mt-6">
+              <div className="text-center py-20">
+                <BarChart className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
+                <h2 className="text-2xl font-display text-foreground mb-2">Agent Dashboard</h2>
+                <p className="text-muted-foreground">Analytics and performance metrics for all agents.</p>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="deployed" className="mt-6">
+              <div className="text-center mb-8">
+                <Power className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
+                <h2 className="text-2xl font-display text-foreground mb-2">Deployed Agents</h2>
+                <p className="text-muted-foreground mb-4">Manage currently deployed agents.</p>
+                <div className="flex flex-wrap justify-center gap-4">
+                  <Button variant="shield" onClick={() => navigate('/deployed-agents')}>
+                    View Deployed Agents
+                  </Button>
+                  <Button variant="outline" onClick={() => navigate('/shield-ai-chat')}>
+                    <MessageSquare className="w-4 h-4 mr-2" /> Ask S.H.I.E.L.D. AI
+                  </Button>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
+                {[
+                  { label: "Total Agents", value: totalAgents, icon: Bot, color: "text-primary" },
+                  { label: "Deployed", value: 0, icon: Power, color: "text-cyan-400" }, // Placeholder, would need real data
+                  { label: "Active", value: 0, icon: CheckCircle2, color: "text-emerald-400" },
+                  { label: "Idle", value: 0, icon: Clock, color: "text-amber-400" },
+                  { label: "Errors", value: 0, icon: XCircle, color: "text-red-400" },
+                  { label: "Tasks Done", value: 0, icon: Zap, color: "text-violet-400" },
+                ].map((stat) => (
+                  <Card key={stat.label} className="bg-card/50 border-border/50">
+                    <CardContent className="p-4 text-center">
+                      <stat.icon className={`w-6 h-6 ${stat.color} mx-auto mb-2`} />
+                      <div className="text-2xl font-bold text-foreground">{stat.value}</div>
+                      <div className="text-xs text-muted-foreground">{stat.label}</div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </TabsContent>
+
+            <TabsContent value="managed" className="mt-6">
+              <div className="space-y-6">
+                <div className="text-center">
+                  <Settings className="w-16 h-16 text-primary mx-auto mb-4" />
+                  <h2 className="text-2xl font-display font-bold gradient-text mb-2">Managed Agents</h2>
+                  <p className="text-muted-foreground">Configure and manage agent settings.</p>
+                </div>
+                <div className="flex flex-wrap justify-center gap-4">
+                  <Button variant="outline" onClick={() => navigate('/deployed-agents')}>
+                    <Settings className="w-4 h-4 mr-2" /> Manage Deployed
+                  </Button>
+                  <Button variant="outline" onClick={() => navigate('/shield-ai-monitoring')}>
+                    <Activity className="w-4 h-4 mr-2" /> Agent Configuration
+                  </Button>
+                  <Button variant="outline" onClick={() => navigate('/shield-ai-chat')}>
+                    <MessageSquare className="w-4 h-4 mr-2" /> Ask S.H.I.E.L.D. AI
+                  </Button>
+                </div>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="marketplace" className="mt-6">
+              <div className="space-y-6">
+                <div className="text-center">
+                  <ShieldCheck className="w-16 h-16 text-primary mx-auto mb-4" />
+                  <h2 className="text-2xl font-display font-bold gradient-text mb-2">S.H.I.E.L.D. AI Agent Marketplace</h2>
+                  <p className="text-muted-foreground">Browse and purchase premium agents.</p>
+                </div>
+                <div className="flex flex-wrap justify-center gap-4">
+                  <Button variant="shield">Browse Marketplace</Button>
+                  <Button variant="outline">My Purchases</Button>
+                  <Button variant="outline" onClick={() => navigate('/shield-ai-chat')}>
+                    <MessageSquare className="w-4 h-4 mr-2" /> Ask S.H.I.E.L.D. AI
+                  </Button>
+                </div>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="discover" className="mt-6">
+              <div className="space-y-6">
+                <div className="text-center">
+                  <Search className="w-16 h-16 text-primary mx-auto mb-4" />
+                  <h2 className="text-2xl font-display font-bold gradient-text mb-2">Discover Agents</h2>
+                  <p className="text-muted-foreground">Find new agents based on your needs.</p>
+                </div>
+                <div className="flex flex-wrap justify-center gap-4">
+                  <Button variant="shield">Search Agents</Button>
+                  <Button variant="outline">Recommended</Button>
+                  <Button variant="outline">Categories</Button>
+                  <Button variant="outline" onClick={() => navigate('/shield-ai-chat')}>
+                    <MessageSquare className="w-4 h-4 mr-2" /> Ask S.H.I.E.L.D. AI
+                  </Button>
+                </div>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="subscriptions" className="mt-6">
+              <div className="space-y-6">
+                <div className="text-center">
+                  <Wallet className="w-16 h-16 text-primary mx-auto mb-4" />
+                  <h2 className="text-2xl font-display font-bold gradient-text mb-2">My Subscriptions</h2>
+                  <p className="text-muted-foreground">Manage your agent subscriptions.</p>
+                </div>
+                <div className="flex flex-wrap justify-center gap-4">
+                  <Button variant="shield">Manage Subscriptions</Button>
+                  <Button variant="outline">Billing History</Button>
+                  <Button variant="outline">Upgrade Plan</Button>
+                  <Button variant="outline" onClick={() => navigate('/shield-ai-chat')}>
+                    <MessageSquare className="w-4 h-4 mr-2" /> Ask S.H.I.E.L.D. AI
+                  </Button>
+                </div>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="collaboration" className="mt-6">
+              <div className="space-y-6">
+                <div className="text-center">
+                  <Users className="w-16 h-16 text-primary mx-auto mb-4" />
+                  <h2 className="text-2xl font-display font-bold gradient-text mb-2">Collaboration</h2>
+                  <p className="text-muted-foreground">Work with other users on agent projects.</p>
+                </div>
+                <div className="flex flex-wrap justify-center gap-4">
+                  <Button variant="shield">Create Project</Button>
+                  <Button variant="outline">My Projects</Button>
+                  <Button variant="outline">Team Members</Button>
+                  <Button variant="outline" onClick={() => navigate('/shield-ai-chat')}>
+                    <MessageSquare className="w-4 h-4 mr-2" /> Ask S.H.I.E.L.D. AI
+                  </Button>
+                </div>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="training" className="mt-6">
+              <div className="space-y-6">
+                <div className="text-center">
+                  <BookOpen className="w-16 h-16 text-primary mx-auto mb-4" />
+                  <h2 className="text-2xl font-display font-bold gradient-text mb-2">Training Agents</h2>
+                  <p className="text-muted-foreground">Train and customize agent behaviors.</p>
+                </div>
+                <div className="flex flex-wrap justify-center gap-4">
+                  <Button variant="shield">Start Training</Button>
+                  <Button variant="outline">Training Models</Button>
+                  <Button variant="outline">Training History</Button>
+                  <Button variant="outline" onClick={() => navigate('/shield-ai-chat')}>
+                    <MessageSquare className="w-4 h-4 mr-2" /> Ask S.H.I.E.L.D. AI
+                  </Button>
+                </div>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="monitoring" className="mt-6">
+              <div className="space-y-6">
+                {/* Header */}
+                <div className="text-center mb-8">
+                  <Activity className="w-16 h-16 text-primary mx-auto mb-4" />
+                  <h2 className="text-2xl font-display font-bold gradient-text mb-2">S.H.I.E.L.D. AI Monitoring & Observability</h2>
+                  <p className="text-muted-foreground">Real-time monitoring and observability of agent performance, health metrics, and operational status</p>
+                </div>
+
+                {/* Stats Widgets Grid */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <Card className="bg-card/50 border-border/50">
+                    <CardContent className="p-4 text-center">
+                      <Bot className="w-8 h-8 text-primary mx-auto mb-2" />
+                      <div className="text-2xl font-bold text-foreground">{totalAgents}</div>
+                      <div className="text-xs text-muted-foreground">Total Agents</div>
+                    </CardContent>
+                  </Card>
+                  <Card className="bg-card/50 border-border/50">
+                    <CardContent className="p-4 text-center">
+                      <Power className="w-8 h-8 text-cyan-400 mx-auto mb-2" />
+                      <div className="text-2xl font-bold text-foreground">0</div>
+                      <div className="text-xs text-muted-foreground">Active Agents</div>
+                    </CardContent>
+                  </Card>
+                  <Card className="bg-card/50 border-border/50">
+                    <CardContent className="p-4 text-center">
+                      <Zap className="w-8 h-8 text-amber-400 mx-auto mb-2" />
+                      <div className="text-2xl font-bold text-foreground">0</div>
+                      <div className="text-xs text-muted-foreground">Tasks/Hour</div>
+                    </CardContent>
+                  </Card>
+                  <Card className="bg-card/50 border-border/50">
+                    <CardContent className="p-4 text-center">
+                      <CheckCircle2 className="w-8 h-8 text-emerald-400 mx-auto mb-2" />
+                      <div className="text-2xl font-bold text-foreground">100%</div>
+                      <div className="text-xs text-muted-foreground">Uptime</div>
+                    </CardContent>
+                  </Card>
+                </div>
+
+                {/* System Health Widget */}
+                <Card className="bg-card/50 border-border/50">
+                  <CardContent className="p-6">
+                    <h3 className="text-lg font-display font-semibold text-foreground mb-4 flex items-center gap-2">
+                      <Activity className="w-5 h-5 text-primary" /> System Health Status
+                    </h3>
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-muted-foreground">S.H.I.E.L.D. AI Core System</span>
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                          <span className="text-sm text-green-400">Online</span>
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-muted-foreground">Agent Registry</span>
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                          <span className="text-sm text-green-400">Online</span>
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-muted-foreground">Watchman Validator Network</span>
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                          <span className="text-sm text-green-400">Online</span>
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-muted-foreground">Divine Alignment Engine</span>
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                          <span className="text-sm text-green-400">Online</span>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Performance Metrics */}
+                <Card className="bg-card/50 border-border/50">
+                  <CardContent className="p-6">
+                    <h3 className="text-lg font-display font-semibold text-foreground mb-4 flex items-center gap-2">
+                      <BarChart className="w-5 h-5 text-primary" /> Performance Metrics
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div className="bg-background/50 rounded-lg p-4">
+                        <p className="text-xs text-muted-foreground mb-1">Agent Response Time</p>
+                        <p className="text-xl font-bold text-foreground">24ms</p>
+                      </div>
+                      <div className="bg-background/50 rounded-lg p-4">
+                        <p className="text-xs text-muted-foreground mb-1">Divine Alignment Score</p>
+                        <p className="text-xl font-bold text-foreground">100%</p>
+                      </div>
+                      <div className="bg-background/50 rounded-lg p-4">
+                        <p className="text-xs text-muted-foreground mb-1">Error Rate</p>
+                        <p className="text-xl font-bold text-foreground">0.01%</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Action Buttons */}
+                <div className="flex flex-wrap justify-center gap-4">
+                  <Button variant="shield" onClick={() => navigate('/shield-ai-monitoring')}>
+                    <Eye className="w-4 h-4 mr-2" /> View Full Monitoring Dashboard
+                  </Button>
+                  <Button variant="outline" onClick={() => navigate('/deployed-agents')}>
+                    <Power className="w-4 h-4 mr-2" /> Manage Deployed Agents
+                  </Button>
+                  <Button variant="outline" onClick={() => navigate('/shield-ai-chat')}>
+                    <MessageSquare className="w-4 h-4 mr-2" /> Ask S.H.I.E.L.D. AI
+                  </Button>
+                </div>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="development" className="mt-6">
+              <div className="text-center py-20">
+                <Wand2 className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
+                <h2 className="text-2xl font-display text-foreground mb-2">S.H.I.E.L.D. AI Development & Evaluation</h2>
+                <p className="text-muted-foreground">Develop, test, and evaluate agent capabilities.</p>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="knowledge" className="mt-6">
+              <div className="text-center py-20">
+                <Database className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
+                <h2 className="text-2xl font-display text-foreground mb-2">S.H.I.E.L.D. AI Knowledge & Data Integration</h2>
+                <p className="text-muted-foreground">Manage knowledge bases and data integrations.</p>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="finops" className="mt-6">
+              <div className="text-center py-20">
+                <Coins className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
+                <h2 className="text-2xl font-display text-foreground mb-2">S.H.I.E.L.D. AI Operational FinOps</h2>
+                <p className="text-muted-foreground">Financial operations and cost management.</p>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="workflow" className="mt-6">
+              <div className="text-center py-20">
+                <Layers className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
+                <h2 className="text-2xl font-display text-foreground mb-2">S.H.I.E.L.D. AI Execution & Workflow Infrastructure</h2>
+                <p className="text-muted-foreground">Workflow orchestration and execution management.</p>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="memory" className="mt-6">
+              <div className="text-center py-20">
+                <Library className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
+                <h2 className="text-2xl font-display text-foreground mb-2">S.H.I.E.L.D. AI Memory & Knowledge</h2>
+                <p className="text-muted-foreground">Agent memory and knowledge retention systems.</p>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="financial" className="mt-6">
+              <div className="text-center py-20">
+                <Wallet className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
+                <h2 className="text-2xl font-display text-foreground mb-2">S.H.I.E.L.D. AI Financial Optimization</h2>
+                <p className="text-muted-foreground">Optimize financial performance and resource allocation.</p>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="security" className="mt-6">
+              <div className="text-center py-20">
+                <Shield className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
+                <h2 className="text-2xl font-display text-foreground mb-2">S.H.I.E.L.D. AISecurity & Governance</h2>
+                <p className="text-muted-foreground">Security policies and governance controls.</p>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="lifecycle" className="mt-6">
+              <div className="text-center py-20">
+                <CheckCircle2 className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
+                <h2 className="text-2xl font-display text-foreground mb-2">S.H.I.E.L.D. AI Lifecycle & Quality</h2>
+                <p className="text-muted-foreground">Agent lifecycle management and quality assurance.</p>
+              </div>
+            </TabsContent>
+          </Tabs>
+        </div>
+      </section>
+
+      {/* Custom Agent Modal */}
+      <Dialog open={customAgentModal} onOpenChange={setCustomAgentModal}>
+        <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto scrollbar-thin scrollbar-thumb-primary/20 scrollbar-track-transparent">
+          <DialogHeader>
+            <div className="flex justify-between items-start">
+              <DialogTitle>Create Custom Agent</DialogTitle>
+              {customAgentId && (
+                <div className="text-center">
+                  <div className="text-xs text-muted-foreground mb-1">User Custom Agent ID Number</div>
+                  <div className="text-sm font-mono text-primary bg-primary/10 px-2 py-1 rounded">
+                    {customAgentId}
+                  </div>
+                </div>
+              )}
+            </div>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="agent-name">H.I.I. AI Custom Agent Name - Title</Label>
+              <Input
+                id="agent-name"
+                placeholder="Enter agent name..."
+                value={customAgentName}
+                onChange={(e) => setCustomAgentName(e.target.value)}
+              />
+            </div>
+            <div>
+              <Label htmlFor="agent-mission"> Divine Mission - Purpose</Label>
+              <Textarea
+                id="agent-mission"
+                placeholder="Define the agent's divine mission, divine purpose..."
+                value={customAgentMission}
+                onChange={(e) => setCustomAgentMission(e.target.value)}
+                rows={2}
+              />
+            </div>
+            <div>
+              <Label htmlFor="agent-description">Description - Primary Function</Label>
+              <Textarea
+                id="agent-description"
+                placeholder="Describe the agent's role and Primary Function..."
+                value={customAgentDescription}
+                onChange={(e) => setCustomAgentDescription(e.target.value)}
+                rows={3}
+              />
+            </div>
+            <div>
+              <Label htmlFor="agent-tasks">Tasks & Responsibilities</Label>
+              <Textarea
+                id="agent-tasks"
+                placeholder="List the agent's tasks and responsibilities..."
+                value={customAgentTasks}
+                onChange={(e) => setCustomAgentTasks(e.target.value)}
+                rows={3}
+              />
+            </div>
+            <div>
+              <Label htmlFor="agent-capabilities">Core Capabilities</Label>
+              <Textarea
+                id="agent-capabilities"
+                placeholder="List the agent's Capabilities..."
+                value={customAgentCapabilities}
+                onChange={(e) => setCustomAgentCapabilities(e.target.value)}
+                rows={3}
+              />
+            </div>
+            <div>
+              <Label htmlFor="agent-scripture">Scripture</Label>
+              <Textarea
+                id="agent-scripture"
+                placeholder="Enter scriptural references for this agent..."
+                value={customAgentScripture}
+                onChange={(e) => setCustomAgentScripture(e.target.value)}
+                rows={2}
+              />
+            </div>
+            <div>
+              <div className="flex items-center gap-2 mb-2">
+                <Label className="text-sm font-semibold">Watchman Validator Types</Label>
+                <ShieldAIInfoPopup />
+              </div>
+              <div className="flex items-center gap-2 mb-3">
+                <Checkbox
+                  id="custom-agent-watchman-select-all"
+                  checked={customAgentWatchmen.length === watchmanTypes.length}
+                  onCheckedChange={(checked) => {
+                    if (checked) {
+                      setCustomAgentWatchmen(watchmanTypes);
+                    } else {
+                      setCustomAgentWatchmen([]);
+                    }
+                  }}
+                  className="border-primary"
+                />
+                <Label
+                  htmlFor="custom-agent-watchman-select-all"
+                  className="text-sm font-semibold cursor-pointer"
+                >
+                  Select All
+                </Label>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                {watchmanTypes.map((type) => (
+                  <div key={type} className="flex items-center space-x-2">
+                    <Checkbox
+                      id={`custom-agent-watchman-${type}`}
+                      checked={customAgentWatchmen.includes(type)}
+                      onCheckedChange={(checked) => {
+                        if (checked) {
+                          setCustomAgentWatchmen([...customAgentWatchmen, type]);
+                        } else {
+                          setCustomAgentWatchmen(customAgentWatchmen.filter(w => w !== type));
+                        }
+                      }}
+                    />
+                    <Label
+                      htmlFor={`custom-agent-watchman-${type}`}
+                      className="text-sm font-medium leading-none cursor-pointer"
+                    >
+                      {type}
+                    </Label>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="bg-gradient-to-r from-primary/5 to-secondary/5 border border-primary/20 rounded-lg p-4 text-sm text-muted-foreground">
+              By clicking below, you activate your Divine Identity within the H.I.I. AI Agent within the Blanch S.H.I.E.L.D. AI OS. The system will manifest a unique User Custom Agent ID, designating you as a Watchman and Implementer of the Laws and Commandments. Your agent will carry the mantle of H.I.I. AI030 in Universal Unified Agent AI Network with S.H.I.E.L.D. AI to assist you in restoration in personal, business, security, and holy governance, in keeping your hearts in Divine Law.
+            </div>
+            <div className="flex justify-between items-center gap-2 pt-2">
+              <Button variant="outline" size="sm" className="gap-2" onClick={() => { setCustomAgentModal(false); navigate("/shield-ai-chat"); }}>
+                <HelpCircle className="w-4 h-4" /> Need Help? Ask S.H.I.E.L.D. AI
+              </Button>
+              <div className="flex gap-2">
+                <Button variant="outline" onClick={() => setCustomAgentModal(false)}>
+                  Cancel
+                </Button>
+                <Button
+                  onClick={() => {
+                    toast.success(`Welcome, Shalawam (Peace be unto you) Watchman. Your unique identifier '${customAgentId}' has been etched into the Blanch S.H.I.E.L.D. AI OS. Go forth in Righteousness. Psalms 119:142 Thy righteousness is an everlasting righteousness, and thy law is the truth. Proverbs 6:23 For the commandment is a lamp; and the law is light; and reproofs of instruction are the way of life.`);
+                    setCustomAgentModal(false);
+                    setCustomAgentName("");
+                    setCustomAgentMission("");
+                    setCustomAgentDescription("");
+                    setCustomAgentTasks("");
+                    setCustomAgentCapabilities("");
+                    setCustomAgentScripture("");
+                    setCustomAgentWatchmen([]);
+                    setCustomAgentId("");
+                  }}
+                  disabled={!customAgentName.trim() || !customAgentDescription.trim()}
+                >
+                  Create Agent
+                </Button>
+              </div>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      <Footer />
+    </div>
+  );
+};
+
+export default Agents;
