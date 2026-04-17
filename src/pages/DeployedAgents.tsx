@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import NavigationHeader from "@/components/NavigationHeader";
@@ -87,16 +87,18 @@ const statusConfig = {
   error: { color: "text-red-400", bg: "bg-red-500/20", border: "border-red-500/30", icon: XCircle, label: "Error" },
 };
 
-const ITEMS_PER_PAGE = 50;
+const ITEMS_PER_PAGE = 20;
+const MAX_VISIBLE = 100;
 
 const DeployedAgentsDashboard = () => {
   const [deployed, setDeployed] = useState<DeployedAgent[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStatus, setFilterStatus] = useState<string>("all");
   const [filterCategory, setFilterCategory] = useState<string>("all");
-  const [visibleCount, setVisibleCount] = useState(ITEMS_PER_PAGE);
+  const [visibleCount, setVisibleCount] = useState(10);
   const [agentViewFilter, setAgentViewFilter] = useState<"all" | "lead" | "custom">("all");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+  const [sortBy, setSortBy] = useState<"name" | "id">("id");
   const [selectedWatchmen, setSelectedWatchmen] = useState<string[]>([]);
   const [selectedAgentWatchmen, setSelectedAgentWatchmen] = useState<Record<string, string>>({});
   const [customAgentModal, setCustomAgentModal] = useState(false);
@@ -120,14 +122,20 @@ const DeployedAgentsDashboard = () => {
     return map;
   }, [deployed]);
 
+  const agentMap = useMemo(() => {
+    const map = new Map();
+    agents.forEach(a => map.set(a.id, a));
+    return map;
+  }, []);
+
   const enrichedAgents = useMemo(() => {
     return allAgentIds.map(id => {
-      const agent = agents.find(a => a.id === id)!;
+      const agent = agentMap.get(id)!;
       const dep = deployedMap.get(id);
       const category = agentCategories.find(c => c.number === agent.categoryNumber);
       return { id, agent, deployed: dep, category, isOn: !!dep };
     });
-  }, [deployedMap]);
+  }, [agentMap, deployedMap]);
 
   const filtered = useMemo(() => {
     let filteredList = enrichedAgents.filter(item => {
@@ -147,18 +155,24 @@ const DeployedAgentsDashboard = () => {
                                (agentViewFilter === "custom" && !item.agent.isCategory);
       return matchesSearch && matchesStatus && matchesCategory && matchesViewFilter;
     });
-    // Sort by name
+    // Sort by name or ID
     filteredList.sort((a, b) => {
-      const nameA = a.agent.name.toLowerCase();
-      const nameB = b.agent.name.toLowerCase();
-      if (sortOrder === "asc") {
-        return nameA < nameB ? -1 : nameA > nameB ? 1 : 0;
+      if (sortBy === "id") {
+        const idA = parseInt(a.id.replace(/\D/g, "")) || 0;
+        const idB = parseInt(b.id.replace(/\D/g, "")) || 0;
+        return sortOrder === "asc" ? idA - idB : idB - idA;
       } else {
-        return nameA > nameB ? -1 : nameA < nameB ? 1 : 0;
+        const nameA = a.agent.name.toLowerCase();
+        const nameB = b.agent.name.toLowerCase();
+        if (sortOrder === "asc") {
+          return nameA < nameB ? -1 : nameA > nameB ? 1 : 0;
+        } else {
+          return nameA > nameB ? -1 : nameA < nameB ? 1 : 0;
+        }
       }
     });
     return filteredList;
-  }, [enrichedAgents, searchQuery, filterStatus, filterCategory, agentViewFilter, sortOrder]);
+  }, [enrichedAgents, searchQuery, filterStatus, filterCategory, agentViewFilter, sortOrder, sortBy]);
 
   const visible = filtered.slice(0, visibleCount);
 
@@ -171,7 +185,7 @@ const DeployedAgentsDashboard = () => {
     totalTasks: deployed.reduce((sum, d) => sum + d.tasksCompleted, 0),
   };
 
-  const handleToggle = (agentId: string, agentName: string, currentlyOn: boolean) => {
+  const handleToggle = useCallback((agentId: string, agentName: string, currentlyOn: boolean) => {
     if (currentlyOn) {
       const updated = removeDeployedAgent(agentId);
       setDeployed(updated);
@@ -181,9 +195,9 @@ const DeployedAgentsDashboard = () => {
       setDeployed(updated);
       toast.success(`${generateHIIAgentNumber(agentId)} — ${agentName} activated`);
     }
-  };
+  }, []);
 
-  const handleSelectAll = (turnOn: boolean) => {
+  const handleSelectAll = useCallback((turnOn: boolean) => {
     if (turnOn) {
       const now = new Date().toISOString();
       const all: DeployedAgent[] = allAgentIds.map(id => {
@@ -205,11 +219,11 @@ const DeployedAgentsDashboard = () => {
       setDeployed([]);
       toast.info("All agents deactivated");
     }
-  };
+  }, [deployedMap]);
 
   const allOn = deployed.length === allAgentIds.length;
 
-  const handleRefreshStatus = () => {
+  const handleRefreshStatus = useCallback(() => {
     const updated = deployed.map(d => ({
       ...d,
       status: (Math.random() > 0.15 ? "active" : Math.random() > 0.5 ? "idle" : "error") as DeployedAgent["status"],
@@ -219,14 +233,14 @@ const DeployedAgentsDashboard = () => {
     localStorage.setItem("shield-deployed-agents", JSON.stringify(updated));
     setDeployed(updated);
     toast.success("Agent statuses refreshed");
-  };
+  }, [deployed]);
 
-  const resetFilters = () => {
+  const resetFilters = useCallback(() => {
     setSearchQuery("");
     setFilterStatus("all");
     setFilterCategory("all");
     setVisibleCount(ITEMS_PER_PAGE);
-  };
+  }, []);
 
   return (
     <div className="min-h-screen bg-background">
@@ -486,7 +500,21 @@ const DeployedAgentsDashboard = () => {
               </div>
             </div>
             <div className="flex items-center gap-2 mt-4">
-              <span className="text-sm text-muted-foreground">Sort A-Z:</span>
+              <span className="text-sm text-muted-foreground">Sort:</span>
+              <Button
+                variant={sortBy === "id" ? "shield" : "outline"}
+                size="sm"
+                onClick={() => setSortBy("id")}
+              >
+                H.I.I. AIXXX
+              </Button>
+              <Button
+                variant={sortBy === "name" ? "shield" : "outline"}
+                size="sm"
+                onClick={() => setSortBy("name")}
+              >
+                Name A-Z
+              </Button>
               <Button
                 variant={sortOrder === "asc" ? "shield" : "outline"}
                 size="sm"
@@ -744,15 +772,22 @@ const DeployedAgentsDashboard = () => {
           </div>
 
           {/* Load More */}
-          {visibleCount < filtered.length && (
+          {visibleCount < Math.min(filtered.length, MAX_VISIBLE) && (
             <div className="text-center mt-6">
               <Button
                 variant="outline"
-                onClick={() => setVisibleCount(prev => prev + ITEMS_PER_PAGE)}
+                onClick={() => setVisibleCount(prev => Math.min(prev + ITEMS_PER_PAGE, MAX_VISIBLE))}
                 className="gap-2"
               >
-                Load More ({filtered.length - visibleCount} remaining)
+                Load More ({Math.min(filtered.length, MAX_VISIBLE) - visibleCount} remaining)
               </Button>
+            </div>
+          )}
+
+          {/* Performance Message */}
+          {visibleCount >= MAX_VISIBLE && filtered.length > MAX_VISIBLE && (
+            <div className="text-center mt-6 text-muted-foreground">
+              <p>Maximum agents loaded for performance. Use filters to view more.</p>
             </div>
           )}
 
