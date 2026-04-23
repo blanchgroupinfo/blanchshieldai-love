@@ -134,6 +134,7 @@ interface PrayerRequest {
   hebrew_name: string | null;
   prayer_message: string;
   request_type: string;
+  source_page: string | null;
   created_at: string;
 }
 
@@ -146,6 +147,7 @@ interface BaptismRegistration {
   date_of_baptism: string | null;
   location_of_baptism: string | null;
   officiant: string | null;
+  source_page: string | null;
   created_at: string;
 }
 
@@ -169,6 +171,12 @@ const Admin = () => {
   const [userProfiles, setUserProfiles] = useState<UserProfile[]>([]);
   const [userRoles, setUserRoles] = useState<UserRole[]>([]);
   const [selectedMessage, setSelectedMessage] = useState<ContactMessage | null>(null);
+  const [selectedTradingHub, setSelectedTradingHub] = useState<EnrollmentSubmission | null>(null);
+  const [selectedPrayerRequest, setSelectedPrayerRequest] = useState<PrayerRequest | null>(null);
+  const [selectedBaptismRegistry, setSelectedBaptismRegistry] = useState<BaptismRegistration | null>(null);
+  const [selectedSubscriber, setSelectedSubscriber] = useState<NewsletterSub | null>(null);
+  const [selectedChatHistory, setSelectedChatHistory] = useState<ChatConversation | null>(null);
+  const [selectedUserRole, setSelectedUserRole] = useState<UserProfile | null>(null);
   const [enrollmentList, setEnrollmentList] = useState<EnrollmentSubmission[]>([]);
   const [prayerList, setPrayerList] = useState<PrayerRequest[]>([]);
   const [baptismList, setBaptismList] = useState<BaptismRegistration[]>([]);
@@ -536,6 +544,24 @@ const Admin = () => {
 
   const systemModules: SystemModule[] = [
     {
+      id: "ai-agents-registry",
+      name: "AI Agents Registry",
+      description: "Complete AI Agent directory & management system",
+      icon: Cpu,
+      status: "active",
+      lastSync: "Real Time, Automatic Updates & Automatic Sync",
+      color: "text-blue-500",
+    },
+    {
+      id: "deployed-agents",
+      name: "Deployed Agents",
+      description: "Live production AI agents monitoring",
+      icon: Server,
+      status: "active",
+      lastSync: "Real Time, Automatic Updates & Automatic Sync",
+      color: "text-blue-300",
+    },
+    {
       id: "agents",
       name: "H.I.I. AI Agent Network",
       description: `${PLATFORM.totalAgents} Universal Unified AI Agents`,
@@ -899,14 +925,14 @@ const Admin = () => {
                 <CardContent>
                   <Table>
                     <TableHeader>
-                      <TableRow>
-                        <TableHead>Name</TableHead>
-                        <TableHead>Program</TableHead>
-                        <TableHead>Deposit</TableHead>
-                        <TableHead>Status</TableHead>
-                        <TableHead>Date</TableHead>
-                        <TableHead className="text-right">Actions</TableHead>
-                      </TableRow>
+                       <TableRow>
+                         <TableHead>Name</TableHead>
+                         <TableHead>Program</TableHead>
+                         <TableHead>Deposit</TableHead>
+                         <TableHead>Status</TableHead>
+                         <TableHead>Date</TableHead>
+                         <TableHead className="text-right">Actions</TableHead>
+                       </TableRow>
                     </TableHeader>
                     <TableBody>
                       {enrollmentList.length === 0 ? (
@@ -943,38 +969,45 @@ const Admin = () => {
                               </Badge>
                             </TableCell>
                             <TableCell>{new Date(enrollment.created_at).toLocaleDateString()}</TableCell>
-                            <TableCell className="text-right">
-                              <div className="flex justify-end gap-1">
-                                {enrollment.status !== 'approved' && (
-                                  <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    onClick={() => updateEnrollmentStatus(enrollment.id, 'approved')}
-                                    className="text-xs text-green-400"
-                                  >
-                                    Approve
-                                  </Button>
-                                )}
-                                {enrollment.status !== 'rejected' && (
-                                  <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    onClick={() => updateEnrollmentStatus(enrollment.id, 'rejected')}
-                                    className="text-xs text-red-400"
-                                  >
-                                    Reject
-                                  </Button>
-                                )}
-                                <Button
-                                  variant="ghost"
-                                  size="icon"
-                                  onClick={() => deleteEnrollment(enrollment.id)}
-                                  className="text-destructive/70 hover:text-destructive"
-                                >
-                                  <Trash2 className="w-4 h-4" />
-                                </Button>
-                              </div>
-                            </TableCell>
+                           <TableCell className="text-right">
+                             <div className="flex justify-end gap-1">
+                               {enrollment.status !== 'approved' && (
+                                 <Button
+                                   variant="ghost"
+                                   size="sm"
+                                   onClick={() => updateEnrollmentStatus(enrollment.id, 'approved')}
+                                   className="text-xs text-green-400"
+                                 >
+                                   Approve
+                                 </Button>
+                               )}
+                               {enrollment.status !== 'rejected' && (
+                                 <Button
+                                   variant="ghost"
+                                   size="sm"
+                                   onClick={() => updateEnrollmentStatus(enrollment.id, 'rejected')}
+                                   className="text-xs text-red-400"
+                                 >
+                                   Reject
+                                 </Button>
+                               )}
+                                     <Button
+                                       variant="ghost"
+                                       size="icon"
+                                       onClick={() => setSelectedUserRole(profile)}
+                                     >
+                                       <Eye className="w-4 h-4" />
+                                     </Button>
+                               <Button
+                                 variant="ghost"
+                                 size="icon"
+                                 onClick={() => deleteEnrollment(enrollment.id)}
+                                 className="text-destructive/70 hover:text-destructive"
+                               >
+                                 <Trash2 className="w-4 h-4" />
+                               </Button>
+                             </div>
+                           </TableCell>
                           </TableRow>
                         ))
                       )}
@@ -1022,16 +1055,25 @@ const Admin = () => {
                               </Badge>
                             </TableCell>
                             <TableCell>{new Date(sub.subscribed_at).toLocaleDateString()}</TableCell>
-                            <TableCell className="text-right">
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                onClick={() => deleteNewsletterSub(sub.id)}
-                                className="text-destructive/70 hover:text-destructive"
-                              >
-                                <Trash2 className="w-4 h-4" />
-                              </Button>
-                            </TableCell>
+                           <TableCell className="text-right">
+                             <div className="flex justify-end gap-1">
+                               <Button
+                                 variant="ghost"
+                                 size="icon"
+                                 onClick={() => setSelectedSubscriber(sub)}
+                               >
+                                 <Eye className="w-4 h-4" />
+                               </Button>
+                               <Button
+                                 variant="ghost"
+                                 size="icon"
+                                 onClick={() => deleteNewsletterSub(sub.id)}
+                                 className="text-destructive/70 hover:text-destructive"
+                               >
+                                 <Trash2 className="w-4 h-4" />
+                               </Button>
+                             </div>
+                           </TableCell>
                           </TableRow>
                         ))
                       )}
@@ -1079,13 +1121,13 @@ const Admin = () => {
                             <TableCell>{new Date(msg.created_at).toLocaleDateString()}</TableCell>
                             <TableCell className="text-right">
                               <div className="flex justify-end gap-2">
-                                <Button
-                                  variant="ghost"
-                                  size="icon"
-                                  onClick={() => setSelectedMessage(msg)}
-                                >
-                                  <Eye className="w-4 h-4" />
-                                </Button>
+                               <Button
+                                 variant="ghost"
+                                 size="icon"
+                                 onClick={() => setSelectedTradingHub(enrollment)}
+                               >
+                                 <Eye className="w-4 h-4" />
+                               </Button>
                                 <Button
                                   variant="ghost"
                                   size="icon"
@@ -1145,16 +1187,25 @@ const Admin = () => {
                             </TableCell>
                             <TableCell>{new Date(chat.created_at).toLocaleDateString()}</TableCell>
                             <TableCell>{new Date(chat.updated_at).toLocaleDateString()}</TableCell>
-                            <TableCell className="text-right">
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                onClick={() => deleteChatConversation(chat.id)}
-                                className="text-destructive/70 hover:text-destructive"
-                              >
-                                <Trash2 className="w-4 h-4" />
-                              </Button>
-                            </TableCell>
+                           <TableCell className="text-right">
+                             <div className="flex justify-end gap-1">
+                               <Button
+                                 variant="ghost"
+                                 size="icon"
+                                 onClick={() => setSelectedChatHistory(chat)}
+                               >
+                                 <Eye className="w-4 h-4" />
+                               </Button>
+                               <Button
+                                 variant="ghost"
+                                 size="icon"
+                                 onClick={() => deleteChatConversation(chat.id)}
+                                 className="text-destructive/70 hover:text-destructive"
+                               >
+                                 <Trash2 className="w-4 h-4" />
+                               </Button>
+                             </div>
+                           </TableCell>
                           </TableRow>
                         ))
                       )}
@@ -1308,50 +1359,57 @@ const Admin = () => {
                                   </Badge>
                                 </TableCell>
                                 <TableCell>{new Date(profile.created_at).toLocaleDateString()}</TableCell>
-                                <TableCell className="text-right">
-                                  <div className="flex justify-end gap-1">
-                                    <Button
-                                      variant="ghost"
-                                      size="sm"
-                                      onClick={() => assignRole(profile.user_id, 'admin')}
-                                      disabled={currentRole === 'admin'}
-                                      className="text-xs"
-                                    >
-                                      Admin
-                                    </Button>
-                                    <Button
-                                      variant="ghost"
-                                      size="sm"
-                                      onClick={() => assignRole(profile.user_id, 'moderator')}
-                                      disabled={currentRole === 'moderator'}
-                                      className="text-xs"
-                                    >
-                                      Mod
-                                    </Button>
-                                    <Button
-                                      variant="ghost"
-                                      size="sm"
-                                      onClick={() => assignRole(profile.user_id, 'user')}
-                                      disabled={currentRole === 'user'}
-                                      className="text-xs text-muted-foreground"
-                                    >
-                                      User
-                                    </Button>
-                                    {currentRole !== 'user' && (
-                                      <Button
-                                        variant="ghost"
-                                        size="sm"
-                                        onClick={() => {
-                                          const roleEntry = userRoles.find(r => r.user_id === profile.user_id);
-                                          if (roleEntry) deleteUserRole(roleEntry.id, profile.user_id);
-                                        }}
-                                        className="text-destructive hover:text-destructive"
-                                      >
-                                        <Trash2 className="w-4 h-4" />
-                                      </Button>
-                                    )}
-                                  </div>
-                                </TableCell>
+                                 <TableCell className="text-right">
+                                   <div className="flex justify-end gap-1">
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  onClick={() => setSelectedTradingHub(enrollment)}
+                                >
+                                  <Eye className="w-4 h-4" />
+                                </Button>
+                                     <Button
+                                       variant="ghost"
+                                       size="sm"
+                                       onClick={() => assignRole(profile.user_id, 'admin')}
+                                       disabled={currentRole === 'admin'}
+                                       className="text-xs"
+                                     >
+                                       Admin
+                                     </Button>
+                                     <Button
+                                       variant="ghost"
+                                       size="sm"
+                                       onClick={() => assignRole(profile.user_id, 'moderator')}
+                                       disabled={currentRole === 'moderator'}
+                                       className="text-xs"
+                                     >
+                                       Mod
+                                     </Button>
+                                     <Button
+                                       variant="ghost"
+                                       size="sm"
+                                       onClick={() => assignRole(profile.user_id, 'user')}
+                                       disabled={currentRole === 'user'}
+                                       className="text-xs text-muted-foreground"
+                                     >
+                                       User
+                                     </Button>
+                                     {currentRole !== 'user' && (
+                                       <Button
+                                         variant="ghost"
+                                         size="icon"
+                                         onClick={() => {
+                                           const roleEntry = userRoles.find(r => r.user_id === profile.user_id);
+                                           if (roleEntry) deleteUserRole(roleEntry.id, profile.user_id);
+                                         }}
+                                         className="text-destructive hover:text-destructive"
+                                       >
+                                         <Trash2 className="w-4 h-4" />
+                                       </Button>
+                                     )}
+                                   </div>
+                                 </TableCell>
                               </TableRow>
                             );
                           })
@@ -1378,14 +1436,14 @@ const Admin = () => {
                 <CardContent>
                   <Table>
                     <TableHeader>
-                      <TableRow>
-                        <TableHead>Name</TableHead>
-                        <TableHead>Hebrew Name</TableHead>
-                        <TableHead>Type</TableHead>
-                        <TableHead>Message</TableHead>
-                        <TableHead>Date</TableHead>
-                        <TableHead className="text-right">Actions</TableHead>
-                      </TableRow>
+                       <TableRow>
+                          <TableHead>Name</TableHead>
+                          <TableHead>Hebrew Name</TableHead>
+                          <TableHead>Type</TableHead>
+                          <TableHead>Message</TableHead>
+                          <TableHead>Date</TableHead>
+                          <TableHead className="text-right">Actions</TableHead>
+                       </TableRow>
                     </TableHeader>
                     <TableBody>
                       {prayerList.length === 0 ? (
@@ -1406,11 +1464,20 @@ const Admin = () => {
                             </TableCell>
                             <TableCell className="max-w-[300px] truncate">{prayer.prayer_message}</TableCell>
                             <TableCell>{new Date(prayer.created_at).toLocaleDateString()}</TableCell>
-                            <TableCell className="text-right">
-                              <Button variant="ghost" size="sm" onClick={() => deletePrayerRequest(prayer.id)} className="text-destructive hover:text-destructive">
-                                <Trash2 className="w-4 h-4" />
-                              </Button>
-                            </TableCell>
+                           <TableCell className="text-right">
+                             <div className="flex justify-end gap-1">
+                               <Button
+                                 variant="ghost"
+                                 size="icon"
+                                 onClick={() => setSelectedPrayerRequest(prayer)}
+                               >
+                                 <Eye className="w-4 h-4" />
+                               </Button>
+                               <Button variant="ghost" size="icon" onClick={() => deletePrayerRequest(prayer.id)} className="text-destructive hover:text-destructive">
+                                 <Trash2 className="w-4 h-4" />
+                               </Button>
+                             </div>
+                           </TableCell>
                           </TableRow>
                         ))
                        )}
@@ -1435,14 +1502,14 @@ const Admin = () => {
                   <Table>
                     <TableHeader>
                       <TableRow>
-                        <TableHead>Name</TableHead>
-                        <TableHead>Hebrew Name</TableHead>
-                        <TableHead>Type</TableHead>
-                        <TableHead>Date of Baptism</TableHead>
-                        <TableHead>Location</TableHead>
-                        <TableHead>Officiant</TableHead>
-                        <TableHead>Submitted</TableHead>
-                        <TableHead className="text-right">Actions</TableHead>
+                         <TableHead>Name</TableHead>
+                         <TableHead>Hebrew Name</TableHead>
+                         <TableHead>Type</TableHead>
+                         <TableHead>Date of Baptism</TableHead>
+                         <TableHead>Location</TableHead>
+                         <TableHead>Officiant</TableHead>
+                         <TableHead>Submitted</TableHead>
+                         <TableHead className="text-right">Actions</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -1470,11 +1537,20 @@ const Admin = () => {
                             <TableCell>{baptism.location_of_baptism || "—"}</TableCell>
                             <TableCell>{baptism.officiant || "—"}</TableCell>
                             <TableCell>{new Date(baptism.created_at).toLocaleDateString()}</TableCell>
-                            <TableCell className="text-right">
-                              <Button variant="ghost" size="sm" onClick={() => deleteBaptismRegistration(baptism.id)} className="text-destructive hover:text-destructive">
-                                <Trash2 className="w-4 h-4" />
-                              </Button>
-                            </TableCell>
+                           <TableCell className="text-right">
+                             <div className="flex justify-end gap-1">
+                               <Button
+                                 variant="ghost"
+                                 size="icon"
+                                 onClick={() => setSelectedBaptismRegistry(baptism)}
+                               >
+                                 <Eye className="w-4 h-4" />
+                               </Button>
+                               <Button variant="ghost" size="icon" onClick={() => deleteBaptismRegistration(baptism.id)} className="text-destructive hover:text-destructive">
+                                 <Trash2 className="w-4 h-4" />
+                               </Button>
+                             </div>
+                           </TableCell>
                           </TableRow>
                         ))
                        )}
@@ -1617,21 +1693,27 @@ const Admin = () => {
                       <h3 className="font-display font-semibold text-primary mb-4 flex items-center gap-2">
                         <Layers className="w-4 h-4" /> System & Category Sync
                       </h3>
-                      {PLATFORM.syncItems.map((itemName, index) => (
-                        <motion.div
-                          key={itemName}
-                          initial={{ opacity: 0, x: -20 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ delay: index * 0.05 }}
-                          className="flex items-center justify-between p-3 rounded-xl bg-card/30 border border-border/20"
-                        >
-                          <span className="font-medium text-sm">{itemName}</span>
-                          <div className="flex items-center gap-2">
-                              <CheckCircle className="w-4 h-4 text-green-400" />
-                              <span className="text-xs text-green-400">Real-Time Sync</span>
-                          </div>
-                        </motion.div>
-                      ))}
+                       {PLATFORM.syncItems.map((itemName, index) => (
+                         <motion.div
+                           key={itemName}
+                           initial={{ opacity: 0, x: -20 }}
+                           animate={{ opacity: 1, x: 0 }}
+                           transition={{ delay: index * 0.05 }}
+                           className="flex items-center justify-between p-3 rounded-xl bg-card/30 border border-border/20"
+                         >
+                           <span className="font-medium text-sm">{itemName}</span>
+                           <div className="flex items-center gap-2">
+                               <CheckCircle className="w-4 h-4 text-green-400" />
+                               <span className="text-xs text-green-400">Real-Time Sync</span>
+                               <Badge variant="outline" className="text-[8px] py-0 h-4 border-blue-500/30 text-blue-400 font-mono">
+                                 Auto Updates
+                               </Badge>
+                               <Badge variant="outline" className="text-[8px] py-0 h-4 border-green-500/30 text-green-400 font-mono">
+                                 Auto Sync
+                               </Badge>
+                           </div>
+                         </motion.div>
+                       ))}
                       <motion.div
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
@@ -1650,32 +1732,40 @@ const Admin = () => {
                       <h3 className="font-display font-semibold text-primary mb-4 flex items-center gap-2">
                         <Globe className="w-4 h-4" /> Global Page Links Sync
                       </h3>
-                      {[
-                        { name: "Home / Index", path: "/" },
-                        { name: "Dashboard", path: "/dashboard" },
-                        { name: "AI Agent Registry", path: "/agents" },
-                        { name: "S.H.I.E.L.D. AI LLM", path: "/shield-llm" },
-                        { name: "Trading Hub", path: "/trading" },
-                        { name: "Command Center", path: "/command-center" },
-                        { name: "Knowledge Base", path: "/knowledge-base" },
-                        { name: "Creative Media", path: "/creative-media" },
-                        { name: "Sovereign OS", path: "/shield-ai-os" },
-                        { name: "Distributed Ledger", path: "/distributed-ledger" },
-                      ].map((page, index) => (
-                        <motion.div
-                          key={page.name}
-                          initial={{ opacity: 0, x: -20 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ delay: index * 0.05 }}
-                          className="flex items-center justify-between p-3 rounded-xl bg-card/30 border border-border/20"
-                        >
-                          <span className="font-medium text-sm">{page.name}</span>
-                          <div className="flex items-center gap-2">
-                              <CheckCircle className="w-4 h-4 text-green-400" />
-                              <span className="text-xs text-green-400">Real-Time Sync</span>
-                          </div>
-                        </motion.div>
-                      ))}
+                       {[
+                         { name: "Home / Index", path: "/" },
+                         { name: "Dashboard", path: "/dashboard" },
+                         { name: "Deployed Agents", path: "/deployed-agents" },
+                         { name: "Admin", path: "/admin" },
+                         { name: "Creators Calendar", path: "/creators-calendar" },
+                         { name: "S.H.I.E.L.D. AI Web/App Development", path: "/web-app-development" },
+                         { name: "S.H.I.E.L.D. AI Creative Media Hub", path: "/creative-media-hub" },
+                         { name: "S.H.I.E.L.D. AI Creative Media Portal", path: "/creative-media-portal" },
+                         { name: "S.H.I.E.L.D. AI Drive", path: "/shield-drive" },
+                         { name: "S.H.I.E.L.D. AI OS", path: "/shield-os" },
+                         { name: "S.H.I.E.L.D. AI Chat", path: "/shield-chat" },
+                         { name: "S.H.I.E.L.D. AI Trade Finance Hub", path: "/trade-finance-hub" },
+                       ].map((page, index) => (
+                         <motion.div
+                           key={page.name}
+                           initial={{ opacity: 0, x: -20 }}
+                           animate={{ opacity: 1, x: 0 }}
+                           transition={{ delay: index * 0.05 }}
+                           className="flex items-center justify-between p-3 rounded-xl bg-card/30 border border-border/20"
+                         >
+                           <span className="font-medium text-sm">{page.name}</span>
+                           <div className="flex items-center gap-2">
+                               <CheckCircle className="w-4 h-4 text-green-400" />
+                               <span className="text-xs text-green-400">Real-Time Sync</span>
+                               <Badge variant="outline" className="text-[8px] py-0 h-4 border-blue-500/30 text-blue-400 font-mono">
+                                 Auto Updates
+                               </Badge>
+                               <Badge variant="outline" className="text-[8px] py-0 h-4 border-green-500/30 text-green-400 font-mono">
+                                 Auto Sync
+                               </Badge>
+                           </div>
+                         </motion.div>
+                       ))}
                       <motion.div
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
@@ -1715,6 +1805,237 @@ const Admin = () => {
         </DialogContent>
       </Dialog>
 
+       {/* Trading Hub & Enrollments Dialog */}
+       <Dialog open={!!selectedTradingHub} onOpenChange={() => setSelectedTradingHub(null)}>
+         <DialogContent className="max-w-2xl">
+           <DialogHeader>
+             <DialogTitle>Trading Hub & Enrollments</DialogTitle>
+             <DialogDescription>
+               Complete enrollment submission details
+             </DialogDescription>
+           </DialogHeader>
+           <div className="mt-4 p-6 bg-card/50 rounded-xl border border-border/30">
+             <div className="grid grid-cols-2 gap-4">
+               <div className="space-y-4">
+                 <div>
+                   <p className="text-xs font-mono text-muted-foreground uppercase mb-1">Full Name</p>
+                   <p className="text-sm font-medium">{selectedTradingHub?.full_name}</p>
+                 </div>
+                 <div>
+                   <p className="text-xs font-mono text-muted-foreground uppercase mb-1">Email</p>
+                   <p className="text-sm">{selectedTradingHub?.email}</p>
+                 </div>
+                 <div>
+                   <p className="text-xs font-mono text-muted-foreground uppercase mb-1">Phone</p>
+                   <p className="text-sm">{selectedTradingHub?.phone}</p>
+                 </div>
+                 <div>
+                   <p className="text-xs font-mono text-muted-foreground uppercase mb-1">Program Name</p>
+                   <p className="text-sm">{selectedTradingHub?.program_name}</p>
+                 </div>
+               </div>
+               <div className="space-y-4">
+                 <div>
+                   <p className="text-xs font-mono text-muted-foreground uppercase mb-1">Program Duration</p>
+                   <p className="text-sm">{selectedTradingHub?.program_duration}</p>
+                 </div>
+                 <div>
+                   <p className="text-xs font-mono text-muted-foreground uppercase mb-1">Deposit Amount</p>
+                   <p className="text-sm">${selectedTradingHub?.deposit_amount}</p>
+                 </div>
+                 <div>
+                   <p className="text-xs font-mono text-muted-foreground uppercase mb-1">Compounding</p>
+                   <p className="text-sm">{selectedTradingHub?.compounding}</p>
+                 </div>
+                 <div>
+                   <p className="text-xs font-mono text-muted-foreground uppercase mb-1">Status</p>
+                   <p className="text-sm capitalize">{selectedTradingHub?.status}</p>
+                 </div>
+               </div>
+             </div>
+           </div>
+           <p className="text-xs text-muted-foreground mt-2">
+             Submitted: {selectedTradingHub && new Date(selectedTradingHub.created_at).toLocaleString()}
+           </p>
+         </DialogContent>
+       </Dialog>
+
+       {/* Prayer Requests Dialog */}
+       <Dialog open={!!selectedPrayerRequest} onOpenChange={() => setSelectedPrayerRequest(null)}>
+         <DialogContent className="max-w-2xl">
+           <DialogHeader>
+             <DialogTitle>Prayer Requests</DialogTitle>
+             <DialogDescription>
+               Prayer request submission details
+             </DialogDescription>
+           </DialogHeader>
+           <div className="mt-4 p-6 bg-card/50 rounded-xl border border-border/30 space-y-4">
+             <div>
+               <p className="text-xs font-mono text-muted-foreground uppercase mb-1">Full Name</p>
+               <p className="text-sm font-medium">{selectedPrayerRequest?.full_name}</p>
+             </div>
+             {selectedPrayerRequest?.hebrew_name && (
+               <div>
+                 <p className="text-xs font-mono text-muted-foreground uppercase mb-1">Hebrew Name</p>
+                 <p className="text-sm">{selectedPrayerRequest?.hebrew_name}</p>
+               </div>
+             )}
+             <div>
+               <p className="text-xs font-mono text-muted-foreground uppercase mb-1">Request Type</p>
+               <p className="text-sm capitalize">{selectedPrayerRequest?.request_type}</p>
+             </div>
+             <div>
+               <p className="text-xs font-mono text-muted-foreground uppercase mb-1">Prayer Message</p>
+               <p className="text-sm whitespace-pre-wrap bg-background/50 p-3 rounded-lg border border-border/20">
+                 {selectedPrayerRequest?.prayer_message}
+               </p>
+             </div>
+           </div>
+            <p className="text-xs text-muted-foreground mt-2">
+              Requested: {selectedPrayerRequest && new Date(selectedPrayerRequest.created_at).toLocaleString()}
+            </p>
+            {selectedPrayerRequest?.source_page && (
+              <p className="text-xs text-muted-foreground mt-1">
+                S.H.I.E.L.D. AI Page Submitted: {selectedPrayerRequest.source_page}
+              </p>
+            )}
+         </DialogContent>
+       </Dialog>
+
+       {/* Baptism Registry Dialog */}
+       <Dialog open={!!selectedBaptismRegistry} onOpenChange={() => setSelectedBaptismRegistry(null)}>
+         <DialogContent className="max-w-2xl">
+           <DialogHeader>
+             <DialogTitle>Baptism Registry</DialogTitle>
+             <DialogDescription>
+               Complete baptism registration details
+             </DialogDescription>
+           </DialogHeader>
+           <div className="mt-4 p-6 bg-card/50 rounded-xl border border-border/30 space-y-4">
+             <div>
+               <p className="text-xs font-mono text-muted-foreground uppercase mb-1">Full Name</p>
+               <p className="text-sm font-medium">{selectedBaptismRegistry?.full_name}</p>
+             </div>
+             {selectedBaptismRegistry?.hebrew_name && (
+               <div>
+                 <p className="text-xs font-mono text-muted-foreground uppercase mb-1">Hebrew Name</p>
+                 <p className="text-sm">{selectedBaptismRegistry?.hebrew_name}</p>
+               </div>
+             )}
+             <div>
+               <p className="text-xs font-mono text-muted-foreground uppercase mb-1">Registration Type</p>
+               <p className="text-sm capitalize">
+                 {selectedBaptismRegistry?.registration_type === 'want_baptism' ? 'Wants Baptism' : 'Completed'}
+               </p>
+             </div>
+             <div>
+               <p className="text-xs font-mono text-muted-foreground uppercase mb-1">Date of Baptism</p>
+               <p className="text-sm">{selectedBaptismRegistry?.date_of_baptism ? new Date(selectedBaptismRegistry.date_of_baptism).toLocaleDateString() : 'Not scheduled'}</p>
+             </div>
+             <div>
+               <p className="text-xs font-mono text-muted-foreground uppercase mb-1">Location</p>
+               <p className="text-sm">{selectedBaptismRegistry?.location_of_baptism || 'Not set'}</p>
+             </div>
+             <div>
+               <p className="text-xs font-mono text-muted-foreground uppercase mb-1">Officiant</p>
+               <p className="text-sm">{selectedBaptismRegistry?.officiant || 'Not assigned'}</p>
+             </div>
+           </div>
+           <p className="text-xs text-muted-foreground mt-2">
+             Registered: {selectedBaptismRegistry && new Date(selectedBaptismRegistry.created_at).toLocaleString()}
+           </p>
+         </DialogContent>
+       </Dialog>
+
+       {/* Subscribers Dialog */}
+       <Dialog open={!!selectedSubscriber} onOpenChange={() => setSelectedSubscriber(null)}>
+         <DialogContent className="max-w-lg">
+           <DialogHeader>
+             <DialogTitle>Subscribers</DialogTitle>
+             <DialogDescription>
+               Newsletter subscriber information
+             </DialogDescription>
+           </DialogHeader>
+           <div className="mt-4 p-6 bg-card/50 rounded-xl border border-border/30 space-y-4">
+             <div>
+               <p className="text-xs font-mono text-muted-foreground uppercase mb-1">Email</p>
+               <p className="text-sm font-medium">{selectedSubscriber?.email}</p>
+             </div>
+             <div>
+               <p className="text-xs font-mono text-muted-foreground uppercase mb-1">Status</p>
+               <p className="text-sm">{selectedSubscriber?.is_active ? 'Active' : 'Inactive'}</p>
+             </div>
+             <div>
+               <p className="text-xs font-mono text-muted-foreground uppercase mb-1">Subscribed At</p>
+               <p className="text-sm">{selectedSubscriber && new Date(selectedSubscriber.subscribed_at).toLocaleString()}</p>
+             </div>
+           </div>
+         </DialogContent>
+       </Dialog>
+
+       {/* Chat History Dialog */}
+       <Dialog open={!!selectedChatHistory} onOpenChange={() => setSelectedChatHistory(null)}>
+         <DialogContent className="max-w-2xl">
+           <DialogHeader>
+             <DialogTitle>Chat History</DialogTitle>
+             <DialogDescription>
+               Conversation record details
+             </DialogDescription>
+           </DialogHeader>
+           <div className="mt-4 p-6 bg-card/50 rounded-xl border border-border/30 space-y-4">
+             <div>
+               <p className="text-xs font-mono text-muted-foreground uppercase mb-1">Conversation Title</p>
+               <p className="text-sm font-medium">{selectedChatHistory?.title || 'Untitled'}</p>
+             </div>
+             <div>
+               <p className="text-xs font-mono text-muted-foreground uppercase mb-1">User ID</p>
+               <p className="text-sm font-mono text-xs">{selectedChatHistory?.user_id}</p>
+             </div>
+             <div>
+               <p className="text-xs font-mono text-muted-foreground uppercase mb-1">Created</p>
+               <p className="text-sm">{selectedChatHistory && new Date(selectedChatHistory.created_at).toLocaleString()}</p>
+             </div>
+             <div>
+               <p className="text-xs font-mono text-muted-foreground uppercase mb-1">Last Updated</p>
+               <p className="text-sm">{selectedChatHistory && new Date(selectedChatHistory.updated_at).toLocaleString()}</p>
+             </div>
+           </div>
+         </DialogContent>
+       </Dialog>
+
+       {/* User Roles Dialog */}
+       <Dialog open={!!selectedUserRole} onOpenChange={() => setSelectedUserRole(null)}>
+         <DialogContent className="max-w-2xl">
+           <DialogHeader>
+             <DialogTitle>User Role</DialogTitle>
+             <DialogDescription>
+               User account details and permissions
+             </DialogDescription>
+           </DialogHeader>
+           <div className="mt-4 p-6 bg-card/50 rounded-xl border border-border/30 space-y-4">
+             <div>
+               <p className="text-xs font-mono text-muted-foreground uppercase mb-1">Full Name</p>
+               <p className="text-sm font-medium">{selectedUserRole?.full_name || 'Anonymous'}</p>
+             </div>
+             <div>
+               <p className="text-xs font-mono text-muted-foreground uppercase mb-1">Email</p>
+               <p className="text-sm">{selectedUserRole?.email || 'N/A'}</p>
+             </div>
+             <div>
+               <p className="text-xs font-mono text-muted-foreground uppercase mb-1">User ID</p>
+               <p className="text-sm font-mono text-xs">{selectedUserRole?.user_id}</p>
+             </div>
+             <div>
+               <p className="text-xs font-mono text-muted-foreground uppercase mb-1">Current Role</p>
+               <p className="text-sm capitalize">{getUserRole(selectedUserRole?.user_id || '')}</p>
+             </div>
+             <div>
+               <p className="text-xs font-mono text-muted-foreground uppercase mb-1">Joined</p>
+               <p className="text-sm">{selectedUserRole && new Date(selectedUserRole.created_at).toLocaleString()}</p>
+             </div>
+           </div>
+         </DialogContent>
+       </Dialog>
       <Footer />
     </div>
   );
