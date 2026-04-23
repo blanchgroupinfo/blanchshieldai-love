@@ -5,6 +5,31 @@
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Exo+2:wght@300;400;500;600;700&display=swap');
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Custom Scrollbar Styles */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: hsl(var(--background));
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: hsl(var(--primary));
+    border-radius: 10px;
+    border: 2px solid hsl(var(--background));
+  }
+
+  /* For Firefox */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--primary)) hsl(var(--background));
+  }
+
   :root {
     /* Divine Blue Palette - inspired by ethereal light */
     --background: 222 47% 5%;
@@ -42,16 +67,16 @@
     --shield-accent: 200 100% 75%;
     --divine-gold: 45 100% 60%;
     --cosmic-purple: 260 80% 60%;
-    
+
     /* Gradients */
     --gradient-divine: linear-gradient(135deg, hsl(210 100% 60%) 0%, hsl(200 100% 70%) 50%, hsl(180 100% 60%) 100%);
     --gradient-cosmic: linear-gradient(180deg, hsl(222 47% 5%) 0%, hsl(222 47% 8%) 50%, hsl(230 50% 10%) 100%);
     --gradient-shield: linear-gradient(135deg, hsl(210 100% 50%) 0%, hsl(260 80% 50%) 100%);
-    
+
     /* Shadows */
     --shadow-glow: 0 0 40px hsl(210 100% 60% / 0.3);
     --shadow-divine: 0 0 80px hsl(210 100% 60% / 0.2), 0 0 120px hsl(200 100% 70% / 0.1);
-    
+
     --sidebar-background: 222 47% 8%;
     --sidebar-foreground: 210 100% 98%;
     --sidebar-primary: 210 100% 60%;
@@ -103,7 +128,12 @@
     font-family: 'Exo 2', sans-serif;
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     font-family: 'Orbitron', sans-serif;
   }
 }
@@ -112,32 +142,32 @@
   .shield-glow {
     box-shadow: var(--shadow-glow);
   }
-  
+
   .divine-glow {
     box-shadow: var(--shadow-divine);
   }
-  
+
   .gradient-text {
     background: var(--gradient-divine);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
-  
+
   .glass-card {
     background: hsl(var(--card) / 0.6);
     backdrop-filter: blur(20px);
     border: 1px solid hsl(var(--border) / 0.5);
   }
-  
+
   .animate-pulse-glow {
     animation: pulse-glow 3s ease-in-out infinite;
   }
-  
+
   .animate-float {
     animation: float 6s ease-in-out infinite;
   }
-  
+
   .animate-shimmer {
     animation: shimmer 3s ease-in-out infinite;
   }
@@ -153,18 +183,24 @@
 }
 
 @keyframes pulse-glow {
-  0%, 100% {
+
+  0%,
+  100% {
     box-shadow: 0 0 20px hsl(210 100% 60% / 0.3), 0 0 40px hsl(210 100% 60% / 0.2);
   }
+
   50% {
     box-shadow: 0 0 40px hsl(210 100% 60% / 0.5), 0 0 80px hsl(210 100% 60% / 0.3);
   }
 }
 
 @keyframes float {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translateY(0px);
   }
+
   50% {
     transform: translateY(-20px);
   }
@@ -174,24 +210,30 @@
   0% {
     background-position: -200% center;
   }
+
   100% {
     background-position: 200% center;
   }
 }
 
 @keyframes particle-float {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translateY(0) translateX(0) scale(1);
     opacity: 0.6;
   }
+
   25% {
     transform: translateY(-30px) translateX(10px) scale(1.2);
     opacity: 1;
   }
+
   50% {
     transform: translateY(-20px) translateX(-10px) scale(0.8);
     opacity: 0.8;
   }
+
   75% {
     transform: translateY(-40px) translateX(5px) scale(1.1);
     opacity: 0.9;
@@ -202,6 +244,7 @@
   0% {
     transform: translateX(0);
   }
+
   100% {
     transform: translateX(-50%);
   }
