@@ -20,26 +20,11 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { calendarMonths, hebrewDayNames, feasts, calendarScriptures, getFeastsForDay, getGregorianDate, formatGregorianDate, getHebrewDayName, isSabbath, getYearStartDate, getSabbathDays, getCreatorDateForGregorian, type Feast } from "@/data/creatorsCalendar";
+import { calendarMonths, hebrewDayNames, feasts, calendarScriptures, scripturesByMonth, getFeastsForDay, getGregorianDate, formatGregorianDate, getHebrewDayName, isSabbath, getYearStartDate, getSabbathDays, getCreatorDateForGregorian, type Feast } from "@/data/creatorsCalendar";
 import { useSunTimes } from "@/hooks/useSunTimes";
 import { HolyDayReminder, useCalendarEvents } from "@/hooks/useCalendarEvents";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-
-const scripturesByMonth = [
-  { month: '1st Month', scriptures: ['Genesis 1, Genesis 2', 'Exodus 12, Exodus 13', 'Exodus 23:14, Exodus 20:8-10', 'Numbers 28:16-17, 33:1-3', 'Leviticus 23:1-16', '1 Corinthians 16:1-2', 'Acts 20:6-7', '1 Corinthians 5:7', 'Matthew 5:17'] },
-  { month: '2nd Month', scriptures: ['Numbers 9:11', '1 Kings 6:1, 6:3', '1 Chronicles 30:13-15', 'Leviticus 23:10-11'] },
-  { month: '3rd Month', scriptures: ['Esther 8:9', 'Exodus 19:1', 'Leviticus 23:15-16, 21', 'Numbers 28:26', 'Deuteronomy 16:9-16', 'Acts 2', 'Acts 20:16', 'Jubilees 6'] },
-  { month: '4th Month', scriptures: ['Ezekiel 1:1', 'Zechariah 8:19', 'Leviticus 23:32'] },
-  { month: '5th Month', scriptures: ['2 Kings 25:8', 'Zechariah 8:19', 'Leviticus 23:32'] },
-  { month: '6th Month', scriptures: ['Nehemiah 6:15', 'Ezekiel 8:1', 'Haggai 1:1', 'Luke 1:26'] },
-  { month: '7th Month', scriptures: ['Exodus 23:14-7', 'Exodus 34:22', '1 Kings 8:1-2', 'Leviticus 16:29-34', 'Leviticus 23:23-44', 'Numbers 29:1, 29:7, 29:12, 29:35', 'Deuteronomy 16:13-16', 'Psalm 81:3-4', 'Nehemiah 8:14', 'Zechariah 8:19'] },
-  { month: '8th Month', scriptures: ['1 Kings 6:38', '1 Kings 12:32-33', 'Zechariah 1:1'] },
-  { month: '9th Month', scriptures: ['Zechariah 7:1', '2 Chronicles 7:9', 'Nehemiah 1:1', 'Haggai 2:18', 'John 10:22', '1 Maccabees 4:52-59'] },
-  { month: '10th Month', scriptures: ['Esther 2:16', 'Jeremiah 39:1', 'Zechariah 8:19', 'Leviticus 23:32'] },
-  { month: '11th Month', scriptures: ['Deuteronomy 1:3', 'Zechariah 1:7'] },
-  { month: '12th Month', scriptures: ['Esther 8:12, 3:13, 9:1, 9:21', '1 Maccabees 7:43', 'Enoch 82:6'] }
-];
 
 const offeringsData = [
   {
@@ -336,7 +321,7 @@ const CreatorsCalendar = () => {
   // Baptism form state
   const [baptismForm, setBaptismForm] = useState({ fullName: '', hebrewName: '', dateOfBaptism: '', location: '', officiant: '' });
   const [baptismSubmitting, setBaptismSubmitting] = useState(false);
-  const [wantBaptismForm, setWantBaptismForm] = useState({ fullName: '', hebrewName: '' });
+  const [wantBaptismForm, setWantBaptismForm] = useState({ fullName: '', hebrewName: '', desiredDate: '', location: '' });
   const [wantBaptismSubmitting, setWantBaptismSubmitting] = useState(false);
   
   // Expanded offering
@@ -591,6 +576,8 @@ const CreatorsCalendar = () => {
       return;
     }
     setPrayerSubmitting(true);
+    // Store source page in localStorage since database column doesn't exist yet
+    localStorage.setItem('last_prayer_source', 'Creators Calendar');
     const { error } = await supabase.from('prayer_requests').insert({
       user_id: user.id,
       full_name: prayerForm.fullName,
@@ -615,10 +602,14 @@ const CreatorsCalendar = () => {
       return;
     }
     setWantBaptismSubmitting(true);
+    // Store source page in localStorage since database column doesn't exist yet
+    localStorage.setItem('last_baptism_source', 'Creators Calendar');
     const { error } = await supabase.from('baptism_registrations').insert({
       user_id: user.id,
       full_name: wantBaptismForm.fullName,
       hebrew_name: wantBaptismForm.hebrewName || null,
+      date_of_baptism: wantBaptismForm.desiredDate || null,
+      location_of_baptism: wantBaptismForm.location || null,
       registration_type: 'want_baptism'
     });
     setWantBaptismSubmitting(false);
@@ -626,7 +617,7 @@ const CreatorsCalendar = () => {
       toast({ title: "Error", description: "Failed to submit.", variant: "destructive" });
     } else {
       toast({ title: "Request Submitted", description: "Your baptism interest has been registered. We will reach out to you." });
-      setWantBaptismForm({ fullName: '', hebrewName: '' });
+      setWantBaptismForm({ fullName: '', hebrewName: '', desiredDate: '', location: '' });
     }
   };
 
@@ -706,18 +697,22 @@ const CreatorsCalendar = () => {
 
           {todayCreatorDate && <div className="max-w-3xl mx-auto mb-4">
             <h3 className="text-center text-sm font-bold text-green-400 mb-2">Creator Restoration Date Today</h3>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
+              <div className="p-3 rounded-lg bg-green-500/10 border border-green-500/20 text-center">
+                <p className="text-[10px] text-green-300 mb-1">Creators Restoration Month & Day</p>
+                <p className="font-bold text-sm">Month {todayCreatorDate.month}, Day {todayCreatorDate.day}</p>
+              </div>
               <div className="p-3 rounded-lg bg-green-500/10 border border-green-500/20 text-center">
                 <p className="text-[10px] text-green-300 mb-1">Creators Restoration Year & Day</p>
                 <p className="font-bold text-sm">Year {todayCreatorDate.creatorYearNum}, Day {todayCreatorDate.absoluteDay}</p>
               </div>
               <div className="p-3 rounded-lg bg-green-500/10 border border-green-500/20 text-center">
-                <p className="text-[10px] text-green-300 mb-1">Creators Restoration Month & Day</p>
-                <p className="font-bold text-sm">{getOrdinal(todayCreatorDate.month)} Month, Day {todayCreatorDate.day}</p>
-              </div>
-              <div className="p-3 rounded-lg bg-green-500/10 border border-green-500/20 text-center">
                 <p className="text-[10px] text-green-300 mb-1">Creators Restoration Weekday</p>
                 <p className="font-bold text-xs">Day {getHebrewDayName(todayCreatorDate.month, todayCreatorDate.day).day} - {getHebrewDayName(todayCreatorDate.month, todayCreatorDate.day).hebrew}</p>
+              </div>
+              <div className="p-3 rounded-lg bg-green-500/10 border border-green-500/20 text-center">
+                <p className="text-[10px] text-green-300 mb-1">Lashawan Qadash Hebrew Year</p>
+                <p className="font-bold text-sm">{new Date().getFullYear() + 3760}</p>
               </div>
               <div className="p-3 rounded-lg bg-green-500/10 border border-green-500/20 text-center">
                 <p className="text-[10px] text-green-300 mb-1">Gregorian Date</p>
@@ -726,7 +721,7 @@ const CreatorsCalendar = () => {
             </div>
           </div>}
 
-          {sunTimes && <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="grid grid-cols-2 md:grid-cols-5 gap-2 mt-4 max-w-3xl mx-auto">
+          {sunTimes && <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="grid grid-cols-2 md:grid-cols-7 gap-2 mt-4 max-w-3xl mx-auto">
             <div className="p-3 rounded-lg bg-orange-500/10 border border-orange-500/20">
               <div className="flex items-center gap-1 justify-center mb-1"><Sunrise className="w-4 h-4 text-orange-400" /><span className="text-xs text-orange-300">Dawn</span></div>
               <span className="font-mono text-sm">{sunTimes.dawn}</span>
@@ -736,8 +731,16 @@ const CreatorsCalendar = () => {
               <span className="font-mono text-sm">{sunTimes.sunrise}</span>
             </div>
             <div className="p-3 rounded-lg bg-amber-500/10 border border-amber-500/20">
+              <div className="flex items-center gap-1 justify-center mb-1"><Clock className="w-4 h-4 text-amber-400" /><span className="text-xs text-amber-300">Noon</span></div>
+              <span className="font-mono text-sm">12:00 PM</span>
+            </div>
+            <div className="p-3 rounded-lg bg-amber-500/10 border border-amber-500/20">
               <div className="flex items-center gap-1 justify-center mb-1"><Sun className="w-4 h-4 text-amber-400" /><span className="text-xs text-amber-300">Solar Noon</span></div>
               <span className="font-mono text-sm">{sunTimes.solarNoon}</span>
+            </div>
+            <div className="p-3 rounded-lg bg-blue-500/10 border border-blue-500/20">
+              <div className="flex items-center gap-1 justify-center mb-1"><Clock className="w-4 h-4 text-blue-400" /><span className="text-xs text-blue-300">Ninth Hour</span></div>
+              <span className="font-mono text-sm">3:00 PM</span>
             </div>
             <div className="p-3 rounded-lg bg-orange-500/10 border border-orange-500/20">
               <div className="flex items-center gap-1 justify-center mb-1"><Sunset className="w-4 h-4 text-orange-400" /><span className="text-xs text-orange-300">Sunset</span></div>
@@ -1342,14 +1345,14 @@ const CreatorsCalendar = () => {
                     <Label>Request Type</Label>
                     <Select value={prayerForm.requestType} onValueChange={v => setPrayerForm(p => ({ ...p, requestType: v }))}>
                       <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="healing">Healing</SelectItem>
-                        <SelectItem value="guidance">Guidance</SelectItem>
-                        <SelectItem value="protection">Protection</SelectItem>
-                        <SelectItem value="provision">Provision</SelectItem>
-                        <SelectItem value="thanksgiving">Thanksgiving</SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
-                      </SelectContent>
+                       <SelectContent>
+                          <SelectItem value="healing">Healing</SelectItem>
+                          <SelectItem value="protection">Protection</SelectItem>
+                          <SelectItem value="provision">Provision</SelectItem>
+                          <SelectItem value="guidance">Guidance</SelectItem>
+                          <SelectItem value="thanksgiving">Thanksgiving</SelectItem>
+                          <SelectItem value="general">General Prayer</SelectItem>
+                        </SelectContent>
                     </Select>
                   </div>
                   <Button className="w-full" onClick={handlePrayerSubmit} disabled={prayerSubmitting}>
@@ -1389,49 +1392,37 @@ const CreatorsCalendar = () => {
                   </div>
 
                   {/* Baptism Actions */}
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div className="p-6 rounded-xl bg-primary/5 border border-primary/20">
-                      <Sparkles className="w-10 h-10 text-primary mx-auto mb-3" />
-                      <h4 className="font-bold text-lg mb-2 text-center">I Want to Get Baptized</h4>
-                      <p className="text-sm text-muted-foreground mb-4 text-center">Begin your journey of faith through baptism in the name of YASHAYA HA'MASHIACH</p>
-                      {!user ? <Button className="w-full" size="lg" asChild><a href="/auth">Sign In to Register</a></Button> :
-                      <div className="space-y-3">
-                        <div><Label>Full Name</Label><Input placeholder="Enter your name..." className="mt-1" value={wantBaptismForm.fullName} onChange={e => setWantBaptismForm(p => ({ ...p, fullName: e.target.value }))} /></div>
-                        <div><Label>Lashawan Qadash Hebrew Name</Label><Input placeholder="Hebrew name (optional)..." className="mt-1" value={wantBaptismForm.hebrewName} onChange={e => setWantBaptismForm(p => ({ ...p, hebrewName: e.target.value }))} /></div>
-                        <Button className="w-full" size="lg" onClick={handleWantBaptism} disabled={wantBaptismSubmitting}>{wantBaptismSubmitting ? 'Submitting...' : 'I Want to Get Baptized'}</Button>
-                      </div>}
-                    </div>
-                    <div className="p-6 rounded-xl bg-green-500/5 border border-green-500/20 text-center">
-                      <Book className="w-10 h-10 text-green-400 mx-auto mb-3" />
-                      <h4 className="font-bold text-lg mb-2">Register a Completed Baptism</h4>
-                      <p className="text-sm text-muted-foreground mb-4">Record your completed baptism in the registry for the congregation</p>
-                      {!user ? <Button variant="outline" className="w-full" size="lg" asChild><a href="/auth">Sign In to Register</a></Button> : null}
-                    </div>
-                  </div>
-
-                  {/* Baptism Registry */}
-                  <div className="p-6 rounded-xl bg-card/50 border border-border/30">
-                    <h3 className="text-lg font-bold text-foreground mb-4">Baptism - Register & Registry</h3>
-                    <p className="text-sm text-muted-foreground mb-4">
-                      The baptism registry keeps a sacred record of all who have been baptized in the name of YASHAYA HA'MASHIACH.
-                    </p>
-                    {!user ? <div className="text-center py-4">
-                      <p className="text-muted-foreground mb-4">Sign in to access the baptism registry</p>
-                      <Button asChild><a href="/auth">Sign In</a></Button>
-                    </div> :
-                    <div className="space-y-4">
-                      <div className="grid md:grid-cols-2 gap-4">
-                        <div><Label>Full Name</Label><Input placeholder="Enter full name..." className="mt-1" value={baptismForm.fullName} onChange={e => setBaptismForm(p => ({ ...p, fullName: e.target.value }))} /></div>
-                        <div><Label>Lashawan Qadash Hebrew Name</Label><Input placeholder="Hebrew name (optional)..." className="mt-1" value={baptismForm.hebrewName} onChange={e => setBaptismForm(p => ({ ...p, hebrewName: e.target.value }))} /></div>
-                        <div><Label>Date of Baptism</Label><Input type="date" className="mt-1" value={baptismForm.dateOfBaptism} onChange={e => setBaptismForm(p => ({ ...p, dateOfBaptism: e.target.value }))} /></div>
-                        <div><Label>Location of Baptism</Label><Input placeholder="Where were you baptized?" className="mt-1" value={baptismForm.location} onChange={e => setBaptismForm(p => ({ ...p, location: e.target.value }))} /></div>
-                        <div><Label>Officiant</Label><Input placeholder="Who performed the baptism?" className="mt-1" value={baptismForm.officiant} onChange={e => setBaptismForm(p => ({ ...p, officiant: e.target.value }))} /></div>
-                      </div>
-                      <Button className="w-full" onClick={handleBaptismRegister} disabled={baptismSubmitting}>
-                        {baptismSubmitting ? 'Registering...' : 'Register Baptism'}
-                      </Button>
-                    </div>}
-                  </div>
+                   <div className="grid md:grid-cols-2 gap-4">
+                     <div className="p-6 rounded-xl bg-primary/5 border border-primary/20">
+                       <Sparkles className="w-10 h-10 text-primary mx-auto mb-3" />
+                       <h4 className="font-bold text-lg mb-2 text-center">I Want to Get Baptized</h4>
+                       <p className="text-sm text-muted-foreground mb-4 text-center">Begin your journey of faith through baptism in the name of YASHAYA HA'MASHIACH</p>
+                       {!user ? <Button className="w-full" size="lg" asChild><a href="/auth">Sign In to Register</a></Button> :
+                       <div className="space-y-3">
+                         <div><Label>Full Name</Label><Input placeholder="Enter your name..." className="mt-1" value={wantBaptismForm.fullName} onChange={e => setWantBaptismForm(p => ({ ...p, fullName: e.target.value }))} /></div>
+                         <div><Label>Lashawan Qadash Hebrew Name</Label><Input placeholder="Hebrew name (optional)..." className="mt-1" value={wantBaptismForm.hebrewName} onChange={e => setWantBaptismForm(p => ({ ...p, hebrewName: e.target.value }))} /></div>
+                         <div><Label>Date of Baptism</Label><Input type="date" placeholder="mm/dd/yyyy" className="mt-1" value={wantBaptismForm.desiredDate} onChange={e => setWantBaptismForm(p => ({ ...p, desiredDate: e.target.value }))} /></div>
+                         <div><Label>Location of Baptism</Label><Input placeholder="Where do you want to get Baptize? Do you want to come to Jordan" className="mt-1" value={wantBaptismForm.location} onChange={e => setWantBaptismForm(p => ({ ...p, location: e.target.value }))} /></div>
+                         <Button className="w-full" size="lg" onClick={handleWantBaptism} disabled={wantBaptismSubmitting}>{wantBaptismSubmitting ? 'Submitting...' : 'I Want to Get Baptized'}</Button>
+                       </div>}
+                     </div>
+                     <div className="p-6 rounded-xl bg-green-500/5 border border-green-500/20">
+                       <Book className="w-10 h-10 text-green-400 mx-auto mb-3" />
+                       <h4 className="font-bold text-lg mb-2 text-center">Register a Completed Baptism</h4>
+                       <p className="text-sm text-muted-foreground mb-4 text-center">Record your completed baptism in the registry for the congregation</p>
+                       {!user ? <Button variant="outline" className="w-full" size="lg" asChild><a href="/auth">Sign In to Register</a></Button> :
+                       <div className="space-y-3">
+                         <div><Label>Full Name</Label><Input placeholder="Enter full name..." className="mt-1" value={baptismForm.fullName} onChange={e => setBaptismForm(p => ({ ...p, fullName: e.target.value }))} /></div>
+                         <div><Label>Lashawan Qadash Hebrew Name</Label><Input placeholder="Hebrew name (optional)..." className="mt-1" value={baptismForm.hebrewName} onChange={e => setBaptismForm(p => ({ ...p, hebrewName: e.target.value }))} /></div>
+                         <div><Label>Date of Baptism</Label><Input type="date" className="mt-1" value={baptismForm.dateOfBaptism} onChange={e => setBaptismForm(p => ({ ...p, dateOfBaptism: e.target.value }))} /></div>
+                         <div><Label>Location of Baptism</Label><Input placeholder="Where were you baptized?" className="mt-1" value={baptismForm.location} onChange={e => setBaptismForm(p => ({ ...p, location: e.target.value }))} /></div>
+                         <div><Label>Officiant</Label><Input placeholder="Who performed the baptism?" className="mt-1" value={baptismForm.officiant} onChange={e => setBaptismForm(p => ({ ...p, officiant: e.target.value }))} /></div>
+                         <Button className="w-full" onClick={handleBaptismRegister} disabled={baptismSubmitting}>
+                           {baptismSubmitting ? 'Registering...' : 'Register Baptism'}
+                         </Button>
+                       </div>}
+                     </div>
+                   </div>
                 </CardContent>
               </Card>
             </div>
