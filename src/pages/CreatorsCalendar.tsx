@@ -252,9 +252,9 @@ const ReminderCheckboxDropdown = ({ itemName, currentDaysBefore, currentRemindTi
   const isAllSelected = selectedOptions.length === reminderOptions.length;
   const displayText = isAllSelected ? 'All' : selectedOptions.length > 0
     ? selectedOptions.map(v => {
-        const opt = reminderOptions.find(o => o.value === v);
-        return opt ? opt.label.split(' ')[0] : v;
-      }).join(', ')
+      const opt = reminderOptions.find(o => o.value === v);
+      return opt ? opt.label.split(' ')[0] : v;
+    }).join(', ')
     : 'Select';
 
   return (
@@ -313,17 +313,17 @@ const CreatorsCalendar = () => {
   const [coordInput, setCoordInput] = useState({ lat: '', lon: '' });
   const [northernHemisphere, setNorthernHemisphere] = useState(true);
   const [easternHemisphere, setEasternHemisphere] = useState(true);
-  
+
   // Prayer form state
-  const [prayerForm, setPrayerForm] = useState({ fullName: '', hebrewName: '', message: '', requestType: 'healing' });
+  const [prayerForm, setPrayerForm] = useState({ fullName: '', hebrewName: '', message: '', requestType: 'healing', communityNation: 'hebrew-israelites' });
   const [prayerSubmitting, setPrayerSubmitting] = useState(false);
-  
+
   // Baptism form state
   const [baptismForm, setBaptismForm] = useState({ fullName: '', hebrewName: '', dateOfBaptism: '', location: '', officiant: '' });
   const [baptismSubmitting, setBaptismSubmitting] = useState(false);
   const [wantBaptismForm, setWantBaptismForm] = useState({ fullName: '', hebrewName: '', desiredDate: '', location: '' });
   const [wantBaptismSubmitting, setWantBaptismSubmitting] = useState(false);
-  
+
   // Expanded offering
   const [expandedOffering, setExpandedOffering] = useState<number | null>(null);
 
@@ -481,10 +481,10 @@ const CreatorsCalendar = () => {
 
   const handleSelectAll = async (type: 'holy-day' | 'trumpet' | 'fast', enabled: boolean) => {
     if (!user) return;
-    
+
     let list: any[] = [];
     let prefix = '';
-    
+
     if (type === 'holy-day') {
       list = holyDayRemindersList;
     } else if (type === 'trumpet') {
@@ -493,7 +493,7 @@ const CreatorsCalendar = () => {
     } else if (type === 'fast') {
       list = fastingRemindersList;
     }
-    
+
     toast({
       title: enabled ? "Enabling All Reminders" : "Disabling All Reminders",
       description: `Updating ${list.length} reminders. Please wait...`,
@@ -521,7 +521,7 @@ const CreatorsCalendar = () => {
           { ...channels, reminder_type: type === 'trumpet' ? 'trumpet' : 'holy_day' }
         );
       }));
-      
+
       toast({
         title: "Update Complete",
         description: `All ${type.replace('-', ' ')} reminders have been ${enabled ? 'enabled' : 'disabled'}.`,
@@ -576,21 +576,23 @@ const CreatorsCalendar = () => {
       return;
     }
     setPrayerSubmitting(true);
-    // Store source page in localStorage since database column doesn't exist yet
-    localStorage.setItem('last_prayer_source', 'Creators Calendar');
+
     const { error } = await supabase.from('prayer_requests').insert({
       user_id: user.id,
-      full_name: prayerForm.fullName,
-      hebrew_name: prayerForm.hebrewName || null,
-      prayer_message: prayerForm.message,
-      request_type: prayerForm.requestType
+      full_name: name,
+      hebrew_name: hebrewName || null,
+      community_nation: community || null,
+      prayer_message: prayerRequest,
+      request_type: requestType || null,
+      source_page: 'Creators Calendar'
     });
+
     setPrayerSubmitting(false);
     if (error) {
       toast({ title: "Error", description: "Failed to submit prayer request.", variant: "destructive" });
     } else {
-      toast({ title: "Prayer Request Submitted", description: "Your prayer request has been received. May Most High AHAYAH bless you." });
-      setPrayerForm({ fullName: '', hebrewName: '', message: '', requestType: 'healing' });
+      toast({ title: "Prayer Request Submitted", description: "Your prayer request has been received. This is a House of Prayer for ALL People. May Most High AHAYAH hear your cry." });
+      setPrayerForm({ fullName: '', hebrewName: '', message: '', requestType: 'healing', communityNation: 'hebrew-israelites' });
     }
   };
 
@@ -650,7 +652,7 @@ const CreatorsCalendar = () => {
 
   return <div className="min-h-screen bg-background">
     <NavigationHeader />
-    
+
     <style>{`
       @media print {
         .no-print { display: none !important; }
@@ -664,14 +666,14 @@ const CreatorsCalendar = () => {
     <section className="relative pt-32 pb-8 overflow-hidden no-print">
       <div className="absolute inset-0 bg-gradient-to-br from-amber-900/20 via-background to-blue-900/20" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(251,191,36,0.1),transparent_70%)]" />
-      
+
       <div className="container mx-auto px-4 relative z-10">
         <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="text-center max-w-4xl mx-auto">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-500/10 border border-amber-500/20 mb-4">
             <Star className="w-4 h-4 text-amber-400" />
             <span className="text-sm text-amber-300">Sacred Times & Seasons</span>
           </div>
-          
+
           <h1 className="text-4xl md:text-5xl font-display font-bold mb-3">
             <span className="text-foreground">Most High AHAYAH</span>
             <br />
@@ -679,7 +681,7 @@ const CreatorsCalendar = () => {
             <br />
             <span className="text-foreground">Creators Calendar</span>
           </h1>
-          
+
           <p className="text-muted-foreground mb-4 max-w-2xl mx-auto">
             The sacred calendar established by the Most High AHAYAH, marking His Holy Days, Sabbaths, Feasts, and appointed times for His people.
           </p>
@@ -1094,7 +1096,7 @@ const CreatorsCalendar = () => {
                 {/* Annual Holy Days List */}
                 <div>
                   <h3 className="text-lg font-bold text-amber-400 mb-4">Annual Holy Days</h3>
-                  
+
                   {/* New Month entries for all 12 months */}
                   <div className="mb-4 p-4 rounded-lg bg-blue-500/5 border border-blue-500/20">
                     <h4 className="font-medium text-blue-400 mb-3 flex items-center gap-2">
@@ -1217,11 +1219,11 @@ const CreatorsCalendar = () => {
                 <CardContent>
                   <div className="grid md:grid-cols-3 gap-4">
                     {feasts.filter(f => ['dedication', 'nicanor', 'purim'].includes(f.id)).map((feast, index) => (
-                      <motion.div 
-                        key={feast.id} 
-                        initial={{ opacity: 0, y: 20 }} 
-                        animate={{ opacity: 1, y: 0 }} 
-                        transition={{ delay: index * 0.1 }} 
+                      <motion.div
+                        key={feast.id}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: index * 0.1 }}
                         className="p-3 rounded-lg bg-blue-500/5 border border-blue-500/20"
                       >
                         <div className="flex items-center justify-between mb-1">
@@ -1328,38 +1330,56 @@ const CreatorsCalendar = () => {
                   <p className="text-muted-foreground mb-4">Sign in to submit prayer requests</p>
                   <Button asChild><a href="/auth">Sign In</a></Button>
                 </div> :
-                <div className="max-w-2xl mx-auto space-y-4">
-                  <div>
-                    <Label>Your Name</Label>
-                    <Input placeholder="Enter your name..." className="mt-1" value={prayerForm.fullName} onChange={e => setPrayerForm(p => ({ ...p, fullName: e.target.value }))} />
-                  </div>
-                  <div>
-                    <Label>Lashawan Qadash Hebrew Name</Label>
-                    <Input placeholder="Enter your Hebrew name (optional)..." className="mt-1" value={prayerForm.hebrewName} onChange={e => setPrayerForm(p => ({ ...p, hebrewName: e.target.value }))} />
-                  </div>
-                  <div>
-                    <Label>Prayer Request</Label>
-                    <Textarea placeholder="Write your prayer request here..." className="mt-1 min-h-[150px]" value={prayerForm.message} onChange={e => setPrayerForm(p => ({ ...p, message: e.target.value }))} />
-                  </div>
-                  <div>
-                    <Label>Request Type</Label>
-                    <Select value={prayerForm.requestType} onValueChange={v => setPrayerForm(p => ({ ...p, requestType: v }))}>
-                      <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
-                       <SelectContent>
-                          <SelectItem value="healing">Healing</SelectItem>
-                          <SelectItem value="protection">Protection</SelectItem>
-                          <SelectItem value="provision">Provision</SelectItem>
-                          <SelectItem value="guidance">Guidance</SelectItem>
-                          <SelectItem value="thanksgiving">Thanksgiving</SelectItem>
+                  <div className="max-w-2xl mx-auto space-y-4">
+                    <div>
+                      <Label>Your Name</Label>
+                      <Input placeholder="Enter your name..." className="mt-1" value={prayerForm.fullName} onChange={e => setPrayerForm(p => ({ ...p, fullName: e.target.value }))} />
+                    </div>
+                    <div>
+                      <Label>Lashawan Qadash Hebrew Name</Label>
+                      <Input placeholder="Enter your Hebrew name (optional)..." className="mt-1" value={prayerForm.hebrewName} onChange={e => setPrayerForm(p => ({ ...p, hebrewName: e.target.value }))} />
+                    </div>
+                    
+                    <div>
+                      <Label>Your Community / Nation</Label>
+                      <Select value={prayerForm.communityNation} onValueChange={v => setPrayerForm(p => ({ ...p, communityNation: v }))}>
+                        <SelectTrigger className="mt-1"><SelectValue placeholder="Select your community..." /></SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="hebrew-israelites">Hebrew Israelites</SelectItem>
+                          <SelectItem value="indigenous">First Nations / Indigenous</SelectItem>
+                          <SelectItem value="african">African Diaspora</SelectItem>
+                          <SelectItem value="sovereign">Sovereign Nations</SelectItem>
+                          <SelectItem value="global">Global Believers</SelectItem>
+                          <SelectItem value="other">Other / All Peoples</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div>
+                      <Label>Prayer Request</Label>
+                      <Textarea placeholder="Share your heart's cry, your needs, your thanksgivings..." className="mt-1 min-h-[150px]" value={prayerForm.message} onChange={e => setPrayerForm(p => ({ ...p, message: e.target.value }))} rows={6} />
+                    </div>
+                    <div>
+                      <Label>Request Type</Label>
+                      <Select value={prayerForm.requestType} onValueChange={v => setPrayerForm(p => ({ ...p, requestType: v }))}>
+                        <SelectTrigger className="mt-1"><SelectValue placeholder="Select request type..." /></SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="healing">Healing & Health</SelectItem>
+                          <SelectItem value="protection">Protection & Safety</SelectItem>
+                          <SelectItem value="provision">Provision & Sustenance</SelectItem>
+                          <SelectItem value="guidance">Guidance & Wisdom</SelectItem>
+                          <SelectItem value="deliverance">Deliverance & Freedom</SelectItem>
+                          <SelectItem value="thanksgiving">Thanksgiving & Praise</SelectItem>
+                          <SelectItem value="nation">For Your Nation / People</SelectItem>
+                          <SelectItem value="global">Global Prayer</SelectItem>
                           <SelectItem value="general">General Prayer</SelectItem>
                         </SelectContent>
-                    </Select>
-                  </div>
-                  <Button className="w-full" onClick={handlePrayerSubmit} disabled={prayerSubmitting}>
-                    {prayerSubmitting ? 'Submitting...' : 'Submit Prayer Request'}
-                  </Button>
-                  <p className="text-xs text-center text-muted-foreground">"The effectual fervent prayer of a righteous man availeth much." — James 5:16</p>
-                </div>}
+                      </Select>
+                    </div>
+                    <Button className="w-full" onClick={handlePrayerSubmit} disabled={prayerSubmitting}>
+                      {prayerSubmitting ? 'Submitting...' : 'Submit Prayer Request'}
+                    </Button>
+                    <p className="text-xs text-center text-muted-foreground">"The effectual fervent prayer of a righteous man availeth much." — James 5:16</p>
+                  </div>}
               </CardContent>
             </Card>
           </TabsContent>
@@ -1392,37 +1412,37 @@ const CreatorsCalendar = () => {
                   </div>
 
                   {/* Baptism Actions */}
-                   <div className="grid md:grid-cols-2 gap-4">
-                     <div className="p-6 rounded-xl bg-primary/5 border border-primary/20">
-                       <Sparkles className="w-10 h-10 text-primary mx-auto mb-3" />
-                       <h4 className="font-bold text-lg mb-2 text-center">I Want to Get Baptized</h4>
-                       <p className="text-sm text-muted-foreground mb-4 text-center">Begin your journey of faith through baptism in the name of YASHAYA HA'MASHIACH</p>
-                       {!user ? <Button className="w-full" size="lg" asChild><a href="/auth">Sign In to Register</a></Button> :
-                       <div className="space-y-3">
-                         <div><Label>Full Name</Label><Input placeholder="Enter your name..." className="mt-1" value={wantBaptismForm.fullName} onChange={e => setWantBaptismForm(p => ({ ...p, fullName: e.target.value }))} /></div>
-                         <div><Label>Lashawan Qadash Hebrew Name</Label><Input placeholder="Hebrew name (optional)..." className="mt-1" value={wantBaptismForm.hebrewName} onChange={e => setWantBaptismForm(p => ({ ...p, hebrewName: e.target.value }))} /></div>
-                         <div><Label>Date of Baptism</Label><Input type="date" placeholder="mm/dd/yyyy" className="mt-1" value={wantBaptismForm.desiredDate} onChange={e => setWantBaptismForm(p => ({ ...p, desiredDate: e.target.value }))} /></div>
-                         <div><Label>Location of Baptism</Label><Input placeholder="Where do you want to get Baptize? Do you want to come to Jordan" className="mt-1" value={wantBaptismForm.location} onChange={e => setWantBaptismForm(p => ({ ...p, location: e.target.value }))} /></div>
-                         <Button className="w-full" size="lg" onClick={handleWantBaptism} disabled={wantBaptismSubmitting}>{wantBaptismSubmitting ? 'Submitting...' : 'I Want to Get Baptized'}</Button>
-                       </div>}
-                     </div>
-                     <div className="p-6 rounded-xl bg-green-500/5 border border-green-500/20">
-                       <Book className="w-10 h-10 text-green-400 mx-auto mb-3" />
-                       <h4 className="font-bold text-lg mb-2 text-center">Register a Completed Baptism</h4>
-                       <p className="text-sm text-muted-foreground mb-4 text-center">Record your completed baptism in the registry for the congregation</p>
-                       {!user ? <Button variant="outline" className="w-full" size="lg" asChild><a href="/auth">Sign In to Register</a></Button> :
-                       <div className="space-y-3">
-                         <div><Label>Full Name</Label><Input placeholder="Enter full name..." className="mt-1" value={baptismForm.fullName} onChange={e => setBaptismForm(p => ({ ...p, fullName: e.target.value }))} /></div>
-                         <div><Label>Lashawan Qadash Hebrew Name</Label><Input placeholder="Hebrew name (optional)..." className="mt-1" value={baptismForm.hebrewName} onChange={e => setBaptismForm(p => ({ ...p, hebrewName: e.target.value }))} /></div>
-                         <div><Label>Date of Baptism</Label><Input type="date" className="mt-1" value={baptismForm.dateOfBaptism} onChange={e => setBaptismForm(p => ({ ...p, dateOfBaptism: e.target.value }))} /></div>
-                         <div><Label>Location of Baptism</Label><Input placeholder="Where were you baptized?" className="mt-1" value={baptismForm.location} onChange={e => setBaptismForm(p => ({ ...p, location: e.target.value }))} /></div>
-                         <div><Label>Officiant</Label><Input placeholder="Who performed the baptism?" className="mt-1" value={baptismForm.officiant} onChange={e => setBaptismForm(p => ({ ...p, officiant: e.target.value }))} /></div>
-                         <Button className="w-full" onClick={handleBaptismRegister} disabled={baptismSubmitting}>
-                           {baptismSubmitting ? 'Registering...' : 'Register Baptism'}
-                         </Button>
-                       </div>}
-                     </div>
-                   </div>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div className="p-6 rounded-xl bg-primary/5 border border-primary/20">
+                      <Sparkles className="w-10 h-10 text-primary mx-auto mb-3" />
+                      <h4 className="font-bold text-lg mb-2 text-center">I Want to Get Baptized</h4>
+                      <p className="text-sm text-muted-foreground mb-4 text-center">Begin your journey of faith through baptism in the name of YASHAYA HA'MASHIACH</p>
+                      {!user ? <Button className="w-full" size="lg" asChild><a href="/auth">Sign In to Register</a></Button> :
+                        <div className="space-y-3">
+                          <div><Label>Full Name</Label><Input placeholder="Enter your name..." className="mt-1" value={wantBaptismForm.fullName} onChange={e => setWantBaptismForm(p => ({ ...p, fullName: e.target.value }))} /></div>
+                          <div><Label>Lashawan Qadash Hebrew Name</Label><Input placeholder="Hebrew name (optional)..." className="mt-1" value={wantBaptismForm.hebrewName} onChange={e => setWantBaptismForm(p => ({ ...p, hebrewName: e.target.value }))} /></div>
+                          <div><Label>Date of Baptism</Label><Input type="date" placeholder="mm/dd/yyyy" className="mt-1" value={wantBaptismForm.desiredDate} onChange={e => setWantBaptismForm(p => ({ ...p, desiredDate: e.target.value }))} /></div>
+                          <div><Label>Location of Baptism</Label><Input placeholder="Where do you want to get Baptize? Do you want to come to Jordan" className="mt-1" value={wantBaptismForm.location} onChange={e => setWantBaptismForm(p => ({ ...p, location: e.target.value }))} /></div>
+                          <Button className="w-full" size="lg" onClick={handleWantBaptism} disabled={wantBaptismSubmitting}>{wantBaptismSubmitting ? 'Submitting...' : 'I Want to Get Baptized'}</Button>
+                        </div>}
+                    </div>
+                    <div className="p-6 rounded-xl bg-green-500/5 border border-green-500/20">
+                      <Book className="w-10 h-10 text-green-400 mx-auto mb-3" />
+                      <h4 className="font-bold text-lg mb-2 text-center">Register a Completed Baptism</h4>
+                      <p className="text-sm text-muted-foreground mb-4 text-center">Record your completed baptism in the registry for the congregation</p>
+                      {!user ? <Button variant="outline" className="w-full" size="lg" asChild><a href="/auth">Sign In to Register</a></Button> :
+                        <div className="space-y-3">
+                          <div><Label>Full Name</Label><Input placeholder="Enter full name..." className="mt-1" value={baptismForm.fullName} onChange={e => setBaptismForm(p => ({ ...p, fullName: e.target.value }))} /></div>
+                          <div><Label>Lashawan Qadash Hebrew Name</Label><Input placeholder="Hebrew name (optional)..." className="mt-1" value={baptismForm.hebrewName} onChange={e => setBaptismForm(p => ({ ...p, hebrewName: e.target.value }))} /></div>
+                          <div><Label>Date of Baptism</Label><Input type="date" className="mt-1" value={baptismForm.dateOfBaptism} onChange={e => setBaptismForm(p => ({ ...p, dateOfBaptism: e.target.value }))} /></div>
+                          <div><Label>Location of Baptism</Label><Input placeholder="Where were you baptized?" className="mt-1" value={baptismForm.location} onChange={e => setBaptismForm(p => ({ ...p, location: e.target.value }))} /></div>
+                          <div><Label>Officiant</Label><Input placeholder="Who performed the baptism?" className="mt-1" value={baptismForm.officiant} onChange={e => setBaptismForm(p => ({ ...p, officiant: e.target.value }))} /></div>
+                          <Button className="w-full" onClick={handleBaptismRegister} disabled={baptismSubmitting}>
+                            {baptismSubmitting ? 'Registering...' : 'Register Baptism'}
+                          </Button>
+                        </div>}
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
             </div>
@@ -1530,35 +1550,35 @@ const CreatorsCalendar = () => {
                         <p className="italic text-sm">"{scripture.verse}"</p>
                         <p className="text-xs text-purple-400 mt-2">{scripture.reference}</p>
                       </div>)}
-                     </div>
-                   </ScrollArea>
-                 </CardContent>
-               </Card>
-               <Card className="bg-card/50 border-border/50 md:col-span-2">
-                 <CardHeader>
-                   <CardTitle className="flex items-center gap-3 text-green-400"><Calendar className="w-6 h-6" />Scriptures by Month</CardTitle>
-                 </CardHeader>
-                 <CardContent>
-                   <ScrollArea className="h-[400px] pr-4">
-                     <div className="space-y-6">
-                       {scripturesByMonth.map((monthData, i) => (
-                         <div key={i} className="border border-green-500/20 rounded-lg p-4 bg-green-500/5">
-                           <h4 className="font-bold text-green-400 mb-3">{monthData.month}</h4>
-                           <ul className="space-y-1">
-                             {monthData.scriptures.map((scripture, j) => (
-                               <li key={j} className="text-sm text-muted-foreground">
-                                 • {scripture}
-                               </li>
-                             ))}
-                           </ul>
-                         </div>
-                       ))}
-                     </div>
-                   </ScrollArea>
-                 </CardContent>
-               </Card>
-             </div>
-           </TabsContent>
+                    </div>
+                  </ScrollArea>
+                </CardContent>
+              </Card>
+              <Card className="bg-card/50 border-border/50 md:col-span-2">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-3 text-green-400"><Calendar className="w-6 h-6" />Scriptures by Month</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <ScrollArea className="h-[400px] pr-4">
+                    <div className="space-y-6">
+                      {scripturesByMonth.map((monthData, i) => (
+                        <div key={i} className="border border-green-500/20 rounded-lg p-4 bg-green-500/5">
+                          <h4 className="font-bold text-green-400 mb-3">{monthData.month}</h4>
+                          <ul className="space-y-1">
+                            {monthData.scriptures.map((scripture, j) => (
+                              <li key={j} className="text-sm text-muted-foreground">
+                                • {scripture}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      ))}
+                    </div>
+                  </ScrollArea>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
 
           {/* Reminders Tab */}
           <TabsContent value="reminders">
@@ -1624,26 +1644,26 @@ const CreatorsCalendar = () => {
                                 <div className="p-2 rounded-lg bg-background/50 border border-border/30">
                                   {item.type === 'prayer' ? <Sunrise className="w-5 h-5 text-orange-400" /> : <Star className="w-5 h-5 text-amber-400" />}
                                 </div>
-                                 <div>
-                                   <h4 className="font-bold text-sm">{item.name}</h4>
-                                   <p className="text-[10px] text-muted-foreground uppercase tracking-wider">{item.type}</p>
-                                   {item.details && <p className="text-[9px] text-muted-foreground">{item.details}</p>}
-                                 </div>
+                                <div>
+                                  <h4 className="font-bold text-sm">{item.name}</h4>
+                                  <p className="text-[10px] text-muted-foreground uppercase tracking-wider">{item.type}</p>
+                                  {item.details && <p className="text-[9px] text-muted-foreground">{item.details}</p>}
+                                </div>
                               </div>
                               <div className="flex items-center gap-4">
-                                  <div className="flex items-center gap-2">
-                                    <span className="text-xs text-muted-foreground">Remind:</span>
-                                    <ReminderCheckboxDropdown
-                                      itemName={item.name}
-                                      currentDaysBefore={reminder?.remind_days_before}
-                                      currentRemindTimes={(reminder as any)?.remind_times}
-                                      reminderEnabled={reminder?.reminder_enabled || false}
-                                      onChange={(daysBefore, enabled, remindTimes) => handleIndividualSwitch(item.name, daysBefore, enabled, { remind_times: remindTimes })}
-                                    />
-                                  </div>
+                                <div className="flex items-center gap-2">
+                                  <span className="text-xs text-muted-foreground">Remind:</span>
+                                  <ReminderCheckboxDropdown
+                                    itemName={item.name}
+                                    currentDaysBefore={reminder?.remind_days_before}
+                                    currentRemindTimes={(reminder as any)?.remind_times}
+                                    reminderEnabled={reminder?.reminder_enabled || false}
+                                    onChange={(daysBefore, enabled, remindTimes) => handleIndividualSwitch(item.name, daysBefore, enabled, { remind_times: remindTimes })}
+                                  />
+                                </div>
                                 <Switch
                                   checked={reminder?.reminder_enabled || false}
-                                    onCheckedChange={(checked) => handleIndividualSwitch(item.name, reminder?.remind_days_before || 1, checked, {})}
+                                  onCheckedChange={(checked) => handleIndividualSwitch(item.name, reminder?.remind_days_before || 1, checked, {})}
                                 />
                               </div>
                             </div>
@@ -1662,16 +1682,16 @@ const CreatorsCalendar = () => {
                                 <div key={channel.label} className="flex flex-col items-center gap-1.5 p-2 rounded-lg bg-background/40 border border-border/5 hover:bg-background/60 transition-colors">
                                   <channel.icon className="w-3.5 h-3.5 text-muted-foreground" />
                                   <span className="text-[10px] text-muted-foreground font-medium">{channel.label}</span>
-                                   <Switch
-                                     className="scale-75"
-                                     checked={reminder ? Boolean((reminder as any)[channel.key]) : false}
-                                      onCheckedChange={(checked) => handleIndividualSwitch(
-                                        item.name,
-                                        reminder?.remind_days_before || 1,
-                                        reminder?.reminder_enabled !== false,
-                                        { [channel.key]: checked }
-                                      )}
-                                   />
+                                  <Switch
+                                    className="scale-75"
+                                    checked={reminder ? Boolean((reminder as any)[channel.key]) : false}
+                                    onCheckedChange={(checked) => handleIndividualSwitch(
+                                      item.name,
+                                      reminder?.remind_days_before || 1,
+                                      reminder?.reminder_enabled !== false,
+                                      { [channel.key]: checked }
+                                    )}
+                                  />
                                 </div>
                               ))}
                             </div>
@@ -1738,22 +1758,22 @@ const CreatorsCalendar = () => {
                     </div>
                   ) : (
                     <div className="space-y-4">
-                    {trumpetsRemindersList.map((item, idx) => {
-                      const reminderName = `Trumpet: ${item.name}`;
-                      const reminder = getOptimisticReminder(reminderName);
-                      return (
-                        <div key={idx} className={`p-4 rounded-xl border transition-all ${reminder?.reminder_enabled ? 'bg-amber-500/5 border-amber-500/20' : 'bg-card/50 border-border/30'}`}>
-                          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
-                            <div className="flex items-center gap-3">
-                              <div className="p-2 rounded-lg bg-background/50 border border-border/30">
-                                <Megaphone className="w-5 h-5 text-amber-500" />
+                      {trumpetsRemindersList.map((item, idx) => {
+                        const reminderName = `Trumpet: ${item.name}`;
+                        const reminder = getOptimisticReminder(reminderName);
+                        return (
+                          <div key={idx} className={`p-4 rounded-xl border transition-all ${reminder?.reminder_enabled ? 'bg-amber-500/5 border-amber-500/20' : 'bg-card/50 border-border/30'}`}>
+                            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+                              <div className="flex items-center gap-3">
+                                <div className="p-2 rounded-lg bg-background/50 border border-border/30">
+                                  <Megaphone className="w-5 h-5 text-amber-500" />
+                                </div>
+                                <div>
+                                  <h4 className="font-bold text-sm">{item.name}</h4>
+                                  <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Blowing the Trumpets Reminder</p>
+                                </div>
                               </div>
-                              <div>
-                                <h4 className="font-bold text-sm">{item.name}</h4>
-                                <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Blowing the Trumpets Reminder</p>
-                              </div>
-                            </div>
-                            <div className="flex items-center gap-3">
+                              <div className="flex items-center gap-3">
                                 <div className="flex items-center gap-2">
                                   <span className="text-xs text-muted-foreground">Remind:</span>
                                   <ReminderCheckboxDropdown
@@ -1766,37 +1786,37 @@ const CreatorsCalendar = () => {
                                 </div>
                                 <Switch
                                   checked={reminder?.reminder_enabled || false}
-                                   onCheckedChange={(checked) => handleIndividualSwitch(reminderName, 0, checked, { reminder_type: 'trumpet' })}
-                                />
-                            </div>
-                          </div>
-
-                          {/* Notification Channels */}
-                          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3 pt-4 border-t border-border/10">
-                            {[
-                              { icon: MailIcon, label: 'Email', key: 'email_enabled' },
-                              { icon: Smartphone, label: 'SMS', key: 'sms_enabled' },
-                              { icon: MessageCircle, label: 'WhatsApp', key: 'whatsapp_enabled' },
-                              { icon: SendIcon, label: 'Telegram', key: 'telegram_enabled' },
-                              { icon: Share2, label: 'Botim', key: 'botim_enabled' },
-                              { icon: Printer, label: 'Fax', key: 'fax_enabled' },
-                              { icon: Sparkles, label: 'Hologram', key: 'hologram_enabled' },
-                            ].map((channel) => (
-                              <div key={channel.label} className="flex flex-col items-center gap-1.5 p-2 rounded-lg bg-background/40 border border-border/5 hover:bg-background/60 transition-colors">
-                                <channel.icon className="w-3.5 h-3.5 text-muted-foreground" />
-                                <span className="text-[10px] text-muted-foreground font-medium">{channel.label}</span>
-                                <Switch
-                                  className="scale-75"
-                                  checked={reminder ? Boolean((reminder as any)[channel.key]) : false}
-                                    onCheckedChange={(checked) => handleIndividualSwitch(reminderName, 0, reminder?.reminder_enabled || false, { [channel.key]: checked, reminder_type: 'trumpet' })}
+                                  onCheckedChange={(checked) => handleIndividualSwitch(reminderName, 0, checked, { reminder_type: 'trumpet' })}
                                 />
                               </div>
-                            ))}
+                            </div>
+
+                            {/* Notification Channels */}
+                            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3 pt-4 border-t border-border/10">
+                              {[
+                                { icon: MailIcon, label: 'Email', key: 'email_enabled' },
+                                { icon: Smartphone, label: 'SMS', key: 'sms_enabled' },
+                                { icon: MessageCircle, label: 'WhatsApp', key: 'whatsapp_enabled' },
+                                { icon: SendIcon, label: 'Telegram', key: 'telegram_enabled' },
+                                { icon: Share2, label: 'Botim', key: 'botim_enabled' },
+                                { icon: Printer, label: 'Fax', key: 'fax_enabled' },
+                                { icon: Sparkles, label: 'Hologram', key: 'hologram_enabled' },
+                              ].map((channel) => (
+                                <div key={channel.label} className="flex flex-col items-center gap-1.5 p-2 rounded-lg bg-background/40 border border-border/5 hover:bg-background/60 transition-colors">
+                                  <channel.icon className="w-3.5 h-3.5 text-muted-foreground" />
+                                  <span className="text-[10px] text-muted-foreground font-medium">{channel.label}</span>
+                                  <Switch
+                                    className="scale-75"
+                                    checked={reminder ? Boolean((reminder as any)[channel.key]) : false}
+                                    onCheckedChange={(checked) => handleIndividualSwitch(reminderName, 0, reminder?.reminder_enabled || false, { [channel.key]: checked, reminder_type: 'trumpet' })}
+                                  />
+                                </div>
+                              ))}
+                            </div>
                           </div>
-                        </div>
-                      );
-                    })}
-                  </div>
+                        );
+                      })}
+                    </div>
                   )}
                 </CardContent>
               </Card>
@@ -1867,20 +1887,20 @@ const CreatorsCalendar = () => {
                                 </div>
                               </div>
                               <div className="flex items-center gap-4">
-                                  <div className="flex items-center gap-2">
-                                    <span className="text-xs text-muted-foreground">Remind:</span>
-                                    <ReminderCheckboxDropdown
-                                      itemName={item.name}
-                                      currentDaysBefore={reminder?.remind_days_before}
-                                      currentRemindTimes={(reminder as any)?.remind_times}
-                                      reminderEnabled={reminder?.reminder_enabled || false}
-                                      onChange={(daysBefore, enabled, remindTimes) => handleIndividualSwitch(item.name, daysBefore, enabled, { remind_times: remindTimes })}
-                                    />
-                                  </div>
-                                 <Switch
-                                   checked={reminder?.reminder_enabled || false}
-                                    onCheckedChange={(checked) => handleIndividualSwitch(item.name, reminder?.remind_days_before || 1, checked, {})}
-                                 />
+                                <div className="flex items-center gap-2">
+                                  <span className="text-xs text-muted-foreground">Remind:</span>
+                                  <ReminderCheckboxDropdown
+                                    itemName={item.name}
+                                    currentDaysBefore={reminder?.remind_days_before}
+                                    currentRemindTimes={(reminder as any)?.remind_times}
+                                    reminderEnabled={reminder?.reminder_enabled || false}
+                                    onChange={(daysBefore, enabled, remindTimes) => handleIndividualSwitch(item.name, daysBefore, enabled, { remind_times: remindTimes })}
+                                  />
+                                </div>
+                                <Switch
+                                  checked={reminder?.reminder_enabled || false}
+                                  onCheckedChange={(checked) => handleIndividualSwitch(item.name, reminder?.remind_days_before || 1, checked, {})}
+                                />
                               </div>
                             </div>
 
@@ -1898,16 +1918,16 @@ const CreatorsCalendar = () => {
                                 <div key={channel.label} className="flex flex-col items-center gap-1.5 p-2 rounded-lg bg-background/40 border border-border/5 hover:bg-background/60 transition-colors">
                                   <channel.icon className="w-3.5 h-3.5 text-muted-foreground" />
                                   <span className="text-[10px] text-muted-foreground font-medium">{channel.label}</span>
-                                   <Switch
-                                     className="scale-75"
-                                     checked={reminder ? Boolean((reminder as any)[channel.key]) : false}
-                                      onCheckedChange={(checked) => handleIndividualSwitch(
-                                        item.name,
-                                        reminder?.remind_days_before || 1,
-                                        reminder?.reminder_enabled !== false,
-                                        { [channel.key]: checked }
-                                      )}
-                                   />
+                                  <Switch
+                                    className="scale-75"
+                                    checked={reminder ? Boolean((reminder as any)[channel.key]) : false}
+                                    onCheckedChange={(checked) => handleIndividualSwitch(
+                                      item.name,
+                                      reminder?.remind_days_before || 1,
+                                      reminder?.reminder_enabled !== false,
+                                      { [channel.key]: checked }
+                                    )}
+                                  />
                                 </div>
                               ))}
                             </div>
