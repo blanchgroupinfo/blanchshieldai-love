@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import NavigationHeader from "@/components/NavigationHeader";
 import Footer from "@/components/Footer";
@@ -8,9 +8,14 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+
 import {
   Video, Radio, Tv, Calendar, Users, MessageSquare, Play, Pause,
-  Volume2, Maximize, Heart, Share2, BookOpen, Sun, Clock, Mic
+  Volume2, Maximize, Heart, Share2, BookOpen, Sun, Clock, Mic, Sparkles,
+  Droplets, FileText, CheckCircle
 } from "lucide-react";
 
 const liveStreams = [
@@ -32,6 +37,101 @@ const pastBroadcasts = [
 const HouseOfPrayerBroadcast = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [prayerRequest, setPrayerRequest] = useState("");
+  const [name, setName] = useState("");
+  const [hebrewName, setHebrewName] = useState("");
+  const [community, setCommunity] = useState("hebrewIsraelite");
+  const [requestType, setRequestType] = useState("healing");
+  const [user, setUser] = useState(null);
+  const [prayerSubmitting, setPrayerSubmitting] = useState(false);
+  const [baptismSubmitting, setBaptismSubmitting] = useState(false);
+  const [baptismForm, setBaptismForm] = useState({
+    fullName: '',
+    hebrewName: '',
+    desiredDate: '',
+    location: ''
+  });
+  const { toast } = useToast();
+
+
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      setUser(session?.user ?? null);
+    });
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+    });
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const handlePrayerSubmit = async () => {
+    if (!user) {
+      toast({ title: "Sign In Required", description: "Please sign in to submit a prayer request.", variant: "destructive" });
+      return;
+    }
+    if (!name.trim() || !prayerRequest.trim()) {
+      toast({ title: "Missing Fields", description: "Please fill in your name and prayer request.", variant: "destructive" });
+      return;
+    }
+    setPrayerSubmitting(true);
+
+    const { error } = await supabase.from('prayer_requests').insert({
+      user_id: user.id,
+      full_name: name,
+      hebrew_name: hebrewName || null,
+      community_nation: community || null,
+      prayer_message: prayerRequest,
+      request_type: requestType || null,
+      source_page: 'House of Prayer Broadcast'
+    });
+
+    setPrayerSubmitting(false);
+
+    if (error) {
+      console.error('Prayer submit error:', error);
+      toast({ title: "Error", description: "Failed to submit prayer request.", variant: "destructive" });
+    } else {
+      toast({ title: "Prayer Request Submitted", description: "Your prayer request has been received. This is a House of Prayer for ALL People. May Most High AHAYAH hear your cry." });
+      setName("");
+      setHebrewName("");
+      setCommunity("hebrew-israelites");
+      setPrayerRequest("");
+      setRequestType("healing");
+    }
+  };
+
+  const handleBaptismSubmit = async () => {
+    if (!user) {
+      toast({ title: "Sign In Required", description: "Please sign in to submit a baptism request.", variant: "destructive" });
+      return;
+    }
+    if (!baptismForm.fullName.trim()) {
+      toast({ title: "Missing Fields", description: "Please enter your name.", variant: "destructive" });
+      return;
+    }
+    setBaptismSubmitting(true);
+
+    const { error } = await supabase.from('baptism_registrations').insert({
+      user_id: user.id,
+      full_name: baptismForm.fullName,
+      hebrew_name: baptismForm.hebrewName || null,
+      date_of_baptism: baptismForm.desiredDate || null,
+      location_of_baptism: baptismForm.location || null,
+      registration_type: 'want_baptism',
+      source_page: 'House of Prayer Broadcast'
+    });
+
+    setBaptismSubmitting(false);
+
+    if (error) {
+      console.error('Baptism submit error:', error);
+      toast({ title: "Error", description: "Failed to submit.", variant: "destructive" });
+    } else {
+      toast({ title: "Request Submitted", description: "Your baptism interest has been registered. We will reach out to you." });
+      setBaptismForm({ fullName: '', hebrewName: '', desiredDate: '', location: '' });
+    }
+  };
+
+
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -100,10 +200,11 @@ const HouseOfPrayerBroadcast = () => {
           </motion.div>
 
           <Tabs defaultValue="schedule" className="max-w-5xl mx-auto">
-            <TabsList className="grid w-full grid-cols-4 bg-card/50">
+            <TabsList className="grid w-full grid-cols-5 bg-card/50">
               <TabsTrigger value="schedule"><Calendar className="w-4 h-4 mr-2" /> Schedule</TabsTrigger>
               <TabsTrigger value="archive"><Video className="w-4 h-4 mr-2" /> Archive</TabsTrigger>
               <TabsTrigger value="prayer"><BookOpen className="w-4 h-4 mr-2" /> Prayer</TabsTrigger>
+              <TabsTrigger value="baptism"><Sparkles className="w-4 h-4 mr-2" /> Baptism</TabsTrigger>
               <TabsTrigger value="community"><Users className="w-4 h-4 mr-2" /> Community</TabsTrigger>
             </TabsList>
 
@@ -171,20 +272,81 @@ const HouseOfPrayerBroadcast = () => {
                 <Card className="bg-card/30 border-border/50">
                   <CardContent className="p-6">
                     <h3 className="text-lg font-display font-semibold text-foreground mb-4 flex items-center gap-2">
-                      <Sun className="w-5 h-5 text-primary" /> Submit a Prayer Request
+                      <Heart className="w-5 h-5 text-primary" /> Submit Your Prayer Request
                     </h3>
                     <p className="text-sm text-muted-foreground mb-4">
-                      Submit your prayer requests to be included in our live broadcast prayer sessions.
+                      This is a House of Prayer for All People. Every request is honored and will be included in our global prayer watch.
                     </p>
-                    <Textarea
-                      placeholder="Write your prayer request here..."
-                      value={prayerRequest}
-                      onChange={(e) => setPrayerRequest(e.target.value)}
-                      rows={5}
-                      className="mb-4 bg-background/50"
-                    />
-                    <Button variant="shield" className="w-full" disabled={!prayerRequest.trim()}>
-                      <BookOpen className="w-4 h-4 mr-2" /> Submit Prayer Request
+                    <div className="mb-3">
+                      <label className="text-sm font-medium text-foreground mb-1 block">Your Name</label>
+                      <Input
+                        placeholder="Enter your name..."
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        className="bg-background/50"
+                      />
+                    </div>
+                    <div className="mb-3">
+                      <label className="text-sm font-medium text-foreground mb-1 block">Lashawan Qadash Hebrew Name</label>
+                      <Input
+                        placeholder="Enter your Hebrew name (optional)..."
+                        value={hebrewName}
+                        onChange={(e) => setHebrewName(e.target.value)}
+                        className="bg-background/50"
+                      />
+                    </div>
+                    <div className="mb-3">
+                      <label className="text-sm font-medium text-foreground mb-1 block">Your Community / Nation</label>
+                      <Select value={community} onValueChange={setCommunity}>
+                        <SelectTrigger className="bg-background/50">
+                          <SelectValue placeholder="Select your community..." />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="hebrew-israelites">Hebrew Israelites</SelectItem>
+                          <SelectItem value="indigenous">First Nations / Indigenous</SelectItem>
+                          <SelectItem value="african">African Diaspora</SelectItem>
+                          <SelectItem value="sovereign">Sovereign Nations</SelectItem>
+                          <SelectItem value="global">Global Believers</SelectItem>
+                          <SelectItem value="other">Other / All Peoples</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="mb-3">
+                      <label className="text-sm font-medium text-foreground mb-1 block">Prayer Request</label>
+                      <Textarea
+                        placeholder="Share your heart's cry, your needs, your thanksgivings..."
+                        value={prayerRequest}
+                        onChange={(e) => setPrayerRequest(e.target.value)}
+                        rows={6}
+                        className="bg-background/50"
+                      />
+                    </div>
+                    <div className="mb-4">
+                      <label className="text-sm font-medium text-foreground mb-1 block">Request Type</label>
+                      <Select value={requestType} onValueChange={setRequestType}>
+                        <SelectTrigger className="bg-background/50">
+                          <SelectValue placeholder="Select request type..." />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="healing">Healing & Health</SelectItem>
+                          <SelectItem value="protection">Protection & Safety</SelectItem>
+                          <SelectItem value="provision">Provision & Sustenance</SelectItem>
+                          <SelectItem value="guidance">Guidance & Wisdom</SelectItem>
+                          <SelectItem value="deliverance">Deliverance & Freedom</SelectItem>
+                          <SelectItem value="thanksgiving">Thanksgiving & Praise</SelectItem>
+                          <SelectItem value="nation">For Your Nation / People</SelectItem>
+                          <SelectItem value="global">Global Prayer</SelectItem>
+                          <SelectItem value="general">General Prayer</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <Button
+                      variant="shield"
+                      className="w-full"
+                      disabled={!name.trim() || !prayerRequest.trim() || prayerSubmitting}
+                      onClick={handlePrayerSubmit}
+                    >
+                      <Heart className="w-4 h-4 mr-2" /> {prayerSubmitting ? 'Submitting...' : 'Submit Prayer Request'}
                     </Button>
                   </CardContent>
                 </Card>
@@ -193,8 +355,8 @@ const HouseOfPrayerBroadcast = () => {
                     <h3 className="text-lg font-display font-semibold text-foreground mb-4 flex items-center gap-2">
                       <Mic className="w-5 h-5 text-primary" /> Prayer Wall
                     </h3>
-                    <div className="space-y-3">
-                      {["Pray for healing and restoration of our community", "Pray for wisdom in sovereign governance", "Pray for protection over the Royal Priesthood", "Pray for the youth to know their identity"].map((prayer, i) => (
+                     <div className="space-y-3">
+                      {["Pray for healing and restoration of our community", "Pray for wisdom in sovereign governance", "Pray for protection over the Royal Priesthood", "Pray for the youth to know their identity", "Pray for the peace of Jerusalem and all Israel", "Pray for provision and sustenance for families in need", "Pray for spiritual awakening and return to the ancient paths"].map((prayer, i) => (
                         <div key={i} className="p-3 rounded-lg bg-background/50 border border-border/30">
                           <p className="text-sm text-foreground/80 italic">"{prayer}"</p>
                           <div className="flex items-center gap-2 mt-2">
@@ -203,6 +365,153 @@ const HouseOfPrayerBroadcast = () => {
                           </div>
                         </div>
                       ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </TabsContent>
+
+            {/* Baptism Tab */}
+            <TabsContent value="baptism" className="mt-6">
+              <div className="grid md:grid-cols-3 gap-6">
+                {/* What is Baptism */}
+                <Card className="bg-card/30 border-border/50">
+                  <CardContent className="p-6">
+                    <h3 className="text-lg font-display font-semibold text-foreground mb-4 flex items-center gap-2">
+                      <Droplets className="w-5 h-5 text-primary" /> What is Baptism?
+                    </h3>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      Baptism is an act of obedience symbolizing the believer's faith in the death, burial, and resurrection of YASHAYA HA'MASHIACH. It represents the washing away of sin and the adoption into the Royal Priesthood.
+                    </p>
+                    <div className="space-y-2 text-sm text-muted-foreground">
+                      <div className="flex items-start gap-2">
+                        <CheckCircle className="w-4 h-4 text-primary mt-0.5" />
+                        <span>Submersion in living waters (Mikveh)</span>
+                      </div>
+                      <div className="flex items-start gap-2">
+                        <CheckCircle className="w-4 h-4 text-primary mt-0.5" />
+                        <span>In the name of YASHAYA HAMASHIACH</span>
+                      </div>
+                      <div className="flex items-start gap-2">
+                        <CheckCircle className="w-4 h-4 text-primary mt-0.5" />
+                        <span>Entry into the Royal Priesthood</span>
+                      </div>
+                      <div className="flex items-start gap-2">
+                        <CheckCircle className="w-4 h-4 text-primary mt-0.5" />
+                        <span>Covenant of the Abrahamic Promise</span>
+                      </div>
+                    </div>
+                    <div className="mt-4 p-3 rounded-lg bg-primary/10 border border-primary/20">
+                      <p className="text-xs text-muted-foreground italic">
+                        "Go therefore and make disciples of all nations, baptizing them in the name of the Father and of the Son and of the Holy Spirit." — Matthew 28:19
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* I Want to Get Baptized */}
+                <Card className="bg-card/30 border-border/50">
+                  <CardContent className="p-6">
+                    <h3 className="text-lg font-display font-semibold text-foreground mb-4 flex items-center gap-2">
+                      <Sparkles className="w-5 h-5 text-primary" /> I Want to Get Baptized
+                    </h3>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      Begin your journey of faith through baptism in the name of YASHAYA HA'MASHIACH.
+                    </p>
+                    <div className="space-y-3">
+                      <div>
+                        <label className="text-sm font-medium text-foreground mb-1 block">Full Name</label>
+                        <Input
+                          placeholder="Enter your name..."
+                          className="bg-background/50"
+                          value={baptismForm.fullName}
+                          onChange={(e) => setBaptismForm(p => ({ ...p, fullName: e.target.value }))}
+                        />
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium text-foreground mb-1 block">Lashawan Qadash Hebrew Name</label>
+                        <Input
+                          placeholder="Hebrew name (optional)..."
+                          className="bg-background/50"
+                          value={baptismForm.hebrewName}
+                          onChange={(e) => setBaptismForm(p => ({ ...p, hebrewName: e.target.value }))}
+                        />
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium text-foreground mb-1 block">Date of Baptism</label>
+                        <Input
+                          type="date"
+                          placeholder="mm/dd/yyyy"
+                          className="bg-background/50"
+                          value={baptismForm.desiredDate}
+                          onChange={(e) => setBaptismForm(p => ({ ...p, desiredDate: e.target.value }))}
+                        />
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium text-foreground mb-1 block">Location of Baptism</label>
+                        <Input
+                          placeholder="Where do you want to get Baptize? Do you want to come to Jordan"
+                          className="bg-background/50"
+                          value={baptismForm.location}
+                          onChange={(e) => setBaptismForm(p => ({ ...p, location: e.target.value }))}
+                        />
+                      </div>
+                      <Button variant="shield" className="w-full mt-2" disabled={!baptismForm.fullName.trim() || baptismSubmitting} onClick={handleBaptismSubmit}>
+                        <Sparkles className="w-4 h-4 mr-2" /> {baptismSubmitting ? 'Submitting...' : 'Submit Baptism Request'}
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Register a Completed Baptism */}
+                <Card className="bg-card/30 border-border/50">
+                  <CardContent className="p-6">
+                    <h3 className="text-lg font-display font-semibold text-foreground mb-4 flex items-center gap-2">
+                      <CheckCircle className="w-5 h-5 text-emerald-400" /> Register a Completed Baptism
+                    </h3>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      Record your completed baptism in the registry for the congregation and community records.
+                    </p>
+                    <div className="space-y-3">
+                      <div>
+                        <label className="text-sm font-medium text-foreground mb-1 block">Full Name</label>
+                        <Input
+                          placeholder="Enter your name..."
+                          className="bg-background/50"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium text-foreground mb-1 block">Lashawan Qadash Hebrew Name</label>
+                        <Input
+                          placeholder="Hebrew name (optional)..."
+                          className="bg-background/50"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium text-foreground mb-1 block">Date of Baptism</label>
+                        <Input
+                          type="date"
+                          placeholder="mm/dd/yyyy"
+                          className="bg-background/50"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium text-foreground mb-1 block">Location of Baptism</label>
+                        <Input
+                          placeholder="Where were you baptized?"
+                          className="bg-background/50"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium text-foreground mb-1 block">Minister/Officer</label>
+                        <Input
+                          placeholder="Name of the minister who performed baptism"
+                          className="bg-background/50"
+                        />
+                      </div>
+                      <Button variant="outline" className="w-full mt-2 border-emerald-500/50 text-emerald-400 hover:bg-emerald-500/10">
+                        <FileText className="w-4 h-4 mr-2" /> Register Completed Baptism
+                      </Button>
                     </div>
                   </CardContent>
                 </Card>
