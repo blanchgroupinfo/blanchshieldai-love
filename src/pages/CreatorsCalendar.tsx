@@ -584,12 +584,10 @@ const CreatorsCalendar = () => {
 
     const { error } = await supabase.from('prayer_requests').insert({
       user_id: user.id,
-      full_name: name,
-      hebrew_name: hebrewName || null,
-      community_nation: community || null,
-      prayer_message: prayerRequest,
-      request_type: requestType || null,
-      source_page: 'Creators Calendar'
+      full_name: prayerForm.fullName,
+      hebrew_name: prayerForm.hebrewName || null,
+      prayer_message: prayerForm.message,
+      request_type: prayerForm.requestType || 'healing',
     });
 
     setPrayerSubmitting(false);
