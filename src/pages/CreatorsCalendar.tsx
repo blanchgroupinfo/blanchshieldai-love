@@ -21,11 +21,11 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { calendarMonths, hebrewDayNames, feasts, calendarScriptures, getFeastsForDay, getGregorianDate, formatGregorianDate, getHebrewDayName, isSabbath, getYearStartDate, getSabbathDays, getCreatorDateForGregorian, type Feast } from "@/data/creatorsCalendar";
-const scripturesByMonth: Record<number, typeof calendarScriptures> = calendarScriptures.reduce((acc, s: any) => {
-  const m = s.month ?? 0;
-  (acc[m] = acc[m] || []).push(s);
-  return acc;
-}, {} as Record<number, typeof calendarScriptures>);
+const scripturesByMonth: { month: string; scriptures: string[] }[] = calendarMonths.map((m, idx) => {
+  const start = idx * Math.ceil(calendarScriptures.length / 12);
+  const slice = calendarScriptures.slice(start, start + Math.ceil(calendarScriptures.length / 12));
+  return { month: m.name, scriptures: slice.map(s => `${s.verse} (${s.reference})`) };
+});
 import { useSunTimes } from "@/hooks/useSunTimes";
 import { HolyDayReminder, useCalendarEvents } from "@/hooks/useCalendarEvents";
 import { useToast } from "@/hooks/use-toast";
