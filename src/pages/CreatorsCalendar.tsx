@@ -20,7 +20,12 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { calendarMonths, hebrewDayNames, feasts, calendarScriptures, scripturesByMonth, getFeastsForDay, getGregorianDate, formatGregorianDate, getHebrewDayName, isSabbath, getYearStartDate, getSabbathDays, getCreatorDateForGregorian, type Feast } from "@/data/creatorsCalendar";
+import { calendarMonths, hebrewDayNames, feasts, calendarScriptures, getFeastsForDay, getGregorianDate, formatGregorianDate, getHebrewDayName, isSabbath, getYearStartDate, getSabbathDays, getCreatorDateForGregorian, type Feast } from "@/data/creatorsCalendar";
+const scripturesByMonth: { month: string; scriptures: string[] }[] = calendarMonths.map((m, idx) => {
+  const start = idx * Math.ceil(calendarScriptures.length / 12);
+  const slice = calendarScriptures.slice(start, start + Math.ceil(calendarScriptures.length / 12));
+  return { month: m.hebrewName, scriptures: slice.map(s => `${s.verse} (${s.reference})`) };
+});
 import { useSunTimes } from "@/hooks/useSunTimes";
 import { HolyDayReminder, useCalendarEvents } from "@/hooks/useCalendarEvents";
 import { useToast } from "@/hooks/use-toast";
@@ -579,12 +584,10 @@ const CreatorsCalendar = () => {
 
     const { error } = await supabase.from('prayer_requests').insert({
       user_id: user.id,
-      full_name: name,
-      hebrew_name: hebrewName || null,
-      community_nation: community || null,
-      prayer_message: prayerRequest,
-      request_type: requestType || null,
-      source_page: 'Creators Calendar'
+      full_name: prayerForm.fullName,
+      hebrew_name: prayerForm.hebrewName || null,
+      prayer_message: prayerForm.message,
+      request_type: prayerForm.requestType || 'healing',
     });
 
     setPrayerSubmitting(false);
