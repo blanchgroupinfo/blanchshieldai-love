@@ -206,7 +206,7 @@ export const useCalendarEvents = (year: number) => {
   }, [user, toast]);
 
   // Create or update reminder
-  const setReminder = useCallback(async (holyDayName: string, remindOptions: string[], enabled: boolean, options: Partial<HolyDayReminder> = {}) => {
+  const setReminder = useCallback(async (holyDayName: string, remindOptions: number | string[], enabled: boolean, options: Partial<HolyDayReminder> = {}) => {
     if (!user) {
       toast({
         title: "Authentication Required",
@@ -216,6 +216,7 @@ export const useCalendarEvents = (year: number) => {
       return null;
     }
 
+    const daysCount = typeof remindOptions === 'number' ? remindOptions : remindOptions.length;
     try {
       // Check if reminder exists
       const existing = reminders.find(r => r.holy_day_name === holyDayName);
@@ -224,7 +225,7 @@ export const useCalendarEvents = (year: number) => {
         const { data, error } = await supabase
           .from('holy_day_reminders')
           .update({
-            remind_days_before: remindOptions.length,
+            remind_days_before: daysCount,
             reminder_enabled: enabled,
             ...options
           })
@@ -242,7 +243,7 @@ export const useCalendarEvents = (year: number) => {
           .insert({
             user_id: user.id,
             holy_day_name: holyDayName,
-            remind_days_before: remindOptions.length,
+            remind_days_before: daysCount,
             reminder_enabled: enabled,
           })
           .select()
@@ -254,7 +255,7 @@ export const useCalendarEvents = (year: number) => {
         if (!options.reminder_type || options.reminder_type === 'holy_day') {
           toast({
             title: "Reminder Set",
-            description: `You will be reminded ${remindOptions.length} day(s) before ${holyDayName}`,
+            description: `You will be reminded ${daysCount} day(s) before ${holyDayName}`,
           });
         } else {
           toast({
