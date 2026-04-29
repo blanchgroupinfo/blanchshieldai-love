@@ -861,6 +861,14 @@ const CreatorsCalendar = () => {
             <TabsTrigger value="reminders" className="gap-2"><Bell className="w-4 h-4" />Reminders</TabsTrigger>
           </TabsList>
 
+          {/* Insights Widget */}
+          <div className="mb-4">
+            <CalendarInsightsWidget
+              scripturesByMonth={scripturesByMonth}
+              reminders={reminders as never}
+            />
+          </div>
+
           {/* Monthly Calendar Tab */}
           <TabsContent value="monthly">
             <Card className="bg-card/50 border-border/50">
