@@ -534,6 +534,52 @@ const AgentDetail = ({ agentId }: { agentId: string }) => {
                 <Bot className="w-4 h-4" /> Create Custom Agent
               </Button>
             </div>
+            <div className="mt-6">
+              <div className="flex items-center gap-2 mb-3">
+                <Label className="text-sm font-semibold">
+                  Watchman Validator Types
+                </Label>
+                <ShieldAIInfoPopup />
+              </div>
+              <div className="flex items-center gap-2 mb-3">
+                <Checkbox
+                  id="watchman-select-all"
+                  checked={selectedWatchmen.length === watchmanTypes.length}
+                  onCheckedChange={(checked) => {
+                    if (checked) {
+                      setSelectedWatchmen(watchmanTypes);
+                    } else {
+                      setSelectedWatchmen([]);
+                    }
+                  }}
+                  className="border-primary"
+                />
+                <Label
+                  htmlFor="watchman-select-all"
+                  className="text-sm font-semibold cursor-pointer"
+                >
+                  Select All
+                </Label>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                {watchmanTypes.map((type) => (
+                  <div key={type} className="flex items-center space-x-2">
+                    <Checkbox
+                      id={`watchman-${type}`}
+                      checked={selectedWatchmen.includes(type)}
+                      onCheckedChange={(checked) => toggleWatchman(type)}
+                      className="border-primary"
+                    />
+                    <Label
+                      htmlFor={`watchman-${type}`}
+                      className="text-sm font-medium leading-none cursor-pointer"
+                    >
+                      {type}
+                    </Label>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -558,6 +604,70 @@ const AgentDetail = ({ agentId }: { agentId: string }) => {
             </div>
           ))}
         </div>
+      </div>
+
+      {/* Divine Mission - Purpose */}
+      <div className="bg-card/30 backdrop-blur-sm border border-border/50 rounded-xl p-6 mb-8">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xl font-display font-semibold text-foreground flex items-center gap-2">
+            <Crown className="w-5 h-5 text-primary" /> Divine Mission - Purpose
+          </h2>
+          <div className="flex gap-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-8 text-xs"
+              onClick={() => handleAdd("Divine Mission")}
+            >
+              + Add
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-8 text-xs"
+              onClick={() => handleEdit("Divine Mission", meta?.mission || "")}
+            >
+              <Edit className="w-4 h-4 mr-1" /> Edit
+            </Button>
+          </div>
+        </div>
+        <p className="text-muted-foreground font-body leading-relaxed">
+          {meta.mission}
+        </p>
+
+        {customItems["Divine Mission"]?.map((item) => (
+          <div
+            key={item.id}
+            className="mt-4 p-4 bg-background/50 border border-border/30 rounded-lg"
+          >
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-sm font-semibold text-primary/80">
+                Additional Mission
+              </h3>
+              <div className="flex gap-1">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-7 text-xs"
+                  onClick={() => handleEdit("Divine Mission", item.content, item.id)}
+                >
+                  <Edit className="w-3.5 h-3.5 mr-1" /> Edit
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-7 text-xs text-red-500"
+                  onClick={() => handleDelete("Divine Mission", item.id)}
+                >
+                  Delete
+                </Button>
+              </div>
+            </div>
+            <p className="text-muted-foreground font-body text-sm">
+              {item.content}
+            </p>
+          </div>
+        ))}
       </div>
 
       {/* Description - Primary Function */}
