@@ -580,6 +580,7 @@ const AIChatInterface = () => {
                           </Button>
                         </div>
 
+                      <textarea ref={inputRef} value={input} onChange={e => setInput(e.target.value)} onKeyDown={handleKeyDown} rows={1} className="flex-1 bg-background border border-border rounded-xl px-4 py-3 text-sm font-body text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 resize-none min-h-[46px]" placeholder="Ask S.H.I.E.L.D. AI for Anything..." />
                       <Button variant="shield" size="icon" onClick={sendMessage} disabled={!input.trim() || isLoading} className="shrink-0">
                         {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
                       </Button>
@@ -607,5 +608,6 @@ const AIChatInterface = () => {
       <CommandCenter open={showCommandCenter} onOpenChange={setShowCommandCenter} />
     </section>;
 };
+export default AIChatInterface;
 
 
