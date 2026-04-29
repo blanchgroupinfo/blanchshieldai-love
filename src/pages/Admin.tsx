@@ -996,13 +996,6 @@ const Admin = () => {
                                    Reject
                                  </Button>
                                )}
-                                     <Button
-                                       variant="ghost"
-                                       size="icon"
-                                       onClick={() => setSelectedUserRole(profile)}
-                                     >
-                                       <Eye className="w-4 h-4" />
-                                     </Button>
                                <Button
                                  variant="ghost"
                                  size="icon"
@@ -1126,13 +1119,6 @@ const Admin = () => {
                             <TableCell>{new Date(msg.created_at).toLocaleDateString()}</TableCell>
                             <TableCell className="text-right">
                               <div className="flex justify-end gap-2">
-                               <Button
-                                 variant="ghost"
-                                 size="icon"
-                                 onClick={() => setSelectedTradingHub(enrollment)}
-                               >
-                                 <Eye className="w-4 h-4" />
-                               </Button>
                                 <Button
                                   variant="ghost"
                                   size="icon"
@@ -1366,13 +1352,6 @@ const Admin = () => {
                                 <TableCell>{new Date(profile.created_at).toLocaleDateString()}</TableCell>
                                  <TableCell className="text-right">
                                    <div className="flex justify-end gap-1">
-                                <Button
-                                  variant="ghost"
-                                  size="icon"
-                                  onClick={() => setSelectedTradingHub(enrollment)}
-                                >
-                                  <Eye className="w-4 h-4" />
-                                </Button>
                                      <Button
                                        variant="ghost"
                                        size="sm"
