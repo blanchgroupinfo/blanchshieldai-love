@@ -24,7 +24,7 @@ import { calendarMonths, hebrewDayNames, feasts, calendarScriptures, getFeastsFo
 const scripturesByMonth: { month: string; scriptures: string[] }[] = calendarMonths.map((m, idx) => {
   const start = idx * Math.ceil(calendarScriptures.length / 12);
   const slice = calendarScriptures.slice(start, start + Math.ceil(calendarScriptures.length / 12));
-  return { month: m.name, scriptures: slice.map(s => `${s.verse} (${s.reference})`) };
+  return { month: m.hebrewName, scriptures: slice.map(s => `${s.verse} (${s.reference})`) };
 });
 import { useSunTimes } from "@/hooks/useSunTimes";
 import { HolyDayReminder, useCalendarEvents } from "@/hooks/useCalendarEvents";
