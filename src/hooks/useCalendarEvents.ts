@@ -224,7 +224,7 @@ export const useCalendarEvents = (year: number) => {
         const { data, error } = await supabase
           .from('holy_day_reminders')
           .update({
-            remind_days_before: JSON.stringify(remindOptions),
+            remind_days_before: remindOptions.length,
             reminder_enabled: enabled,
             ...options
           })
@@ -242,10 +242,8 @@ export const useCalendarEvents = (year: number) => {
           .insert({
             user_id: user.id,
             holy_day_name: holyDayName,
-            remind_days_before: JSON.stringify(remindOptions),
+            remind_days_before: remindOptions.length,
             reminder_enabled: enabled,
-            reminder_type: options.reminder_type || 'holy_day',
-            ...options
           })
           .select()
           .single();
@@ -256,7 +254,7 @@ export const useCalendarEvents = (year: number) => {
         if (!options.reminder_type || options.reminder_type === 'holy_day') {
           toast({
             title: "Reminder Set",
-            description: `You will be reminded ${daysBefore} day(s) before ${holyDayName}`,
+            description: `You will be reminded ${remindOptions.length} day(s) before ${holyDayName}`,
           });
         } else {
           toast({
