@@ -30,6 +30,8 @@ import { useSunTimes } from "@/hooks/useSunTimes";
 import { HolyDayReminder, useCalendarEvents } from "@/hooks/useCalendarEvents";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { CalendarInsightsWidget } from "@/components/calendar/CalendarInsightsWidget";
+import { prayerRequestSchema } from "@/schemas/calendarSchemas";
 
 const offeringsData = [
   {
@@ -576,18 +578,28 @@ const CreatorsCalendar = () => {
   // Prayer request submission
   const handlePrayerSubmit = async () => {
     if (!user) return;
-    if (!prayerForm.fullName.trim() || !prayerForm.message.trim()) {
-      toast({ title: "Missing Fields", description: "Please fill in your name and prayer request.", variant: "destructive" });
+    const parsed = prayerRequestSchema.safeParse({
+      full_name: prayerForm.fullName,
+      hebrew_name: prayerForm.hebrewName,
+      prayer_message: prayerForm.message,
+      request_type: prayerForm.requestType,
+    });
+    if (!parsed.success) {
+      toast({
+        title: "Validation Error",
+        description: parsed.error.errors[0]?.message ?? "Please review the form",
+        variant: "destructive",
+      });
       return;
     }
     setPrayerSubmitting(true);
 
     const { error } = await supabase.from('prayer_requests').insert({
       user_id: user.id,
-      full_name: prayerForm.fullName,
-      hebrew_name: prayerForm.hebrewName || null,
-      prayer_message: prayerForm.message,
-      request_type: prayerForm.requestType || 'healing',
+      full_name: parsed.data.full_name,
+      hebrew_name: parsed.data.hebrew_name || null,
+      prayer_message: parsed.data.prayer_message,
+      request_type: parsed.data.request_type,
     });
 
     setPrayerSubmitting(false);
