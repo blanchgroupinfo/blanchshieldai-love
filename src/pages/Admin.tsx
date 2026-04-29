@@ -67,6 +67,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import type { User } from "@supabase/supabase-js";
+import { BuildStatusPanel } from "@/components/admin/BuildStatusPanel";
 
 interface SystemModule {
   id: string;
@@ -870,6 +871,7 @@ const Admin = () => {
               <TabsTrigger value="users" className="gap-2"><UserCog className="w-3 h-3" /> User Roles</TabsTrigger>
               <TabsTrigger value="modules" className="gap-2"><Layers className="w-3 h-3" /> Modules</TabsTrigger>
               <TabsTrigger value="sync" className="gap-2"><RefreshCw className="w-3 h-3" /> Sync Status</TabsTrigger>
+              <TabsTrigger value="buildstatus" className="gap-2"><Wrench className="w-3 h-3" /> Build Status</TabsTrigger>
             </TabsList>
 
             <TabsContent value="overview">
