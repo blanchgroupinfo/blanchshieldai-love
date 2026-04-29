@@ -235,7 +235,7 @@ const quickActions: QuickAction[] = [
   // ==================== PHILANTHROPY ====================
   { id: "blanch-foundation", name: "Blanch Foundation", description: "Charity, Humanitarian Fund, Emancipation", icon: Heart, color: "text-pink-400", gradient: "from-pink-500/20 to-rose-500/20", link: "/philanthropy", category: "philanthropy" },
   { id: "blanch-philanthropy", name: "Blanch Philanthropy Hub", description: "Foundation, Charity, Community, Humanitarian, Emancipation", icon: Heart, color: "text-pink-400", gradient: "from-pink-500/20 to-rose-500/20", link: "/philanthropy", category: "philanthropy" },
-  { id: "prayer", name: "House of Prayer", description: "For All People", icon: Heart, color: "text-pink-400", gradient: "from-pink-500/20 to-rose-500/20", link: "/philanthropy", category: "philanthropy" },
+   { id: "prayer", name: "House of Prayer for All People", description: "Global Prayer Network for All Nations, Kindreds, Tongues, and Peoples", icon: Heart, color: "text-pink-400", gradient: "from-pink-500/20 to-rose-500/20", link: "/house-of-prayer", category: "philanthropy" },
 
   // ==================== PROGRAMS ====================
   { id: "blanch-affiliates", name: "Blanch Group Affiliate Programs", description: "Circle Agent ID, LEI, Referrals, Commissions", icon: Users2, color: "text-pink-400", gradient: "from-pink-500/20 to-rose-500/20", link: "/command-center", category: "programs" },
@@ -267,7 +267,7 @@ const quickActions: QuickAction[] = [
   { id: "creators-calendar", name: "Creator Calendar", description: "Holy Days & Sabbaths", icon: Calendar, color: "text-amber-400", gradient: "from-amber-500/20 to-orange-500/20", link: "/creators-calendar", category: "spiritual" },
   { id: "daily-spiritual", name: "Daily Spiritual Guidance", description: "Scriptural Wisdom & Inspiration", icon: Book, color: "text-amber-400", gradient: "from-amber-500/20 to-yellow-500/20", link: "/watchman", category: "spiritual" },
   { id: "divine-healing", name: "Divine Healing", description: "Restoration & Wholeness", icon: Heart, color: "text-rose-400", gradient: "from-rose-500/20 to-pink-500/20", link: "/command-center", category: "spiritual" },
-  { id: "house-of-prayer", name: "House of Prayer", description: "Prayer Requests & Spiritual Support", icon: Heart, color: "text-pink-400", gradient: "from-pink-500/20 to-rose-500/20", link: "/philanthropy", category: "spiritual" },
+   { id: "house-of-prayer", name: "House of Prayer for All People", description: "Global Prayer Network for All Nations", icon: Heart, color: "text-pink-400", gradient: "from-pink-500/20 to-rose-500/20", link: "/house-of-prayer", category: "spiritual" },
   { id: "kingdom-ops", name: "Eternal Kingdom Operations", description: "Kingdom Protocol & Authority", icon: Crown, color: "text-amber-400", gradient: "from-amber-500/20 to-yellow-500/20", link: "/command-center", category: "spiritual" },
   { id: "laws-commandments", name: "Laws & Commandments", description: "Divine Laws & Statutes", icon: ScrollText, color: "text-amber-400", gradient: "from-amber-500/20 to-yellow-500/20", link: "/laws-commandments", category: "spiritual" },
   { id: "truth-freedom", name: "Truth & Freedom", description: "Liberation & Emancipation", icon: Sun, color: "text-yellow-400", gradient: "from-yellow-500/20 to-orange-500/20", link: "/command-center", category: "spiritual" },

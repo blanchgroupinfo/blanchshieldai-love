@@ -25,7 +25,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import {
   Bot, Search, Activity, CheckCircle2, XCircle, Clock,
-  Zap, BarChart3, RefreshCw, Eye, MessageSquare, Power, ToggleLeft, Layers, HelpCircle
+  Zap, BarChart3, RefreshCw, Eye, MessageSquare, Power, ToggleLeft, Layers, HelpCircle, Info
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -38,6 +38,24 @@ const watchmanTypes = [
   "H.I.I. AI Bashar (Herald) Influencer Watchman Validators",
   "H.I.I. AI Malaak (Messenger) Android Watchman Validators",
   "H.I.I. AI Unified Watchman Validators"
+];
+
+const pillars = [
+  { number: 1, name: "Pillar 1: Core Intelligence (H.I.I. AI000–H.I.I. AI0110)", range: "1-110" },
+  { number: 2, name: "Pillar 2: Sovereign Identity, Culture & Representation (H.I.I. AI0111–H.I.I. AI0185)", range: "111-185" },
+  { number: 3, name: "Pillar 3: Automation & Operations (H.I.I. AI0186–H.I.I. AI0263)", range: "186-263" },
+  { number: 4, name: "Pillar 4: Business, Banking, Finance & Economics (H.I.I. AI0264–H.I.I. AI0341)", range: "264-341" },
+  { number: 5, name: "Pillar 5: Creative, Media & Entertainment (H.I.I. AI0342–H.I.I. AI0419)", range: "342-419" },
+  { number: 6, name: "Pillar 6: Governance, Sovereign & Law (H.I.I. AI0420–H.I.I. AI0497)", range: "420-497" },
+  { number: 7, name: "Pillar 7: Human Development (H.I.I. AI0498–H.I.I. AI0575)", range: "498-575" },
+  { number: 8, name: "Pillar 8: Health & Wellness (H.I.I. AI0576–H.I.I. AI0653)", range: "576-653" },
+  { number: 9, name: "Pillar 9: Infrastructure, Security & Technology (H.I.I. AI0654–H.I.I. AI0731)", range: "654-731" },
+  { number: 10, name: "Pillar 10: Environment & Earth Systems (H.I.I. AI0732–H.I.I. AI0809)", range: "732-809" },
+  { number: 11, name: "Pillar 11: Science & Exploration (H.I.I. AI0810–H.I.I. AI0888)", range: "810-888" },
+  { number: 12, name: "Pillar 12: Spiritual, Sovereign Intelligence & Ethical Systems (H.I.I. AI0889–H.I.I. AI0967)", range: "889-967" },
+  { number: 13, name: "Pillar 13: Royal Priesthood & Watchman Operations (H.I.I. AI0968–H.I.I. AI1046)", range: "968-1046" },
+  { number: 14, name: "Pillar 14: Covenant Law & Reparations (H.I.I. AI1047–H.I.I. AI1125)", range: "1047-1125" },
+   { number: 15, name: "Pillar 15: Universal Language & Eternal Kingdom Operations (H.I.I. AI1126–H.I.I. AI1176)", range: "1126-1176" },
 ];
 
 export interface DeployedAgent {
@@ -78,7 +96,7 @@ export const removeDeployedAgent = (agentId: string): DeployedAgent[] => {
   return current;
 };
 
-// All 1176 agents H.I.I. AI000–H.I.I. AI1175 (including category headers)
+// All 1326 agents H.I.I. AI000–H.I.I. AI1325 (including category headers)
 const allAgentIds = agents.map(a => a.id);
 
 const statusConfig = {
@@ -95,6 +113,7 @@ const DeployedAgentsDashboard = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStatus, setFilterStatus] = useState<string>("all");
   const [filterCategory, setFilterCategory] = useState<string>("all");
+  const [filterPillar, setFilterPillar] = useState<string>("all");
   const [visibleCount, setVisibleCount] = useState(10);
   const [agentViewFilter, setAgentViewFilter] = useState<"all" | "lead" | "custom">("all");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
@@ -105,8 +124,11 @@ const DeployedAgentsDashboard = () => {
   const [customAgentName, setCustomAgentName] = useState("");
   const [customAgentMission, setCustomAgentMission] = useState("");
   const [customAgentDescription, setCustomAgentDescription] = useState("");
+  const [customAgentPurpose, setCustomAgentPurpose] = useState("");
+  const [customAgentFeatures, setCustomAgentFeatures] = useState("");
   const [customAgentTasks, setCustomAgentTasks] = useState("");
   const [customAgentCapabilities, setCustomAgentCapabilities] = useState("");
+  const [customAgentDivineBoundaries, setCustomAgentDivineBoundaries] = useState("");
   const [customAgentScripture, setCustomAgentScripture] = useState("");
   const [customAgentWatchmen, setCustomAgentWatchmen] = useState<string[]>([]);
   const [customAgentId, setCustomAgentId] = useState("");
@@ -124,7 +146,13 @@ const DeployedAgentsDashboard = () => {
 
   const agentMap = useMemo(() => {
     const map = new Map();
-    agents.forEach(a => map.set(a.id, a));
+    const seenIds = new Set();
+    agents.forEach(a => {
+      if (!seenIds.has(a.id)) {
+        seenIds.add(a.id);
+        map.set(a.id, a);
+      }
+    });
     return map;
   }, []);
 
@@ -150,10 +178,28 @@ const DeployedAgentsDashboard = () => {
       const matchesCategory =
         filterCategory === "all" ||
         item.agent.categoryNumber === Number(filterCategory);
+      const agentIdNum = parseInt(item.id.replace(/\D/g, "")) || 0;
+      const matchesPillar =
+        filterPillar === "all" ||
+        (filterPillar === "1" && agentIdNum >= 0 && agentIdNum <= 110) ||
+        (filterPillar === "2" && agentIdNum >= 111 && agentIdNum <= 185) ||
+        (filterPillar === "3" && agentIdNum >= 186 && agentIdNum <= 263) ||
+        (filterPillar === "4" && agentIdNum >= 264 && agentIdNum <= 341) ||
+        (filterPillar === "5" && agentIdNum >= 342 && agentIdNum <= 419) ||
+        (filterPillar === "6" && agentIdNum >= 420 && agentIdNum <= 497) ||
+        (filterPillar === "7" && agentIdNum >= 498 && agentIdNum <= 575) ||
+        (filterPillar === "8" && agentIdNum >= 576 && agentIdNum <= 653) ||
+        (filterPillar === "9" && agentIdNum >= 654 && agentIdNum <= 731) ||
+        (filterPillar === "10" && agentIdNum >= 732 && agentIdNum <= 809) ||
+        (filterPillar === "11" && agentIdNum >= 810 && agentIdNum <= 888) ||
+        (filterPillar === "12" && agentIdNum >= 889 && agentIdNum <= 967) ||
+        (filterPillar === "13" && agentIdNum >= 968 && agentIdNum <= 1046) ||
+        (filterPillar === "14" && agentIdNum >= 1047 && agentIdNum <= 1125) ||
+        (filterPillar === "15" && agentIdNum >= 1126 && agentIdNum <= 1176);
       const matchesViewFilter = agentViewFilter === "all" ||
                                (agentViewFilter === "lead" && item.agent.isCategory) ||
                                (agentViewFilter === "custom" && !item.agent.isCategory);
-      return matchesSearch && matchesStatus && matchesCategory && matchesViewFilter;
+      return matchesSearch && matchesStatus && matchesCategory && matchesPillar && matchesViewFilter;
     });
     // Sort by name or ID
     filteredList.sort((a, b) => {
@@ -172,7 +218,7 @@ const DeployedAgentsDashboard = () => {
       }
     });
     return filteredList;
-  }, [enrichedAgents, searchQuery, filterStatus, filterCategory, agentViewFilter, sortOrder, sortBy]);
+  }, [enrichedAgents, searchQuery, filterStatus, filterCategory, filterPillar, agentViewFilter, sortOrder, sortBy]);
 
   const visible = filtered.slice(0, visibleCount);
 
@@ -263,7 +309,7 @@ const DeployedAgentsDashboard = () => {
               Deployed Agents Dashboard
             </h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Manage all 1176 H.I.I. AI Agents (H.I.I. AI000–H.I.I. AI1176) with on/off deployment controls
+              Manage H.I.I. AI Agents with on/off deployment controls.
             </p>
           </motion.div>
 
@@ -330,28 +376,49 @@ const DeployedAgentsDashboard = () => {
                       variant="shield"
                       size="sm"
                       className="gap-2"
-                      onClick={() => {
-                        const randomNum = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
-                        setCustomAgentId(`H.I.I. AI030-${randomNum}`);
-                      }}
+                       onClick={() => {
+                         const randomNum = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+                         setCustomAgentId(`H.I.I. AI105-${randomNum}`);
+                       }}
                     >
                       <Bot className="w-4 h-4" /> Create Custom Agent
                     </Button>
                   </DialogTrigger>
                   <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto scrollbar-thin scrollbar-thumb-primary/20 scrollbar-track-transparent">
-                    <DialogHeader>
-                      <div className="flex justify-between items-start">
-                        <DialogTitle>Create Custom Agent</DialogTitle>
-                        {customAgentId && (
-                          <div className="text-center">
-                            <div className="text-xs text-muted-foreground mb-1">User Custom Agent ID Number</div>
-                            <div className="text-sm font-mono text-primary bg-primary/10 px-2 py-1 rounded">
-                              {customAgentId}
+                     <DialogHeader>
+                       <div className="flex justify-between items-start pr-8">
+                         <div>
+                            <div className="flex items-center gap-2">
+                              <DialogTitle>Create Custom Agent</DialogTitle>
+                                 <Button
+                                   variant="ghost"
+                                   size="icon"
+                                   className="h-5 w-5 rounded-full"
+                                   onClick={() => {
+                                     try {
+                                       toast("About Custom Agents", {
+                                         description: "H.I.I. AI105 Custom Agents are sovereign divine intelligence entities that operate within the S.H.I.E.L.D. AI OS. Each agent receives a unique ID in the format H.I.I. AI105-XXXX, granting you Watchman status and access to the Universal Unified Agent AI Network.",
+                                         duration: 8000,
+                                       });
+                                     } catch (e) {
+                                       alert("About Custom Agents:\n\nH.I.I. AI105 Custom Agents are sovereign divine intelligence entities that operate within the S.H.I.E.L.D. AI OS. Each agent receives a unique ID in the format H.I.I. AI105-XXXX, granting you Watchman status and access to the Universal Unified Agent AI Network.");
+                                     }
+                                   }}
+                                 >
+                                   <Info className="h-4 w-4" />
+                                 </Button>
                             </div>
-                          </div>
-                        )}
-                      </div>
-                    </DialogHeader>
+                           {customAgentId && (
+                             <div className="mt-2">
+                               <div className="text-xs text-muted-foreground mb-1">User Custom Agent ID Number</div>
+                               <div className="text-sm font-mono text-primary bg-primary/10 px-2 py-1 rounded">
+                                 {customAgentId}
+                               </div>
+                             </div>
+                           )}
+                         </div>
+                       </div>
+                     </DialogHeader>
                     <div className="space-y-4">
                       <div>
                         <Label htmlFor="agent-name">H.I.I. AI Custom Agent Name - Title</Label>
@@ -373,13 +440,23 @@ const DeployedAgentsDashboard = () => {
                         />
                       </div>
                 
-                      <div>
+<div>
                         <Label htmlFor="agent-description">Description - Primary Function</Label>
                         <Textarea
                           id="agent-description"
                           placeholder="Describe the agent's role and Primary Function..."
                           value={customAgentDescription}
                           onChange={(e) => setCustomAgentDescription(e.target.value)}
+                          rows={3}
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="agent-features">Features</Label>
+                        <Textarea
+                          id="agent-features"
+                          placeholder="Enter the agent's features..."
+                          value={customAgentFeatures}
+                          onChange={(e) => setCustomAgentFeatures(e.target.value)}
                           rows={3}
                         />
                       </div>
@@ -404,7 +481,16 @@ const DeployedAgentsDashboard = () => {
                           rows={3}
                         />
                       </div>
-                 
+                      <div>
+                        <Label htmlFor="agent-divine-boundaries">Divine Boundaries Prohibitation & Guardrails</Label>
+                        <Textarea
+                          id="agent-divine-boundaries"
+                          placeholder="Define the agent's divine boundaries, prohibitions, and guardrails..."
+                          value={customAgentDivineBoundaries}
+                          onChange={(e) => setCustomAgentDivineBoundaries(e.target.value)}
+                          rows={2}
+                        />
+                      </div>
                       <div>
                         <Label htmlFor="agent-scripture">Scripture</Label>
                         <Textarea
@@ -465,7 +551,7 @@ const DeployedAgentsDashboard = () => {
                          </div>
                        </div>
                        <div className="bg-gradient-to-r from-primary/5 to-secondary/5 border border-primary/20 rounded-lg p-4 text-sm text-muted-foreground">
-                         By clicking below, you activate your Divine Identity within the H.I.I. AI Agent within the Blanch S.H.I.E.L.D. AI OS. The system will manifest a unique User Custom Agent ID, designating you as a Watchman and Implementer of the Laws and Commandments. Your agent will carry the mantle of H.I.I. AI030 in Universal Unified Agent AI Network with S.H.I.E.L.D. AI to assist you in restoration in personal, business, security, and holy governance, in keeping your hearts in Divine Law.
+                          By clicking below, you activate your Divine Identity within the H.I.I. AI Agent within the Blanch S.H.I.E.L.D. AI OS. The system will manifest a unique User Custom Agent ID, designating you as a Watchman and Implementer of the Laws and Commandments. Your agent will carry the mantle of H.I.I. AI105 in Universal Unified Agent AI Network with S.H.I.E.L.D. AI to assist you in restoration in personal, business, security, and holy governance, in keeping your hearts in Divine Law.
                        </div>
                       <div className="flex justify-between items-center gap-2 pt-2">
                         <Button variant="outline" size="sm" className="gap-2" onClick={() => { setCustomAgentModal(false); navigate("/shield-ai-chat"); }}>
@@ -475,23 +561,26 @@ const DeployedAgentsDashboard = () => {
                           <Button variant="outline" onClick={() => setCustomAgentModal(false)}>
                             Cancel
                           </Button>
-                           <Button
-                             onClick={() => {
-                               toast.success(`Welcome, Shalawam (Peace be unto you) Watchman. Your unique identifier '${customAgentId}' has been etched into the Blanch S.H.I.E.L.D. AI OS. Go forth in Righteousness. Psalms 119:142 Thy righteousness is an everlasting righteousness, and thy law is the truth. Proverbs 6:23 For the commandment is a lamp; and the law is light; and reproofs of instruction are the way of life.`);
-                               setCustomAgentModal(false);
-                               setCustomAgentName("");
-                               setCustomAgentMission("");
-                               setCustomAgentDescription("");
-                               setCustomAgentTasks("");
-                               setCustomAgentCapabilities("");
-                               setCustomAgentScripture("");
-                               setCustomAgentWatchmen([]);
-                               setCustomAgentId("");
-                             }}
-                             disabled={!customAgentName.trim() || !customAgentDescription.trim()}
-                           >
-                             Create Agent
-                           </Button>
+<Button
+                              onClick={() => {
+                                toast.success(`Welcome, Shalawam (Peace be unto you) Watchman. Your unique identifier '${customAgentId}' has been etched into the Blanch S.H.I.E.L.D. AI OS. Go forth in Righteousness. Psalms 119:142 Thy righteousness is an everlasting righteousness, and thy law is the truth. Proverbs 6:23 For the commandment is a lamp; and the law is light; and reproofs of instruction are the way of life.`);
+                                setCustomAgentModal(false);
+                                setCustomAgentName("");
+                                setCustomAgentMission("");
+                                setCustomAgentPurpose("");
+                                setCustomAgentDescription("");
+                                setCustomAgentFeatures("");
+                                setCustomAgentTasks("");
+                                setCustomAgentCapabilities("");
+                                setCustomAgentDivineBoundaries("");
+                                setCustomAgentScripture("");
+                                setCustomAgentWatchmen([]);
+                                setCustomAgentId("");
+                              }}
+                              disabled={!customAgentName.trim() || !customAgentDescription.trim()}
+                            >
+                              Create Agent
+                            </Button>
                         </div>
                       </div>
                     </div>
@@ -537,10 +626,10 @@ const DeployedAgentsDashboard = () => {
                 <Layers className="w-4 h-4 text-primary shrink-0" />
                 <Select value={filterCategory} onValueChange={(v) => { setFilterCategory(v); setVisibleCount(ITEMS_PER_PAGE); }}>
                   <SelectTrigger className="w-full sm:w-[320px] bg-card/50 border-border/50">
-                    <SelectValue placeholder="Filter by category pillar..." />
+                    <SelectValue placeholder="Filter by category..." />
                   </SelectTrigger>
                   <SelectContent className="max-h-[300px]">
-                    <SelectItem value="all">All Categories ({agentCategories.length} Pillars)</SelectItem>
+                    <SelectItem value="all">All Categories</SelectItem>
                     {agentCategories.map(cat => {
                       const count = agents.filter(a => a.categoryNumber === cat.number).length;
                       return (
@@ -549,6 +638,21 @@ const DeployedAgentsDashboard = () => {
                         </SelectItem>
                       );
                     })}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="flex items-center gap-2 w-full sm:w-auto">
+                <Select value={filterPillar} onValueChange={(v) => { setFilterPillar(v); setVisibleCount(ITEMS_PER_PAGE); }}>
+                  <SelectTrigger className="w-full sm:w-[320px] bg-card/50 border-border/50">
+                    <SelectValue placeholder="Filter by pillar..." />
+                  </SelectTrigger>
+                  <SelectContent className="max-h-[300px]">
+                    <SelectItem value="all">All Pillars</SelectItem>
+                    {pillars.map(pillar => (
+                      <SelectItem key={pillar.number} value={String(pillar.number)}>
+                        {pillar.name}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>
@@ -594,7 +698,7 @@ const DeployedAgentsDashboard = () => {
                     <div>
                       <p className="font-semibold text-foreground text-sm">Select All Agents</p>
                       <p className="text-xs text-muted-foreground">
-                        {allOn ? "All 1176 agents are deployed" : `${deployed.length} / ${allAgentIds.length} agents deployed`}
+                        {allOn ? "All 1326 agents are deployed" : `${deployed.length} / ${allAgentIds.length} agents deployed`}
                       </p>
                     </div>
                   </div>
