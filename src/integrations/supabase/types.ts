@@ -50,6 +50,42 @@ export type Database = {
         }
         Relationships: []
       }
+      build_status: {
+        Row: {
+          category: string
+          component_name: string
+          created_at: string
+          error_message: string | null
+          file_path: string | null
+          id: string
+          run_at: string
+          status: string
+          suggested_fix: string | null
+        }
+        Insert: {
+          category?: string
+          component_name: string
+          created_at?: string
+          error_message?: string | null
+          file_path?: string | null
+          id?: string
+          run_at?: string
+          status?: string
+          suggested_fix?: string | null
+        }
+        Update: {
+          category?: string
+          component_name?: string
+          created_at?: string
+          error_message?: string | null
+          file_path?: string | null
+          id?: string
+          run_at?: string
+          status?: string
+          suggested_fix?: string | null
+        }
+        Relationships: []
+      }
       calendar_events: {
         Row: {
           calendar_day: number
@@ -250,27 +286,42 @@ export type Database = {
       holy_day_reminders: {
         Row: {
           created_at: string
+          email_address: string | null
+          email_enabled: boolean
           holy_day_name: string
           id: string
+          phone_number: string | null
           remind_days_before: number | null
           reminder_enabled: boolean | null
+          sms_enabled: boolean
           user_id: string
+          whatsapp_enabled: boolean
         }
         Insert: {
           created_at?: string
+          email_address?: string | null
+          email_enabled?: boolean
           holy_day_name: string
           id?: string
+          phone_number?: string | null
           remind_days_before?: number | null
           reminder_enabled?: boolean | null
+          sms_enabled?: boolean
           user_id: string
+          whatsapp_enabled?: boolean
         }
         Update: {
           created_at?: string
+          email_address?: string | null
+          email_enabled?: boolean
           holy_day_name?: string
           id?: string
+          phone_number?: string | null
           remind_days_before?: number | null
           reminder_enabled?: boolean | null
+          sms_enabled?: boolean
           user_id?: string
+          whatsapp_enabled?: boolean
         }
         Relationships: []
       }
