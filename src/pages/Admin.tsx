@@ -860,6 +860,7 @@ const Admin = () => {
             <TabsList className="bg-card/50 border border-border/30 flex-wrap h-auto gap-1 p-1">
               <TabsTrigger value="overview" className="gap-2"><Eye className="w-3 h-3" /> Overview</TabsTrigger>
               <TabsTrigger value="enrollments" className="gap-2"><TrendingUp className="w-3 h-3" /> Trading Hub & Enrollments</TabsTrigger>
+              <TabsTrigger value="broadcast" className="gap-2"><Radio className="w-3 h-3" /> House of Prayer Broadcast</TabsTrigger>
               <TabsTrigger value="prayers" className="gap-2"><Heart className="w-3 h-3" /> Prayer Requests</TabsTrigger>
               <TabsTrigger value="baptisms" className="gap-2"><Droplets className="w-3 h-3" /> Baptism Registry</TabsTrigger>
               <TabsTrigger value="calendar" className="gap-2"><Clock className="w-3 h-3" /> Creators Calendar</TabsTrigger>
