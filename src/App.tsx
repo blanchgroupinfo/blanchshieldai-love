@@ -12,7 +12,7 @@ import About from "./pages/About";
 import Technology from "./pages/Technology";
 import Contact from "./pages/Contact";
 import API from "./pages/API";
-import Agents from "./pages/Agents";
+import Agents from "./pages/Agents.tsx";
 import Dashboard from "./pages/Dashboard";
 import Admin from "./pages/Admin";
 import Watchman from "./pages/Watchman";
@@ -65,6 +65,8 @@ import CreativeEngine from "./pages/CreativeEngine";
 import CreativePortal from "./pages/CreativePortal";
 import PublishingDashboard from "./pages/PublishingDashboard";
 import HouseOfPrayerBroadcast from "./pages/HouseOfPrayerBroadcast";
+import HouseOfPrayerForAllPeople from "./pages/HouseOfPrayerForAllPeople";
+import IntelligentModes from "./pages/IntelligentModes";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -75,9 +77,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        {/* Global Spiritual Ticker */}
         <SpiritualTicker />
-        {/* Global Live Market Ticker */}
         <LiveMarketTicker />
         <Routes>
           <Route path="/" element={<Index />} />
@@ -141,6 +141,8 @@ const App = () => (
           <Route path="/creative-portal" element={<CreativePortal />} />
           <Route path="/publishing-dashboard" element={<PublishingDashboard />} />
           <Route path="/broadcast" element={<HouseOfPrayerBroadcast />} />
+          <Route path="/house-of-prayer" element={<HouseOfPrayerForAllPeople />} />
+          <Route path="/intelligent-modes" element={<IntelligentModes />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
