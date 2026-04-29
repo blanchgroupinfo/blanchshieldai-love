@@ -1900,6 +1900,10 @@ const Admin = () => {
                 </CardContent>
               </Card>
             </TabsContent>
+
+            <TabsContent value="buildstatus">
+              <BuildStatusPanel />
+            </TabsContent>
           </Tabs>
         </div>
       </main>
