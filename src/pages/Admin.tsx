@@ -1427,6 +1427,136 @@ const Admin = () => {
               </Card>
             </TabsContent>
 
+            <TabsContent value="broadcast">
+              <Card className="bg-card/50 border-border/30">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Radio className="w-5 h-5 text-primary" />
+                    House of Prayer Broadcast Management
+                  </CardTitle>
+                  <CardDescription>
+                    Manage live streams, broadcast schedule, and prayer requests
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Tabs defaultValue="livestream" className="space-y-4">
+                    <TabsList className="bg-card/50 border border-border/30">
+                      <TabsTrigger value="livestream" className="gap-2"><Video className="w-3 h-3" /> Live Stream</TabsTrigger>
+                      <TabsTrigger value="prayerlink" className="gap-2"><Heart className="w-3 h-3" /> Prayer Requests</TabsTrigger>
+                    </TabsList>
+
+                    <TabsContent value="livestream" className="space-y-4">
+                      <div className="grid md:grid-cols-3 gap-4">
+                        <Card className="bg-card/30 border-border/30">
+                          <CardHeader className="pb-2">
+                            <CardDescription>Stream Status</CardDescription>
+                            <CardTitle className="flex items-center gap-2 text-green-400">
+                              <Activity className="w-4 h-4 animate-pulse" /> Live
+                            </CardTitle>
+                          </CardHeader>
+                        </Card>
+                        <Card className="bg-card/30 border-border/30">
+                          <CardHeader className="pb-2">
+                            <CardDescription>Active Viewers</CardDescription>
+                            <CardTitle>1,247</CardTitle>
+                          </CardHeader>
+                        </Card>
+                        <Card className="bg-card/30 border-border/30">
+                          <CardHeader className="pb-2">
+                            <CardDescription>Next Broadcast</CardDescription>
+                            <CardTitle className="text-base">Sabbath Service · 9:00 AM</CardTitle>
+                          </CardHeader>
+                        </Card>
+                      </div>
+
+                      <Card className="bg-card/30 border-border/30">
+                        <CardHeader>
+                          <CardTitle className="text-lg flex items-center gap-2">
+                            <PlayCircle className="w-5 h-5 text-primary" /> Stream Configuration
+                          </CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                          <div className="grid md:grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                              <label className="text-sm text-muted-foreground">Stream Title</label>
+                              <Input placeholder="House of Prayer · Live Worship" />
+                            </div>
+                            <div className="space-y-2">
+                              <label className="text-sm text-muted-foreground">Stream URL / RTMP Key</label>
+                              <Input placeholder="rtmp://stream.shieldai/live/..." type="password" />
+                            </div>
+                          </div>
+                          <div className="flex flex-wrap gap-2">
+                            <Button className="gap-2"><Radio className="w-4 h-4" /> Start Broadcast</Button>
+                            <Button variant="outline" className="gap-2"><Video className="w-4 h-4" /> Schedule Stream</Button>
+                            <Button variant="outline" className="gap-2" onClick={() => navigate("/broadcast")}>
+                              <Eye className="w-4 h-4" /> View Public Page
+                            </Button>
+                          </div>
+                        </CardContent>
+                      </Card>
+
+                      <Card className="bg-card/30 border-border/30">
+                        <CardHeader>
+                          <CardTitle className="text-lg flex items-center gap-2">
+                            <CalendarIcon className="w-5 h-5 text-primary" /> Upcoming Schedule
+                          </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <Table>
+                            <TableHeader>
+                              <TableRow>
+                                <TableHead>Title</TableHead>
+                                <TableHead>Date</TableHead>
+                                <TableHead>Time</TableHead>
+                                <TableHead>Status</TableHead>
+                              </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                              {[
+                                { t: "Sabbath Worship Service", d: "Saturday", tm: "9:00 AM", s: "Scheduled" },
+                                { t: "Daily Prayer Hour", d: "Daily", tm: "6:00 AM", s: "Recurring" },
+                                { t: "Scripture Study", d: "Wednesday", tm: "7:00 PM", s: "Scheduled" },
+                                { t: "House of Prayer Vigil", d: "Friday", tm: "10:00 PM", s: "Scheduled" },
+                              ].map((b, i) => (
+                                <TableRow key={i}>
+                                  <TableCell className="font-medium">{b.t}</TableCell>
+                                  <TableCell>{b.d}</TableCell>
+                                  <TableCell>{b.tm}</TableCell>
+                                  <TableCell><Badge className="bg-primary/20 text-primary border-primary/30">{b.s}</Badge></TableCell>
+                                </TableRow>
+                              ))}
+                            </TableBody>
+                          </Table>
+                        </CardContent>
+                      </Card>
+                    </TabsContent>
+
+                    <TabsContent value="prayerlink">
+                      <Card className="bg-card/30 border-border/30">
+                        <CardContent className="pt-6 text-center space-y-4">
+                          <Heart className="w-12 h-12 text-rose-400 mx-auto" />
+                          <h3 className="text-xl font-semibold">Prayer Requests</h3>
+                          <p className="text-muted-foreground">
+                            {prayerList.length} prayer request{prayerList.length === 1 ? "" : "s"} submitted through the House of Prayer Broadcast.
+                          </p>
+                          <Button
+                            className="gap-2"
+                            onClick={() => {
+                              const trigger = document.querySelector('[value="prayers"]') as HTMLElement;
+                              trigger?.click();
+                            }}
+                          >
+                            <Heart className="w-4 h-4" /> Go to Prayer Requests
+                          </Button>
+                        </CardContent>
+                      </Card>
+                    </TabsContent>
+                  </Tabs>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
             <TabsContent value="prayers">
               <Card className="bg-card/50 border-border/30">
                 <CardHeader>
