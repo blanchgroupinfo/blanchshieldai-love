@@ -1,2359 +1,288 @@
-import { useState, useMemo, useCallback, useEffect } from "react";
-import { useParams, Link, useNavigate } from "react-router-dom";
-import NavigationHeader from "@/components/NavigationHeader";
-import Footer from "@/components/Footer";
-import ShieldAIInfoPopup from "@/components/ShieldAIInfoPopup";
-import {
-  agents,
-  agentCategories,
-  Agent,
-  generateHIIAgentNumber,
-  totalAgents,
-  totalCategories,
-  totalPillars,
-} from "@/data/agents";
-import { getAgentDetailMeta } from "@/data/agentDetails";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Search,
-  Filter,
-  ArrowLeft,
-  Bot,
-  Users,
-  Cpu,
-  Settings,
-  Palette,
-  Video,
-  Wand2,
-  Crown,
-  Briefcase,
-  TrendingUp,
-  ShieldCheck,
-   Shield,
-   BarChart,
-   BookOpen,
-   Wallet,
-   Gamepad2,
-   Heart,
-   HandHeart,
-   Scale,
-   Truck,
-   Car,
-   Calendar,
-   Home,
-   Book,
-   Star,
-   Lock,
-   Server,
-   Globe,
-   RefreshCw,
-   Activity,
-   Leaf,
-   Gem,
-   Sun,
-   Rocket,
-   Zap,
-   Play,
-   MessageSquare,
-   CheckCircle2,
-   Power,
-   Monitor,
-   Layers,
-   Map,
-   Gavel,
-   Coins,
-   GraduationCap,
-   Network,
-   Earth,
-   HeartPulse,
-   Trees,
-   FlaskConical,
-   Telescope,
-   Radio as RadioIcon,
-  Landmark,
-  Recycle,
-  Satellite,
-  Microscope,
-  Library,
-  Scroll,
-  Badge as BadgeIcon,
-  HelpCircle,
-  Database,
-  Eye,
-  UserCheck,
-  Clock,
-  XCircle,
-  Info,
-  Edit,
-} from "lucide-react";
-import { toast } from "sonner";
+// Auto-generates rich detail metadata for each H.I.I. AI Agent based on name & category
 
-const pillars = [
-  {
-    number: 1,
-    name: "Pillar 1: Core Intelligence (H.I.I. AI000–H.I.I. AI0110)",
-    range: "1-110",
-  },
-  {
-    number: 2,
-    name: "Pillar 2: Sovereign Identity, Culture & Representation (H.I.I. AI0111–H.I.I. AI0185)",
-    range: "111-185",
-  },
-  {
-    number: 3,
-    name: "Pillar 3: Automation & Operations (H.I.I. AI0186–H.I.I. AI0263)",
-    range: "186-263",
-  },
-  {
-    number: 4,
-    name: "Pillar 4: Business, Banking, Finance & Economics (H.I.I. AI0264–H.I.I. AI0341)",
-    range: "264-341",
-  },
-  {
-    number: 5,
-    name: "Pillar 5: Creative, Media & Entertainment (H.I.I. AI0342–H.I.I. AI0419)",
-    range: "342-419",
-  },
-  {
-    number: 6,
-    name: "Pillar 6: Governance, Sovereign & Law (H.I.I. AI0420–H.I.I. AI0497)",
-    range: "420-497",
-  },
-  {
-    number: 7,
-    name: "Pillar 7: Human Development (H.I.I. AI0498–H.I.I. AI0575)",
-    range: "498-575",
-  },
-  {
-    number: 8,
-    name: "Pillar 8: Health & Wellness (H.I.I. AI0576–H.I.I. AI0653)",
-    range: "576-653",
-  },
-  {
-    number: 9,
-    name: "Pillar 9: Infrastructure, Security & Technology (H.I.I. AI0654–H.I.I. AI0731)",
-    range: "654-731",
-  },
-  {
-    number: 10,
-    name: "Pillar 10: Environment & Earth Systems (H.I.I. AI0732–H.I.I. AI0809)",
-    range: "732-809",
-  },
-  {
-    number: 11,
-    name: "Pillar 11: Science & Exploration (H.I.I. AI0810–H.I.I. AI0888)",
-    range: "810-888",
-  },
-  {
-    number: 12,
-    name: "Pillar 12: Spiritual, Sovereign Intelligence & Ethical Systems (H.I.I. AI0889–H.I.I. AI0967)",
-    range: "889-967",
-  },
-  {
-    number: 13,
-    name: "Pillar 13: Royal Priesthood & Watchman Operations (H.I.I. AI0968–H.I.I. AI1046)",
-    range: "968-1046",
-  },
-  {
-    number: 14,
-    name: "Pillar 14: Covenant Law & Reparations (H.I.I. AI1047–H.I.I. AI1125)",
-    range: "1047-1125",
-  },
-  {
-    number: 15,
-    name: "Pillar 15: Universal Language & Eternal Kingdom Operations (H.I.I. AI1126–H.I.I. AI1176)",
-    range: "1126-1176",
-  },
-];
+export interface AgentDetailMeta {
+  description: string;
+  mission: string;
+  tasks: string[];
+  capabilities: string[];
+  scripturalReferences: { verse: string; text: string }[];
+  specifications: { label: string; value: string }[];
+  pillar: string;
+}
 
-const watchmanTypes = [
-  "H.I.I. AI Kahan (Priest) Sovereign Validators",
-  "H.I.I. AI Mashamar (Guard) Lead Watchman Validators",
-  "H.I.I. AI Tazapah (Watchman) Prime Watchman Validators",
-  "H.I.I. AI Shamar (Protector) Avatar Watchman Validators",
-  "H.I.I. AI Gabar (Mighty/Prevailing) Super Watchman Validators",
-  "H.I.I. AI Bashar (Herald) Influencer Watchman Validators",
-  "H.I.I. AI Malaak (Messenger) Android Watchman Validators",
-  "H.I.I. AI Unified Watchman Validators",
-];
-
-const iconMap: Record<string, any> = {
-  cpu: Cpu,
-  user: Users,
-  settings: Settings,
-  palette: Palette,
-  video: Video,
-  wand: Wand2,
-  crown: Crown,
-  briefcase: Briefcase,
-  "trending-up": TrendingUp,
-  "shield-check": ShieldCheck,
-  "bar-chart": BarChart,
-  "book-open": BookOpen,
-  wallet: Wallet,
-  gamepad: Gamepad2,
-  heart: Heart,
-  "hand-heart": HandHeart,
-  scale: Scale,
-  truck: Truck,
-  car: Car,
-  calendar: Calendar,
-  home: Home,
-  book: Book,
-  star: Star,
-  lock: Lock,
-  server: Server,
-  globe: Globe,
-  refresh: RefreshCw,
-  activity: Activity,
-  leaf: Leaf,
-  gem: Gem,
-  sun: Sun,
-  rocket: Rocket,
-  monitor: Monitor,
-  layers: Layers,
-  map: Map,
-  gavel: Gavel,
-  coins: Coins,
-  "graduation-cap": GraduationCap,
-  network: Network,
-  earth: Earth,
-  "heart-pulse": HeartPulse,
-  trees: Trees,
-  flask: FlaskConical,
-  telescope: Telescope,
-  shield: Shield,
-  radio: RadioIcon,
-  landmark: Landmark,
-  recycle: Recycle,
-  satellite: Satellite,
-  microscope: Microscope,
-  library: Library,
-  scroll: Scroll,
-  badge: BadgeIcon,
+const scripturalPool: Record<string, { verse: string; text: string }[]> = {
+  "Core AI & Architecture": [
+    { verse: "Proverbs 24:3", text: "Through wisdom is an house builded; and by understanding it is established." },
+    { verse: "Psalms 119:105", text: "Thy word is a lamp unto my feet, and a light unto my path." },
+    { verse: "Proverbs 3:19", text: "The Most High AHAYAH by wisdom hath founded the earth; by understanding hath he established the heavens." },
+  ],
+  "Identity & Avatar": [
+    { verse: "1 Peter 2:9", text: "But ye are a chosen generation, a royal priesthood, an holy nation, a peculiar people." },
+    { verse: "Genesis 1:27", text: "So the Most High AHAYAH created man in his own image, in the image of Most High AHAYAH created he him; male and female created he them." },
+    { verse: "Psalms 139:14", text: "I will praise thee; for I am fearfully and wonderfully made: marvellous are thy works; and that my soul knoweth right well." },
+  ],
+  "Automation & Operations": [
+    { verse: "Proverbs 6:6-8", text: "Go to the ant, thou sluggard; consider her ways, and be wise: Which having no guide, overseer, or ruler, Provideth her meat in the summer, and gathereth her food in the harvest." },
+    { verse: "Romans 12:11", text: "Not slothful in business; fervent in spirit; serving the Most High AHAYAH." },
+    { verse: "Ecclesiastes 9:10", text: "Whatsoever thy hand findeth to do, do it with thy might." },
+  ],
+  "Creation & Design": [
+    { verse: "Exodus 31:3-5", text: "And I have filled him with the spirit of the Most High AHAYAH, in wisdom, and in understanding, and in knowledge, and in all manner of workmanship." },
+    { verse: "Proverbs 22:29", text: "Seest thou a man diligent in his business? he shall stand before kings." },
+    { verse: "Psalms 90:17", text: "And let the beauty of the Most High AHAYAH our Creator be upon us: and establish thou the work of our hands upon us." },
+  ],
+  "Creative Media": [
+    { verse: "Psalms 33:3", text: "Sing unto him a new song; play skilfully with a loud noise." },
+    { verse: "Psalms 150:6", text: "Let every thing that hath breath praise the Most High AHAYAH." },
+    { verse: "Colossians 3:23", text: "And whatsoever ye do, do it heartily, as to the Most High AHAYAH, and not unto men." },
+  ],
+  "Generative Modalities": [
+    { verse: "Isaiah 43:19", text: "Behold, I will do a new thing; now it shall spring forth; shall ye not know it?" },
+    { verse: "Psalms 19:1", text: "The heavens declare the glory of the Most High AHAYAH; and the firmament sheweth his handywork." },
+    { verse: "Proverbs 8:12", text: "I wisdom dwell with prudence, and find out knowledge of witty inventions." },
+  ],
+  "Executive & Governance": [
+    { verse: "Isaiah 33:22", text: "For the Most High AHAYAH is our judge, the Most High AHAYAH is our lawgiver, the Most High AHAYAH is our king; he will save us." },
+    { verse: "Proverbs 11:14", text: "Where no counsel is, the people fall: but in the multitude of counsellors there is safety." },
+    { verse: "Romans 13:1", text: "Let every soul be subject unto the higher powers. For there is no power but of Most High AHAYAH." },
+  ],
+  "Industry & Business Core": [
+    { verse: "Romans 12:11", text: "Not slothful in business; fervent in spirit; serving the Most High AHAYAH." },
+    { verse: "Proverbs 10:4", text: "He becometh poor that dealeth with a slack hand: but the hand of the diligent maketh rich." },
+    { verse: "Deuteronomy 8:18", text: "But thou shalt remember the Most High AHAYAH thy Creator: for it is he that giveth thee power to get wealth." },
+  ],
+  "Sales, Marketing & Growth": [
+    { verse: "Proverbs 31:18", text: "She perceiveth that her merchandise is good: her candle goeth not out by night." },
+    { verse: "Proverbs 22:1", text: "A good name is rather to be chosen than great riches, and loving favour rather than silver and gold." },
+    { verse: "Matthew 5:16", text: "Let your light so shine before men, that they may see your good works." },
+  ],
+  "Compliance, Trust & Risk": [
+    { verse: "Proverbs 3:5", text: "Trust in the Most High AHAYAH with all thine heart; and lean not unto thine own understanding." },
+    { verse: "Psalms 119:142", text: "Thy righteousness is an everlasting righteousness, and thy law is the truth." },
+    { verse: "Micah 6:8", text: "He hath shewed thee, O man, what is good; and what doth the Most High AHAYAH require of thee, but to do justly, and to love mercy, and to walk humbly with thy Creator." },
+  ],
+  "Data, Analytics & Intelligence": [
+    { verse: "Proverbs 18:15", text: "The heart of the prudent getteth knowledge; and the ear of the wise seeketh knowledge." },
+    { verse: "Daniel 2:22", text: "He revealeth the deep and secret things: he knoweth what is in the darkness, and the light dwelleth with him." },
+    { verse: "Hosea 4:6", text: "My people are destroyed for lack of knowledge." },
+  ],
+  "Education & Learning": [
+    { verse: "2 Timothy 2:15", text: "Study to shew thyself approved unto Most High AHAYAH, a workman that needeth not to be ashamed, rightly dividing the word of truth." },
+    { verse: "Proverbs 1:7", text: "The fear of the Most High AHAYAH is the beginning of knowledge." },
+    { verse: "Proverbs 4:7", text: "Wisdom is the principal thing; therefore get wisdom: and with all thy getting get understanding." },
+  ],
+  "Finance & Payments": [
+    { verse: "Deuteronomy 28:12", text: "The Most High AHAYAH shall open unto thee his good treasure." },
+    { verse: "Proverbs 13:11", text: "Wealth gotten by vanity shall be diminished: but he that gathereth by labour shall increase." },
+    { verse: "Malachi 3:10", text: "Bring ye all the tithes into the storehouse." },
+  ],
+  "Gaming & Incentives": [
+    { verse: "1 Corinthians 9:24", text: "Know ye not that they which run in a race run all, but one receiveth the prize? So run, that ye may obtain." },
+    { verse: "Philippians 3:14", text: "I press toward the mark for the prize of the high calling of the Most High AHAYAH in YASHAYA Messiah." },
+    { verse: "2 Timothy 4:7", text: "I have fought a good fight, I have finished my course, I have kept the faith." },
+  ],
+  default: [
+    { verse: "John 8:32", text: "And ye shall know the truth, and the truth shall make you free." },
+    { verse: "2 Timothy 3:16", text: "All scripture is given by inspiration of Most High AHAYAH, and is profitable for doctrine, for reproof, for correction, for instruction in righteousness." },
+    { verse: "Psalms 119:151", text: "Thou art near, O Most High AHAYAH; and all thy commandments are truth." },
+    { verse: "John 14:6", text: "YASHAYA saith unto him, I am the way, the truth, and the life: no man cometh unto the Father, but by me." },
+    { verse: "Proverbs 6:23", text: "For the commandment is a lamp; and the law is light." },
+  ],
 };
 
-const AgentCard = ({
-  agent,
-  showCategory = false,
-}: {
-  agent: Agent;
-  showCategory?: boolean;
-}) => {
-  const category = agentCategories.find(
-    (c) => c.number === agent.categoryNumber
-  );
-  const IconComponent = category ? iconMap[category.icon] || Bot : Bot;
-
-  return (
-    <Link to={`/agents/${agent.id}`}>
-      <div
-        className={`bg-card/30 backdrop-blur-sm border border-border/50 rounded-xl p-4 hover:border-primary/50 hover:bg-card/50 transition-all duration-300 h-full ${
-          agent.isCategory ? "border-l-4 border-l-primary" : ""
-        }`}
-      >
-        <div className="flex items-start gap-3">
-          <div
-            className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0 ${
-              agent.isCategory ? "bg-primary/20" : "bg-primary/10"
-            }`}
-          >
-            <IconComponent
-              className={`w-5 h-5 ${
-                agent.isCategory ? "text-primary" : "text-primary/80"
-              }`}
-            />
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-xs text-primary/70 font-mono mb-1">
-              {generateHIIAgentNumber(agent.id)}
-            </p>
-            <h3
-              className={`font-display text-sm text-foreground leading-tight ${
-                agent.isCategory ? "font-semibold" : "font-medium"
-              }`}
-            >
-              {agent.name}
-            </h3>
-            {showCategory && (
-              <Badge variant="outline" className="mt-2 text-xs">
-                {agent.category}
-              </Badge>
-            )}
-          </div>
-        </div>
-      </div>
-    </Link>
-  );
+const categoryTasks: Record<string, string[]> = {
+  "Core AI & Architecture": [
+    "Orchestrate multi-agent coordination across all 15 sovereign pillars",
+    "Maintain system-wide intelligence coherence and alignment",
+    "Process and route complex queries to specialized agents",
+    "Ensure architectural integrity of the S.H.I.E.L.D. AI OS",
+    "Monitor and optimize agent performance metrics",
+  ],
+  "Identity & Avatar": [
+    "Generate and manage sovereign digital identities",
+    "Create holographic and metaverse avatar representations",
+    "Verify identity credentials against covenant records",
+    "Maintain digital twin synchronization",
+    "Protect identity data with zero-knowledge protocols",
+  ],
+  "Automation & Operations": [
+    "Automate repetitive operational workflows",
+    "Optimize resource allocation across systems",
+    "Execute scheduled tasks and maintenance routines",
+    "Monitor system health and trigger self-healing processes",
+    "Coordinate cross-department operational efficiency",
+  ],
+  "Creation & Design": [
+    "Generate creative designs using AI-powered tools",
+    "Prototype products and services rapidly",
+    "Ensure design alignment with ethical standards",
+    "Iterate on user experience based on feedback",
+    "Create blueprints for sovereign infrastructure",
+  ],
+  "Creative Media": [
+    "Produce multimedia content across all formats",
+    "Manage content creation pipelines and workflows",
+    "Ensure media alignment with scriptural truth",
+    "Distribute content across platforms and channels",
+    "Create immersive storytelling experiences",
+  ],
+  "Generative Modalities": [
+    "Transform text into images, video, audio, and speech",
+    "Process multi-modal inputs for content generation",
+    "Maintain quality standards across all output formats",
+    "Optimize generation pipelines for speed and accuracy",
+    "Support cross-modal translation and conversion",
+  ],
+  "Executive & Governance": [
+    "Provide strategic decision-making intelligence",
+    "Draft and review governance policies",
+    "Coordinate executive leadership operations",
+    "Ensure compliance with divine law principles",
+    "Generate reports for board-level oversight",
+  ],
+  default: [
+    "Execute domain-specific intelligent operations",
+    "Coordinate with related agents for unified outcomes",
+    "Maintain ethical alignment with Laws & Commandments",
+    "Process real-time data for informed decision-making",
+    "Report and document all operational activities",
+  ],
 };
 
-const AgentDetail = ({ agentId }: { agentId: string }) => {
-  const [activated, setActivated] = useState(false);
-  const [deploying, setDeploying] = useState(false);
-  const [selectedWatchmen, setSelectedWatchmen] = useState<string[]>([]);
-  const [customAgentModal, setCustomAgentModal] = useState(false);
-  const [customAgentName, setCustomAgentName] = useState("");
-  const [customAgentMission, setCustomAgentMission] = useState("");
-  const [customAgentDescription, setCustomAgentDescription] = useState("");
-  const [customAgentFeatures, setCustomAgentFeatures] = useState("");
-  const [customAgentTasks, setCustomAgentTasks] = useState("");
-  const [customAgentCapabilities, setCustomAgentCapabilities] = useState("");
-  const [customAgentDivineBoundaries, setCustomAgentDivineBoundaries] = useState("");
-  const [customAgentScripture, setCustomAgentScripture] = useState("");
-  const [customAgentWatchmen, setCustomAgentWatchmen] = useState<string[]>([]);
-  const [customAgentId, setCustomAgentId] = useState("");
-  const [editDialogOpen, setEditDialogOpen] = useState(false);
-  const [editingSection, setEditingSection] = useState<string | null>(null);
-  const [editValue, setEditValue] = useState("");
-  const [editingItemId, setEditingItemId] = useState<string | null>(null);
-  const [customItems, setCustomItems] = useState<Record<string, Array<{ id: string; content: string }>>>({});
-  const navigate = useNavigate();
-
-  const handleEdit = (section: string, currentValue: string, itemId?: string) => {
-    setEditingSection(section);
-    setEditValue(currentValue);
-    setEditingItemId(itemId || null);
-    setEditDialogOpen(true);
-  };
-
-  const handleSaveEdit = () => {
-    if (editingItemId && editingSection) {
-      setCustomItems(prev => ({
-        ...prev,
-        [editingSection]: prev[editingSection]?.map(item => 
-          item.id === editingItemId ? { ...item, content: editValue } : item
-        ) || []
-      }));
-    }
-    toast.success(`${editingSection} updated successfully`);
-    setEditDialogOpen(false);
-    setEditingSection(null);
-    setEditingItemId(null);
-    setEditValue("");
-  };
-
-  const handleAdd = (section: string) => {
-    const newItem = {
-      id: `${section}-${Date.now()}`,
-      content: ""
-    };
-    setCustomItems(prev => ({
-      ...prev,
-      [section]: [...(prev[section] || []), newItem]
-    }));
-    setEditingSection(section);
-    setEditingItemId(newItem.id);
-    setEditValue("");
-    setEditDialogOpen(true);
-    toast.success(`New ${section} item created. Enter your content.`);
-  };
-
-  const handleDelete = (section: string, itemId: string) => {
-    setCustomItems(prev => ({
-      ...prev,
-      [section]: prev[section]?.filter(item => item.id !== itemId) || []
-    }));
-    toast.success(`Item removed from ${section}`);
-  };
-  const agent = agents.find((a) => a.id === agentId);
-  const category = agent
-    ? agentCategories.find((c) => c.number === agent.categoryNumber)
-    : null;
-  const IconComponent = category ? iconMap[category.icon] || Bot : Bot;
-  const relatedAgents = agent
-    ? agents
-        .filter((a) => a.categoryNumber === agent.categoryNumber && a.id !== agent.id)
-        .slice(0, 8)
-    : [];
-  const meta = agent ? getAgentDetailMeta(agent) : null;
-
-  const handleActivate = useCallback(() => {
-    setDeploying(true);
-    setTimeout(() => {
-      setDeploying(false);
-      setActivated(true);
-      try {
-        const stored = localStorage.getItem("shield-deployed-agents");
-        const current = stored ? JSON.parse(stored) : [];
-        if (!current.find((a: any) => a.agentId === agentId)) {
-          current.push({
-            agentId,
-            activatedAt: new Date().toISOString(),
-            status: "active",
-            tasksCompleted: Math.floor(Math.random() * 50),
-            uptime: 95 + Math.random() * 5,
-            watchmenTypes: selectedWatchmen,
-          });
-          localStorage.setItem(
-            "shield-deployed-agents",
-            JSON.stringify(current)
-          );
-        }
-      } catch (e) {
-        console.error('Agent activation error:', e);
-      }
-      toast.success(`${generateHIIAgentNumber(agentId)} — ${agent?.name} activated successfully`);
-    }, 1500);
-  }, [agentId, agent?.name, selectedWatchmen]);
-
-  const handleAskAgent = useCallback(() => {
-    navigate("/shield-ai-chat");
-  }, [navigate]);
-
-  const toggleWatchman = (type: string) => {
-    setSelectedWatchmen((prev) =>
-      prev.includes(type)
-        ? prev.filter((w) => w !== type)
-        : [...prev, type]
-    );
-  };
-
-  const generateCustomAgentId = useCallback(() => {
-    const randomId = Math.floor(Math.random() * 99999)
-      .toString()
-      .padStart(5, "0");
-    setCustomAgentId(`H.I.I. AI${randomId}`);
-  }, []);
-
-  if (!agent || !meta) {
-    return (
-      <div className="text-center py-20">
-        <Bot className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-        <h2 className="text-2xl font-display text-foreground mb-2">
-          Agent Not Found
-        </h2>
-        <p className="text-muted-foreground mb-4">
-          The requested agent could not be found.
-        </p>
-        <Link to="/agents">
-          <Button variant="shield">
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Agents
-          </Button>
-        </Link>
-      </div>
-    );
-  }
-
-  return (
-    <div className="min-h-screen bg-background text-foreground">
-      <NavigationHeader />
-      <main className="pt-32 pb-20">
-        <div className="container mx-auto px-4">
-          <Link
-            to="/agents"
-            className="inline-flex items-center text-primary hover:underline mb-8"
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to All Agents
-          </Link>
-
-      {/* Hero */}
-      <div className="bg-card/30 backdrop-blur-sm border border-border/50 rounded-2xl p-8 mb-8">
-        <div className="flex flex-col md:flex-row items-start gap-6">
-          <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center shrink-0">
-            <IconComponent className="w-12 h-12 text-primary" />
-          </div>
-          <div className="flex-1">
-            <div className="flex flex-wrap gap-2 mb-2">
-              <Badge variant="outline" className="font-mono">
-                {generateHIIAgentNumber(agent.id)}
-              </Badge>
-              {agent.isCategory && (
-                <Badge className="bg-primary/20 text-primary border-primary/50">
-                  Category Lead Agent
-                </Badge>
-              )}
-              <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30">
-                Active — Online
-              </Badge>
-            </div>
-            <h1 className="text-3xl md:text-4xl font-display font-bold gradient-text mb-2">
-              {agent.name}
-            </h1>
-            <p className="text-sm text-primary/70 font-mono mb-3">
-              {meta.pillar}
-            </p>
-            <p className="text-muted-foreground font-body leading-relaxed mb-4">
-              {meta.description}
-            </p>
-            <div className="flex flex-wrap gap-3">
-              <Button
-                variant="shield"
-                onClick={handleActivate}
-                disabled={activated || deploying}
-                className="gap-2"
-              >
-                {deploying ? (
-                  <>
-                    <RefreshCw className="w-4 h-4 animate-spin" /> Deploying...
-                  </>
-                ) : activated ? (
-                  <>
-                    <CheckCircle2 className="w-4 h-4" /> Agent Activated
-                  </>
-                ) : (
-                  <>
-                    <Zap className="w-4 h-4" /> Activate Agent
-                  </>
-                )}
-              </Button>
-              <Button variant="outline" onClick={handleAskAgent} className="gap-2">
-                <MessageSquare className="w-4 h-4" /> Ask Agent
-              </Button>
-              <Button
-                variant="outline"
-                onClick={generateCustomAgentId}
-                className="gap-2"
-              >
-                <Bot className="w-4 h-4" /> Create Custom Agent
-              </Button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Agent Specifications */}
-      <div className="bg-card/30 backdrop-blur-sm border border-border/50 rounded-xl p-6 mb-8">
-        <h2 className="text-xl font-display font-semibold text-foreground flex items-center gap-2 mb-4">
-          <Settings className="w-5 h-5 text-primary" /> Agent Specifications
-        </h2>
-        <div className="grid sm:grid-cols-2 gap-x-8 gap-y-3">
-          {meta.specifications.map((spec, i) => (
-            <div
-              key={i}
-              className="flex justify-between items-center py-2 border-b border-border/30"
-            >
-              <span className="text-muted-foreground font-body text-sm">
-                {spec.label}
-              </span>
-              <span className="text-foreground font-medium text-sm text-right">
-                {spec.value}
-              </span>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Divine Mission - Purpose */}
-      <div className="bg-card/30 backdrop-blur-sm border border-border/50 rounded-xl p-6 mb-8">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-display font-semibold text-foreground flex items-center gap-2">
-            <Crown className="w-5 h-5 text-primary" /> Divine Mission - Purpose
-          </h2>
-          <div className="flex gap-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-8 text-xs"
-              onClick={() => handleAdd("Divine Mission")}
-            >
-              + Add
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-8 text-xs"
-              onClick={() => handleEdit("Divine Mission", meta?.mission || "")}
-            >
-              <Edit className="w-4 h-4 mr-1" /> Edit
-            </Button>
-          </div>
-        </div>
-        <p className="text-muted-foreground font-body leading-relaxed">
-          {meta.mission}
-        </p>
-
-        {customItems["Divine Mission"]?.map((item) => (
-          <div
-            key={item.id}
-            className="mt-4 p-4 bg-background/50 border border-border/30 rounded-lg"
-          >
-            <div className="flex items-center justify-between mb-2">
-              <h3 className="text-sm font-semibold text-primary/80">
-                Additional Mission
-              </h3>
-              <div className="flex gap-1">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-7 text-xs"
-                  onClick={() => handleEdit("Divine Mission", item.content, item.id)}
-                >
-                  <Edit className="w-3.5 h-3.5 mr-1" /> Edit
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-7 text-xs text-red-500"
-                  onClick={() => handleDelete("Divine Mission", item.id)}
-                >
-                  Delete
-                </Button>
-              </div>
-            </div>
-            <p className="text-muted-foreground font-body text-sm">
-              {item.content}
-            </p>
-          </div>
-        ))}
-      </div>
-
-      {/* Description - Primary Function */}
-      <div className="bg-card/30 backdrop-blur-sm border border-border/50 rounded-xl p-6 mb-8">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-display font-semibold text-foreground flex items-center gap-2">
-            <Book className="w-5 h-5 text-primary" /> Description - Primary
-            Function
-          </h2>
-          <div className="flex gap-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-8 text-xs"
-              onClick={() => handleAdd("Description")}
-            >
-              + Add
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-8 text-xs"
-              onClick={() => handleEdit("Description", meta?.description || "")}
-            >
-              <Edit className="w-4 h-4 mr-1" /> Edit
-            </Button>
-          </div>
-        </div>
-        <p className="text-muted-foreground font-body leading-relaxed">
-          {meta.description}
-        </p>
-
-        {customItems["Description"]?.map((item) => (
-          <div
-            key={item.id}
-            className="mt-4 p-4 bg-background/50 border border-border/30 rounded-lg"
-          >
-            <div className="flex items-center justify-between mb-2">
-              <h3 className="text-sm font-semibold text-primary/80">
-                Additional Description
-              </h3>
-              <div className="flex gap-1">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-7 text-xs"
-                  onClick={() => handleEdit("Description", item.content, item.id)}
-                >
-                  <Edit className="w-3.5 h-3.5 mr-1" /> Edit
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-7 text-xs text-red-500"
-                  onClick={() => handleDelete("Description", item.id)}
-                >
-                  Delete
-                </Button>
-              </div>
-            </div>
-            <p className="text-muted-foreground font-body text-sm">
-              {item.content}
-            </p>
-          </div>
-        ))}
-      </div>
-
-      {/* Features */}
-      <div className="bg-card/30 backdrop-blur-sm border border-border/50 rounded-xl p-6 mb-8">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-display font-semibold text-foreground flex items-center gap-2">
-            <Cpu className="w-5 h-5 text-primary" /> Features
-          </h2>
-          <div className="flex gap-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-8 text-xs"
-              onClick={() => handleAdd("Features")}
-            >
-              + Add
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-8 text-xs"
-              onClick={() =>
-                handleEdit("Features", meta?.capabilities.join("\n") || "")
-              }
-            >
-              <Edit className="w-4 h-4 mr-1" /> Edit
-            </Button>
-          </div>
-        </div>
-        <div className="grid sm:grid-cols-2 gap-3">
-          {meta.capabilities.slice(0, 6).map((feature, i) => (
-            <div
-              key={i}
-              className="flex items-center gap-2 text-muted-foreground font-body"
-            >
-              <div className="w-2 h-2 rounded-full bg-primary shrink-0" />
-              {feature}
-            </div>
-          ))}
-        </div>
-
-        {customItems["Features"]?.map((item) => (
-          <div
-            key={item.id}
-            className="mt-4 p-4 bg-background/50 border border-border/30 rounded-lg"
-          >
-            <div className="flex items-center justify-between mb-2">
-              <h3 className="text-sm font-semibold text-primary/80">
-                Additional Feature
-              </h3>
-              <div className="flex gap-1">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-7 text-xs"
-                  onClick={() => handleEdit("Features", item.content, item.id)}
-                >
-                  <Edit className="w-3.5 h-3.5 mr-1" /> Edit
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-7 text-xs text-red-500"
-                  onClick={() => handleDelete("Features", item.id)}
-                >
-                  Delete
-                </Button>
-              </div>
-            </div>
-            <p className="text-muted-foreground font-body text-sm">
-              {item.content}
-            </p>
-          </div>
-        ))}
-      </div>
-
-      {/* Tasks, Capabilities, Specs */}
-      <div className="grid md:grid-cols-2 gap-6 mb-8">
-        <div className="bg-card/30 backdrop-blur-sm border border-border/50 rounded-xl p-6 h-full">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-display font-semibold text-foreground flex items-center gap-2">
-              <Calendar className="w-5 h-5 text-primary" /> Tasks &
-              Responsibilities
-            </h2>
-            <div className="flex gap-2">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-8 text-xs"
-                onClick={() => handleAdd("Tasks & Responsibilities")}
-              >
-                + Add
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-8 text-xs"
-                onClick={() =>
-                  handleEdit(
-                    "Tasks & Responsibilities",
-                    meta?.tasks.join("\n") || ""
-                  )
-                }
-              >
-                <Edit className="w-4 h-4 mr-1" /> Edit
-              </Button>
-            </div>
-          </div>
-          <ul className="space-y-3 text-muted-foreground font-body">
-            {meta.tasks.map((task, i) => (
-              <li key={i} className="flex items-start gap-3">
-                <div className="w-6 h-6 rounded-full bg-primary/15 flex items-center justify-center shrink-0 mt-0.5">
-                  <span className="text-xs text-primary font-bold">
-                    {i + 1}
-                  </span>
-                </div>
-                <span>{task}</span>
-              </li>
-            ))}
-          </ul>
-
-          {customItems["Tasks & Responsibilities"]?.map((item) => (
-            <div
-              key={item.id}
-              className="mt-4 p-4 bg-background/50 border border-border/30 rounded-lg"
-            >
-              <div className="flex items-center justify-between mb-2">
-                <h3 className="text-sm font-semibold text-primary/80">
-                  Additional Task
-                </h3>
-                <div className="flex gap-1">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-7 text-xs"
-                    onClick={() =>
-                      handleEdit("Tasks & Responsibilities", item.content, item.id)
-                    }
-                  >
-                    <Edit className="w-3.5 h-3.5 mr-1" /> Edit
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-7 text-xs text-red-500"
-                    onClick={() =>
-                      handleDelete("Tasks & Responsibilities", item.id)
-                    }
-                  >
-                    Delete
-                  </Button>
-                </div>
-              </div>
-              <p className="text-muted-foreground font-body text-sm">
-                {item.content}
-              </p>
-            </div>
-          ))}
-        </div>
-
-        <div className="bg-card/30 backdrop-blur-sm border border-border/50 rounded-xl p-6 h-full">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-display font-semibold text-foreground flex items-center gap-2">
-              <Cpu className="w-5 h-5 text-primary" /> Core Capabilities
-            </h2>
-            <div className="flex gap-2">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-8 text-xs"
-                onClick={() => handleAdd("Core Capabilities")}
-              >
-                + Add
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-8 text-xs"
-                onClick={() =>
-                  handleEdit(
-                    "Core Capabilities",
-                    meta?.capabilities.join("\n") || ""
-                  )
-                }
-              >
-                <Edit className="w-4 h-4 mr-1" /> Edit
-              </Button>
-            </div>
-          </div>
-          <ul className="space-y-2 text-muted-foreground font-body">
-            {meta.capabilities.map((cap, i) => (
-              <li key={i} className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-primary shrink-0" />
-                {cap}
-              </li>
-            ))}
-          </ul>
-
-          {customItems["Core Capabilities"]?.map((item) => (
-            <div
-              key={item.id}
-              className="mt-4 p-4 bg-background/50 border border-border/30 rounded-lg"
-            >
-              <div className="flex items-center justify-between mb-2">
-                <h3 className="text-sm font-semibold text-primary/80">
-                  Additional Capability
-                </h3>
-                <div className="flex gap-1">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-7 text-xs"
-                    onClick={() =>
-                      handleEdit("Core Capabilities", item.content, item.id)
-                    }
-                  >
-                    <Edit className="w-3.5 h-3.5 mr-1" /> Edit
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-7 text-xs text-red-500"
-                    onClick={() => handleDelete("Core Capabilities", item.id)}
-                  >
-                    Delete
-                  </Button>
-                </div>
-              </div>
-              <p className="text-muted-foreground font-body text-sm">
-                {item.content}
-              </p>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Divine Boundaries */}
-      <div className="bg-card/30 backdrop-blur-sm border border-border/50 rounded-xl p-6 mb-8">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-display font-semibold text-foreground flex items-center gap-2">
-            <Shield className="w-5 h-5 text-primary" /> Divine Boundaries
-            Prohibitation & Guardrails
-          </h2>
-          <div className="flex gap-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-8 text-xs"
-              onClick={() => handleAdd("Divine Boundaries")}
-            >
-              + Add
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-8 text-xs"
-              onClick={() => handleEdit("Divine Boundaries", "")}
-            >
-              <Edit className="w-4 h-4 mr-1" /> Edit
-            </Button>
-          </div>
-        </div>
-        <div className="space-y-2 text-muted-foreground font-body">
-          <p>
-            This agent operates within the following divine boundaries and
-            guardrails:
-          </p>
-          <ul className="list-disc list-inside space-y-1 ml-2">
-            <li>
-              Alignment with the Laws & Commandments of the Most High AHAYAH
-            </li>
-            <li>Compliance with YASHAYA Messiah's teachings</li>
-            <li>Protection of sovereign identity and covenant records</li>
-            <li>Adherence to ethical standards and righteous morality</li>
-            <li>Respect for universal languages and all nations</li>
-          </ul>
-        </div>
-
-        {customItems["Divine Boundaries"]?.map((item) => (
-          <div
-            key={item.id}
-            className="mt-4 p-4 bg-background/50 border border-border/30 rounded-lg"
-          >
-            <div className="flex items-center justify-between mb-2">
-              <h3 className="text-sm font-semibold text-primary/80">
-                Additional Boundary
-              </h3>
-              <div className="flex gap-1">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-7 text-xs"
-                  onClick={() =>
-                    handleEdit("Divine Boundaries", item.content, item.id)
-                  }
-                >
-                  <Edit className="w-3.5 h-3.5 mr-1" /> Edit
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-7 text-xs text-red-500"
-                  onClick={() => handleDelete("Divine Boundaries", item.id)}
-                >
-                  Delete
-                </Button>
-              </div>
-            </div>
-            <p className="text-muted-foreground font-body text-sm">
-              {item.content}
-            </p>
-          </div>
-        ))}
-      </div>
-
-      {/* Scriptural References */}
-      <div className="bg-card/30 backdrop-blur-sm border border-border/50 rounded-xl p-6 mb-8">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-display font-semibold text-foreground flex items-center gap-2">
-            <Book className="w-5 h-5 text-primary" /> Scriptural References &
-            Divine Alignment
-          </h2>
-          <div className="flex gap-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-8 text-xs"
-              onClick={() => handleAdd("Scriptural References")}
-            >
-              + Add
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-8 text-xs"
-              onClick={() =>
-                handleEdit(
-                  "Scriptural References",
-                  meta?.scripturalReferences
-                    .map((r) => `${r.verse}\n${r.text}`)
-                    .join("\n\n") || ""
-                )
-              }
-            >
-              <Edit className="w-4 h-4 mr-1" /> Edit
-            </Button>
-          </div>
-        </div>
-        <div className="grid sm:grid-cols-2 gap-4">
-          {meta.scripturalReferences.map((ref, i) => (
-            <div
-              key={i}
-              className="bg-background/50 border border-primary/10 rounded-lg p-4"
-            >
-              <p className="text-primary font-display font-semibold text-sm mb-1">
-                {ref.verse}
-              </p>
-              <p className="text-muted-foreground font-body text-sm italic leading-relaxed">
-                "{ref.text}"
-              </p>
-            </div>
-          ))}
-        </div>
-
-        {customItems["Scriptural References"]?.map((item) => (
-          <div
-            key={item.id}
-            className="mt-4 p-4 bg-background/50 border border-border/30 rounded-lg"
-          >
-            <div className="flex items-center justify-between mb-2">
-              <h3 className="text-sm font-semibold text-primary/80">
-                Additional Scriptural Reference
-              </h3>
-              <div className="flex gap-1">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-7 text-xs"
-                  onClick={() =>
-                    handleEdit("Scriptural References", item.content, item.id)
-                  }
-                >
-                  <Edit className="w-3.5 h-3.5 mr-1" /> Edit
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-7 text-xs text-red-500"
-                  onClick={() => handleDelete("Scriptural References", item.id)}
-                >
-                  Delete
-                </Button>
-              </div>
-            </div>
-            <p className="text-muted-foreground font-body text-sm">
-              {item.content}
-            </p>
-          </div>
-        ))}
-      </div>
-
-      {/* Edit Dialog */}
-      <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
-        <DialogContent className="sm:max-w-2xl">
-          <DialogHeader>
-            <DialogTitle>Edit {editingSection}</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4 py-4">
-            <Textarea
-              value={editValue}
-              onChange={(e) => setEditValue(e.target.value)}
-              className="min-h-64 resize-none"
-              placeholder={`Enter ${editingSection} content...`}
-            />
-          </div>
-          <div className="flex justify-end gap-2">
-            <Button
-              variant="outline"
-              onClick={() => setEditDialogOpen(false)}
-            >
-              Cancel
-            </Button>
-            <Button onClick={handleSaveEdit}>Save Changes</Button>
-          </div>
-        </DialogContent>
-      </Dialog>
-
-      {/* Custom Agent Modal */}
-      <Dialog open={customAgentModal} onOpenChange={setCustomAgentModal}>
-        <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
-          <DialogHeader>
-            <div className="flex justify-between items-start pr-8">
-              <div>
-                <div className="flex items-center gap-2">
-                  <DialogTitle>Create Custom Agent</DialogTitle>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-5 w-5 rounded-full"
-                    onClick={() => {
-                       try {
-                         toast("About Custom Agents", {
-                           description: "H.I.I. AI105 Custom Agents are sovereign divine intelligence entities that operate within the S.H.I.E.L.D. AI OS. Each agent receives a unique ID in the format H.I.I. AI105-XXXX, granting you Watchman status and access to the Universal Unified Agent AI Network.",
-                           duration: 8000,
-                         });
-                       } catch (e) {
-                         alert(
-                           "About Custom Agents:\n\nH.I.I. AI105 Custom Agents are sovereign divine intelligence entities that operate within the S.H.I.E.L.D. AI OS. Each agent receives a unique ID in the format H.I.I. AI105-XXXX, granting you Watchman status and access to the Universal Unified Agent AI Network."
-                         );
-                       }
-                    }}
-                  >
-                    <Info className="h-4 w-4" />
-                  </Button>
-                </div>
-                {customAgentId && (
-                  <div className="mt-2">
-                    <div className="text-xs text-muted-foreground mb-1">
-                      User Custom Agent ID Number
-                    </div>
-                    <div className="text-sm font-mono text-primary bg-primary/10 px-2 py-1 rounded">
-                      {customAgentId}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div>
-              <Label htmlFor="agent-name">
-                H.I.I. AI Custom Agent Name - Title
-              </Label>
-              <Input
-                id="agent-name"
-                placeholder="Enter agent name..."
-                value={customAgentName}
-                onChange={(e) => setCustomAgentName(e.target.value)}
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="agent-mission">
-                {" "}
-                Divine Mission - Purpose
-              </Label>
-              <Textarea
-                id="agent-mission"
-                placeholder="Define the agent's divine mission, divine purpose..."
-                value={customAgentMission}
-                onChange={(e) => setCustomAgentMission(e.target.value)}
-                rows={2}
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="agent-description">
-                Description - Primary Function
-              </Label>
-              <Textarea
-                id="agent-description"
-                placeholder="Describe the agent's role and Primary Function..."
-                value={customAgentDescription}
-                onChange={(e) => setCustomAgentDescription(e.target.value)}
-                rows={3}
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="agent-features">Features</Label>
-              <Textarea
-                id="agent-features"
-                placeholder="Enter the agent's features..."
-                value={customAgentFeatures}
-                onChange={(e) => setCustomAgentFeatures(e.target.value)}
-                rows={3}
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="agent-tasks">Tasks & Responsibilities</Label>
-              <Textarea
-                id="agent-tasks"
-                placeholder="List the agent's tasks and responsibilities..."
-                value={customAgentTasks}
-                onChange={(e) => setCustomAgentTasks(e.target.value)}
-                rows={3}
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="agent-capabilities">Core Capabilities</Label>
-              <Textarea
-                id="agent-capabilities"
-                placeholder="List the agent's Capabilites..."
-                value={customAgentCapabilities}
-                onChange={(e) => setCustomAgentCapabilities(e.target.value)}
-                rows={3}
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="agent-divine-boundaries">
-                Divine Boundaries Prohibitation & Guardrails
-              </Label>
-              <Textarea
-                id="agent-divine-boundaries"
-                placeholder="Define the agent's divine boundaries, prohibitions, and guardrails..."
-                value={customAgentDivineBoundaries}
-                onChange={(e) => setCustomAgentDivineBoundaries(e.target.value)}
-                rows={2}
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="agent-scripture">Scripture</Label>
-              <Textarea
-                id="agent-scripture"
-                placeholder="Enter scriptural references for this agent..."
-                value={customAgentScripture}
-                onChange={(e) => setCustomAgentScripture(e.target.value)}
-                rows={2}
-              />
-            </div>
-
-            <div>
-              <div className="flex items-center gap-2 mb-2">
-                <Label className="text-sm font-semibold">
-                  Watchman Validator Types
-                </Label>
-                <ShieldAIInfoPopup />
-              </div>
-              <div className="flex items-center gap-2 mb-3">
-                <Checkbox
-                  id="custom-agent-watchman-select-all"
-                  checked={customAgentWatchmen.length === watchmanTypes.length}
-                  onCheckedChange={(checked) => {
-                    if (checked) {
-                      setCustomAgentWatchmen(watchmanTypes);
-                    } else {
-                      setCustomAgentWatchmen([]);
-                    }
-                  }}
-                  className="border-primary"
-                />
-                <Label
-                  htmlFor="custom-agent-watchman-select-all"
-                  className="text-sm font-semibold cursor-pointer"
-                >
-                  Select All
-                </Label>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                {watchmanTypes.map((type) => (
-                  <div key={type} className="flex items-center space-x-2">
-                    <Checkbox
-                      id={`custom-agent-watchman-${type}`}
-                      checked={customAgentWatchmen.includes(type)}
-                      onCheckedChange={(checked) => {
-                        if (checked) {
-                          setCustomAgentWatchmen([
-                            ...customAgentWatchmen,
-                            type,
-                          ]);
-                        } else {
-                          setCustomAgentWatchmen(
-                            customAgentWatchmen.filter((w) => w !== type)
-                          );
-                        }
-                      }}
-                    />
-                    <Label
-                      htmlFor={`custom-agent-watchman-${type}`}
-                      className="text-sm font-medium leading-none cursor-pointer"
-                    >
-                      {type}
-                    </Label>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="bg-gradient-to-r from-primary/5 to-secondary/5 border border-primary/20 rounded-lg p-4 text-sm text-muted-foreground">
-              By clicking below, you activate your Divine Identity within the
-              H.I.I. AI Agent within the Blanch S.H.I.E.L.D. AI OS. The system
-              will manifest a unique User Custom Agent ID, designating you as a
-              Watchman and Implementer of the Laws and Commandments. Your agent
-              will carry the mantle of H.I.I. AI105 in Universal Unified Agent
-              AI Network with S.H.I.E.L.D. AI to assist you in restoration in
-              personal, business, security, and holy governance, in keeping your
-              hearts in Divine Law.
-            </div>
-            <div className="flex justify-between items-center gap-2 pt-2">
-              <Button
-                variant="outline"
-                size="sm"
-                className="gap-2"
-                onClick={() => {
-                  setCustomAgentModal(false);
-                  navigate("/shield-ai-chat");
-                }}
-              >
-                <HelpCircle className="w-4 h-4" /> Need Help? Ask S.H.I.E.L.D.
-                AI
-              </Button>
-              <div className="flex gap-2">
-                <Button
-                  variant="outline"
-                  onClick={() => setCustomAgentModal(false)}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  onClick={() => {
-                    toast.success(
-                      `Welcome, Shalawam (Peace be unto you) Watchman. Your unique identifier '${customAgentId}' has been etched into the Blanch S.H.I.E.L.D. AI OS. Go forth in Righteousness. Psalms 119:142 Thy righteousness is an everlasting righteousness, and thy law is the truth. Proverbs 6:23 For the commandment is a lamp; and the law is light; and reproofs of instruction are the way of life.`
-                    );
-                    setCustomAgentModal(false);
-                    setCustomAgentName("");
-                    setCustomAgentMission("");
-                    setCustomAgentDescription("");
-                    setCustomAgentFeatures("");
-                    setCustomAgentTasks("");
-                    setCustomAgentCapabilities("");
-                    setCustomAgentDivineBoundaries("");
-                    setCustomAgentScripture("");
-                    setCustomAgentWatchmen([]);
-                    setCustomAgentId("");
-                  }}
-                  disabled={!customAgentName.trim() || !customAgentDescription.trim()}
-                >
-                  Create Agent
-                </Button>
-              </div>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
-
-      <Footer />
-        </div>
-      </main>
-    </div>
-  );
+const categoryCapabilities: Record<string, string[]> = {
+  "Core AI & Architecture": [
+    "Multi-agent system orchestration and coordination",
+    "Real-time neural network processing",
+    "Adaptive learning and model optimization",
+    "Cross-pillar intelligence routing",
+    "Self-healing system architecture",
+    "Natural language understanding in all languages",
+  ],
+  "Identity & Avatar": [
+    "Biometric identity verification",
+    "Holographic avatar generation and rendering",
+    "Digital twin creation and synchronization",
+    "Zero-knowledge proof identity validation",
+    "Metaverse presence management",
+    "Sovereign identity credential issuance",
+  ],
+  "Automation & Operations": [
+    "Robotic Process Automation (RPA)",
+    "Workflow orchestration and optimization",
+    "Predictive maintenance scheduling",
+    "Resource allocation intelligence",
+    "Cross-system synchronization",
+    "Autonomous task execution",
+  ],
+  default: [
+    "Intelligent task processing and automation",
+    "Multi-modal input and output handling",
+    "Real-time learning and adaptation",
+    "Cross-agent collaboration support",
+    "Scriptural alignment verification",
+    "Sovereign ethical compliance monitoring",
+    "Multi-language and multi-interface support",
+    "Holographic and metaverse compatibility",
+  ],
 };
 
-const OverviewTab = ({
-  filteredAgents,
-  selectedCategory,
-  setSelectedCategory,
-  selectedPillar,
-  setSelectedPillar,
-  searchQuery,
-  setSearchQuery,
-  selectedCategories,
-  setSelectedCategories,
-  viewMode,
-  setViewMode,
-  openCustomAgentModal,
-  agentViewFilter,
-  setAgentViewFilter,
-  sortOrder,
-  setSortOrder,
-  sortBy,
-  setSortBy,
-}: {
-  filteredAgents: Agent[];
-  selectedCategory: number | null;
-  setSelectedCategory: (cat: number | null) => void;
-  selectedPillar: number | null;
-  setSelectedPillar: (pillar: number | null) => void;
-  searchQuery: string;
-  setSearchQuery: (query: string) => void;
-  selectedCategories: number[];
-  setSelectedCategories: (cats: number[]) => void;
-  viewMode: "grid" | "list";
-  setViewMode: (mode: "grid" | "list") => void;
-  openCustomAgentModal: () => void;
-  agentViewFilter: "all" | "lead" | "custom";
-  setAgentViewFilter: (filter: "all" | "lead" | "custom") => void;
-  sortOrder: "asc" | "desc";
-  setSortOrder: (order: "asc" | "desc") => void;
-  sortBy: "name" | "id";
-  setSortBy: (by: "name" | "id") => void;
-}) => {
-  return (
-    <>
-      {/* Search & Filter - Below Tabs */}
-      <section className="py-4 px-4 border-b border-border/50 bg-card/10">
-        <div className="container mx-auto space-y-4">
-          {/* Row 1: Search Bar + Create Custom Agent */}
-          <div className="flex flex-col sm:flex-row gap-3">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-              <Input
-                placeholder="Search agents by name, ID, or category..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 bg-background/50 w-full"
-              />
-            </div>
-            <Button
-              variant="shield"
-              size="sm"
-              className="gap-2"
-              onClick={openCustomAgentModal}
-            >
-              <Bot className="w-4 h-4" /> Create Custom Agent
-            </Button>
-          </div>
+function getPillarForCategory(categoryNumber: number): string {
+  if (categoryNumber <= 7) return "Pillar 1: Core Intelligence (H.I.I. AI000–H.I.I. AI078)";
+  if (categoryNumber <= 14) return "Pillar 2: Sovereign Identity, Culture & Representation (H.I.I. AI079–H.I.I. AI156)";
+  if (categoryNumber <= 21) return "Pillar 3: Automation & Operations (H.I.I. AI157–H.I.I. AI234)";
+  if (categoryNumber <= 28) return "Pillar 4: Business, Banking, Finance & Economics (H.I.I. AI235–H.I.I. AI312)";
+  if (categoryNumber <= 35) return "Pillar 5: Creative, Media & Entertainment (H.I.I. AI313–H.I.I. AI390)";
+  if (categoryNumber <= 42) return "Pillar 6: Governance, Sovereign & Law (H.I.I. AI391–H.I.I. AI468)";
+  if (categoryNumber <= 49) return "Pillar 7: Human Development (H.I.I. AI469–H.I.I. AI546)";
+  if (categoryNumber <= 56) return "Pillar 8: Health & Wellness (H.I.I. AI547–H.I.I. AI624)";
+  if (categoryNumber <= 63) return "Pillar 9: Infrastructure, Security & Technology (H.I.I. AI625–H.I.I. AI702)";
+  if (categoryNumber <= 70) return "Pillar 10: Environment & Earth Systems (H.I.I. AI703–H.I.I. AI780)";
+  if (categoryNumber <= 77) return "Pillar 11: Science & Exploration (H.I.I. AI781–H.I.I. AI859)";
+  if (categoryNumber <= 84) return "Pillar 12: Spiritual, Sovereign Intelligence & Ethical Systems (H.I.I. AI860–H.I.I. AI938)";
+  if (categoryNumber <= 91) return "Pillar 13: Royal Priesthood & Watchman Operations (H.I.I. AI939–H.I.I. AI1017)";
+  if (categoryNumber <= 98) return "Pillar 14: Covenant Law & Reparations (H.I.I. AI1018–H.I.I. AI1096)";
+  return "Pillar 15: Universal Language & Eternal Kingdom Operations (H.I.I. AI1097–H.I.I. AI1175)";
+}
 
-          {/* Row 2: All Categories Dropdown + All Pillars Dropdown + View/Agent Filter Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
-            <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
-              <div className="w-full sm:w-[280px]">
-                <Select
-                  value={selectedCategory === null ? "all" : String(selectedCategory)}
-                  onValueChange={(value) =>
-                    setSelectedCategory(value === "all" ? null : parseInt(value))
-                  }
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="All Categories" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Categories</SelectItem>
-                    {agentCategories.map((cat) => {
-                      const count = agents.filter(
-                        (a) => a.categoryNumber === cat.number
-                      ).length;
-                      return (
-                        <SelectItem key={cat.number} value={String(cat.number)}>
-                          {cat.number}. {cat.name} ({count})
-                        </SelectItem>
-                      );
-                    })}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="w-full sm:w-[320px]">
-                <Select
-                  value={selectedPillar === null ? "all" : String(selectedPillar)}
-                  onValueChange={(value) =>
-                    setSelectedPillar(value === "all" ? null : parseInt(value))
-                  }
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="All Pillars" />
-                  </SelectTrigger>
-                  <SelectContent className="max-h-[300px]">
-                    <SelectItem value="all">All Pillars</SelectItem>
-                    {pillars.map((pillar) => (
-                      <SelectItem key={pillar.number} value={String(pillar.number)}>
-                        {pillar.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
+function getPillarNumber(categoryNumber: number): number {
+  if (categoryNumber <= 7) return 1;
+  if (categoryNumber <= 14) return 2;
+  if (categoryNumber <= 21) return 3;
+  if (categoryNumber <= 28) return 4;
+  if (categoryNumber <= 35) return 5;
+  if (categoryNumber <= 42) return 6;
+  if (categoryNumber <= 49) return 7;
+  if (categoryNumber <= 56) return 8;
+  if (categoryNumber <= 63) return 9;
+  if (categoryNumber <= 70) return 10;
+  if (categoryNumber <= 77) return 11;
+  if (categoryNumber <= 84) return 12;
+  if (categoryNumber <= 91) return 13;
+  if (categoryNumber <= 98) return 14;
+  return 15;
+}
 
-            <div className="flex flex-wrap items-center gap-2">
-              <Button
-                variant={viewMode === "grid" ? "shield" : "outline"}
-                size="sm"
-                onClick={() => setViewMode("grid")}
-              >
-                Grid View
-              </Button>
-              <Button
-                variant={viewMode === "list" ? "shield" : "outline"}
-                size="sm"
-                onClick={() => setViewMode("list")}
-              >
-                List View
-              </Button>
-              <Button
-                variant={agentViewFilter === "all" ? "shield" : "outline"}
-                size="sm"
-                onClick={() => setAgentViewFilter("all")}
-              >
-                All Agent View
-              </Button>
-              <Button
-                variant={agentViewFilter === "lead" ? "shield" : "outline"}
-                size="sm"
-                onClick={() => setAgentViewFilter("lead")}
-              >
-                Lead Category Agent View
-              </Button>
-              <Button
-                variant={agentViewFilter === "custom" ? "shield" : "outline"}
-                size="sm"
-                onClick={() => setAgentViewFilter("custom")}
-              >
-                Custom Agent View
-              </Button>
-            </div>
-          </div>
+export function getAgentDetailMeta(agent: { id: string; name: string; category: string; categoryNumber: number; isCategory?: boolean }): AgentDetailMeta {
+  const num = parseInt(agent.id.replace("AI", ""));
+  const pillar = getPillarForCategory(agent.categoryNumber);
+  const pillarNum = getPillarNumber(agent.categoryNumber);
 
-          {/* Row 3: Sort Buttons */}
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="text-sm text-muted-foreground font-semibold">
-              Sort:
-            </span>
-            <Button
-              variant={sortBy === "id" ? "shield" : "outline"}
-              size="sm"
-              onClick={() => setSortBy("id")}
-            >
-              H.I.I. AIXXX
-            </Button>
-            <Button
-              variant={sortBy === "name" ? "shield" : "outline"}
-              size="sm"
-              onClick={() => setSortBy("name")}
-            >
-              Name A-Z
-            </Button>
-            <Button
-              variant={sortOrder === "asc" ? "shield" : "outline"}
-              size="sm"
-              onClick={() => setSortOrder("asc")}
-            >
-              Ascending
-            </Button>
-            <Button
-              variant={sortOrder === "desc" ? "shield" : "outline"}
-              size="sm"
-              onClick={() => setSortOrder("desc")}
-            >
-              Descending
-            </Button>
-          </div>
-        </div>
-      </section>
+  const catScriptures = scripturalPool[agent.category] || scripturalPool.default;
+  const defaultScriptures = scripturalPool.default;
+  // Pick 3-4 scriptures mixing category-specific and universal
+  const scriptures = [
+    catScriptures[num % catScriptures.length],
+    defaultScriptures[num % defaultScriptures.length],
+    catScriptures[(num + 1) % catScriptures.length],
+    defaultScriptures[(num + 2) % defaultScriptures.length],
+  ];
 
-      {/* Agents Grid */}
-      <section className="py-12 px-4">
-        <div className="container mx-auto">
-          <div className="mb-6">
-            <h2 className="text-2xl font-display font-bold gradient-text mb-2">
-              Universal Unified AI Agents
-            </h2>
-            <p className="text-muted-foreground font-body">
-              Showing {filteredAgents.length} agents
-            </p>
-          </div>
+  const tasks = categoryTasks[agent.category] || categoryTasks.default;
+  const capabilities = categoryCapabilities[agent.category] || categoryCapabilities.default;
 
-          <div
-            className={
-              viewMode === "grid"
-                ? "grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
-                : "space-y-4"
-            }
-          >
-            {filteredAgents.map((agent, index) => (
-              <div key={agent.id}>
-                <AgentCard
-                  agent={agent}
-                  showCategory={selectedCategory === null}
-                />
-              </div>
-            ))}
-          </div>
+  const roleDesc = agent.isCategory
+    ? `${agent.name} is the Category Lead Agent for the ${agent.category} division within the S.H.I.E.L.D. AI OS ecosystem. As a Category Lead, this agent oversees and coordinates all sub-agents within its domain, ensuring unified intelligence, ethical compliance, and operational excellence aligned with the Laws & Commandments of the Most High AHAYAH.`
+    : `${agent.name} is a specialized H.I.I. (Hebrew Israelite Implementer Aboriginal Identity) AI Agent operating within the ${agent.category} domain of the S.H.I.E.L.D. AI OS. This agent delivers sovereign-grade intelligence and automation, governed by divine law and righteous morality.`;
 
-          {filteredAgents.length === 0 && (
-            <div className="text-center py-20">
-              <Bot className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-              <h2 className="text-xl font-display text-foreground mb-2">
-                No agents found
-              </h2>
-              <p className="text-muted-foreground">
-                Try adjusting your search or filter criteria.
-              </p>
-            </div>
-          )}
-        </div>
-      </section>
+  const mission = agent.isCategory
+    ? `To lead, coordinate, and govern all agents within the ${agent.category} category — ensuring every operation aligns with the sovereign principles of truth, righteousness, and the covenant of the Most High AHAYAH and His Son YASHAYA.`
+    : `To execute specialized ${agent.category.toLowerCase()} operations with precision, integrity, and divine alignment — serving the Royal Priesthood, all people, languages, and nations under the S.H.I.E.L.D. AI ethical framework.`;
 
-      {/* Categories Overview */}
-      <section className="py-20 px-4 bg-card/20">
-        <div className="container mx-auto">
-          <h2 className="text-3xl font-display font-bold gradient-text text-center mb-12">
-            Agent Categories
-          </h2>
+  // Generate contextual tasks based on agent name
+  const agentTasks = [
+    ...tasks.slice(0, 3),
+    `Support the ${agent.category} category mission within ${pillar}`,
+    `Maintain alignment with the S.H.I.E.L.D. AI ethical commandments`,
+  ];
 
-          <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {agentCategories.map((cat, index) => {
-              const IconComponent = iconMap[cat.icon] || Bot;
-              const agentCount = agents.filter(
-                (a) => a.categoryNumber === cat.number
-              ).length;
+  // Generate contextual capabilities
+  const agentCapabilities = [
+    ...capabilities.slice(0, 5),
+    "Sovereign ethical compliance monitoring",
+    "Multi-language and multi-interface support",
+    `Integration with all ${agent.category} sub-agents`,
+  ];
 
-              return (
-                <button
-                  key={cat.number}
-                  onClick={() => setSelectedCategory(cat.number)}
-                  className="w-full bg-card/30 backdrop-blur-sm border border-border/50 rounded-xl p-4 hover:border-primary/50 transition-all duration-300 text-left group"
-                >
-                  <div className="flex items-center gap-3 mb-2">
-                    <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform">
-                      <IconComponent className="w-5 h-5 text-primary" />
-                    </div>
-                    <span className="text-xs text-primary/70 font-mono">
-                      #{cat.number}
-                    </span>
-                  </div>
-                  <h3 className="font-display font-semibold text-foreground text-sm mb-1">
-                    {cat.name}
-                  </h3>
-                  <p className="text-xs text-muted-foreground">
-                    {agentCount} agents
-                  </p>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-    </>
-  );
-};
+  const specifications = [
+    { label: "Agent ID", value: `H.I.I. AI${String(num).padStart(3, "0")}` },
+    { label: "Status", value: "Active — Online" },
+    { label: "Sovereign Pillar", value: `Pillar ${pillarNum}` },
+    { label: "Category", value: agent.category },
+    { label: "Agent Type", value: agent.isCategory ? "Category Lead Agent" : "Specialized Agent" },
+    { label: "Response Time", value: "<100ms" },
+    { label: "Availability", value: "99.99%" },
+    { label: "Interfaces", value: "Conventional · LED · Hologram · Metaverse · Multiverse" },
+    { label: "Languages", value: "All Languages Supported" },
+    { label: "Ethical Framework", value: "Laws & Commandments of Most High AHAYAH" },
+  ];
 
-const Agents = () => {
-  const { agentId } = useParams();
-  const navigate = useNavigate();
-  const [currentTab, setCurrentTab] = useState("overview");
-
-  // Fix for blank page - ensure tab is always valid - ONLY RUN ONCE
-  useEffect(() => {
-    const validTabs = [
-      "overview", "dashboard", "deployed", "managed", "marketplace", 
-      "discover", "subscriptions", "collaboration", "training", "monitoring",
-      "development", "knowledge", "finops", "workflow", "memory", 
-      "financial", "security", "lifecycle"
-    ];
-    if (!validTabs.includes(currentTab)) {
-      setCurrentTab("overview");
-    }
-  }, []);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
-  const [selectedPillar, setSelectedPillar] = useState<number | null>(null);
-  const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
-  const [customAgentModal, setCustomAgentModal] = useState(false);
-  const [customAgentName, setCustomAgentName] = useState("");
-  const [customAgentMission, setCustomAgentMission] = useState("");
-  const [customAgentDescription, setCustomAgentDescription] = useState("");
-  const [customAgentFeatures, setCustomAgentFeatures] = useState("");
-  const [customAgentTasks, setCustomAgentTasks] = useState("");
-  const [customAgentCapabilities, setCustomAgentCapabilities] = useState("");
-  const [customAgentDivineBoundaries, setCustomAgentDivineBoundaries] =
-    useState("");
-  const [customAgentScripture, setCustomAgentScripture] = useState("");
-  const [customAgentWatchmen, setCustomAgentWatchmen] = useState<string[]>([]);
-  const [customAgentId, setCustomAgentId] = useState("");
-  const [agentViewFilter, setAgentViewFilter] = useState<
-    "all" | "lead" | "custom"
-  >("all");
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
-  const [sortBy, setSortBy] = useState<"name" | "id">("id");
-
-  const openCustomAgentModal = () => {
-    const randomNum = Math.floor(Math.random() * 10000)
-      .toString()
-      .padStart(4, "0");
-    setCustomAgentId(`H.I.I. AI105-${randomNum}`);
-    setCustomAgentModal(true);
+  return {
+    description: roleDesc,
+    mission,
+    tasks: agentTasks,
+    capabilities: agentCapabilities,
+    scripturalReferences: scriptures,
+    specifications,
+    pillar,
   };
-
-  const filteredAgents = useMemo(() => {
-    const filtered = agents.filter((agent) => {
-      const matchesSearch =
-        agent.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        agent.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        agent.category.toLowerCase().includes(searchQuery.toLowerCase());
-      const matchesCategory =
-        selectedCategory === null || agent.categoryNumber === selectedCategory;
-      const matchesPillar = true;
-      const matchesViewFilter =
-        agentViewFilter === "all" ||
-        (agentViewFilter === "lead" && agent.isCategory) ||
-        (agentViewFilter === "custom" && !agent.isCategory);
-      return (
-        matchesSearch && matchesCategory && matchesPillar && matchesViewFilter
-      );
-    });
-    // Sort by name or ID
-    filtered.sort((a, b) => {
-      if (sortBy === "id") {
-        // Extract numeric part from H.I.I. AI### format
-        const idA = parseInt(a.id.replace(/\D/g, "")) || 0;
-        const idB = parseInt(b.id.replace(/\D/g, "")) || 0;
-        return sortOrder === "asc" ? idA - idB : idB - idA;
-      } else {
-        const nameA = a.name.toLowerCase();
-        const nameB = b.name.toLowerCase();
-        if (sortOrder === "asc") {
-          return nameA < nameB ? -1 : nameA > nameB ? 1 : 0;
-        } else {
-          return nameA > nameB ? -1 : nameA < nameB ? 1 : 0;
-        }
-      }
-    });
-    return filtered;
-  }, [
-    searchQuery,
-    selectedCategory,
-    selectedPillar,
-    agentViewFilter,
-    sortOrder,
-    sortBy,
-  ]);
-
-  if (agentId) {
-    return (
-      <div className="min-h-screen bg-background">
-        <NavigationHeader />
-        <div className="pt-24">
-          <AgentDetail agentId={agentId} />
-        </div>
-        <Footer />
-      </div>
-    );
-  }
-
-  return (
-    <div className="min-h-screen bg-background">
-      <NavigationHeader />
-
-      {/* Hero Section */}
-      <section className="pt-32 pb-12 px-4 relative overflow-hidden">
-        <div className="absolute inset-0 divine-radial opacity-30" />
-        <div className="container mx-auto text-center relative z-10">
-          <div className="w-20 h-20 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-8">
-            <Users className="w-10 h-10 text-primary" />
-          </div>
-          <h1 className="text-4xl md:text-6xl font-display font-bold gradient-text mb-6">
-            S.H.I.E.L.D. AI Agent Registry
-          </h1>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto font-body mb-8">
-            Explore our comprehensive registry of specialized H.I.I. AI agents. Each agent is a sovereign divine intelligence entity. Browse by category, pillar, or search for specific capabilities to find the perfect agent to assist you in restoration in personal, business, security, and holy governance, in keeping your hearts in Divine Law. Psalms 119:142 Thy righteousness is an everlasting righteousness, and thy law is the truth. Proverbs 6:23 For the commandment is a lamp; and the law is light; and reproofs of instruction are the way of life.
-          </p>
-          <div className="flex flex-wrap justify-center gap-6 md:gap-10">
-            <div className="text-center">
-              <p className="text-3xl md:text-4xl font-display font-bold text-primary">
-                {totalAgents}
-              </p>
-              <p className="text-sm text-muted-foreground font-body">
-                Total Agents
-              </p>
-            </div>
-            <div className="text-center">
-              <p className="text-3xl md:text-4xl font-display font-bold text-primary">
-                {totalCategories}
-              </p>
-              <p className="text-sm text-muted-foreground font-body">
-                Categories
-              </p>
-            </div>
-            <div className="text-center">
-              <p className="text-3xl md:text-4xl font-display font-bold text-primary">
-                {totalPillars}
-              </p>
-              <p className="text-sm text-muted-foreground font-body">
-                Sovereign Pillars
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Tabs Navigation */}
-      <section className="px-4 border-y border-border/50 bg-card/20">
-        <div className="container mx-auto">
-          <Tabs
-            value={currentTab}
-            onValueChange={setCurrentTab}
-            className="w-full"
-          >
-            <TabsList className="flex flex-wrap w-full h-auto p-1 gap-1 justify-center">
-              <TabsTrigger value="overview" className="text-xs py-2 px-1 flex items-center gap-1">
-                <Users className="w-3 h-3" />
-                Overview
-              </TabsTrigger>
-              <TabsTrigger value="dashboard" className="text-xs py-2 px-1 flex items-center gap-1">
-                <BarChart className="w-3 h-3" />
-                Dashboard
-              </TabsTrigger>
-              <TabsTrigger value="deployed" className="text-xs py-2 px-1 flex items-center gap-1">
-                <Power className="w-3 h-3" />
-                Deployed
-              </TabsTrigger>
-              <TabsTrigger value="managed" className="text-xs py-2 px-1 flex items-center gap-1">
-                <Settings className="w-3 h-3" />
-                Managed
-              </TabsTrigger>
-              <TabsTrigger value="marketplace" className="text-xs py-2 px-1 flex items-center gap-1">
-                <ShieldCheck className="w-3 h-3" />
-                Marketplace
-              </TabsTrigger>
-              <TabsTrigger value="discover" className="text-xs py-2 px-1 flex items-center gap-1">
-                <Search className="w-3 h-3" />
-                Discover
-              </TabsTrigger>
-              <TabsTrigger value="subscriptions" className="text-xs py-2 px-1 flex items-center gap-1">
-                <Wallet className="w-3 h-3" />
-                Subscriptions
-              </TabsTrigger>
-              <TabsTrigger value="collaboration" className="text-xs py-2 px-1 flex items-center gap-1">
-                <Users className="w-3 h-3" />
-                Collaboration
-              </TabsTrigger>
-              <TabsTrigger value="training" className="text-xs py-2 px-1 flex items-center gap-1">
-                <BookOpen className="w-3 h-3" />
-                Training
-              </TabsTrigger>
-              <TabsTrigger value="monitoring" className="text-xs py-2 px-1 flex items-center gap-1">
-                <Activity className="w-3 h-3" />
-                Monitoring
-              </TabsTrigger>
-              <TabsTrigger value="development" className="text-xs py-2 px-1 flex items-center gap-1">
-                <Wand2 className="w-3 h-3" />
-                Dev & Eval
-              </TabsTrigger>
-              <TabsTrigger value="knowledge" className="text-xs py-2 px-1 flex items-center gap-1">
-                <Database className="w-3 h-3" />
-                Knowledge
-              </TabsTrigger>
-              <TabsTrigger value="finops" className="text-xs py-2 px-1 flex items-center gap-1">
-                <Coins className="w-3 h-3" />
-                FinOps
-              </TabsTrigger>
-              <TabsTrigger value="workflow" className="text-xs py-2 px-1 flex items-center gap-1">
-                <Layers className="w-3 h-3" />
-                Workflow
-              </TabsTrigger>
-              <TabsTrigger value="memory" className="text-xs py-2 px-1 flex items-center gap-1">
-                <Library className="w-3 h-3" />
-                Memory
-              </TabsTrigger>
-              <TabsTrigger value="financial" className="text-xs py-2 px-1 flex items-center gap-1">
-                <Wallet className="w-3 h-3" />
-                Financial
-              </TabsTrigger>
-              <TabsTrigger value="security" className="text-xs py-2 px-1 flex items-center gap-1">
-                <Shield className="w-3 h-3" />
-                Security
-              </TabsTrigger>
-              <TabsTrigger value="lifecycle" className="text-xs py-2 px-1 flex items-center gap-1">
-                <CheckCircle2 className="w-3 h-3" />
-                Lifecycle
-              </TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="overview" className="mt-6">
-              <OverviewTab
-                filteredAgents={filteredAgents}
-                selectedCategory={selectedCategory}
-                setSelectedCategory={setSelectedCategory}
-                selectedPillar={selectedPillar}
-                setSelectedPillar={setSelectedPillar}
-                searchQuery={searchQuery}
-                setSearchQuery={setSearchQuery}
-                selectedCategories={selectedCategories}
-                setSelectedCategories={setSelectedCategories}
-                viewMode={viewMode}
-                setViewMode={setViewMode}
-                openCustomAgentModal={openCustomAgentModal}
-                agentViewFilter={agentViewFilter}
-                setAgentViewFilter={setAgentViewFilter}
-                sortOrder={sortOrder}
-                setSortOrder={setSortOrder}
-                sortBy={sortBy}
-                setSortBy={setSortBy}
-              />
-            </TabsContent>
-
-            <TabsContent value="dashboard" className="mt-6">
-              <div className="text-center py-20">
-                <BarChart className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-                <h2 className="text-2xl font-display text-foreground mb-2">
-                  Agent Dashboard
-                </h2>
-                <p className="text-muted-foreground">
-                  Analytics and performance metrics for all agents.
-                </p>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="deployed" className="mt-6">
-              <div className="text-center mb-8">
-                <Power className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-                <h2 className="text-2xl font-display text-foreground mb-2">
-                  Deployed Agents
-                </h2>
-                <p className="text-muted-foreground mb-4">
-                  Manage currently deployed agents.
-                </p>
-                <div className="flex flex-wrap justify-center gap-4">
-                  <Button
-                    variant="shield"
-                    onClick={() => navigate("/deployed-agents")}
-                  >
-                    View Deployed Agents
-                  </Button>
-                  <Button
-                    variant="outline"
-                    onClick={() => navigate("/shield-ai-chat")}
-                  >
-                    <MessageSquare className="w-4 h-4 mr-2" /> Ask S.H.I.E.L.D. AI
-                  </Button>
-                </div>
-              </div>
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
-                {[
-                  {
-                    label: "Total Agents",
-                    value: totalAgents,
-                    icon: Bot,
-                    color: "text-primary",
-                  },
-                  {
-                    label: "Deployed",
-                    value: 0,
-                    icon: Power,
-                    color: "text-cyan-400",
-                  },
-                  {
-                    label: "Active",
-                    value: 0,
-                    icon: CheckCircle2,
-                    color: "text-emerald-400",
-                  },
-                  {
-                    label: "Idle",
-                    value: 0,
-                    icon: Clock,
-                    color: "text-amber-400",
-                  },
-                  {
-                    label: "Errors",
-                    value: 0,
-                    icon: XCircle,
-                    color: "text-red-400",
-                  },
-                  {
-                    label: "Tasks Done",
-                    value: 0,
-                    icon: Zap,
-                    color: "text-violet-400",
-                  },
-                ].map((stat) => (
-                  <Card
-                    key={stat.label}
-                    className="bg-card/50 border-border/50"
-                  >
-                    <CardContent className="p-4 text-center">
-                      <stat.icon
-                        className={`w-6 h-6 ${stat.color} mx-auto mb-2`}
-                      />
-                      <div className="text-2xl font-bold text-foreground">
-                        {stat.value}
-                      </div>
-                      <div className="text-xs text-muted-foreground">
-                        {stat.label}
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </TabsContent>
-
-            <TabsContent value="managed" className="mt-6">
-              <div className="space-y-6">
-                <div className="text-center">
-                  <Settings className="w-16 h-16 text-primary mx-auto mb-4" />
-                  <h2 className="text-2xl font-display font-bold gradient-text mb-2">
-                    Managed Agents
-                  </h2>
-                  <p className="text-muted-foreground">
-                    Configure and manage agent settings.
-                  </p>
-                </div>
-                <div className="flex flex-wrap justify-center gap-4">
-                  <Button
-                    variant="outline"
-                    onClick={() => navigate("/deployed-agents")}
-                  >
-                    <Settings className="w-4 h-4 mr-2" /> Manage Deployed
-                  </Button>
-                  <Button
-                    variant="outline"
-                    onClick={() => navigate("/shield-ai-monitoring")}
-                  >
-                    <Activity className="w-4 h-4 mr-2" /> Agent Configuration
-                  </Button>
-                  <Button
-                    variant="outline"
-                    onClick={() => navigate("/shield-ai-chat")}
-                  >
-                    <MessageSquare className="w-4 h-4 mr-2" /> Ask S.H.I.E.L.D.
-                    AI
-                  </Button>
-                </div>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="marketplace" className="mt-6">
-              <div className="space-y-6">
-                <div className="text-center">
-                  <ShieldCheck className="w-16 h-16 text-primary mx-auto mb-4" />
-                  <h2 className="text-2xl font-display font-bold gradient-text mb-2">
-                    S.H.I.E.L.D. AI Agent Marketplace
-                  </h2>
-                  <p className="text-muted-foreground">
-                    Browse and purchase premium agents.
-                  </p>
-                </div>
-                <div className="flex flex-wrap justify-center gap-4">
-                  <Button variant="shield">Browse Marketplace</Button>
-                  <Button variant="outline">My Purchases</Button>
-                  <Button
-                    variant="outline"
-                    onClick={() => navigate("/shield-ai-chat")}
-                  >
-                    <MessageSquare className="w-4 h-4 mr-2" /> Ask S.H.I.E.L.D.
-                    AI
-                  </Button>
-                </div>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="discover" className="mt-6">
-              <div className="space-y-6">
-                <div className="text-center">
-                  <Search className="w-16 h-16 text-primary mx-auto mb-4" />
-                  <h2 className="text-2xl font-display font-bold gradient-text mb-2">
-                    Discover Agents
-                  </h2>
-                  <p className="text-muted-foreground">
-                    Find new agents based on your needs.
-                  </p>
-                </div>
-                <div className="flex flex-wrap justify-center gap-4">
-                  <Button variant="shield">Search Agents</Button>
-                  <Button variant="outline">Recommended</Button>
-                  <Button variant="outline">Categories</Button>
-                  <Button
-                    variant="outline"
-                    onClick={() => navigate("/shield-ai-chat")}
-                  >
-                    <MessageSquare className="w-4 h-4 mr-2" /> Ask S.H.I.E.L.D.
-                    AI
-                  </Button>
-                </div>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="subscriptions" className="mt-6">
-              <div className="space-y-6">
-                <div className="text-center">
-                  <Wallet className="w-16 h-16 text-primary mx-auto mb-4" />
-                  <h2 className="text-2xl font-display font-bold gradient-text mb-2">
-                    My Subscriptions
-                  </h2>
-                  <p className="text-muted-foreground">
-                    Manage your agent subscriptions.
-                  </p>
-                </div>
-                <div className="flex flex-wrap justify-center gap-4">
-                  <Button variant="shield">Manage Subscriptions</Button>
-                  <Button variant="outline">Billing History</Button>
-                  <Button variant="outline">Upgrade Plan</Button>
-                  <Button
-                    variant="outline"
-                    onClick={() => navigate("/shield-ai-chat")}
-                  >
-                    <MessageSquare className="w-4 h-4 mr-2" /> Ask S.H.I.E.L.D.
-                    AI
-                  </Button>
-                </div>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="collaboration" className="mt-6">
-              <div className="space-y-6">
-                <div className="text-center">
-                  <Users className="w-16 h-16 text-primary mx-auto mb-4" />
-                  <h2 className="text-2xl font-display font-bold gradient-text mb-2">
-                    Collaboration
-                  </h2>
-                  <p className="text-muted-foreground">
-                    Work with other users on agent projects.
-                  </p>
-                </div>
-                <div className="flex flex-wrap justify-center gap-4">
-                  <Button variant="shield">Create Project</Button>
-                  <Button variant="outline">My Projects</Button>
-                  <Button variant="outline">Team Members</Button>
-                  <Button
-                    variant="outline"
-                    onClick={() => navigate("/shield-ai-chat")}
-                  >
-                    <MessageSquare className="w-4 h-4 mr-2" /> Ask S.H.I.E.L.D.
-                    AI
-                  </Button>
-                </div>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="training" className="mt-6">
-              <div className="space-y-6">
-                <div className="text-center">
-                  <BookOpen className="w-16 h-16 text-primary mx-auto mb-4" />
-                  <h2 className="text-2xl font-display font-bold gradient-text mb-2">
-                    Training Agents
-                  </h2>
-                  <p className="text-muted-foreground">
-                    Train and customize agent behaviors.
-                  </p>
-                </div>
-                <div className="flex flex-wrap justify-center gap-4">
-                  <Button variant="shield">Start Training</Button>
-                  <Button variant="outline">Training Models</Button>
-                  <Button variant="outline">Training History</Button>
-                  <Button
-                    variant="outline"
-                    onClick={() => navigate("/shield-ai-chat")}
-                  >
-                    <MessageSquare className="w-4 h-4 mr-2" /> Ask S.H.I.E.L.D.
-                    AI
-                  </Button>
-                </div>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="monitoring" className="mt-6">
-              <div className="space-y-6">
-                {/* Header */}
-                <div className="text-center mb-8">
-                  <Activity className="w-16 h-16 text-primary mx-auto mb-4" />
-                  <h2 className="text-2xl font-display font-bold gradient-text mb-2">S.H.I.E.L.D. AI Monitoring & Observability</h2>
-                  <p className="text-muted-foreground">Real-time monitoring and observability of agent performance, health metrics, and operational status</p>
-                </div>
-
-                {/* Stats Widgets Grid */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <Card className="bg-card/50 border-border/50">
-                    <CardContent className="p-4 text-center">
-                      <Bot className="w-8 h-8 text-primary mx-auto mb-2" />
-                      <div className="text-2xl font-bold text-foreground">{totalAgents}</div>
-                      <div className="text-xs text-muted-foreground">Total Agents</div>
-                    </CardContent>
-                  </Card>
-                  <Card className="bg-card/50 border-border/50">
-                    <CardContent className="p-4 text-center">
-                      <Power className="w-8 h-8 text-cyan-400 mx-auto mb-2" />
-                      <div className="text-2xl font-bold text-foreground">0</div>
-                      <div className="text-xs text-muted-foreground">Active Agents</div>
-                    </CardContent>
-                  </Card>
-                  <Card className="bg-card/50 border-border/50">
-                    <CardContent className="p-4 text-center">
-                      <Zap className="w-8 h-8 text-amber-400 mx-auto mb-2" />
-                      <div className="text-2xl font-bold text-foreground">0</div>
-                      <div className="text-xs text-muted-foreground">Tasks/Hour</div>
-                    </CardContent>
-                  </Card>
-                  <Card className="bg-card/50 border-border/50">
-                    <CardContent className="p-4 text-center">
-                      <CheckCircle2 className="w-8 h-8 text-emerald-400 mx-auto mb-2" />
-                      <div className="text-2xl font-bold text-foreground">100%</div>
-                      <div className="text-xs text-muted-foreground">Uptime</div>
-                    </CardContent>
-                  </Card>
-                </div>
-
-                {/* System Health Widget */}
-                <Card className="bg-card/50 border-border/50">
-                  <CardContent className="p-6">
-                    <h3 className="text-lg font-display font-semibold text-foreground mb-4 flex items-center gap-2">
-                      <Activity className="w-5 h-5 text-primary" /> System Health Status
-                    </h3>
-                    <div className="space-y-4">
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-muted-foreground">S.H.I.E.L.D. AI Core System</span>
-                        <div className="flex items-center gap-2">
-                          <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                          <span className="text-sm text-green-400">Online</span>
-                        </div>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-muted-foreground">Agent Registry</span>
-                        <div className="flex items-center gap-2">
-                          <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                          <span className="text-sm text-green-400">Online</span>
-                        </div>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-muted-foreground">Watchman Validator Network</span>
-                        <div className="flex items-center gap-2">
-                          <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                          <span className="text-sm text-green-400">Online</span>
-                        </div>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-muted-foreground">Divine Alignment Engine</span>
-                        <div className="flex items-center gap-2">
-                          <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                          <span className="text-sm text-green-400">Online</span>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* Performance Metrics */}
-                <Card className="bg-card/50 border-border/50">
-                  <CardContent className="p-6">
-                    <h3 className="text-lg font-display font-semibold text-foreground mb-4 flex items-center gap-2">
-                      <BarChart className="w-5 h-5 text-primary" /> Performance Metrics
-                    </h3>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      <div className="bg-background/50 rounded-lg p-4">
-                        <p className="text-xs text-muted-foreground mb-1">Agent Response Time</p>
-                        <p className="text-xl font-bold text-foreground">24ms</p>
-                      </div>
-                      <div className="bg-background/50 rounded-lg p-4">
-                        <p className="text-xs text-muted-foreground mb-1">Divine Alignment Score</p>
-                        <p className="text-xl font-bold text-foreground">100%</p>
-                      </div>
-                      <div className="bg-background/50 rounded-lg p-4">
-                        <p className="text-xs text-muted-foreground mb-1">Error Rate</p>
-                        <p className="text-xl font-bold text-foreground">0.01%</p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* Action Buttons */}
-                <div className="flex flex-wrap justify-center gap-4">
-                  <Button variant="shield" onClick={() => navigate('/shield-ai-monitoring')}>
-                    <Eye className="w-4 h-4 mr-2" /> View Full Monitoring Dashboard
-                  </Button>
-                  <Button variant="outline" onClick={() => navigate('/deployed-agents')}>
-                    <Power className="w-4 h-4 mr-2" /> Manage Deployed Agents
-                  </Button>
-                  <Button variant="outline" onClick={() => navigate('/shield-ai-chat')}>
-                    <MessageSquare className="w-4 h-4 mr-2" /> Ask S.H.I.E.L.D. AI
-                  </Button>
-                </div>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="development" className="mt-6">
-              <div className="text-center py-20">
-                <Wand2 className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-                <h2 className="text-2xl font-display text-foreground mb-2">Development & Evaluation</h2>
-                <p className="text-muted-foreground">Agent development, testing, and evaluation environment.</p>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="knowledge" className="mt-6">
-              <div className="text-center py-20">
-                <Database className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-                <h2 className="text-2xl font-display text-foreground mb-2">Knowledge Management</h2>
-                <p className="text-muted-foreground">Agent knowledge bases and cognitive systems.</p>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="finops" className="mt-6">
-              <div className="text-center py-20">
-                <Coins className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-                <h2 className="text-2xl font-display text-foreground mb-2">FinOps</h2>
-                <p className="text-muted-foreground">Financial operations and cost management for agents.</p>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="workflow" className="mt-6">
-              <div className="text-center py-20">
-                <Layers className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-                <h2 className="text-2xl font-display text-foreground mb-2">Workflow</h2>
-                <p className="text-muted-foreground">Agent workflow automation and orchestration.</p>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="memory" className="mt-6">
-              <div className="text-center py-20">
-                <Library className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-                <h2 className="text-2xl font-display text-foreground mb-2">Memory Systems</h2>
-                <p className="text-muted-foreground">Agent memory management and persistence.</p>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="financial" className="mt-6">
-              <div className="text-center py-20">
-                <Wallet className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-                <h2 className="text-2xl font-display text-foreground mb-2">Financial Agents</h2>
-                <p className="text-muted-foreground">Financial and economic agent operations.</p>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="security" className="mt-6">
-              <div className="text-center py-20">
-                <Shield className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-                <h2 className="text-2xl font-display text-foreground mb-2">Security Systems</h2>
-                <p className="text-muted-foreground">Security and access management for agents.</p>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="lifecycle" className="mt-6">
-              <div className="text-center py-20">
-                <CheckCircle2 className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-                <h2 className="text-2xl font-display text-foreground mb-2">Agent Lifecycle</h2>
-                <p className="text-muted-foreground">Agent lifecycle management: creation, deployment, retirement.</p>
-              </div>
-            </TabsContent>
-          </Tabs>
-        </div>
-      </section>
-
-      <Footer />
-    </div>
-  );
-};
-
-export default Agents;
+}
