@@ -18,19 +18,21 @@ export interface CalendarEvent {
 export interface HolyDayReminder {
   id: string;
   holy_day_name: string;
-  remind_days_before: string;
+  remind_days_before: number;
   reminder_enabled: boolean;
-  reminder_type: string;
-  email_enabled: boolean;
-  sms_enabled: boolean;
-  whatsapp_enabled: boolean;
-  telegram_enabled: boolean;
-  botim_enabled: boolean;
-  fax_enabled: boolean;
-  hologram_enabled: boolean;
-  notification_sound: string;
-  trumpet_sound_type: string;
+  user_id: string;
   created_at: string;
+  // Optional extended fields (not in DB schema, kept for UI compatibility)
+  reminder_type?: string;
+  email_enabled?: boolean;
+  sms_enabled?: boolean;
+  whatsapp_enabled?: boolean;
+  telegram_enabled?: boolean;
+  botim_enabled?: boolean;
+  fax_enabled?: boolean;
+  hologram_enabled?: boolean;
+  notification_sound?: string;
+  trumpet_sound_type?: string;
 }
 
 export const useCalendarEvents = (year: number) => {
