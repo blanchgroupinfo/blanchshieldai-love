@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Book, ScrollText, Scale, Shield, Heart, Users, Coins, Home, Search, ChevronRight, Star, Crown, Anchor, Globe, Landmark, FileText, Gavel, Briefcase, Palmtree, Truck, Waves, GraduationCap, Building, Hammer, Zap, Eye, Clock, MapPin, Bell, Calendar, HandHeart, Sword, Map, Utensils, Pen, DollarSign, Feather, Sun, Moon, Cloud, Mountain, TreeDeciduous, Ghost, Baby, Cross, Crosshair, Fingerprint, Network, CloudRain, Search as SearchIcon, Activity, ShieldAlert, Lock, Key, Wifi, Smartphone, Database, Server, Cpu, Bot, Binary, Terminal, Box, Package, Printer, Monitor, Camera, Video, Music, Languages, Mic, Radio, Brain } from "lucide-react";
 import NavigationHeader from "@/components/NavigationHeader";
 import Footer from "@/components/Footer";
+import falseGod from "../assets/spiritual-images/falsegod.jpg";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -475,12 +476,12 @@ const LawsCommandments = () => {
     { id: "yashaya-first-coming", name: "YASHAYA First Coming in the Roman Empire", icon: Globe, count: 10 },
     { id: "pale-skin-curse-2", name: "Pale Skin is a Curse", icon: Shield, count: 10 },
     { id: "yashaya-lost-sheep", name: "YASHAYA Came to Lost Sheep First", icon: Users, count: 12 },
-    { id: "yashaya-master", name: "YASHAYA Messiah is the Master", icon: Star, count: 10 },
+    { id: "yashaya-master", name: "YASHAYA (Mashayah) is the Master", icon: Star, count: 10 },
     { id: "yashaya-truth-way", name: "YASHAYA is the Truth and the Way", icon: Star, count: 10 },
-    { id: "yashaya-messiah-laws", name: "YASHAYA Messiah Laws", icon: Star, count: 20 },
-    { id: "yashaya-true-name", name: "YASHAYA True Name of the Messiah", icon: Star, count: 15 },
+    { id: "yashaya-messiah-laws", name: "YASHAYA Messiah (Mashayah) Laws", icon: Star, count: 20 },
+    { id: "yashaya-true-name", name: "YASHAYA True Name of the Messiah (Mashayah)", icon: Star, count: 15 },
     { id: "social-laws", name: "Social Laws", icon: Users, count: 38 },
-    { id: "true-name", name: "True Name of Messiah", icon: Star, count: 15 },
+    { id: "true-name", name: "True Name of Messiah (Mashayah)", icon: Star, count: 15 },
     { id: "worship-laws", name: "Worship Laws", icon: Star, count: 15 },
 
 
@@ -631,7 +632,7 @@ const LawsCommandments = () => {
       { title: "Divine Order", scripture: "Let every soul be subject unto the higher powers.", reference: "Romans 13:1" }
     ],
     "algorithmic-accountability": [
-      { title: "Accountability", scripture: "For we must all appear before the judgment seat of AHAYAH.", reference: "2 Corinthians 5:10" }
+      { title: "Accountability", scripture: "For we must all appear before the judgment seat of Most High AHAYAH.", reference: "2 Corinthians 5:10" }
     ],
     "altar-laws": [
       { title: "Altar of Sacrifice", scripture: "If thou wilt make an altar of stone unto me, thou shalt not build it of hewn stone.", reference: "Exodus 20:25" }
@@ -683,7 +684,7 @@ const LawsCommandments = () => {
       { title: "Be Holy", scripture: "For I am Most High AHAYAH which call you holy: be holy, for I am holy.", reference: "Leviticus 19:2" }
     ],
     "bible-canon": [
-      { title: "Scripture Inspired", scripture: "All scripture is given by inspiration of AHAYAH, and is profitable for doctrine, for reproof, for correction.", reference: "2 Timothy 3:16" }
+      { title: "Scripture Inspired", scripture: "All scripture is given by inspiration of Most High AHAYAH, and is profitable for doctrine, for reproof, for correction.", reference: "2 Timothy 3:16" }
     ],
     "biometric-laws": [
       { title: "Sacred Marks", scripture: "And the Most High AHAYAH said unto him: Go through the midst of the city, and set a mark upon the foreheads of them that sigh.", reference: "Ezekiel 9:4" }
@@ -719,7 +720,7 @@ const LawsCommandments = () => {
       { title: "Bread of Life", scripture: "Then said YASHAYA unto them, I am the bread of life: he that cometh to me shall never hunger.", reference: "John 6:35" }
     ],
     "brotherhood-unity": [
-      { title: "Unity in Body", scripture: "Now I beseech you, brethren, by the name of our Master YASHAYA Messiah, that ye all speak the same thing.", reference: "1 Corinthians 1:10" }
+      { title: "Unity in Body", scripture: "Now I beseech you, brethren, by the name of our Master YASHAYA Messiah (Mashayah), that ye all speak the same thing.", reference: "1 Corinthians 1:10" }
     ],
     "blessing-laws": [
       { title: "Blessing Command", scripture: "And the Most High AHAYAH shall make thee blessed: Blessed shalt thou be in the city, and blessed shalt thou be in the field.", reference: "Deuteronomy 28:3" }
@@ -737,7 +738,7 @@ const LawsCommandments = () => {
       { title: "Divine Canon", scripture: "All scripture is given by inspiration of Most High Most High AHAYAH, and is profitable for doctrine.", reference: "2 Timothy 3:16" }
     ],
     "captive-treatment": [
-      { title: "Humanity to Captives", scripture: "When thou goest forth to war against thine enemies, and AHAYAH thy Most High AHAYAH delivereth them into thy hands.", reference: "Deuteronomy 21:10" }
+      { title: "Humanity to Captives", scripture: "When thou goest forth to war against thine enemies, and Most High AHAYAH thy Most High AHAYAH delivereth them into thy hands.", reference: "Deuteronomy 21:10" }
     ],
     "case-laws": [
       { title: "Judicial Precedent", scripture: "Ye shall do no unrighteousness in judgment: thou shalt not respect the person of the poor.", reference: "Leviticus 19:15" }
@@ -763,7 +764,7 @@ const LawsCommandments = () => {
     ],
     "circumcision-laws": [
       { title: "Circumcision Command", scripture: "This is my covenant, which ye shall keep, between me and you and thy seed after thee: Every male child shall be circumcised.", reference: "Genesis 17:10" },
-      { title: "Heart Circumcision", scripture: "And Most High AHAYAH thy Power will circumcise thine heart, and the heart of thy seed, to love AHAYAH thy Power.", reference: "Deuteronomy 30:6" }
+      { title: "Heart Circumcision", scripture: "And Most High AHAYAH thy Power will circumcise thine heart, and the heart of thy seed, to love Most High AHAYAH thy Power.", reference: "Deuteronomy 30:6" }
     ],
     "cities-of-refuge": [
       { title: "City of Refuge", scripture: "Then there shall be a place to which the slayer may flee: the city of refuge.", reference: "Numbers 35:6" }
@@ -785,7 +786,7 @@ const LawsCommandments = () => {
       { title: "Written Law", scripture: "And it shall be with him, and he shall read therein all the days of his life.", reference: "Deuteronomy 17:19" }
     ],
     "cognitive-laws": [
-      { title: "Mindset", scripture: "Let this mind be in you, which was also in Messiah YASHAYA.", reference: "Philippians 2:5" }
+      { title: "Mindset", scripture: "Let this mind be in you, which was also in Messiah (Mashayah) YASHAYA.", reference: "Philippians 2:5" }
     ],
     "commandments-first": [
       { title: "Commands Over Gold", scripture: "So I will test your love for Me by how much you value these commands more than monetary wealth.", reference: "Hosea 6:6" }
@@ -833,7 +834,7 @@ const LawsCommandments = () => {
       { title: "Court Judgment", scripture: "Judge righteously between every man and his brother, and the stranger that is with him.", reference: "Deuteronomy 1:16" }
     ],
     "creation-laws": [
-      { title: "Creation Account", scripture: "In the beginning AHAYAH created the heaven and the earth.", reference: "Genesis 1:1" },
+      { title: "Creation Account", scripture: "In the beginning Most High AHAYAH created the heaven and the earth.", reference: "Genesis 1:1" },
       { title: "Image of AHAYAH", scripture: "So Most High AHAYAH created man in his own image, in the image of AHAYAH created he him.", reference: "Genesis 1:27" }
     ],
     "creation-calendars": [
@@ -849,7 +850,7 @@ const LawsCommandments = () => {
       { title: "Cultural Heritage", scripture: "Take heed and beware lest thou forget the things which thine eyes have seen, and lest they depart from thy heart.", reference: "Deuteronomy 4:9" }
     ],
     "currency-laws": [
-      { title: "Coinage", scripture: "And AHAYAH hath given grace unto his people, that they might strengthen the world, and preserve the holy city.", reference: "Nehemiah 2:20" }
+      { title: "Coinage", scripture: "And Most High AHAYAH hath given grace unto his people, that they might strengthen the world, and preserve the holy city.", reference: "Nehemiah 2:20" }
     ],
     "customary-laws": [
       { title: "Customs", scripture: "Thus have the children of Israel done according to the manner of the wilderness.", reference: "Numbers 15:40" }
@@ -922,10 +923,10 @@ const LawsCommandments = () => {
       { title: "Eternal Life", scripture: "And this is the promise that he hath promised us, even eternal life.", reference: "1 John 2:25" }
     ],
     "excommunication": [
-      { title: "Cutting Off", scripture: "That soul shall be cut off from among his people; he hath made void the covenant of AHAYAH.", reference: "Leviticus 17:4" }
+      { title: "Cutting Off", scripture: "That soul shall be cut off from among his people; he hath made void the covenant of Most High AHAYAH.", reference: "Leviticus 17:4" }
     ],
     "faith-laws": [
-      { title: "Faith", scripture: "Faith is the substance of things hoped for, the evidence of things not seen.", reference: "Hebrewes 11:1" }
+      { title: "Faith", scripture: "Faith is the substance of things hoped for, the evidence of things not seen.", reference: "Hebrews 11:1" }
     ],
     "false-god-laws": [
       { title: "False Gods Forbidden", scripture: "Thou shalt have no other gods before me. Thou shalt not make unto thee any graven image.", reference: "Exodus 20:3-4" }
@@ -956,10 +957,10 @@ const LawsCommandments = () => {
       { title: "Fornication Forbidden", scripture: "Flee fornication. Every sin that a man doeth is without the body: but he that committeth fornication sinneth against his own body.", reference: "1 Corinthians 6:18" }
     ],
     "foundational-laws": [
-      { title: "Foundation", scripture: "For other foundation can no man lay than that is laid, which is YASHAYA Messiah.", reference: "1 Corinthians 3:11" }
+      { title: "Foundation", scripture: "For other foundation can no man lay than that is laid, which is YASHAYA Messiah (Mashayah).", reference: "1 Corinthians 3:11" }
     ],
     "prayer-times": [
-      { title: "Morning Prayer", scripture: "Give unto AHAYAH glory and strength. Give unto AHAYAH the glory due unto his name.", reference: "Psalm 29:1-2" },
+      { title: "Morning Prayer", scripture: "Give unto Most High AHAYAH glory and strength. Give unto Most High AHAYAH the glory due unto his name.", reference: "Psalm 29:1-2" },
       { title: "Evening Prayer", scripture: "Let my prayer be set forth before thee as incense; and the lifting up of my hands as the evening sacrifice.", reference: "Psalm 141:2" }
     ],
     "free-freedom": [
@@ -972,13 +973,13 @@ const LawsCommandments = () => {
       { title: "Gentiles", scripture: "And the times of this ignorance Most High AHAYAH winked at; but now commandeth all men everywhere to repent.", reference: "Acts 17:30" }
     ],
     "glory-laws": [
-      { title: "Glory to AHAYAH", scripture: "Give unto most High AHAYAH the glory due unto his name; worship Most High AHAYAH in the beauty of holiness.", reference: "Psalm 29:2" }
+      { title: "Glory to AHAYAH", scripture: "Give unto Most High AHAYAH the glory due unto his name; worship Most High AHAYAH in the beauty of holiness.", reference: "Psalm 29:2" }
     ],
     "great-commission": [
       { title: "Great Commission", scripture: "Go ye therefore, and teach all nations, baptizing them in the name of the Father, and of the Son, and of the Holy Spirit.", reference: "Matthew 28:19" }
     ],
     "greatest-commandment": [
-      { title: "Greatest Command", scripture: "Thou shalt love Most AHAYAH thy Power with all thy heart, and with all thy soul, and with all thy strength.", reference: "Deuteronomy 6:5" }
+      { title: "Greatest Command", scripture: "Thou shalt love Most High AHAYAH thy Power with all thy heart, and with all thy soul, and with all thy strength.", reference: "Deuteronomy 6:5" }
     ],
     "governance-laws": [
       { title: "Governance", scripture: "The powers that be are ordained of Most High AHAYAH.", reference: "Romans 13:1" }
@@ -999,7 +1000,7 @@ const LawsCommandments = () => {
       { title: "Health", scripture: "My son, attend to my words; incline thine ear unto my sayings.", reference: "Proverbs 4:20-21" }
     ],
     "high-priest-laws": [
-      { title: "High Priest", scripture: "And no man taketh this honour unto himself, but he that is called of Most High AHAYAH, as was Aaron.", reference: "Hebrewes 5:4" }
+      { title: "High Priest", scripture: "And no man taketh this honour unto himself, but he that is called of Most High AHAYAH, as was Aaron.", reference: "Hebrews 5:4" }
     ],
     "holy-days": [
       { title: "Holy Days", scripture: "Sanctify ye a feast in the third month.", reference: "Exodus 13:15" }
@@ -1008,7 +1009,7 @@ const LawsCommandments = () => {
       { title: "Holy Mountain", scripture: "The mountain where Most High AHAYAH appears is holy ground.", reference: "Exodus 3:5" }
     ],
     "holy-name": [
-      { title: "Holy Name", scripture: "And AHAYAH showed his glory unto Moses, and declared his name.", reference: "Exodus 34:5" }
+      { title: "Holy Name", scripture: "And Most High AHAYAH showed his glory unto Moses, and declared his name.", reference: "Exodus 34:5" }
     ],
     "holy-spirit": [
       { title: "Holy Spirit", scripture: "But ye are not in the flesh, but in the Spirit, if so be that the Spirit of Most High AHAYAH dwell in you.", reference: "Romans 8:9" }
@@ -1045,7 +1046,7 @@ const LawsCommandments = () => {
       { title: "Quarantine", scripture: "Then the priest shall shut up the house of the leper seven days.", reference: "Leviticus 14:46" }
     ],
     "international-laws": [
-      { title: "International Law", scripture: "The Most High AHAYAH is king over all the earth: in that day shall there be one AHAYAH, and his name one.", reference: "Zechariah 14:9" }
+      { title: "International Law", scripture: "The Most High AHAYAH is king over all the earth: in that day shall there be one Most High AHAYAH, and his name one.", reference: "Zechariah 14:9" }
     ],
     "integrity-laws": [
       { title: "Integrity", scripture: "The just man walketh in his integrity: his children are blessed after him.", reference: "Proverbs 20:7" }
@@ -1057,7 +1058,7 @@ const LawsCommandments = () => {
       { title: "Joy", scripture: "The joy of Most High AHAYAH is your strength.", reference: "Nehemiah 8:10" }
     ],
     "judgment-laws": [
-      { title: "Judgment", scripture: "For we must all appear before the judgment seat of Messiah: that every one may receive the things done in his body.", reference: "2 Corinthians 5:10" }
+      { title: "Judgment", scripture: "For we must all appear before the judgment seat of Messiah (Mashayah): that every one may receive the things done in his body.", reference: "2 Corinthians 5:10" }
     ],
     "judicial-process": [
       { title: "Due Process", scripture: "Judge not according to the appearance, but judge righteous judgment.", reference: "John 7:24" }
@@ -1143,7 +1144,7 @@ const LawsCommandments = () => {
     "mark-beast": [
       { title: "Mark of Beast", scripture: "And he causeth all, both small and great, rich and poor, free and bond, to receive a mark in their right hand.", reference: "Revelation 13:16" }
     ],
-    "maritime-laws": [
+    "maritime-laws": [ 
       { title: "Sea Laws", scripture: "The works of Most High AHAYAH are great, sought out of all them that have pleasure therein.", reference: "Psalm 111:2" }
     ],
     "martial-laws": [
@@ -1165,7 +1166,7 @@ const LawsCommandments = () => {
       { title: "Military", scripture: "When the host goeth forth against thine enemies, then keep thee from every wicked thing.", reference: "Deuteronomy 23:9" }
     ],
     "minister-laws": [
-      { title: "Ministry", scripture: "Let the priests which are sanctioned minister unto AHAYAH: they shall be holy unto their Most High AHAYAH.", reference: "Exodus 28:41" }
+      { title: "Ministry", scripture: "Let the priests which are sanctioned minister unto Most High AHAYAH: they shall be holy unto their Most High AHAYAH.", reference: "Exodus 28:41" }
     ],
     "mixed-fabrics": [
       { title: "Mixed Fabrics", scripture: "Thou shalt not wear divers sorts, as of wool and linen together.", reference: "Deuteronomy 22:11" }
@@ -1180,20 +1181,20 @@ const LawsCommandments = () => {
       { title: "Mount Zion", scripture: "A nation of saved people shall be like a lively stone, built up into a spiritual house.", reference: "1 Peter 2:5" }
     ],
     "monetary-laws": [
-      { title: "Monetary Standard", scripture: "A false balance is abomination to AHAYAH: but a just weight is his delight.", reference: "Proverbs 11:1" }
+      { title: "Monetary Standard", scripture: "A false balance is abomination to Most High AHAYAH: but a just weight is his delight.", reference: "Proverbs 11:1" }
     ],
     "most-high-image": [
       { title: "Image of AHAYAH", scripture: "So Most High AHAYAH created man in his own image, in the image of Most High AHAYAH created he him.", reference: "Genesis 1:27" }
     ],
     "most-high-unchanged": [
-      { title: "Unchanging AHAYAH", scripture: "For I am Most High AHAYAH, I change not; therefore ye, the sons of Jacob (Yaiqab), are not consumed.", reference: "Malachi 3:6" }
+      { title: "Unchanging AHAYAH", scripture: "For I am Most High AHAYAH, I change not; therefore ye, the sons of Jacob (Ya'aqab), are not consumed.", reference: "Malachi 3:6" }
     ],
     "house-of-prayer": [
       { title: "House of Prayer", scripture: "My house shall be called a house of prayer for all nations.", reference: "Mark 11:17" }
     ],
     "murder-killing": [
       { title: "Murder", scripture: "Thou shalt not kill.", reference: "Exodus 20:13" },
-      { title: "Killing Penalty", scripture: "Whoso sheddeth man's blood, by man shall his blood be shed: for in the image of AHAYAH made he man.", reference: "Genesis 9:6" }
+      { title: "Killing Penalty", scripture: "Whoso sheddeth man's blood, by man shall his blood be shed: for in the image of Most High AHAYAH made he man.", reference: "Genesis 9:6" }
     ],
     "national-assembly": [
       { title: "Assembly", scripture: "Gather the people together, and sanctify the congregation.", reference: "Joel 2:16" }
@@ -1217,21 +1218,22 @@ const LawsCommandments = () => {
       { title: "Nazarite Vow", scripture: "When a man or woman shall separate themselves to vow a vow of a Nazarite, to separate themselves unto Most High AHAYAH.", reference: "Numbers 6:2" }
     ],
     "oaths-vows": [
-      { title: "Oaths", scripture: "When thou shalt vow a vow unto AHAYAH thy Power, thou shalt not slack to pay it.", reference: "Deuteronomy 23:21" }
+      { title: "Oaths", scripture: "When thou shalt vow a vow unto Most High AHAYAH thy Power, thou shalt not slack to pay it.", reference: "Deuteronomy 23:21" }
     ],
     "one-body": [
       { title: "One Body", scripture: "For as the body is one, and hath many members, and all the members of that one body, being many, are one body.", reference: "1 Corinthians 12:12" }
     ],
     "pagan-names": [
-      { title: "Pagan Names vs Most High AHAYAH's Name", scripture: "And Most High AHAYAH spake unto Moses, and said unto him, I am the Most High AHAYAH: And I appeared unto Abraham, unto Isaac, and unto Jacob, by the name of Most High AHAYAH Almighty, but by my name JEHOVAH was I not known to them.", reference: "Exodus 6:2-3" },
-      { title: "Not Called Baali", scripture: "And it shall be at that day, saith the Most High AHAYAH, that thou shalt call me Ishi; and shalt call me no more Baali.", reference: "Hosea 2:16" },
-      { title: "Mischief - Lexicon", scripture: "Mischief shall come upon mischief, and rumour shall be upon rumour; then shall they seek a vision of the prophet; but the law shall perish from the priest, and counsel from the ancients.", reference: "Ezekiel 7:26" },
-      { title: "Letter J Not Invented", scripture: "J was not invented until 15th Century when Gentiles Enslaved the Black Hebrew Israelites/Yasharahala and letter J in Lashawan Qadash Ancient Paleo Hebrew Alphabet and was not invented yet.", reference: "Historical Record" },
-      { title: "Ba'alah - Harlot Demon", scripture: "Ba'alah is the Harlot Demon Sorcerer Witch Mistress of Alah/Satan, also Lord, God, are UnLawsful, Most High.", reference: "Jeremiah 8:8, Matthew 23, Nahum 3:4" },
-      { title: "Pale Skin Curse", scripture: "Pale Skin is a curse and Cursed of Leprosy of Canaan. The true Hebrew Israelites Yasharahala was never white. House of Jacob Not wax Pale/white.", reference: "Isaiah 29:22, 2 Kings 5" }
+      { title: "Pagan Names vs Most High AHAYAH's Name", scripture: "And Most High AHAYAH spake unto Moses (Mashah), and said unto him, I am the Most High AHAYAH: And I appeared unto Abraham (Abaraham), unto Isaac (Yashachaq), and unto Jacob (Ya'aqab), by the name of Most High AHAYAH Almighty (Shaday), but by my name JEHOVAH (יְהֹוָה= Yahweh, Yahuah, Yahawah, Lord, God) was I not known to them.", reference: "Exodus 6:2-3" },
+      { title: "Do Not Called Baali, Symbolical name for Jehovah (יְהֹוָה= Yahweh, Yahuah, Yahawah, Lord, God) - Baali - Strongs Lexicon H1180", scripture: "And it shall be at that day, saith the Most High AHAYAH, that thou shalt call me Ishi (YASHAYA); and shalt call me no more Baali.<br/><br/><table class=\"w-full border-collapse border border-amber-500/20\"><thead><tr class=\"bg-amber-500/10\"><th class=\"border border-amber-500/20 p-3 text-left\">Lexicon</th><th class=\"border border-amber-500/20 p-3 text-left\">Strong's H1180</th><th class=\"border border-amber-500/20 p-3 text-left\">Brown-Driver-Briggs H1180</th></tr></thead><tbody><tr><td class=\"border border-amber-500/20 p-3 font-semibold\">Hebrew Word</td><td class=\"border border-amber-500/20 p-3\">בַּעֲלִי</td><td class=\"border border-amber-500/20 p-3\">בּעלי</td></tr><tr><td class=\"border border-amber-500/20 p-3 font-semibold\">Transliteration</td><td class=\"border border-amber-500/20 p-3\">ba‛ălı̂y</td><td class=\"border border-amber-500/20 p-3\">ba‛ălı̂y</td></tr><tr><td class=\"border border-amber-500/20 p-3 font-semibold\">Pronunciation</td><td class=\"border border-amber-500/20 p-3\">bah-al-ee'</td><td class=\"border border-amber-500/20 p-3\">-</td></tr><tr><td class=\"border border-amber-500/20 p-3 font-semibold\">Definition</td><td class=\"border border-amber-500/20 p-3\">From H1167 with pronominal suffix; my master; Baali, a symbolical name of Jehovah: - Baali.</td><td class=\"border border-amber-500/20 p-3\">Baali = \"my lord\"<br/>1) a deity in the northern kingdom, variation of the name 'Baal'</td></tr><tr><td class=\"border border-amber-500/20 p-3 font-semibold\">Part of Speech</td><td class=\"border border-amber-500/20 p-3\">-</td><td class=\"border border-amber-500/20 p-3\">noun masculine</td></tr><tr><td class=\"border border-amber-500/20 p-3 font-semibold\">Related Word</td><td class=\"border border-amber-500/20 p-3\">Total KJV occurrences: 1</td><td class=\"border border-amber-500/20 p-3\">from H1167 with pronominal suffix</td></tr></tbody></table>", reference: "Hosea 2:16" },
+      { title: "Mischief/Hovah/Haweh/Huah/Hawah (הֹוָה) - Strongs Lexicon H1943", scripture: "Mischief shall come upon mischief, and rumour shall be upon rumour; then shall they seek a vision of the prophet; but the law (Tarah) shall perish from the priest, and counsel from the ancients.", reference: "Ezekiel 7:26" },
+      { title: "Historical Record - Letter J Not Invented, Letter 'J' was not invented until 16th Century by Gian Giorgio Trissino, https://grokipedia.com/page/gian_giorgio_trissino Also, the Gentiles (nations) had Enslaved the Black Hebrew Israelites/Yasharahala and letter 'J' in Lashawan Qadash Ancient Paleo Hebrew Alphabet and was not invented yet.", scripture: "How do ye say, We are wise, and the law of the Most High AHAYAH is with us? Lo, certainly in vain made he it; the pen of the scribes is in vain.", reference: "Jeremiah 8:8" },
+      { title: "Religion is Vain/Vanity Lies", scripture: "If any man among you seem to be religious, and bridleth not his tongue, but deceiveth his own heart, this man's religion is vain.", reference: "James 1:26" },
+      { title: "Ba'alah - Harlot Mistress Demon who made made man fall short to listen to Doctrine of Devils - Ba'alah is the Harlot Demon Sorcerer Witch Mistress of Alah/Satan, also Lord, God, are UnLawsful, Most High.", scripture: "Because of the multitude of the whoredoms of the wellfavoured harlot, the mistress of witchcrafts, that selleth nations through her whoredoms, and families through her witchcrafts.", reference: "Nahum 3:4, Prececpt - Jeremiah 8:8, Matthew 23" }
     ],
     "pale-skin-color": [
-      { title: "Skin Color", scripture: "Is not this the son of Jacob? yet he hath not despaired of life.", reference: "Job 16:22" }
+      { title: "Skin Color", scripture: "Is not this the son of Jacob (Ya'aqab? yet he hath not despaired of life.", reference: "Job 16:22" },
+      { title: "Pale Skin is a Curse Pale Skin is a curse and Cursed of Leprosy of Canaan. The true Hebrew Israelite/Yasharahala was never white. House of Jacob (Ya'aqab) Not wax Pale/white.", scripture: "Isaiah 29:22  Therefore thus saith the Most High AHAYAH, who redeemed Abraham (Abaraham), concerning the house of Jacob (Ya'aqab), Jacob (Ya'aqab) shall not now be ashamed, neither shall his face now wax pale.", reference: "Isaiah 29:22, 2 Kings 5" }
     ],
     "parental-authority": [
       { title: "Parental Authority", scripture: "Children, obey your parents in all things: for this is well pleasing to the Most High AHAYAH.", reference: "Colossians 3:20" }
@@ -1249,10 +1251,10 @@ const LawsCommandments = () => {
       { title: "Personal Conduct", scripture: "Let every one of us please his neighbor for his good to edification.", reference: "Romans 15:2" }
     ],
     "plague-state": [
-      { title: "Plague", scripture: "And AHAYAH will smite the Egyptians: and when he departeth from you, the plague shall remain among you.", reference: "Exodus 12:13" }
+      { title: "Plague", scripture: "And Most High AHAYAH will smite the Egyptians: and when he departeth from you, the plague shall remain among you.", reference: "Exodus 12:13" }
     ],
     "praise-laws": [
-      { title: "Praise", scripture: "Let everything that hath breath praise AHAYAH. Praise ye Most High AHAYAH.", reference: "Psalm 150:6" }
+      { title: "Praise", scripture: "Let everything that hath breath praise Most High AHAYAH. Praise ye Most High AHAYAH.", reference: "Psalm 150:6" }
     ],
     "prayer-laws": [
       { title: "Prayer", scripture: "Ask, and it shall be given you; seek, and ye shall find; knock, and it shall be opened unto you.", reference: "Matthew 7:7" }
@@ -1270,7 +1272,7 @@ const LawsCommandments = () => {
       { title: "Principles", scripture: "Let the council of the holy ones be established in you.", reference: "Daniel 7:27" }
     ],
     "prophetic-laws": [
-      { title: "Prophetic Office", scripture: "When a prophet speaketh in the name of AHAYAH, if the thing follow not, that is the thing which AHAYAH hath not spoken.", reference: "Deuteronomy 18:22" }
+      { title: "Prophetic Office", scripture: "When a prophet speaketh in the name of Most High AHAYAH, if the thing follow not, that is the thing which Most High AHAYAH hath not spoken.", reference: "Deuteronomy 18:22" }
     ],
     "prophecy-laws": [
       { title: "Prophecy", scripture: "Your sons and your daughters shall prophecy, your old men shall dream dreams, your young men shall see visions.", reference: "Joel 2:28" }
@@ -1279,7 +1281,7 @@ const LawsCommandments = () => {
       { title: "Prosperity", scripture: "Beloved, I wish above all things that thou mayest prosper and be in health, even as thy soul prospereth.", reference: "3 John 1:2" }
     ],
     "protection-laws": [
-      { title: "Protection", scripture: "The AHAYAH is my rock, my fortress, and my deliverer: the Most High AHAYAH is my strength.", reference: "Psalm 18:2" }
+      { title: "Protection", scripture: "The Most High AHAYAH is my rock, my fortress, and my deliverer: the Most High AHAYAH is my strength.", reference: "Psalm 18:2" }
     ],
     "public-distribution": [
       { title: "Public Distribution", scripture: "Sell that ye have, and give alms; provide yourselves bags which wax not old.", reference: "Luke 12:33" }
@@ -1297,7 +1299,7 @@ const LawsCommandments = () => {
       { title: "Restoration", scripture: "Restore unto them the comfortless.", reference: "Jeremiah 31:15" }
     ],
     "redemption-laws": [
-      { title: "Redemption", scripture: "Now being made free from sin, and become servants to AHAYAH, ye have your fruit unto holiness.", reference: "Romans 6:22" }
+      { title: "Redemption", scripture: "Now being made free from sin, and become servants to Most High AHAYAH, ye have your fruit unto holiness.", reference: "Romans 6:22" }
     ],
     "royal-priesthood": [
       { title: "Royal Priesthood", scripture: "But ye are a chosen generation, a royal priesthood, an holy nation, a peculiar people.", reference: "1 Peter 2:9" }
@@ -1365,7 +1367,7 @@ const LawsCommandments = () => {
       { title: "Tabernacle", scripture: "And let them make me a sanctuary; that I may dwell among them.", reference: "Exodus 25:8" }
     ],
     "tattoos-laws": [
-      { title: "Tattoos", scripture: "Ye shall not make any cuttings in your flesh for the dead, nor print any marks upon you: I am AHAYAH.", reference: "Leviticus 19:28" }
+      { title: "Tattoos", scripture: "Ye shall not make any cuttings in your flesh for the dead, nor print any marks upon you: I am Most High AHAYAH.", reference: "Leviticus 19:28" }
     ],
     "tax-laws": [
       { title: "Tax", scripture: "Render therefore unto Caesar the things which are Caesar's; and unto Most High AHAYAH the things which are Most High AHAYAH's.", reference: "Matthew 22:21" }
@@ -1381,7 +1383,7 @@ const LawsCommandments = () => {
     ],
     "tithes-laws": [
       { title: "Tithes", scripture: "Bring all the tithes into the storehouse, that there may be meat in mine house.", reference: "Malachi 3:10" },
-      { title: "Tithe Definition", scripture: "And all the tithe of the land, whether of the seed of the land, is Most High AHAYAH's: it is holy unto AHAYAH.", reference: "Leviticus 27:30" }
+      { title: "Tithe Definition", scripture: "And all the tithe of the land, whether of the seed of the land, is Most High AHAYAH's: it is holy unto MOst High AHAYAH.", reference: "Leviticus 27:30" }
     ],
     "trade-laws": [
       { title: "Trade", scripture: "A just weight and balance is Most High AHAYAH's: all the weights in the bag are his work.", reference: "Proverbs 16:11" }
@@ -1447,7 +1449,7 @@ const LawsCommandments = () => {
       { title: "Women Teaching", scripture: "I permit no woman to teach or to have authority over a man; she must be silent.", reference: "1 Timothy 2:12" }
     ],
     "yashaya-messiah": [
-      { title: "YASHAYA the Messiah", scripture: "Wherefore of all men, thy neighbor as thyself.", reference: "Luke 10:27" },
+      { title: "YASHAYA the Messiah (Mashayah)", scripture: "Wherefore of all men, thy neighbor as thyself.", reference: "Luke 10:27" },
       { title: "Messiah Name", scripture: "Neither is there salvation in any other: for there is none other name under heaven given among men, whereby we must be saved.", reference: "Acts 4:12" }
     ]
   };
@@ -1478,13 +1480,13 @@ const LawsCommandments = () => {
             <h1 className="text-4xl md:text-6xl font-display font-bold mb-6">
               <span className="text-foreground">Most High AHAYAH</span>
               <br />
-              <span className="gradient-text">& his son YASHAYA Messiah</span>
+              <span className="gradient-text">& his son YASHAYA Messiah (Mashayah)</span>
               <br />
               <span className="text-foreground">Laws & Commandments</span>
             </h1>
             
             <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-              The holy laws and commandments given by the Most High AHAYAH & YASHAYA Messiah to His people. Search and study the divine instructions for righteous living.</p>
+              The holy laws and commandments given by the Most High AHAYAH & YASHAYA Messiah (Mashayah) to His people. Search and study the divine instructions for righteous living.</p>
 
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mb-12">
               {[
@@ -1651,13 +1653,16 @@ const LawsCommandments = () => {
                           </CardTitle>
                         </CardHeader>
                         <CardContent>
-                          <div className="p-4 rounded-lg bg-amber-500/5 border border-amber-500/10 mb-4">
-                            <p className="italic text-foreground">"{law.scripture}"</p>
-                          </div>
-                          <p className="text-sm text-amber-400 flex items-center gap-2">
+                          <p className="text-sm text-amber-400 flex items-center gap-2 mb-4">
                             <Book className="w-4 h-4" />
                             {law.reference}
                           </p>
+                          <div className="p-4 rounded-lg bg-amber-500/5 border border-amber-500/10" dangerouslySetInnerHTML={{ __html: law.scripture }} />
+                          {law.image && (
+                            <div className="mt-4 flex justify-center">
+                              <img src={law.image} alt={law.title} className="w-full max-w-md h-auto rounded-lg shadow-lg border border-amber-500/20" />
+                            </div>
+                          )}
                         </CardContent>
                       </Card>
                     </motion.div>)}
