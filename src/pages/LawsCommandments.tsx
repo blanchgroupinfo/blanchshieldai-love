@@ -488,54 +488,55 @@ const LawsCommandments = () => {
   ];
   const lawsContent: Record<string, Array<{
     title: string;
-    scripture: string;
     reference: string;
+    scripture: string;
+    
   }>> = {
     "ten-commandments": [{
       title: "No Other Gods",
-      scripture: "Thou shalt have no other gods before me.",
-      reference: "Exodus 20:3"
+      reference: "Exodus 20:3",
+      scripture: "Thou shalt have no other gods before me."
     }, {
       title: "No Graven Images",
-      scripture: "4. Thou shalt not make unto thee any graven image, or any likeness of any thing that is in heaven above, or that is in the earth beneath, or that is in the water under the earth: 5. Thou shalt not bow down thyself to them, nor serve them: for I the Most High AHAYAH thy Power am a jealous Power, visiting the iniquity of the fathers upon the children unto the third and fourth generation of them that hate me; 6. And shewing mercy unto thousands of them that love me, and keep my commandments. 6. And shewing mercy unto thousands of them that love me, and keep my commandments.",
-      reference: "Exodus 20:4-6"
+      reference: "Exodus 20:4-6",
+      scripture: "4. Thou shalt not make unto thee any graven image, or any likeness of any thing that is in heaven above, or that is in the earth beneath, or that is in the water under the earth: 5. Thou shalt not bow down thyself to them, nor serve them: for I the Most High AHAYAH thy Power am a jealous Power, visiting the iniquity of the fathers upon the children unto the third and fourth generation of them that hate me; 6. And shewing mercy unto thousands of them that love me, and keep my commandments. 6. And shewing mercy unto thousands of them that love me, and keep my commandments."
     }, {
       title: "Name in Vain",
+      reference: "Exodus 20:7",
       scripture: "Thou shalt not take the name of Most High AHAYAH thy Power in vain for Most High AHAYAH will not hold him guiltless that taketh his name in vain.",
-      reference: "Exodus 20:7"
     }, {
       title: "Remember the Sabbath",
-      scripture: "Remember the sabbath day, to keep it holy. Six days shalt thou labour, and do all thy work: But the seventh day is the sabbath of Most High AHAYAH thy Power: in it thou shalt not do any work, thou, nor thy son, nor thy daughter, thy manservant, nor thy maidservant, nor thy cattle, nor thy stranger that is within thy gates: For in six days Most High AHAYAH made heaven and earth, the sea, and all that in them is, and rested the seventh day: wherefore Most High AHAYAH blessed the sabbath day, and hallowed it.",
-      reference: "Exodus 20:8-11"
+      reference: "Exodus 20:8-11",
+      scripture: "Remember the sabbath day, to keep it holy. Six days shalt thou labour, and do all thy work: But the seventh day is the sabbath of Most High AHAYAH thy Power: in it thou shalt not do any work, thou, nor thy son, nor thy daughter, thy manservant, nor thy maidservant, nor thy cattle, nor thy stranger that is within thy gates: For in six days Most High AHAYAH made heaven and earth, the sea, and all that in them is, and rested the seventh day: wherefore Most High AHAYAH blessed the sabbath day, and hallowed it."  
     }, {
       title: "Honor Parents",
-      scripture: "Honour thy father and thy mother: that thy days may be long upon the land which Most High AHAYAH thy Power giveth thee.",
-      reference: "Exodus 20:12"
+      reference: "Exodus 20:12",
+      scripture: "Honour thy father and thy mother: that thy days may be long upon the land which Most High AHAYAH thy Power giveth thee."
     }, {
       title: "No Murder",
-      scripture: "Thou shalt not kill.",
-      reference: "Exodus 20:13"
+      reference: "Exodus 20:13",
+      scripture: "Thou shalt not kill."      
     }, {
       title: "No Adultery",
-      scripture: "Thou shalt not commit adultery.",
-      reference: "Exodus 20:14"
+      reference: "Exodus 20:14",
+      scripture: "Thou shalt not commit adultery."      
     }, {
       title: "No Stealing",
-      scripture: "Thou shalt not steal.",
-      reference: "Exodus 20:15"
+      reference: "Exodus 20:15",
+      scripture: "Thou shalt not steal."      
     }, {
       title: "No False Witness",
-      scripture: "Thou shalt not bear false witness against thy neighbour.",
-      reference: "Exodus 20:16"
+      reference: "Exodus 20:16",
+      scripture: "Thou shalt not bear false witness against thy neighbour."      
     }, {
       title: "No Coveting",
-      scripture: "Thou shalt not covet thy neighbour's house, thou shalt not covet thy neighbour's wife, nor his man-servant, nor his maid-servant, nor his ox, nor his ass, nor anything that is thy neighbour's.",
-      reference: "Exodus 20:17"
+      reference: "Exodus 20:17",
+      scripture: "Thou shalt not covet thy neighbour's house, thou shalt not covet thy neighbour's wife, nor his man-servant, nor his maid-servant, nor his ox, nor his ass, nor anything that is thy neighbour's."
     }],
     "civil-laws": [{
       title: "Justice for All",
-      scripture: "Ye shall do no unrighteousness in judgment: thou shalt not respect the person of the poor, nor honour the person of the mighty: but in righteousness shalt thou judge thy neighbour.",
-      reference: "Leviticus 19:15"
+      reference: "Leviticus 19:15",
+      scripture: "Ye shall do no unrighteousness in judgment: thou shalt not respect the person of the poor, nor honour the person of the mighty: but in righteousness shalt thou judge thy neighbour."      
     }, {
       title: "Witnesses Required",
       scripture: "One witness shall not rise up against a man for any iniquity, or for any sin, in any sin that he sinneth: at the mouth of two witnesses, or at the mouth of three witnesses, shall the matter be established.",
@@ -1224,12 +1225,12 @@ const LawsCommandments = () => {
       { title: "One Body", scripture: "For as the body is one, and hath many members, and all the members of that one body, being many, are one body.", reference: "1 Corinthians 12:12" }
     ],
     "pagan-names": [
-      { title: "Pagan Names vs Most High AHAYAH's Name", scripture: "And Most High AHAYAH spake unto Moses (Mashah), and said unto him, I am the Most High AHAYAH: And I appeared unto Abraham (Abaraham), unto Isaac (Yashachaq), and unto Jacob (Ya'aqab), by the name of Most High AHAYAH Almighty (Shaday), but by my name JEHOVAH (יְהֹוָה= Yahweh, Yahuah, Yahawah, Lord, God) was I not known to them.", reference: "Exodus 6:2-3" },
-      { title: "Do Not Called Baali, Symbolical name for Jehovah (יְהֹוָה= Yahweh, Yahuah, Yahawah, Lord, God) - Baali - Strongs Lexicon H1180", scripture: "And it shall be at that day, saith the Most High AHAYAH, that thou shalt call me Ishi (YASHAYA); and shalt call me no more Baali.<br/><br/><table class=\"w-full border-collapse border border-amber-500/20\"><thead><tr class=\"bg-amber-500/10\"><th class=\"border border-amber-500/20 p-3 text-left\">Lexicon</th><th class=\"border border-amber-500/20 p-3 text-left\">Strong's H1180</th><th class=\"border border-amber-500/20 p-3 text-left\">Brown-Driver-Briggs H1180</th></tr></thead><tbody><tr><td class=\"border border-amber-500/20 p-3 font-semibold\">Hebrew Word</td><td class=\"border border-amber-500/20 p-3\">בַּעֲלִי</td><td class=\"border border-amber-500/20 p-3\">בּעלי</td></tr><tr><td class=\"border border-amber-500/20 p-3 font-semibold\">Transliteration</td><td class=\"border border-amber-500/20 p-3\">ba‛ălı̂y</td><td class=\"border border-amber-500/20 p-3\">ba‛ălı̂y</td></tr><tr><td class=\"border border-amber-500/20 p-3 font-semibold\">Pronunciation</td><td class=\"border border-amber-500/20 p-3\">bah-al-ee'</td><td class=\"border border-amber-500/20 p-3\">-</td></tr><tr><td class=\"border border-amber-500/20 p-3 font-semibold\">Definition</td><td class=\"border border-amber-500/20 p-3\">From H1167 with pronominal suffix; my master; Baali, a symbolical name of Jehovah: - Baali.</td><td class=\"border border-amber-500/20 p-3\">Baali = \"my lord\"<br/>1) a deity in the northern kingdom, variation of the name 'Baal'</td></tr><tr><td class=\"border border-amber-500/20 p-3 font-semibold\">Part of Speech</td><td class=\"border border-amber-500/20 p-3\">-</td><td class=\"border border-amber-500/20 p-3\">noun masculine</td></tr><tr><td class=\"border border-amber-500/20 p-3 font-semibold\">Related Word</td><td class=\"border border-amber-500/20 p-3\">Total KJV occurrences: 1</td><td class=\"border border-amber-500/20 p-3\">from H1167 with pronominal suffix</td></tr></tbody></table>", reference: "Hosea 2:16" },
-      { title: "Mischief/Hovah/Haweh/Huah/Hawah (הֹוָה) - Strongs Lexicon H1943", scripture: "Mischief shall come upon mischief, and rumour shall be upon rumour; then shall they seek a vision of the prophet; but the law (Tarah) shall perish from the priest, and counsel from the ancients.", reference: "Ezekiel 7:26" },
+      { title: "Pagan Names vs Most High AHAYAH's Name", scripture: "And Most High AHAYAH spake unto Moses (Mashah), and said unto him, I am the Most High AHAYAH: And I appeared unto Abraham (Abaraham), unto Isaac (Yashachaq), and unto Jacob (Ya'aqab), by the name of Most High AHAYAH Almighty (Shaday), but by my name JEHOVAH (יְהֹוָה= Yahweh, Yahuah, Yahawah, Lord, God) was I not known to them.", reference: "Exodus 6:2-3", image: falseGod },
+      { title: "Do Not Call Baali, Symbolical name for Jehovah (יְהֹוָה= Yahweh, Yahuah, Yahawah, Lord, God) - Baali - Strongs Lexicon H1180", scripture: "And it shall be at that day, saith the Most High AHAYAH, that thou shalt call me Ishi (YASHAYA); and shalt call me no more Baali.<br/><br/><table class=\"w-full border-collapse border border-amber-500/20\"><thead><tr class=\"bg-amber-500/10\"><th class=\"border border-amber-500/20 p-3 text-left\">Lexicon</th><th class=\"border border-amber-500/20 p-3 text-left\">Strong's H1180</th><th class=\"border border-amber-500/20 p-3 text-left\">Brown-Driver-Briggs H1180</th></tr></thead><tbody><tr><td class=\"border border-amber-500/20 p-3 font-semibold\">Hebrew Word</td><td class=\"border border-amber-500/20 p-3\">בַּעֲלִי</td><td class=\"border border-amber-500/20 p-3\">בּעלי</td></tr><tr><td class=\"border border-amber-500/20 p-3 font-semibold\">Transliteration</td><td class=\"border border-amber-500/20 p-3\">ba‛ălı̂y</td><td class=\"border border-amber-500/20 p-3\">ba‛ălı̂y</td></tr><tr><td class=\"border border-amber-500/20 p-3 font-semibold\">Pronunciation</td><td class=\"border border-amber-500/20 p-3\">bah-al-ee'</td><td class=\"border border-amber-500/20 p-3\">-</td></tr><tr><td class=\"border border-amber-500/20 p-3 font-semibold\">Definition</td><td class=\"border border-amber-500/20 p-3\">From H1167 with pronominal suffix; my master; Baali, a symbolical name of Jehovah: - Baali.</td><td class=\"border border-amber-500/20 p-3\">Baali = \"my lord\"<br/>1) a deity in the northern kingdom, variation of the name 'Baal'</td></tr><tr><td class=\"border border-amber-500/20 p-3 font-semibold\">Part of Speech</td><td class=\"border border-amber-500/20 p-3\">-</td><td class=\"border border-amber-500/20 p-3\">noun masculine</td></tr><tr><td class=\"border border-amber-500/20 p-3 font-semibold\">Related Word</td><td class=\"border border-amber-500/20 p-3\">Total KJV occurrences: 1</td><td class=\"border border-amber-500/20 p-3\">from H1167 with pronominal suffix</td></tr></tbody></table>", reference: "Hosea 2:16" },
+      { title: "Mischief/Hovah/Haweh/Huah/Hawah (הֹוָה) - Strongs Lexicon H1943", scripture: "Mischief shall come upon mischief, and rumour shall be upon rumour; then shall they seek a vision of the prophet; but the law (Tarah) shall perish from the priest, and counsel from the ancients.<br/><br/><table class=\"w-full border-collapse border border-amber-500/20\"><thead><tr class=\"bg-amber-500/10\"><th class=\"border border-amber-500/20 p-3 text-left\">Lexicon</th><th class=\"border border-amber-500/20 p-3 text-left\">Strong's H1943</th><th class=\"border border-amber-500/20 p-3 text-left\">Brown-Driver-Briggs H1943</th></tr></thead><tbody><tr><td class=\"border border-amber-500/20 p-3 font-semibold\">Hebrew Word</td><td class=\"border border-amber-500/20 p-3\">הֹוָה</td><td class=\"border border-amber-500/20 p-3\">הֹוָה</td></tr><tr><td class=\"border border-amber-500/20 p-3 font-semibold\">Transliteration</td><td class=\"border border-amber-500/20 p-3\">hôvâh</td><td class=\"border border-amber-500/20 p-3\">hôvâh</td></tr><tr><td class=\"border border-amber-500/20 p-3 font-semibold\">Pronunciation</td><td class=\"border border-amber-500/20 p-3\">ho-vaw'</td><td class=\"border border-amber-500/20 p-3\">ho-vaw'</td></tr><tr><td class=\"border border-amber-500/20 p-3 font-semibold\">Definition</td><td class=\"border border-amber-500/20 p-3\">Another form for H1942; ruin: - mischief.</td><td class=\"border border-amber-500/20 p-3\">Another form for H1942; ruin: - mischief.</td></tr><tr><td class=\"border border-amber-500/20 p-3 font-semibold\">Total KJV occurrences</td><td class=\"border border-amber-500/20 p-3\">3</td><td class=\"border border-amber-500/20 p-3\">3</td></tr><tr><td class=\"border border-amber-500/20 p-3 font-semibold\">Ancient Hebrew Benner's Lexicon</td><td class=\"border border-amber-500/20 p-3\" colspan=\"2\">Strong's #1943: AHLB#: 1098-A (N1) 1098) Fe% (Fe% HW) ac: ? co: Sigh ab: Disaster: The pictograph e represents one who is looking at a great sight with his hands raised as when saying behold. This root is closely related to ae, ee and ie. (eng: ho) A) Fe% (Fe% HW) ac: ? co: Sigh ab: Disaster: A moaning sigh from a disaster or evil. Nm) Fe% (Fe% HW) - Woe: [freq. 2] |kjv: alas| {str: 1930} Nf1) Efe% (Efe% H-WH) - Disaster: A wicked or disastrous event. [Hebrew and Aramaic] [df: hyh] [freq. 21] |kjv: calamity, wickedness, perverse, mischief| {str: 1942, 1943, 1962}</td></tr></tbody></table>", reference: "Ezekiel 7:26" },
       { title: "Historical Record - Letter J Not Invented, Letter 'J' was not invented until 16th Century by Gian Giorgio Trissino, https://grokipedia.com/page/gian_giorgio_trissino Also, the Gentiles (nations) had Enslaved the Black Hebrew Israelites/Yasharahala and letter 'J' in Lashawan Qadash Ancient Paleo Hebrew Alphabet and was not invented yet.", scripture: "How do ye say, We are wise, and the law of the Most High AHAYAH is with us? Lo, certainly in vain made he it; the pen of the scribes is in vain.", reference: "Jeremiah 8:8" },
       { title: "Religion is Vain/Vanity Lies", scripture: "If any man among you seem to be religious, and bridleth not his tongue, but deceiveth his own heart, this man's religion is vain.", reference: "James 1:26" },
-      { title: "Ba'alah - Harlot Mistress Demon who made made man fall short to listen to Doctrine of Devils - Ba'alah is the Harlot Demon Sorcerer Witch Mistress of Alah/Satan, also Lord, God, are UnLawsful, Most High.", scripture: "Because of the multitude of the whoredoms of the wellfavoured harlot, the mistress of witchcrafts, that selleth nations through her whoredoms, and families through her witchcrafts.", reference: "Nahum 3:4, Prececpt - Jeremiah 8:8, Matthew 23" }
+      { title: "Ba'alah - Harlot Mistress Demon who made made man fall short to listen to Doctrine of Devils - Ba'alah is the Harlot Demon Sorcerer Witch Mistress of Alah/Satan, also Lord, God, are UnLawful an not the Most High.", scripture: "Because of the multitude of the whoredoms of the well favoured harlot, the mistress of witchcrafts, that selleth nations through her whoredoms, and families through her witchcrafts.", reference: "Nahum 3:4, Prececpt - Jeremiah 8:8, Matthew 23, Revelation 17:5" }
     ],
     "pale-skin-color": [
       { title: "Skin Color", scripture: "Is not this the son of Jacob (Ya'aqab? yet he hath not despaired of life.", reference: "Job 16:22" },
@@ -1680,6 +1681,6 @@ const LawsCommandments = () => {
       </section>
 
       <Footer />
-    </div>;
+      </div>;
 };
 export default LawsCommandments;
